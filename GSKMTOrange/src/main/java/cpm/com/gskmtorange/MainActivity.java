@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
 
         webView = (WebView) findViewById(R.id.webview);
 
-        String url = preferences.getString(CommonString.KEY_NOTICE_BOARD_LINK,"");
+        String url = preferences.getString(CommonString.KEY_NOTICE_BOARD_LINK, "");
         user_name = preferences.getString(CommonString.KEY_USERNAME, null);
         //user_type = preferences.getString(CommonString.KEY_USER_TYPE, null);
 
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
 
         webView.getSettings().setJavaScriptEnabled(true);
 
-        if(!url.equals("")){
+        if (!url.equals("")) {
 
             webView.loadUrl(url);
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity
 
         View headerView = LayoutInflater.from(this).inflate(R.layout.nav_header_main, navigationView, false);
 
-        TextView tv_username = (TextView)  headerView.findViewById(R.id.nav_user_name);
+        TextView tv_username = (TextView) headerView.findViewById(R.id.nav_user_name);
         //tv_usertype = (TextView) headerView.findViewById(R.id.nav_user_type);
 
         tv_username.setText(user_name);
@@ -133,31 +133,13 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_upload) {
 
-        }
-        else if (id == R.id.nav_geotag) {
+        } else if (id == R.id.nav_geotag) {
 
-
-
-
-
-
-
-
-
-        }
-        else if (id == R.id.nav_export) {
-
-
-
-
-        }
-
-
-        else if (id == R.id.nav_exit) {
+        } else if (id == R.id.nav_exit) {
 
         } else if (id == R.id.nav_services) {
 
-        }else if (id == R.id.nav_setting) {
+        } else if (id == R.id.nav_setting) {
 
         }
 
