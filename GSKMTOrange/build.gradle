@@ -6,6 +6,10 @@ android {
 
     useLibrary 'org.apache.http.legacy'
 
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+
     defaultConfig {
         applicationId "cpm.com.gskmtorange"
         minSdkVersion 15
