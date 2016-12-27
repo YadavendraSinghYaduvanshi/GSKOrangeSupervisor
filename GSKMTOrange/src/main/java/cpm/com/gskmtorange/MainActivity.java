@@ -133,9 +133,27 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_upload) {
 
-        } else if (id == R.id.nav_geotag) {
+        }
+        else if (id == R.id.nav_geotag) {
 
-        } else if (id == R.id.nav_exit) {
+
+
+
+
+
+
+
+
+        }
+        else if (id == R.id.nav_export) {
+
+
+
+
+        }
+
+
+        else if (id == R.id.nav_exit) {
 
         } else if (id == R.id.nav_services) {
 
