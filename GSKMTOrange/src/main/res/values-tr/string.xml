@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="prompt_email">E-posta</string>
+    <string name="prompt_password">Şifre (isteğe bağlı)</string>
+    <string name="action_sign_in">Giriş yapın veya kayıt olun</string>
+    <string name="action_sign_in_short">oturum aç</string>
+    <string name="error_invalid_email">Bu e-posta adresi geçersiz</string>
+    <string name="error_invalid_password">Bu şifre çok kısa</string>
+    <string name="error_incorrect_password">Bu şifre yanlış</string>
+    <string name="error_field_required">Bu alan gereklidir</string>
+    <string name="permission_rationale">"E-posta sağlamak için kişiler izinleri gereklidir
+        Tamamlamalar."
+    </string>
+
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/GSKMTOrange/GSKMTOrange.iml" filepath="$PROJECT_DIR$/GSKMTOrange/GSKMTOrange.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GSKMTOrange2.iml" filepath="$PROJECT_DIR$/GSKMTOrange2.iml" />
+    </modules>
+  </component>
+</project>
