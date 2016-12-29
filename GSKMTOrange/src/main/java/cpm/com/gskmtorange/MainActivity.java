@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
+import cpm.com.gskmtorange.download.DownloadActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -130,6 +131,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_route_plan) {
             // Handle the camera action
         } else if (id == R.id.nav_download) {
+
+            Intent in = new Intent(getApplicationContext(), DownloadActivity.class);
+            startActivity(in);
 
         } else if (id == R.id.nav_upload) {
 
