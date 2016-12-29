@@ -15,14 +15,14 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txt_mslAvailabilityName"
+            android:id="@+id/txt_stockFacingName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFF1710F"
             android:paddingBottom="10dp"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
-            android:text="Must Have Availability"
+            android:text="Stock Facing"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black" />
 
@@ -63,7 +63,7 @@
                     android:gravity="center"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    android:text="MBQ"
+                    android:text="Stock"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#222" />
             </LinearLayout>
@@ -80,7 +80,7 @@
                     android:gravity="center"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    android:text="Available"
+                    android:text="Faceup"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#222" />
             </LinearLayout>

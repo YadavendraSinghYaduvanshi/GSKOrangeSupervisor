@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -30,15 +29,16 @@ import java.util.List;
 
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 
-public class MSL_AvailabilityActivity extends AppCompatActivity {
+public class Stock_FacingActivity extends AppCompatActivity {
     ExpandableListView expandableListView;
-    TextView txt_mslAvailabilityName;
+    TextView txt_stockFacingName;
 
-    ArrayList<MSL_AvailabilityGetterSetter> headerDataList;
-    ArrayList<MSL_AvailabilityGetterSetter> childDataList;
-    List<MSL_AvailabilityGetterSetter> hashMapListHeaderData;
-    HashMap<MSL_AvailabilityGetterSetter, List<MSL_AvailabilityGetterSetter>> hashMapListChildData;
+    ArrayList<Stock_FacingGetterSetter> headerDataList;
+    ArrayList<Stock_FacingGetterSetter> childDataList;
+    List<Stock_FacingGetterSetter> hashMapListHeaderData;
+    HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> hashMapListChildData;
 
     ExpandableListAdapter adapter;
 
@@ -47,7 +47,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_msl__availability);
+        setContentView(R.layout.activity_stock_facing);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -55,10 +55,10 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
-        txt_mslAvailabilityName = (TextView) findViewById(R.id.txt_mslAvailabilityName);
+        txt_stockFacingName = (TextView) findViewById(R.id.txt_stockFacingName);
 
         title = getIntent().getStringExtra("categoryName");
-        txt_mslAvailabilityName.setText(title);
+        txt_stockFacingName.setText(title);
 
         prepareList();
 
@@ -137,25 +137,25 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
     private void prepareList() {
         headerDataList = new ArrayList<>();
 
-        MSL_AvailabilityGetterSetter msl = new MSL_AvailabilityGetterSetter();
+        Stock_FacingGetterSetter msl = new Stock_FacingGetterSetter();
         msl.setBrandName("Parodontax header 1");
         msl.setMbq("1");
         msl.setAvailable("No");
         headerDataList.add(msl);
 
-        msl = new MSL_AvailabilityGetterSetter();
+        msl = new Stock_FacingGetterSetter();
         msl.setBrandName("Parodontax header 2");
         msl.setMbq("2");
         msl.setAvailable("Yes");
         headerDataList.add(msl);
 
-        msl = new MSL_AvailabilityGetterSetter();
+        msl = new Stock_FacingGetterSetter();
         msl.setBrandName("Parodontax header 3");
         msl.setMbq("3");
         msl.setAvailable("Yes");
         headerDataList.add(msl);
 
-        msl = new MSL_AvailabilityGetterSetter();
+        msl = new Stock_FacingGetterSetter();
         msl.setBrandName("Parodontax header 4");
         msl.setMbq("4");
         msl.setAvailable("No");
@@ -172,13 +172,13 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
                 childDataList = new ArrayList<>();
 
-                MSL_AvailabilityGetterSetter msl1 = new MSL_AvailabilityGetterSetter();
+                Stock_FacingGetterSetter msl1 = new Stock_FacingGetterSetter();
                 msl.setBrandName("Parodontax 1");
                 msl.setMbq("1");
                 msl.setAvailable("No");
                 childDataList.add(msl1);
 
-                msl1 = new MSL_AvailabilityGetterSetter();
+                msl1 = new Stock_FacingGetterSetter();
                 msl.setBrandName("Parodontax 2");
                 msl.setMbq("2");
                 msl.setAvailable("No");
@@ -195,11 +195,11 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
         private Context _context;
-        private List<MSL_AvailabilityGetterSetter> _listDataHeader;
-        private HashMap<MSL_AvailabilityGetterSetter, List<MSL_AvailabilityGetterSetter>> _listDataChild;
+        private List<Stock_FacingGetterSetter> _listDataHeader;
+        private HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> _listDataChild;
 
-        public ExpandableListAdapter(Context context, List<MSL_AvailabilityGetterSetter> listDataHeader,
-                                     HashMap<MSL_AvailabilityGetterSetter, List<MSL_AvailabilityGetterSetter>> listChildData) {
+        public ExpandableListAdapter(Context context, List<Stock_FacingGetterSetter> listDataHeader,
+                                     HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listChildData) {
             this._context = context;
             this._listDataHeader = listDataHeader;
             this._listDataChild = listChildData;
@@ -222,19 +222,19 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
         @Override
         public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-            MSL_AvailabilityGetterSetter headerTitle = (MSL_AvailabilityGetterSetter) getGroup(groupPosition);
+            Stock_FacingGetterSetter headerTitle = (Stock_FacingGetterSetter) getGroup(groupPosition);
 
             if (convertView == null) {
                 LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(R.layout.item_msl_availability_header, null, false);
+                convertView = infalInflater.inflate(R.layout.item_stock_facing_header, null, false);
             }
 
-            TextView txt_categoryHeader = (TextView) convertView.findViewById(R.id.txt_categoryHeader);
-            RelativeLayout rel_header = (RelativeLayout) convertView.findViewById(R.id.rel_categoryHeader);
+            TextView txt_stockFaceupHeader = (TextView) convertView.findViewById(R.id.txt_stockFaceupHeader);
+            LinearLayout lin_stockFaceupHeader = (LinearLayout) convertView.findViewById(R.id.lin_stockFaceupHeader);
             ImageView img_camera = (ImageView) convertView.findViewById(R.id.img_camera);
 
-            txt_categoryHeader.setTypeface(null, Typeface.BOLD);
-            txt_categoryHeader.setText(headerTitle.getBrandName());
+            txt_stockFaceupHeader.setTypeface(null, Typeface.BOLD);
+            txt_stockFaceupHeader.setText(headerTitle.getBrandName());
 
             /*img_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -292,27 +292,27 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         @Override
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                                  View convertView, ViewGroup parent) {
-            MSL_AvailabilityGetterSetter childData = (MSL_AvailabilityGetterSetter) getChild(groupPosition, childPosition);
+            Stock_FacingGetterSetter childData = (Stock_FacingGetterSetter) getChild(groupPosition, childPosition);
             ViewHolder holder = null;
 
             if (convertView == null) {
                 LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(R.layout.item_msl_availability_child, null, false);
+                convertView = infalInflater.inflate(R.layout.item_stock_facing_child, null, false);
 
                 holder = new ViewHolder();
                 holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
                 holder.lin_category = (LinearLayout) convertView.findViewById(R.id.lin_category);
 
                 holder.txt_skuName = (TextView) convertView.findViewById(R.id.txt_skuName);
-                holder.ed_mbq = (EditText) convertView.findViewById(R.id.ed_mbq);
-                holder.toggle_available = (ToggleButton) convertView.findViewById(R.id.toggle_available);
+                holder.ed_stock = (EditText) convertView.findViewById(R.id.ed_stock);
+                holder.ed_facing = (EditText) convertView.findViewById(R.id.ed_facing);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             holder.txt_skuName.setText(childData.getBrandName());
-            holder.ed_mbq.setText(childData.getMbq());
+            holder.ed_stock.setText(childData.getMbq());
 
             return convertView;
         }
@@ -329,10 +329,9 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
     }
 
     public class ViewHolder {
-        EditText ed_mbq;
+        EditText ed_stock, ed_facing;
         CardView cardView;
         TextView txt_skuName;
-        ToggleButton toggle_available;
         LinearLayout lin_category;
     }
 

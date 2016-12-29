@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -136,6 +137,10 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                         Intent intent = new Intent(DailyDataMenuActivity.this, MSL_AvailabilityActivity.class);
                         intent.putExtra("categoryName", dailyData.getCategory_name());
                         startActivity(intent);
+                    } else if (dailyData.getCategory_name().equalsIgnoreCase("Stock & Facing")) {
+                        Intent intent1 = new Intent(DailyDataMenuActivity.this, Stock_FacingActivity.class);
+                        intent1.putExtra("categoryName", dailyData.getCategory_name());
+                        startActivity(intent1);
                     }
 
                 }

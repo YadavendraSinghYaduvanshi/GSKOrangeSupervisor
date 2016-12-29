@@ -76,5 +76,11 @@
             android:windowSoftInputMode="adjustPan" />
         <!--android:label="@string/title_activity_msl__availability"-->
 
+        <activity
+            android:name=".gsk_dailyentry.Stock_FacingActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+
     </application>
 </manifest>
