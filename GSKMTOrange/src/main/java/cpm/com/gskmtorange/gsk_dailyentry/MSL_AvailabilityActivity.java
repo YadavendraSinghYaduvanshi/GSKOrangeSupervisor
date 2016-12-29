@@ -314,6 +314,9 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             holder.txt_skuName.setText(childData.getBrandName());
             holder.ed_mbq.setText(childData.getMbq());
 
+            holder.toggle_available.setTextOff("No");
+            holder.toggle_available.setTextOn("Yes");
+
             return convertView;
         }
 

@@ -2,9 +2,12 @@ package cpm.com.gskmtorange.gsk_dailyentry;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -72,6 +75,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
         txt_stockFacingName.setText(title);
 
         prepareList();
+
+        str = Environment.getExternalStorageState();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -270,6 +275,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 }
             }
 
+
             /*if (headerTitle.getImg_cam().equals("")) {
                 img_camera1.setBackgroundResource(R.drawable.ic_menu_camera);
             } else {
@@ -381,9 +387,28 @@ public class Stock_FacingActivity extends AppCompatActivity {
             File file = new File(path);
             Uri outputFileUri = Uri.fromFile(file);
 
+            /*String defaultCameraPackage = "";
+            final PackageManager packageManager = getPackageManager();
+            List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+
+            for (int n = 0; n < list.size(); n++) {
+                if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+//                    Log.d("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+//                    Log.d("TAG", "package name  : " + list.get(n).packageName);
+                    if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                        defaultCameraPackage = list.get(n).packageName;
+                        break;
+                    }
+                }
+            }
+
             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(defaultCameraPackage);
+            startActivityForResult(intent, position);*/
 
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             startActivityForResult(intent, position);
         } catch (Exception e) {
             e.printStackTrace();
