@@ -13,4 +13,12 @@
         الاكمال."
     </string>
 
+    <string name="menu_daily_route_plan">خطة الطريق اليومية</string>
+    <string name="menu_daily_download">يوميا تحميل البيانات</string>
+    <string name="menu_upload_data">البيانات تحميل</string>
+    <string name="menu_geotag">الجغرافية الكلمات الدلالية</string>
+    <string name="menu_exit">خروج</string>
+    <string name="menu_setting">ضبط</string>
+    <string name="menu_services">خدمات</string>
+
 </resources>
