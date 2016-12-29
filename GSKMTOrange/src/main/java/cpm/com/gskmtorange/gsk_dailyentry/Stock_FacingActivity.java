@@ -1,13 +1,17 @@
 package cpm.com.gskmtorange.gsk_dailyentry;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +27,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,6 +51,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
     ExpandableListAdapter adapter;
 
     String title;
+
+    String path = "", str = "", _pathforcheck = "", img1 = "";
+    static int child_position = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +142,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
 
     private void prepareList() {
@@ -222,7 +232,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
         @Override
         public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-            Stock_FacingGetterSetter headerTitle = (Stock_FacingGetterSetter) getGroup(groupPosition);
+            final Stock_FacingGetterSetter headerTitle = (Stock_FacingGetterSetter) getGroup(groupPosition);
 
             if (convertView == null) {
                 LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -231,10 +241,40 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
             TextView txt_stockFaceupHeader = (TextView) convertView.findViewById(R.id.txt_stockFaceupHeader);
             LinearLayout lin_stockFaceupHeader = (LinearLayout) convertView.findViewById(R.id.lin_stockFaceupHeader);
-            ImageView img_camera = (ImageView) convertView.findViewById(R.id.img_camera);
+            ImageView img_reference = (ImageView) convertView.findViewById(R.id.img_reference);
+            ImageView img_camera1 = (ImageView) convertView.findViewById(R.id.img_camera1);
+            ImageView img_camera2 = (ImageView) convertView.findViewById(R.id.img_camera2);
+            ImageView img_edit = (ImageView) convertView.findViewById(R.id.img_edit);
 
             txt_stockFaceupHeader.setTypeface(null, Typeface.BOLD);
             txt_stockFaceupHeader.setText(headerTitle.getBrandName());
+
+            img_camera1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String date = new Date().toLocaleString().toString();
+                    String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+
+                    _pathforcheck = "Stock Camera1_" + tempDate + ".jpg";
+                    child_position = groupPosition;
+                    path = str + _pathforcheck;
+
+                    startCameraActivity(groupPosition);
+                }
+            });
+
+            if (!img1.equalsIgnoreCase("")) {
+                if (groupPosition == child_position) {
+                    //headerTitle.setImg_cam(img1);
+                    img1 = "";
+                }
+            }
+
+            /*if (headerTitle.getImg_cam().equals("")) {
+                img_camera1.setBackgroundResource(R.drawable.ic_menu_camera);
+            } else {
+                //img_camera1.setBackgroundResource(R.drawable.camtick);
+            }*/
 
             /*img_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -333,6 +373,52 @@ public class Stock_FacingActivity extends AppCompatActivity {
         CardView cardView;
         TextView txt_skuName;
         LinearLayout lin_category;
+    }
+
+    private void startCameraActivity(int position) {
+        try {
+            Log.e("Stock & Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+
+            startActivityForResult(intent, position);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("Stock & Facing", "resultCode: " + resultCode);
+        switch (resultCode) {
+            case 0:
+                Log.e("Stock & Facing", "User cancelled");
+                break;
+            case -1:
+                if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                    if (new File(str + _pathforcheck).exists()) {
+                        img1 = _pathforcheck;
+                        //adapter.notifyDataSetChanged();
+                        _pathforcheck = "";
+                    }
+                }
+                break;
+        }
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public String getCurrentTime() {
+        Calendar m_cal = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        String cdate = formatter.format(m_cal.getTime());
+       /* String intime = m_cal.get(Calendar.HOUR_OF_DAY) + ":"
+                + m_cal.get(Calendar.MINUTE) + ":" + m_cal.get(Calendar.SECOND);*/
+
+        return cdate;
     }
 
     @Override
