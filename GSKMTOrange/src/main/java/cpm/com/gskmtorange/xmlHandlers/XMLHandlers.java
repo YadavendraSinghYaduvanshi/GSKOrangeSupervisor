@@ -6,10 +6,15 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.DisplayMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.LoginGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 
 /**
  * Created by yadavendras on 21-12-2016.
@@ -253,5 +258,183 @@ public class XMLHandlers {
             e.printStackTrace();
         }
         return brand;
+    }
+
+    // SUB_CATEGORY_MASTER XML HANDLER
+    public static SubCategoryMasterGetterSetter subCategoryMasterXMLHandler(XmlPullParser xpp,
+                                                                            int eventType) {
+        SubCategoryMasterGetterSetter category = new SubCategoryMasterGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+                    if (xpp.getName().equals("META_DATA")) {
+                        category.setTable_SUB_CATEGORY_MASTER(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SUB_CATEGORY_ID")) {
+                        category.setSUB_CATEGORY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SUB_CATEGORY")) {
+                        category.setSUB_CATEGORY(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CATEGORY_ID")) {
+                        category.setCATEGORY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SUB_CATEGORY_SEQUENCE")) {
+                        category.setSUB_CATEGORY_SEQUENCE(xpp.nextText());
+                    }
+
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return category;
+    }
+
+    // CATEGORY_MASTER XML HANDLER
+    public static CategoryMasterGetterSetter categoryMasterXMLHandler(XmlPullParser xpp,
+                                                                         int eventType) {
+        CategoryMasterGetterSetter category = new CategoryMasterGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+                    if (xpp.getName().equals("META_DATA")) {
+                        category.setTable_CATEGORY_MASTER(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CATEGORY_ID")) {
+                        category.setCATEGORY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CATEGORY")) {
+                        category.setCATEGORY(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CATEGORY_SEQUENCE")) {
+                        category.setCATEGORY_SEQUENCE(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return category;
+    }
+
+    // DISPLAY_MASTER XML HANDLER
+    public static DisplayMasterGetterSetter displayMasterXMLHandler(XmlPullParser xpp,
+                                                                    int eventType) {
+        DisplayMasterGetterSetter display = new DisplayMasterGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+                    if (xpp.getName().equals("META_DATA")) {
+                        display.setTable_DISPLAY_MASTER(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("DISPLAY_ID")) {
+                        display.setDISPLAY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("DISPLAY")) {
+                        display.setDISPLAY(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("IMAGE_URL")) {
+                        display.setIMAGE_URL(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return display;
+    }
+
+    // MAPPING_STOCK XML HANDLER
+    public static MappingStockGetterSetter mappingStockXMLHandler(XmlPullParser xpp,
+                                                                    int eventType) {
+        MappingStockGetterSetter stock = new MappingStockGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+                    if (xpp.getName().equals("META_DATA")) {
+                        stock.setTable_MAPPING_STOCK(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("KEYACCOUNT_ID")) {
+                        stock.setKEYACCOUNT_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("STORETYPE_ID")) {
+                        stock.setSTORETYPE_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CLASS_ID")) {
+                        stock.setCLASS_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SKU_ID")) {
+                        stock.setSKU_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("MUST_HAVE")) {
+                        stock.setMUST_HAVE(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("MBQ")) {
+                        stock.setMBQ(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return stock;
+    }
+
+    // MAPPING_STOCK XML HANDLER
+    public static MAPPINGT2PGetterSetter mappingT2pXMLHandler(XmlPullParser xpp,
+                                                                int eventType) {
+        MAPPINGT2PGetterSetter t2p = new MAPPINGT2PGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+                    if (xpp.getName().equals("META_DATA")) {
+                        t2p.setTable_MAPPING_T2P(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("STORE_ID")) {
+                        t2p.setSTORE_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("BRAND_ID")) {
+                        t2p.setBRAND_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("DISPLAY_ID")) {
+                        t2p.setDISPLAY_ID(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return t2p;
     }
 }
