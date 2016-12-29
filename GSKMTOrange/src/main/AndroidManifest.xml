@@ -49,7 +49,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
 
-
+        <activity
+            android:name=".dailyentry.StoreListActivity"
+            android:label="@string/title_activity_store_list_geotag"
+            android:theme="@style/AppTheme.NoActionBar" />
 
 
     </application>

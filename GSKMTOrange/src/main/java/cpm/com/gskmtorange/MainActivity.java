@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.dailyentry.StoreListActivity;
 import cpm.com.gskmtorange.download.DownloadActivity;
 
 public class MainActivity extends AppCompatActivity
@@ -129,6 +130,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_route_plan) {
+
+            Intent startDownload = 	new Intent(this,StoreListActivity.class);
+            startActivity(startDownload);
+
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+
+
             // Handle the camera action
         } else if (id == R.id.nav_download) {
 
