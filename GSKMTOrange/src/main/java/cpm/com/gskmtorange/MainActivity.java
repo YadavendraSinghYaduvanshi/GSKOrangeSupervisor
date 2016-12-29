@@ -141,10 +141,18 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_geotag) {
 
 
+
             Intent startDownload = 	new Intent(this,GeoTagStoreList.class);
             startActivity(startDownload);
 
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+
+
+
+
+
+
+        }
 
 
 
