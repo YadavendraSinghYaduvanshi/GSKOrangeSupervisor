@@ -21,20 +21,21 @@ import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
 
-import cpm.com.gskmtorange.LoginActivity;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.DisplayMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
-import cpm.com.gskmtorange.xmlHandlers.TableBean;
+import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
 import cpm.com.gskmtorange.xmlHandlers.XMLHandlers;
 
 public class DownloadActivity extends AppCompatActivity {
@@ -51,6 +52,11 @@ public class DownloadActivity extends AppCompatActivity {
     JourneyPlanGetterSetter jcpgettersetter;
     SkuMasterGetterSetter skumastergettersetter;
     BrandMasterGetterSetter brandMasterGetterSetter;
+    SubCategoryMasterGetterSetter subCategoryMasterGetterSetter;
+    CategoryMasterGetterSetter categoryMasterGetterSetter;
+    DisplayMasterGetterSetter displayMasterGetterSetter;
+    MappingStockGetterSetter mappingStockGetterSetter;
+    MAPPINGT2PGetterSetter mappingt2PGetterSetter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,22 +257,22 @@ public class DownloadActivity extends AppCompatActivity {
                 result = (Object) envelope.getResponse();
 
                 if(result.toString()!=null){
-                  /*  xpp.setInput(new StringReader(result.toString()));
+                    xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
-                    skumastergettersetter =XMLHandlers.storeListXML(xpp, eventType);
-                    if(skumastergettersetter.getSku_cd().size()>0){
-                        String skutable = skumastergettersetter.getSku_master_table();
-                        if(skutable!=null){
+                    subCategoryMasterGetterSetter =XMLHandlers.subCategoryMasterXMLHandler(xpp, eventType);
+                    if(subCategoryMasterGetterSetter.getSUB_CATEGORY_ID().size()>0){
+                        String categorytable = subCategoryMasterGetterSetter.getTable_SUB_CATEGORY_MASTER();
+                        if(categorytable!=null){
                             resultHttp = CommonString.KEY_SUCCESS;
-                            TableBean.setSkumastertable(skutable);
+                            TableBean.setSubCategoryMaster(categorytable);
                         }
                     }else{
-                        return "SKU_MASTER";
+                        return "SUB_CATEGORY_MASTER";
                     }
 
                     data.value = 20;
-                    data.name = "Store Data Download";*/
+                    data.name = "SUB_CATEGORY_MASTER Data Download";
                 }
 
                 publishProgress(data);
@@ -290,22 +296,139 @@ public class DownloadActivity extends AppCompatActivity {
                 result = (Object) envelope.getResponse();
 
                 if(result.toString()!=null){
-                  /*  xpp.setInput(new StringReader(result.toString()));
+                   xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
-                    skumastergettersetter =XMLHandlers.storeListXML(xpp, eventType);
-                    if(skumastergettersetter.getSku_cd().size()>0){
-                        String skutable = skumastergettersetter.getSku_master_table();
+                    categoryMasterGetterSetter =XMLHandlers.categoryMasterXMLHandler(xpp, eventType);
+                    if(categoryMasterGetterSetter.getCATEGORY_ID().size()>0){
+                        String skutable = categoryMasterGetterSetter.getTable_CATEGORY_MASTER();
                         if(skutable!=null){
                             resultHttp = CommonString.KEY_SUCCESS;
-                            TableBean.setSkumastertable(skutable);
+                            TableBean.setCategoryMaster(skutable);
                         }
                     }else{
-                        return "SKU_MASTER";
+                        return "CATEGORY_MASTER";
                     }
 
                     data.value = 20;
-                    data.name = "Store Data Download";*/
+                    data.name = "CATEGORY_MASTER Data Download";
+                }
+
+                publishProgress(data);
+
+                // DISPLAY_MASTER
+                request = new SoapObject(CommonString.NAMESPACE,
+                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "DISPLAY_MASTER");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+
+                androidHttpTransport.call(
+                        CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+                result = (Object) envelope.getResponse();
+
+                if(result.toString()!=null){
+                xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    displayMasterGetterSetter =XMLHandlers.displayMasterXMLHandler(xpp, eventType);
+                    if(displayMasterGetterSetter.getDISPLAY_ID().size()>0){
+                        String display_table = displayMasterGetterSetter.getTable_DISPLAY_MASTER();
+                        if(display_table!=null){
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setDisplayMaster(display_table);
+                        }
+                    }else{
+                        return "DISPLAY_MASTER";
+                    }
+
+                    data.value = 20;
+                    data.name = "DISPLAY_MASTER Data Download";
+                }
+
+                publishProgress(data);
+
+                // MAPPING_STOCK
+                request = new SoapObject(CommonString.NAMESPACE,
+                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_STOCK");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+
+                androidHttpTransport.call(
+                        CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+                result = (Object) envelope.getResponse();
+
+                if(result.toString()!=null){
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mappingStockGetterSetter =XMLHandlers.mappingStockXMLHandler(xpp, eventType);
+                    if(mappingStockGetterSetter.getSKU_ID().size()>0){
+                        String stocktable = mappingStockGetterSetter.getTable_MAPPING_STOCK();
+                        if(stocktable!=null){
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setMappingStock(stocktable);
+                        }
+                    }else{
+                        return "MAPPING_STOCK";
+                    }
+
+                    data.value = 20;
+                    data.name = "MAPPING_STOCK Data Download";
+                }
+
+                publishProgress(data);
+
+                // MAPPING_T2P
+                request = new SoapObject(CommonString.NAMESPACE,
+                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_T2P");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+
+                androidHttpTransport.call(
+                        CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+                result = (Object) envelope.getResponse();
+
+                if(result.toString()!=null){
+                   xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mappingt2PGetterSetter =XMLHandlers.mappingT2pXMLHandler(xpp, eventType);
+                    if(mappingt2PGetterSetter.getSTORE_ID().size()>0){
+                        String t2ptable = mappingt2PGetterSetter.getTable_MAPPING_T2P();
+                        if(t2ptable!=null){
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setMappingT2p(t2ptable);
+                        }
+                    }else{
+                        return "MAPPING_T2P";
+                    }
+
+                    data.value = 20;
+                    data.name = "MAPPING_T2P Data Download";
                 }
 
                 publishProgress(data);
