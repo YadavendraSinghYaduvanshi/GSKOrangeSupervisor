@@ -29,7 +29,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
     private SharedPreferences.Editor editor = null;
 
     LoginGetterSetter login_data;
-    ArrayList<String> language;
+    ArrayList<String> language, culture_id;
 
     boolean selected_flag = false;
 
@@ -49,6 +49,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
 
         login_data = (LoginGetterSetter) getIntent().getSerializableExtra(CommonString.KEY_LOGIN_DATA);
         language = login_data.getCULTURE_NAME();
+        culture_id = login_data.getCULTURE_ID();
 
         if(language.size()>1){
 
@@ -98,6 +99,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
                 btn_lang_2.setBackgroundColor(getResources().getColor(R.color.grey_background));
 
                 editor.putString(CommonString.KEY_LANGUAGE, language.get(0));
+                editor.putString(CommonString.KEY_CULTURE_ID, culture_id.get(0));
                 editor.putString(CommonString.KEY_NOTICE_BOARD_LINK, login_data.getNOTICE_URL().get(0));
                 editor.commit();
 
@@ -113,6 +115,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
                 btn_lang_2.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 editor.putString(CommonString.KEY_LANGUAGE, language.get(1));
+                editor.putString(CommonString.KEY_CULTURE_ID, culture_id.get(1));
                 editor.putString(CommonString.KEY_NOTICE_BOARD_LINK, login_data.getNOTICE_URL().get(1));
                 editor.commit();
 

@@ -12,4 +12,12 @@
         Tamamlamalar."
     </string>
 
+    <string name="menu_daily_route_plan">Günlük Rut Planı</string>
+    <string name="menu_daily_download">Günlük Veri Indir</string>
+    <string name="menu_upload_data">Veri Paylaş</string>
+    <string name="menu_geotag">Coğrafi Konum</string>
+    <string name="menu_exit">Çıkış</string>
+    <string name="menu_setting">Ayarlar</string>
+    <string name="menu_services">Hizmetler</string>
+
 </resources>
