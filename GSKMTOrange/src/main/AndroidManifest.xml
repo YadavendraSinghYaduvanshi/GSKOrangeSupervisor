@@ -50,22 +50,30 @@
 
         <activity
             android:name=".gsk_dailyentry.CategoryListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <!--android:label="@string/title_activity_category_list"-->
 
         <activity
             android:name=".gsk_dailyentry.CategoryWisePerformanceActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <!-- android:label="@string/title_activity_category_wise_performance" -->
 
         <activity
             android:name=".gsk_dailyentry.DailyDataMenuActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <!--android:label="@string/title_activity_daily_main_menu"-->
 
         <activity
             android:name=".gsk_dailyentry.MSL_AvailabilityActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <!--android:label="@string/title_activity_msl__availability"-->
 
     </application>
