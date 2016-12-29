@@ -20,6 +20,7 @@ public class CommonString {
     public static final String KEY_LANGUAGE = "LANGUAGE";
     public static final String KEY_NOTICE_BOARD_LINK = "NOTICE_BOARD_LINK";
     public static final String KEY_LOGIN_DATA = "LOGIN_DATA";
+    public static final String KEY_CULTURE_ID = "CULTURE_ID";
 
     // webservice constants
 
@@ -35,6 +36,10 @@ public class CommonString {
     public static final String METHOD_LOGIN = "UserLoginDetail";
     public static final String SOAP_ACTION_LOGIN = "http://tempuri.org/"
             + METHOD_LOGIN;
+
+    public static final String METHOD_NAME_UNIVERSAL_DOWNLOAD = "Download_Universal";
+    public static final String SOAP_ACTION_UNIVERSAL = "http://tempuri.org/"
+            + METHOD_NAME_UNIVERSAL_DOWNLOAD;
 
     //Alert Messages
 
