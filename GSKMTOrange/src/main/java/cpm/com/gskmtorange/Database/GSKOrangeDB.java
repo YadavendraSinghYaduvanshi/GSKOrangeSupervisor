@@ -13,23 +13,18 @@ import cpm.com.gskmtorange.xmlHandlers.TableBean;
  * Created by ashishc on 29-12-2016.
  */
 
-public class GSKOrangeDB extends SQLiteOpenHelper{
-
-
-        public static final String DATABASE_NAME = "GSK_ORANGE";
-        public static final int DATABASE_VERSION = 13;
-        private SQLiteDatabase db;
-        TableBean tableBean;
-
+public class GSKOrangeDB extends SQLiteOpenHelper {
+    public static final String DATABASE_NAME = "GSK_ORANGE";
+    public static final int DATABASE_VERSION = 13;
+    private SQLiteDatabase db;
+    TableBean tableBean;
 
     public GSKOrangeDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-
     }
 
     public void open() {
         try {
-
             db = this.getWritableDatabase();
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,39 +33,26 @@ public class GSKOrangeDB extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         db.execSQL(TableBean.getJourneyPlan());
-
-
-
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
         db.execSQL("DROP TABLE IF EXISTS " + TableBean.getJourneyPlan());
+    }
+
+    public void deleteTableWithStoreID(String storeid, String process_id) {
 
     }
 
-    public void deleteTableWithStoreID(String storeid, String process_id){
+    public void deleteAllTables() {
 
     }
-
-    public void deleteAllTables(){
-
-    }
-
-
-
-
 
     public void InsertJCP(JourneyPlanGetterSetter data) {
-
         db.delete("JOURNEY_PLAN", null, null);
 
         ContentValues values = new ContentValues();
-
         try {
 
             for (int i = 0; i < data.getSTORE_ID().size(); i++) {
@@ -110,30 +92,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper{
 
             }
 
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Log.d("Exception in JCP", ex.toString());
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

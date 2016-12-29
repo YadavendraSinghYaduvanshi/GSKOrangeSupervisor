@@ -21,7 +21,8 @@ import cpm.com.gskmtorange.R;
  * Created by ashishc on 27-12-2016.
  */
 
-public class GeoTagActivity   extends AppCompatActivity  implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener{
+public class GeoTagActivity   extends AppCompatActivity {
+        //implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener{
 
     private GoogleMap mMap;
     double latitude =0.0;
@@ -40,7 +41,7 @@ public class GeoTagActivity   extends AppCompatActivity  implements OnMapReadyCa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        username = preferences.getString(CommonString.KEY_USERNAME, null);
+        //username = preferences.getString(CommonString.KEY_USERNAME, null);
 
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -51,7 +52,7 @@ public class GeoTagActivity   extends AppCompatActivity  implements OnMapReadyCa
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        //mapFragment.getMapAsync(this);
 
 
 
