@@ -117,6 +117,11 @@ public class LoginActivity extends AppCompatActivity {
         //populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
+
+        museridView.setText("testmer");
+        mPasswordView.setText("cpm123");
+
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
