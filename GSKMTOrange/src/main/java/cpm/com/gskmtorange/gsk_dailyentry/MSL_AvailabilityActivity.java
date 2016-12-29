@@ -136,20 +136,26 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
         MSL_AvailabilityGetterSetter msl = new MSL_AvailabilityGetterSetter();
         msl.setBrandName("Parodontax header 1");
-        msl.setMbq("6");
+        msl.setMbq("1");
         msl.setAvailable("No");
         headerDataList.add(msl);
 
         msl = new MSL_AvailabilityGetterSetter();
         msl.setBrandName("Parodontax header 2");
-        msl.setMbq("7");
+        msl.setMbq("2");
         msl.setAvailable("Yes");
         headerDataList.add(msl);
 
         msl = new MSL_AvailabilityGetterSetter();
         msl.setBrandName("Parodontax header 3");
-        msl.setMbq("8");
+        msl.setMbq("3");
         msl.setAvailable("Yes");
+        headerDataList.add(msl);
+
+        msl = new MSL_AvailabilityGetterSetter();
+        msl.setBrandName("Parodontax header 4");
+        msl.setMbq("4");
+        msl.setAvailable("No");
         headerDataList.add(msl);
 
 
