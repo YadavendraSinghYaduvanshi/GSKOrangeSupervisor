@@ -18,6 +18,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
@@ -28,20 +29,44 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".autoupdate.AutoUpdateActivity" />
+
         <activity
             android:name=".SelectLanguageActivity"
             android:label="@string/title_activity_select_language"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".download.DownloadActivity"></activity>
-    </application>
 
+        <activity android:name=".download.DownloadActivity" />
+
+        <activity
+            android:name=".gsk_dailyentry.CategoryListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!--android:label="@string/title_activity_category_list"-->
+
+        <activity
+            android:name=".gsk_dailyentry.CategoryWisePerformanceActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- android:label="@string/title_activity_category_wise_performance" -->
+
+        <activity
+            android:name=".gsk_dailyentry.DailyDataMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!--android:label="@string/title_activity_daily_main_menu"-->
+
+        <activity
+            android:name=".gsk_dailyentry.MSL_AvailabilityActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!--android:label="@string/title_activity_msl__availability"-->
+
+    </application>
 </manifest>
