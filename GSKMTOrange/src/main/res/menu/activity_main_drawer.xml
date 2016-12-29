@@ -19,6 +19,11 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/menu_geotag" />
         <item
+            android:id="@+id/nav_export"
+            android:icon="@drawable/ic_menu_share"
+            android:title="@string/menu_export" />
+
+        <item
             android:id="@+id/nav_exit"
             android:icon="@drawable/ic_menu_send"
             android:title="@string/menu_exit" />
