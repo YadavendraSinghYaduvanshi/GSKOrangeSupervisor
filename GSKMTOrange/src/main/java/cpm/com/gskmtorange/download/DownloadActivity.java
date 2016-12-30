@@ -71,7 +71,7 @@ public class DownloadActivity extends AppCompatActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
-        culture_id = preferences.getString(CommonString.KEY_CULTURE_ID, null);
+        culture_id = preferences.getString(CommonString.KEY_CULTURE_ID, "");
         new UploadTask(DownloadActivity.this).execute();
     }
 
@@ -256,7 +256,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "SUB_CATEGORY_MASTER";
                     }
-                    data.value = 20;
+                    data.value = 40;
                     data.name = "SUB_CATEGORY_MASTER Data Download";
                 }
                 publishProgress(data);
@@ -291,7 +291,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "CATEGORY_MASTER";
                     }
-                    data.value = 20;
+                    data.value = 50;
                     data.name = "CATEGORY_MASTER Data Download";
                 }
                 publishProgress(data);
@@ -326,7 +326,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "DISPLAY_MASTER";
                     }
-                    data.value = 20;
+                    data.value = 60;
                     data.name = "DISPLAY_MASTER Data Download";
                 }
                 publishProgress(data);
@@ -361,7 +361,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "MAPPING_STOCK";
                     }
-                    data.value = 20;
+                    data.value = 80;
                     data.name = "MAPPING_STOCK Data Download";
                 }
                 publishProgress(data);
@@ -396,7 +396,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "MAPPING_T2P";
                     }
-                    data.value = 20;
+                    data.value = 100;
                     data.name = "MAPPING_T2P Data Download";
                 }
                 publishProgress(data);
