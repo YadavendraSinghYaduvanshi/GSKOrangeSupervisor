@@ -1,4 +1,4 @@
-package cpm.com.gskmtorange.Database;
+package cpm.com.gskmtorange.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,6 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+
+
+import cpm.com.gskmtorange.gettersetter.StoreBean;
+import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
+
 
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.constant.CommonString;
@@ -21,6 +27,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
+
 
 /**
  * Created by ashishc on 29-12-2016.

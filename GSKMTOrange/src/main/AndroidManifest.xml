@@ -48,11 +48,17 @@
         <activity android:name=".download.DownloadActivity" />
 
         <activity
+
+            android:name=".geotag.GeoTagStoreList"
+            android:label="@string/title_activity_store_list_geotag"
+            android:theme="@style/AppTheme.NoActionBar" />
+
             android:name=".gsk_dailyentry.CategoryListActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <!--android:label="@string/title_activity_category_list"-->
+
 
         <activity
             android:name=".gsk_dailyentry.CategoryWisePerformanceActivity"

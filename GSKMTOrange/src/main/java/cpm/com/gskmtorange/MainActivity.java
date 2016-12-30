@@ -17,20 +17,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import cpm.com.gskmtorange.geotag.GeoTagStoreList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 
-import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
@@ -156,7 +156,15 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_upload) {
 
-        } else if (id == R.id.nav_geotag) {
+        }
+        else if (id == R.id.nav_geotag) {
+
+
+
+            Intent startDownload = 	new Intent(this,GeoTagStoreList.class);
+            startActivity(startDownload);
+
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
         } else if (id == R.id.nav_exit) {
 

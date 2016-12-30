@@ -3,7 +3,6 @@ package cpm.com.gskmtorange.dailyentry;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -24,8 +23,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import cpm.com.gskmtorange.Database.GSKOrangeDB;
-import cpm.com.gskmtorange.GetterSetter.StoreBean;
+import cpm.com.gskmtorange.database.GSKOrangeDB;
+import cpm.com.gskmtorange.gettersetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 

@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:cacheColorHint="#00000000"
             android:choiceMode="singleChoice"
-            android:divider="#ff9933"
+
             android:dividerHeight="2dp"
             android:drawSelectorOnTop="false"
             android:fastScrollEnabled="true"
