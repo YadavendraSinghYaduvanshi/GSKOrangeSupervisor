@@ -1,4 +1,4 @@
-package cpm.com.gskmtorange.GetterSetter;
+package cpm.com.gskmtorange.gettersetter;
 
 /**
  * Created by ashishc on 29-12-2016.
