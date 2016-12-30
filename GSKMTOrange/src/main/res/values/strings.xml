@@ -24,12 +24,22 @@
     <string name="select_language">Please select language</string>
     <string name="title_activity_select_language">SelectLanguageActivity</string>
 
+    <string name="title_activity_store_list_geotag">Store List</string>
+
+
     <string name="menu_daily_route_plan">Daily Route Plan</string>
     <string name="menu_daily_download">Daily Data Download</string>
     <string name="menu_upload_data">Upload Data</string>
     <string name="menu_geotag">Geo Tag</string>
+    <string name="menu_export">Data Export</string>
+
     <string name="menu_exit">Exit</string>
     <string name="menu_setting">Setting</string>
     <string name="menu_services">Services</string>
+
+    <string name="title_activity_category_list">Category List</string>
+    <string name="title_activity_category_wise_performance">CategoryWise Performance</string>
+    <string name="title_activity_daily_main_menu">DailyMainMenuActivity</string>
+    <string name="title_activity_msl__availability">MSL_AvailabilityActivity</string>
 
 </resources>

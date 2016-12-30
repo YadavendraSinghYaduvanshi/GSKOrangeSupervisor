@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
+import cpm.com.gskmtorange.dailyentry.StoreListActivity;
 import cpm.com.gskmtorange.download.DownloadActivity;
 
 public class MainActivity extends AppCompatActivity
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
 
         webView = (WebView) findViewById(R.id.webview);
 
-        String url = preferences.getString(CommonString.KEY_NOTICE_BOARD_LINK,"");
+        String url = preferences.getString(CommonString.KEY_NOTICE_BOARD_LINK, "");
         user_name = preferences.getString(CommonString.KEY_USERNAME, null);
         //user_type = preferences.getString(CommonString.KEY_USER_TYPE, null);
 
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
 
         webView.getSettings().setJavaScriptEnabled(true);
 
-        if(!url.equals("")){
+        if (!url.equals("")) {
 
             webView.loadUrl(url);
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
 
         View headerView = LayoutInflater.from(this).inflate(R.layout.nav_header_main, navigationView, false);
 
-        TextView tv_username = (TextView)  headerView.findViewById(R.id.nav_user_name);
+        TextView tv_username = (TextView) headerView.findViewById(R.id.nav_user_name);
         //tv_usertype = (TextView) headerView.findViewById(R.id.nav_user_type);
 
         tv_username.setText(user_name);
@@ -130,6 +130,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_route_plan) {
+
+            Intent startDownload = 	new Intent(this,StoreListActivity.class);
+            startActivity(startDownload);
+
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+
+
             // Handle the camera action
         } else if (id == R.id.nav_download) {
 
@@ -144,8 +151,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_services) {
 
-        }else if (id == R.id.nav_setting) {
-
+        } else if (id == R.id.nav_setting) {
+            startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
