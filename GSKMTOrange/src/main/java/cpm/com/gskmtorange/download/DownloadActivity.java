@@ -80,8 +80,7 @@ public class DownloadActivity extends AppCompatActivity {
         String name;
     }
 
-    private class UploadTask extends AsyncTask<Void , Data, String>{
-
+    private class UploadTask extends AsyncTask<Void, Data, String> {
         private Context context;
 
         UploadTask(Context context) {
@@ -101,75 +100,63 @@ public class DownloadActivity extends AppCompatActivity {
             message = (TextView) dialog.findViewById(R.id.message);
             dialog.setCancelable(false);
             dialog.show();
-
         }
 
         @Override
         protected String doInBackground(Void... voids) {
-
             try {
-
-                String resultHttp="";
+                String resultHttp = "";
                 data = new Data();
 
                 data.value = 10;
                 data.name = "JCP Data Downloading";
                 publishProgress(data);
 
-                XmlPullParserFactory factory = XmlPullParserFactory
-                        .newInstance();
+                XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                 factory.setNamespaceAware(true);
                 XmlPullParser xpp = factory.newPullParser();
 
-                SoapObject request = new SoapObject(CommonString.NAMESPACE,
-                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                SoapObject request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
                 request.addProperty("Type", "JOURNEY_PLAN");
                 request.addProperty("cultureid", culture_id);
 
-                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                        SoapEnvelope.VER11);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.dotNet = true;
                 envelope.setOutputSoapObject(request);
 
-                HttpTransportSE androidHttpTransport = new HttpTransportSE(
-                        CommonString.URL);
+                HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL,
-                        envelope);
                 Object result = (Object) envelope.getResponse();
 
-                if(result.toString()!=null){
-
+                if (result.toString() != null) {
                     //InputStream stream = new ByteArrayInputStream(result.toString().getBytes("UTF-8"));
 
-                   xpp.setInput(new StringReader(result.toString()));
-                   // xpp.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                   // xpp.setInput(stream,"UTF-8");
+                    xpp.setInput(new StringReader(result.toString()));
+                    // xpp.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                    // xpp.setInput(stream,"UTF-8");
                     xpp.next();
                     eventType = xpp.getEventType();
 
                     jcpgettersetter = XMLHandlers.JCPXMLHandler(xpp, eventType);
 
-                    if(jcpgettersetter.getSTORE_ID().size()>0){
+                    if (jcpgettersetter.getSTORE_ID().size() > 0) {
                         resultHttp = CommonString.KEY_SUCCESS;
                         String jcpTable = jcpgettersetter.getTable_journey_plan();
                         TableBean.setJourneyPlan(jcpTable);
-
-                    }else{
+                    } else {
                         return "JOURNEY_PLAN";
                     }
 
                     data.value = 10;
                     data.name = "JCP Data Downloading";
-
                 }
-                 publishProgress(data);
+                publishProgress(data);
+
 
                 // Store List Master
-                request = new SoapObject(CommonString.NAMESPACE,
-                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
-
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
                 request.addProperty("Type", "SKU_MASTER");
                 request.addProperty("cultureid", culture_id);
@@ -179,36 +166,33 @@ public class DownloadActivity extends AppCompatActivity {
                 envelope.setOutputSoapObject(request);
 
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                androidHttpTransport.call(
-                        CommonString.SOAP_ACTION_UNIVERSAL, envelope);
                 result = (Object) envelope.getResponse();
 
-                if(result.toString()!=null){
-                   xpp.setInput(new StringReader(result.toString()));
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
-                    skumastergettersetter =XMLHandlers.skuMasterXMLHandler(xpp, eventType);
-                    if(skumastergettersetter.getSKU_ID().size()>0){
+                    skumastergettersetter = XMLHandlers.skuMasterXMLHandler(xpp, eventType);
+                    if (skumastergettersetter.getSKU_ID().size() > 0) {
                         String skutable = skumastergettersetter.getTable_SKU_MASTER();
-                        if(skutable!=null){
+                        if (skutable != null) {
                             resultHttp = CommonString.KEY_SUCCESS;
                             TableBean.setSkuMaster(skutable);
                         }
-                    }else{
+                    } else {
                         return "SKU_MASTER";
                     }
 
                     data.value = 20;
                     data.name = "SKU_MASTER Data Download";
                 }
-
                 publishProgress(data);
 
-                // BRAND_MASTER
-                request = new SoapObject(CommonString.NAMESPACE,
-                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
 
+                // BRAND_MASTER
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
                 request.addProperty("Type", "BRAND_MASTER");
                 request.addProperty("cultureid", culture_id);
@@ -218,36 +202,33 @@ public class DownloadActivity extends AppCompatActivity {
                 envelope.setOutputSoapObject(request);
 
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                androidHttpTransport.call(
-                        CommonString.SOAP_ACTION_UNIVERSAL, envelope);
                 result = (Object) envelope.getResponse();
 
-                if(result.toString()!=null){
-                   xpp.setInput(new StringReader(result.toString()));
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
-                    brandMasterGetterSetter =XMLHandlers.brandMasterXMLHandler(xpp, eventType);
-                    if(brandMasterGetterSetter.getBRAND_ID().size()>0){
+                    brandMasterGetterSetter = XMLHandlers.brandMasterXMLHandler(xpp, eventType);
+                    if (brandMasterGetterSetter.getBRAND_ID().size() > 0) {
                         String brandtable = brandMasterGetterSetter.getTable_BRAND_MASTER();
-                        if(brandtable!=null){
+                        if (brandtable != null) {
                             resultHttp = CommonString.KEY_SUCCESS;
                             TableBean.setBrandMaster(brandtable);
                         }
-                    }else{
+                    } else {
                         return "BRAND_MASTER";
                     }
 
                     data.value = 30;
                     data.name = "BRAND_MASTER Data Download";
                 }
-
                 publishProgress(data);
 
-                // SUB_CATEGORY_MASTER
-                request = new SoapObject(CommonString.NAMESPACE,
-                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
 
+                // SUB_CATEGORY_MASTER
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
                 request.addProperty("Type", "SUB_CATEGORY_MASTER");
                 request.addProperty("cultureid", culture_id);
@@ -257,36 +238,32 @@ public class DownloadActivity extends AppCompatActivity {
                 envelope.setOutputSoapObject(request);
 
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                androidHttpTransport.call(
-                        CommonString.SOAP_ACTION_UNIVERSAL, envelope);
                 result = (Object) envelope.getResponse();
 
-                if(result.toString()!=null){
+                if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
-                    subCategoryMasterGetterSetter =XMLHandlers.subCategoryMasterXMLHandler(xpp, eventType);
-                    if(subCategoryMasterGetterSetter.getSUB_CATEGORY_ID().size()>0){
+                    subCategoryMasterGetterSetter = XMLHandlers.subCategoryMasterXMLHandler(xpp, eventType);
+                    if (subCategoryMasterGetterSetter.getSUB_CATEGORY_ID().size() > 0) {
                         String categorytable = subCategoryMasterGetterSetter.getTable_SUB_CATEGORY_MASTER();
-                        if(categorytable!=null){
+                        if (categorytable != null) {
                             resultHttp = CommonString.KEY_SUCCESS;
                             TableBean.setSubCategoryMaster(categorytable);
                         }
-                    }else{
+                    } else {
                         return "SUB_CATEGORY_MASTER";
                     }
-
                     data.value = 20;
                     data.name = "SUB_CATEGORY_MASTER Data Download";
                 }
-
                 publishProgress(data);
 
-                // CATEGORY_MASTER
-                request = new SoapObject(CommonString.NAMESPACE,
-                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
 
+                // CATEGORY_MASTER
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
                 request.addProperty("Type", "CATEGORY_MASTER");
                 request.addProperty("cultureid", culture_id);
@@ -296,36 +273,32 @@ public class DownloadActivity extends AppCompatActivity {
                 envelope.setOutputSoapObject(request);
 
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                androidHttpTransport.call(
-                        CommonString.SOAP_ACTION_UNIVERSAL, envelope);
                 result = (Object) envelope.getResponse();
 
-                if(result.toString()!=null){
-                   xpp.setInput(new StringReader(result.toString()));
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
-                    categoryMasterGetterSetter =XMLHandlers.categoryMasterXMLHandler(xpp, eventType);
-                    if(categoryMasterGetterSetter.getCATEGORY_ID().size()>0){
+                    categoryMasterGetterSetter = XMLHandlers.categoryMasterXMLHandler(xpp, eventType);
+                    if (categoryMasterGetterSetter.getCATEGORY_ID().size() > 0) {
                         String skutable = categoryMasterGetterSetter.getTable_CATEGORY_MASTER();
-                        if(skutable!=null){
+                        if (skutable != null) {
                             resultHttp = CommonString.KEY_SUCCESS;
                             TableBean.setCategoryMaster(skutable);
                         }
-                    }else{
+                    } else {
                         return "CATEGORY_MASTER";
                     }
-
                     data.value = 20;
                     data.name = "CATEGORY_MASTER Data Download";
                 }
-
                 publishProgress(data);
 
-                // DISPLAY_MASTER
-                request = new SoapObject(CommonString.NAMESPACE,
-                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
 
+                // DISPLAY_MASTER
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
                 request.addProperty("Type", "DISPLAY_MASTER");
                 request.addProperty("cultureid", culture_id);
@@ -335,36 +308,32 @@ public class DownloadActivity extends AppCompatActivity {
                 envelope.setOutputSoapObject(request);
 
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                androidHttpTransport.call(
-                        CommonString.SOAP_ACTION_UNIVERSAL, envelope);
                 result = (Object) envelope.getResponse();
 
-                if(result.toString()!=null){
-                xpp.setInput(new StringReader(result.toString()));
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
-                    displayMasterGetterSetter =XMLHandlers.displayMasterXMLHandler(xpp, eventType);
-                    if(displayMasterGetterSetter.getDISPLAY_ID().size()>0){
+                    displayMasterGetterSetter = XMLHandlers.displayMasterXMLHandler(xpp, eventType);
+                    if (displayMasterGetterSetter.getDISPLAY_ID().size() > 0) {
                         String display_table = displayMasterGetterSetter.getTable_DISPLAY_MASTER();
-                        if(display_table!=null){
+                        if (display_table != null) {
                             resultHttp = CommonString.KEY_SUCCESS;
                             TableBean.setDisplayMaster(display_table);
                         }
-                    }else{
+                    } else {
                         return "DISPLAY_MASTER";
                     }
-
                     data.value = 20;
                     data.name = "DISPLAY_MASTER Data Download";
                 }
-
                 publishProgress(data);
 
-                // MAPPING_STOCK
-                request = new SoapObject(CommonString.NAMESPACE,
-                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
 
+                // MAPPING_STOCK
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
                 request.addProperty("Type", "MAPPING_STOCK");
                 request.addProperty("cultureid", culture_id);
@@ -374,36 +343,32 @@ public class DownloadActivity extends AppCompatActivity {
                 envelope.setOutputSoapObject(request);
 
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                androidHttpTransport.call(
-                        CommonString.SOAP_ACTION_UNIVERSAL, envelope);
                 result = (Object) envelope.getResponse();
 
-                if(result.toString()!=null){
+                if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
-                    mappingStockGetterSetter =XMLHandlers.mappingStockXMLHandler(xpp, eventType);
-                    if(mappingStockGetterSetter.getSKU_ID().size()>0){
+                    mappingStockGetterSetter = XMLHandlers.mappingStockXMLHandler(xpp, eventType);
+                    if (mappingStockGetterSetter.getSKU_ID().size() > 0) {
                         String stocktable = mappingStockGetterSetter.getTable_MAPPING_STOCK();
-                        if(stocktable!=null){
+                        if (stocktable != null) {
                             resultHttp = CommonString.KEY_SUCCESS;
                             TableBean.setMappingStock(stocktable);
                         }
-                    }else{
+                    } else {
                         return "MAPPING_STOCK";
                     }
-
                     data.value = 20;
                     data.name = "MAPPING_STOCK Data Download";
                 }
-
                 publishProgress(data);
 
-                // MAPPING_T2P
-                request = new SoapObject(CommonString.NAMESPACE,
-                        CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
 
+                // MAPPING_T2P
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
                 request.addProperty("Type", "MAPPING_T2P");
                 request.addProperty("cultureid", culture_id);
@@ -413,84 +378,65 @@ public class DownloadActivity extends AppCompatActivity {
                 envelope.setOutputSoapObject(request);
 
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                androidHttpTransport.call(
-                        CommonString.SOAP_ACTION_UNIVERSAL, envelope);
                 result = (Object) envelope.getResponse();
 
-                if(result.toString()!=null){
-                   xpp.setInput(new StringReader(result.toString()));
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
                     xpp.next();
                     eventType = xpp.getEventType();
-                    mappingt2PGetterSetter =XMLHandlers.mappingT2pXMLHandler(xpp, eventType);
-                    if(mappingt2PGetterSetter.getSTORE_ID().size()>0){
+                    mappingt2PGetterSetter = XMLHandlers.mappingT2pXMLHandler(xpp, eventType);
+                    if (mappingt2PGetterSetter.getSTORE_ID().size() > 0) {
                         String t2ptable = mappingt2PGetterSetter.getTable_MAPPING_T2P();
-                        if(t2ptable!=null){
+                        if (t2ptable != null) {
                             resultHttp = CommonString.KEY_SUCCESS;
                             TableBean.setMappingT2p(t2ptable);
                         }
-                    }else{
+                    } else {
                         return "MAPPING_T2P";
                     }
-
                     data.value = 20;
                     data.name = "MAPPING_T2P Data Download";
                 }
-
                 publishProgress(data);
 
 
-
-
-
-
-
                 db.open();
-
                 db.InsertJCP(jcpgettersetter);
+                db.InsertCategory(categoryMasterGetterSetter);
+                db.InsertSubCategoryMaster(subCategoryMasterGetterSetter);
+                db.InsertBrandMaster(brandMasterGetterSetter);
+                db.InsertSkuMaster(skumastergettersetter);
+                db.InsertDisplayMaster(displayMasterGetterSetter);
+
+                db.InsertMAPPING_T2P(mappingt2PGetterSetter);
+                db.InsertMappingStock(mappingStockGetterSetter);
 
 
-
-
-
-
-
-
-
-
-
-
-
-            }catch (MalformedURLException e) {
-
+            } catch (MalformedURLException e) {
                 /*final AlertMessage message = new AlertMessage(
                         CompleteDownloadActivity.this,
                         AlertMessage.MESSAGE_EXCEPTION, "download", e);*/
                 runOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
                         // TODO Auto-generated method stub
                         showAlert(CommonString.MESSAGE_EXCEPTION);
                     }
                 });
-
             } catch (IOException e) {
                /* final AlertMessage message = new AlertMessage(
                         CompleteDownloadActivity.this,
                         AlertMessage.MESSAGE_SOCKETEXCEPTION, "socket", e);*/
 
                 runOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
                         showAlert(CommonString.MESSAGE_SOCKETEXCEPTION);
-
                     }
                 });
-            }
-
-            catch (Exception e) {
+            } catch (Exception e) {
              /*   final AlertMessage message = new AlertMessage(
                         CompleteDownloadActivity.this,
                         AlertMessage.MESSAGE_EXCEPTION, "download", e);*/
@@ -499,15 +445,12 @@ public class DownloadActivity extends AppCompatActivity {
                 e.printStackTrace();
                 e.getCause();*/
                 runOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
-
                         showAlert(CommonString.MESSAGE_EXCEPTION);
                     }
                 });
             }
-
             return "";
         }
 
@@ -518,7 +461,6 @@ public class DownloadActivity extends AppCompatActivity {
             pb.setProgress(values[0].value);
             percentage.setText(values[0].value + "%");
             message.setText(values[0].name);
-
         }
 
         @Override
@@ -526,7 +468,6 @@ public class DownloadActivity extends AppCompatActivity {
             super.onPostExecute(s);
 
             dialog.dismiss();
-
             finish();
         }
 
