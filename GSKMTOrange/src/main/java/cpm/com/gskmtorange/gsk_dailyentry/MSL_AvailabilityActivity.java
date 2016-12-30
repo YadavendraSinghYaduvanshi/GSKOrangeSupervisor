@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 
@@ -42,7 +43,9 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
     ExpandableListAdapter adapter;
 
-    String title;
+    GSKOrangeDB db;
+
+    String categoryName, categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +57,16 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        db = new GSKOrangeDB(this);
+        db.open();
+
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         txt_mslAvailabilityName = (TextView) findViewById(R.id.txt_mslAvailabilityName);
 
-        title = getIntent().getStringExtra("categoryName");
-        txt_mslAvailabilityName.setText(title);
+        categoryName = getIntent().getStringExtra("categoryName");
+        categoryId = getIntent().getStringExtra("categoryId");
+
+        txt_mslAvailabilityName.setText(categoryName);
 
         prepareList();
 
@@ -135,58 +143,22 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
     }
 
     private void prepareList() {
-        headerDataList = new ArrayList<>();
-
-        MSL_AvailabilityGetterSetter msl = new MSL_AvailabilityGetterSetter();
-        msl.setBrandName("Parodontax header 1");
-        msl.setMbq("1");
-        msl.setAvailable("No");
-        headerDataList.add(msl);
-
-        msl = new MSL_AvailabilityGetterSetter();
-        msl.setBrandName("Parodontax header 2");
-        msl.setMbq("2");
-        msl.setAvailable("Yes");
-        headerDataList.add(msl);
-
-        msl = new MSL_AvailabilityGetterSetter();
-        msl.setBrandName("Parodontax header 3");
-        msl.setMbq("3");
-        msl.setAvailable("Yes");
-        headerDataList.add(msl);
-
-        msl = new MSL_AvailabilityGetterSetter();
-        msl.setBrandName("Parodontax header 4");
-        msl.setMbq("4");
-        msl.setAvailable("No");
-        headerDataList.add(msl);
-
-
         hashMapListHeaderData = new ArrayList<>();
         hashMapListChildData = new HashMap<>();
 
-        if (headerDataList.size() > 0) {
+        //Header
+        headerDataList = db.getMSL_AvailabilityHeaderData(categoryId);
 
+        if (headerDataList.size() > 0) {
             for (int i = 0; i < headerDataList.size(); i++) {
                 hashMapListHeaderData.add(headerDataList.get(i));
 
-                childDataList = new ArrayList<>();
+                //childDataList = new ArrayList<>();
+                childDataList = db.getMSL_AvailabilitySKUData(categoryId, headerDataList.get(i).getBrand_id());
 
-                MSL_AvailabilityGetterSetter msl1 = new MSL_AvailabilityGetterSetter();
-                msl.setBrandName("Parodontax 1");
-                msl.setMbq("1");
-                msl.setAvailable("No");
-                childDataList.add(msl1);
-
-                msl1 = new MSL_AvailabilityGetterSetter();
-                msl.setBrandName("Parodontax 2");
-                msl.setMbq("2");
-                msl.setAvailable("No");
-                childDataList.add(msl1);
 
                 hashMapListChildData.put(hashMapListHeaderData.get(i), childDataList);
             }
-
         }
 
         adapter = new ExpandableListAdapter(this, hashMapListHeaderData, hashMapListChildData);
@@ -234,7 +206,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             ImageView img_camera = (ImageView) convertView.findViewById(R.id.img_camera);
 
             txt_categoryHeader.setTypeface(null, Typeface.BOLD);
-            txt_categoryHeader.setText(headerTitle.getBrandName());
+            txt_categoryHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
             /*img_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -304,15 +276,15 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 holder.lin_category = (LinearLayout) convertView.findViewById(R.id.lin_category);
 
                 holder.txt_skuName = (TextView) convertView.findViewById(R.id.txt_skuName);
-                holder.ed_mbq = (EditText) convertView.findViewById(R.id.ed_mbq);
+                holder.txt_mbq = (TextView) convertView.findViewById(R.id.txt_mbq);
                 holder.toggle_available = (ToggleButton) convertView.findViewById(R.id.toggle_available);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.txt_skuName.setText(childData.getBrandName());
-            holder.ed_mbq.setText(childData.getMbq());
+            holder.txt_skuName.setText(childData.getSku());
+            holder.txt_mbq.setText(childData.getMrp());
 
             holder.toggle_available.setTextOff("No");
             holder.toggle_available.setTextOn("Yes");
@@ -332,9 +304,8 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
     }
 
     public class ViewHolder {
-        EditText ed_mbq;
         CardView cardView;
-        TextView txt_skuName;
+        TextView txt_skuName, txt_mbq;
         ToggleButton toggle_available;
         LinearLayout lin_category;
     }

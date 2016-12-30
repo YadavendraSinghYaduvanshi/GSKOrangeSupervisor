@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +26,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
     TextView txt_categoryName;
     RecyclerView recyclerView;
 
-    String categoryName = "";
+    String categoryName = "", categoryId;
 
     ArrayList<CategoryWisePerformaceGetterSetter> categoryWisePerformanceList;
     CategoryWisePerformaceAdapter adapter;
@@ -44,6 +45,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
 
         categoryName = getIntent().getStringExtra("categoryName");
+        categoryId = getIntent().getStringExtra("categoryId");
 
         txt_categoryName.setText("CategoryWise Performance " + categoryName);
 
@@ -51,10 +53,9 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-/*                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
                 Intent intent = new Intent(CategoryWisePerformanceActivity.this, DailyDataMenuActivity.class);
                 intent.putExtra("categoryName", categoryName);
+                intent.putExtra("categoryId", categoryId);
                 startActivity(intent);
             }
         });

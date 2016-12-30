@@ -22,14 +22,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryGetterSetter;
 
 public class CategoryListActivity extends AppCompatActivity {
     RecyclerView recyclerView;
+    TextView txt_categoryName;
+
     ArrayList<CategoryGetterSetter> categoryList;
     CategoryListAdapter adapter;
-    TextView txt_categoryName;
+
+    GSKOrangeDB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,9 @@ public class CategoryListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        db = new GSKOrangeDB(this);
+        db.open();
 
         txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
         txt_categoryName.setText("Category List");
@@ -61,7 +68,7 @@ public class CategoryListActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         categoryList = new ArrayList<>();
 
-        CategoryGetterSetter data = new CategoryGetterSetter();
+        /*CategoryGetterSetter data = new CategoryGetterSetter();
         data.setCategory_name("Oral Health");
         data.setCategory_img(R.drawable.category);
         categoryList.add(data);
@@ -74,7 +81,9 @@ public class CategoryListActivity extends AppCompatActivity {
         data = new CategoryGetterSetter();
         data.setCategory_name("Wellness");
         data.setCategory_img(R.drawable.category);
-        categoryList.add(data);
+        categoryList.add(data);*/
+
+        categoryList = db.getCategoryListData("1", "1", "1");
 
         adapter = new CategoryListAdapter(CategoryListActivity.this, categoryList);
         recyclerView.setAdapter(adapter);
@@ -103,21 +112,19 @@ public class CategoryListActivity extends AppCompatActivity {
         public void onBindViewHolder(MyViewHolder holder, int position) {
             final CategoryGetterSetter categoryData = list.get(position);
 
-            holder.categoryName.setText(categoryData.getCategory_name());
-            holder.categoryIcon.setImageResource(categoryData.getCategory_img());
+            holder.categoryName.setText(categoryData.getCategory());
+            holder.categoryIcon.setImageResource(R.drawable.category);
 
             holder.lay_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(CategoryListActivity.this, CategoryWisePerformanceActivity.class);
-                    intent.putExtra("categoryName", categoryData.getCategory_name());
+                    intent.putExtra("categoryName", categoryData.getCategory());
+                    intent.putExtra("categoryId", categoryData.getCategory_id());
                     startActivity(intent);
                 }
             });
-
-
         }
-
 
         @Override
         public int getItemCount() {

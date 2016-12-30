@@ -30,7 +30,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
     ArrayList<DailyDataMenuGetterSetter> categoryList;
     DailyDataMenuAdapter adapter;
     TextView txt_categoryName;
-    String categoryName = "";
+    String categoryName = "", categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +46,18 @@ public class DailyDataMenuActivity extends AppCompatActivity {
         txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
 
         categoryName = getIntent().getStringExtra("categoryName");
+        categoryId = getIntent().getStringExtra("categoryId");
 
         txt_categoryName.setText("Daily Data Menu - " + categoryName);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
     }
 
     @Override
@@ -136,11 +137,13 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                     if (dailyData.getCategory_name().equalsIgnoreCase("MSL Availability")) {
                         Intent intent = new Intent(DailyDataMenuActivity.this, MSL_AvailabilityActivity.class);
                         intent.putExtra("categoryName", dailyData.getCategory_name());
+                        intent.putExtra("categoryId", categoryId);
                         startActivity(intent);
                     } else if (dailyData.getCategory_name().equalsIgnoreCase("Stock & Facing")) {
-                        Intent intent1 = new Intent(DailyDataMenuActivity.this, Stock_FacingActivity.class);
-                        intent1.putExtra("categoryName", dailyData.getCategory_name());
-                        startActivity(intent1);
+                        Intent intent = new Intent(DailyDataMenuActivity.this, Stock_FacingActivity.class);
+                        intent.putExtra("categoryName", dailyData.getCategory_name());
+                        intent.putExtra("categoryId", categoryId);
+                        startActivity(intent);
                     }
 
                 }
