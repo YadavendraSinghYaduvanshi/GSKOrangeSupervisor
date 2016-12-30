@@ -9,24 +9,19 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-
-import cpm.com.gskmtorange.gettersetter.StoreBean;
+import cpm.com.gskmtorange.getterSetter.StoreBean;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
 
-
-import cpm.com.gskmtorange.GetterSetter.StoreBean;
-import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.CategoryGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayMasterGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
+
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
+
 
 
 /**
