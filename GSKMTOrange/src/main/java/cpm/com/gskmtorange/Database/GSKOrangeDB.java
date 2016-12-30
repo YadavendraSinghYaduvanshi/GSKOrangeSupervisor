@@ -47,7 +47,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
     public void deleteTableWithStoreID(String storeid, String process_id) {
-
     }
 
     public void deleteAllTables() {
@@ -101,15 +100,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             Log.d("Exception in JCP", ex.toString());
         }
     }
-
-
-
-
-
-
-
-
-
 
     public ArrayList<StoreBean> getStoreData(String date) {
 
@@ -188,14 +178,5 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         return list;
     }
-
-
-
-
-
-
-
-
-
 
 }
