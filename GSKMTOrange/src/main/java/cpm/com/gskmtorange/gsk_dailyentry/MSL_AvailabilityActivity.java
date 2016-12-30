@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -70,7 +71,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
         prepareList();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +83,15 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int lastItem = firstVisibleItem + visibleItemCount;
+
+                if (firstVisibleItem == 0) {
+                    fab.setVisibility(View.VISIBLE);
+                } else if (lastItem == totalItemCount) {
+                    fab.setVisibility(View.INVISIBLE);
+                } else {
+                    fab.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -139,7 +149,6 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
 
     private void prepareList() {
@@ -264,7 +273,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         @Override
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                                  View convertView, ViewGroup parent) {
-            MSL_AvailabilityGetterSetter childData = (MSL_AvailabilityGetterSetter) getChild(groupPosition, childPosition);
+            final MSL_AvailabilityGetterSetter childData = (MSL_AvailabilityGetterSetter) getChild(groupPosition, childPosition);
             ViewHolder holder = null;
 
             if (convertView == null) {
@@ -284,10 +293,29 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             }
 
             holder.txt_skuName.setText(childData.getSku());
-            holder.txt_mbq.setText(childData.getMrp());
+            holder.txt_mbq.setText(childData.getMbq());
 
             holder.toggle_available.setTextOff("No");
             holder.toggle_available.setTextOn("Yes");
+
+            if (childData.getToggleValue().equals("1")) {
+                holder.toggle_available.setChecked(true);
+            } else {
+                holder.toggle_available.setChecked(false);
+            }
+
+            holder.toggle_available.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        childData.setToggleValue("1");
+                    } else {
+                        childData.setToggleValue("0");
+                    }
+
+                    expandableListView.invalidateViews();
+                }
+            });
 
             return convertView;
         }

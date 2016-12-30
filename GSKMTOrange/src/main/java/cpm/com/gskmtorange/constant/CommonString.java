@@ -16,7 +16,6 @@ public class CommonString {
     public static final String KEY_STOREVISITED_STATUS = "STOREVISITED_STATUS";
 
 
-
     public static final String KEY_PATH = "path";
     public static final String KEY_VERSION = "APP_VERSION";
 
@@ -53,5 +52,23 @@ public class CommonString {
     public static final String MESSAGE_EXCEPTION = "Problem Occured : Report The Problem To Parinaam ";
     public static final String MESSAGE_SOCKETEXCEPTION = "Network Communication Failure. Check Your Network Connection";
 
+    public static final String TABLE_INSERT_MSL_AVAILABILITY = "Msl_Availability_Data";
+
+    public static final String CREATE_TABLE_INSERT_MSL_AVAILABILITY = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_MSL_AVAILABILITY
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "Common_ID"
+            + " VARCHAR,"
+
+            + "POST_WORK_IMAGE"
+            + " VARCHAR,"
+
+            + "POST_WORK_IMAGE1"
+            + " VARCHAR"
+
+            + ")";
 
 }

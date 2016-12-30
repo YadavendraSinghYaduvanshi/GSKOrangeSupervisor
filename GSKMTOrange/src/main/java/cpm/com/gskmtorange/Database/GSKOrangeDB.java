@@ -419,7 +419,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("Select DISTINCT SK.SKU_ID,SK.SKU,SK.MRP,SK.SKU_SEQUENCE " +
+            dbcursor = db.rawQuery("Select DISTINCT SK.SKU_ID,SK.SKU,SK.MRP,SK.SKU_SEQUENCE,M.MBQ " +
                     "from MAPPING_STOCK M " +
                     "inner join SKU_MASTER SK " +
                     "on M.SKU_ID=SK.SKU_ID " +
@@ -441,6 +441,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
                     cd.setMrp(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MRP")));
                     cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
+                    cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
+                    cd.setToggleValue("0");
 
                     list.add(cd);
                     dbcursor.moveToNext();
