@@ -24,7 +24,7 @@
     <string name="select_language">Please select language</string>
     <string name="title_activity_select_language">SelectLanguageActivity</string>
 
-    <string name="title_activity_store_list_geotag">StoreListActivity</string>
+    <string name="title_activity_store_list_geotag">Store List</string>
 
 
     <string name="menu_daily_route_plan">Daily Route Plan</string>

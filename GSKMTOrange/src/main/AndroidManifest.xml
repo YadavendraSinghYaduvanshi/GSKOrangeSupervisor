@@ -40,7 +40,6 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".autoupdate.AutoUpdateActivity" />
-
         <activity
             android:name=".SelectLanguageActivity"
             android:label="@string/title_activity_select_language"
@@ -75,6 +74,10 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <!--android:label="@string/title_activity_msl__availability"-->
+        <activity
+            android:name=".dailyentry.StoreListActivity"
+            android:label="@string/title_activity_store_list_geotag"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".gsk_dailyentry.Stock_FacingActivity"

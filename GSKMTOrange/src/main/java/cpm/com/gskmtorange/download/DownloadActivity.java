@@ -25,6 +25,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 
+
+import cpm.com.gskmtorange.Database.GSKOrangeDB;
+import cpm.com.gskmtorange.LoginActivity;
+
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
@@ -45,7 +49,7 @@ public class DownloadActivity extends AppCompatActivity {
     private TextView percentage, message;
     Data data;
     int eventType;
-
+    GSKOrangeDB db;
     private SharedPreferences preferences = null;
     String userId, culture_id;
 
@@ -62,6 +66,8 @@ public class DownloadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
+
+        db = new GSKOrangeDB(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
@@ -432,6 +438,28 @@ public class DownloadActivity extends AppCompatActivity {
                 }
 
                 publishProgress(data);
+
+
+
+
+
+
+
+                db.open();
+
+                db.InsertJCP(jcpgettersetter);
+
+
+
+
+
+
+
+
+
+
+
+
 
             }catch (MalformedURLException e) {
 

@@ -53,6 +53,7 @@ public class GeoTagActivity   extends AppCompatActivity {
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         //mapFragment.getMapAsync(this);
+       // mapFragment.getMapAsync(this);
 
 
 

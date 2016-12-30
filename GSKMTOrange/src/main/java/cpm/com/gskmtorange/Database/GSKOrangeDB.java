@@ -2,10 +2,15 @@ package cpm.com.gskmtorange.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
+import cpm.com.gskmtorange.GetterSetter.StoreBean;
+import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlHandlers.TableBean;
 
@@ -96,5 +101,101 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             Log.d("Exception in JCP", ex.toString());
         }
     }
+
+
+
+
+
+
+
+
+
+
+    public ArrayList<StoreBean> getStoreData(String date) {
+
+
+        ArrayList<StoreBean> list = new ArrayList<StoreBean>();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT  * from JOURNEY_PLAN  where VISIT_DATE ='" + date + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    StoreBean sb = new StoreBean();
+
+                    sb.setSTORE_ID(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("STORE_ID")));
+
+                    sb.setEMP_ID((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("EMP_ID"))));
+
+                    sb.setKEYACCOUNT(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("KEYACCOUNT")));
+
+                    sb.setSTORE_NAME(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("STORE_NAME")));
+
+                    sb.setADDRESS((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("ADDRESS"))));
+                    sb.setCITY(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CITY")));
+
+                    sb.setSTORETYPE(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("STORETYPE")));
+
+                    sb.setCLASSIFICATION(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CLASSIFICATION")));
+
+                    sb.setKEYACCOUNT_ID(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("KEYACCOUNT_ID")));
+
+                    sb.setSTORETYPE_ID(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("STORETYPE_ID")));
+
+                    sb.setCLASS_ID(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CLASS_ID")));
+
+                    sb.setVISIT_DATE(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("VISIT_DATE")));
+
+                    sb.setCAMERA_ALLOW(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CAMERA_ALLOW")));
+
+                    sb.setUPLOAD_STATUS(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("UPLOAD_STATUS")));
+                    sb.setCHECKOUT_STATUS(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CHECKOUT_STATUS")));
+
+                    sb.setGEO_TAG(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("GEO_TAG")));
+
+
+                    list.add(sb);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+
+        } catch (Exception e) {
+            Log.d("Exception get JCP!", e.toString());
+            return list;
+        }
+
+
+        return list;
+    }
+
+
+
+
+
+
+
+
+
 
 }
