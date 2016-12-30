@@ -13,14 +13,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
+import cpm.com.gskmtorange.geotag.GeoTagStoreList;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
 import cpm.com.gskmtorange.download.DownloadActivity;
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        }
+        //}
 
         else if (id == R.id.nav_export) {
 

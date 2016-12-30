@@ -26,8 +26,7 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 
 
-import cpm.com.gskmtorange.Database.GSKOrangeDB;
-import cpm.com.gskmtorange.LoginActivity;
+import cpm.com.gskmtorange.database.GSKOrangeDB;
 
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;

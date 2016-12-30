@@ -11,7 +11,7 @@
     android:paddingRight="@dimen/custom_margin"
     android:paddingTop="@dimen/custom_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cpm.com.gskmtorange.GeoTag.GeoTagActivity"
+    tools:context="cpm.com.gskmtorange.geotag.GeoTagActivity"
     tools:showIn="@layout/activity_geo_tag">
 
 </fragment>

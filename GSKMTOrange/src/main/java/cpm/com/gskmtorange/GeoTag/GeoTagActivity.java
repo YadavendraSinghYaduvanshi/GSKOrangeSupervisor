@@ -1,4 +1,4 @@
-package cpm.com.gskmtorange.GeoTag;
+package cpm.com.gskmtorange.geotag;
 
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -9,10 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import cpm.com.gskmtorange.R;

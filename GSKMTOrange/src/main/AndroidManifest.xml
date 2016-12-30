@@ -44,7 +44,7 @@
         <activity android:name=".download.DownloadActivity"></activity>
 
         <activity
-            android:name=".GeoTag.GeoTagStoreList"
+            android:name=".geotag.GeoTagStoreList"
             android:label="@string/title_activity_store_list_geotag"
             android:theme="@style/AppTheme.NoActionBar" />
 
