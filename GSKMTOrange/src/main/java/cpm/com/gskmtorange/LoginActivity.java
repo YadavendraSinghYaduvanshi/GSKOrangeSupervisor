@@ -5,10 +5,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.preference.PreferenceManager;
@@ -50,6 +53,7 @@ import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.autoupdate.AutoUpdateActivity;
 import cpm.com.gskmtorange.constant.CommonString;
@@ -580,6 +584,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else{
 
+                        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
                         Intent intent = new Intent(getBaseContext(),
                                 MainActivity.class);
                         startActivity(intent);
@@ -637,6 +643,31 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private static boolean updateResources(Context context, String language) {
 
+        String lang ;
+
+        if(language.equals("English")){
+            lang = "EN";
+        }
+        else if(language.equals("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
 }
 
