@@ -49,12 +49,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(TableBean.getJourneyPlan());
+
+        //Gagan
         db.execSQL(TableBean.getBrandMaster());
         db.execSQL(TableBean.getSkuMaster());
         db.execSQL(TableBean.getCategoryMaster());
         db.execSQL(TableBean.getSubCategoryMaster());
         db.execSQL(TableBean.getDisplayMaster());
-
         db.execSQL(TableBean.getMappingStock());
         db.execSQL(TableBean.getMappingT2p());
     }
