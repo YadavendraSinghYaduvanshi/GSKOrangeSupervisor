@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
-import cpm.com.gskmtorange.xmlHandlers.TableBean;
+import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
 
 /**
  * Created by ashishc on 29-12-2016.
