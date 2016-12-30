@@ -1,6 +1,7 @@
 package cpm.com.gskmtorange.geotag;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -79,6 +80,12 @@ public class GeoTagStoreList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+
+
+                Intent in =new Intent(GeoTagStoreList.this,GeoTagActivity.class);
+
+              startActivity(in);
+                finish();
 
 
                 Toast.makeText(getApplicationContext(),"Click",Toast.LENGTH_LONG).show();
