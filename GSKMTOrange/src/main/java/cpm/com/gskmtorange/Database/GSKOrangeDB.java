@@ -1,4 +1,4 @@
-package cpm.com.gskmtorange.database;
+package cpm.com.gskmtorange.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import cpm.com.gskmtorange.getterSetter.StoreBean;
+import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
 
