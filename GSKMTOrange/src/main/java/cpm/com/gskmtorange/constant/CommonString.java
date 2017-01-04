@@ -66,6 +66,9 @@ public class CommonString {
             + "Category_Id"
             + " VARCHAR,"
 
+            + "Brand_Id"
+            + " VARCHAR,"
+
             + "SKU_ID"
             + " VARCHAR,"
 
@@ -130,6 +133,9 @@ public class CommonString {
             + " VARCHAR,"
 
             + "Category_Id"
+            + " VARCHAR,"
+
+            + "Brand_Id"
             + " VARCHAR,"
 
             + "SKU_ID"

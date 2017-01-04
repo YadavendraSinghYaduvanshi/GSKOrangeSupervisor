@@ -104,8 +104,13 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 db.open();
+                                //db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
 
-                                db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                if (db.checkStockAndFacingData(storeId, categoryId)) {
+                                    db.updateStockAndFacing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                } else {
+                                    db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                }
 
                                 Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
                                 finish();
@@ -201,17 +206,22 @@ public class Stock_FacingActivity extends AppCompatActivity {
         hashMapListHeaderData = new ArrayList<>();
         hashMapListChildData = new HashMap<>();
 
-        //Header
-        headerDataList = db.getStockAndFacingHeaderData(categoryId);
+        //Header Data
+        headerDataList = db.getStockAndFacingHeader_AfterSaveData(categoryId);
+        if (!(headerDataList.size() > 0)) {
+            headerDataList = db.getStockAndFacingHeaderData(categoryId);
+        }
 
         if (headerDataList.size() > 0) {
 
             for (int i = 0; i < headerDataList.size(); i++) {
                 hashMapListHeaderData.add(headerDataList.get(i));
 
-                //childDataList = new ArrayList<>();
-                childDataList = db.getStockAndFacingSKUData(categoryId, headerDataList.get(i).getBrand_id());
-
+                //Child Data
+                childDataList = db.getStockAndFacingSKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id());
+                if (!(childDataList.size() > 0)) {
+                    childDataList = db.getStockAndFacingSKUData(categoryId, headerDataList.get(i).getBrand_id());
+                }
 
                 hashMapListChildData.put(hashMapListHeaderData.get(i), childDataList);
             }

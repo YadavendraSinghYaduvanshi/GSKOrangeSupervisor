@@ -88,7 +88,11 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 db.open();
 
-                                db.InsertMSL_Availability(storeId,categoryId, hashMapListHeaderData, hashMapListChildData);
+                                if (db.checkMsl_AvailabilityData(storeId, categoryId)) {
+                                    db.updateMSL_Availability(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                } else {
+                                    db.InsertMSL_Availability(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                }
 
                                 Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
                                 finish();
@@ -202,8 +206,10 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 hashMapListHeaderData.add(headerDataList.get(i));
 
                 //childDataList = new ArrayList<>();
-                childDataList = db.getMSL_AvailabilitySKUData(categoryId, headerDataList.get(i).getBrand_id());
-
+                childDataList = db.getMSL_AvailabilitySKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id());
+                if (!(childDataList.size() > 0)) {
+                    childDataList = db.getMSL_AvailabilitySKUData(categoryId, headerDataList.get(i).getBrand_id());
+                }
 
                 hashMapListChildData.put(hashMapListHeaderData.get(i), childDataList);
             }

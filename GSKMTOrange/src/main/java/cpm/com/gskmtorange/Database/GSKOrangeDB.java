@@ -480,6 +480,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     values.put("Store_Id", storeId);
                     values.put("Category_Id", categoryId);
+                    values.put("Brand_Id", hashMapListHeaderData.get(i).getBrand_id());
                     values.put("SKU_ID", data.getSku_id());
                     values.put("SKU", data.getSku());
                     values.put("SKU_SEQUENCE", data.getSku_sequence());
@@ -487,6 +488,98 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     values.put("TOGGLE_VALUE", data.getToggleValue());
 
                     db.insert(CommonString.TABLE_INSERT_MSL_AVAILABILITY, null, values);
+                }
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        } catch (Exception ex) {
+            Log.d("Exception ", " in Insert MSL_Availability " + ex.toString());
+        }
+    }
+
+    public ArrayList<MSL_AvailabilityGetterSetter> getMSL_AvailabilitySKU_AfterSaveData(String category_id, String brand_id) {
+        ArrayList<MSL_AvailabilityGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Msl_Availability_Data " +
+                    "where category_id='" + category_id + "' and Brand_Id='" + brand_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    MSL_AvailabilityGetterSetter cd = new MSL_AvailabilityGetterSetter();
+
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
+                    cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
+                    cd.setToggleValue(dbcursor.getString(dbcursor.getColumnIndexOrThrow("TOGGLE_VALUE")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_Availability Sku After Save Data!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public boolean checkMsl_AvailabilityData(String store_id, String category_id) {
+        Log.d("MSL_Availability ", "Stock data--------------->Start<------------");
+        ArrayList<MSL_AvailabilityGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Msl_Availability_Data " +
+                    "where category_id='" + category_id + "' and Store_Id='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                if (dbcursor.moveToFirst()) {
+                    do {
+                        MSL_AvailabilityGetterSetter sb = new MSL_AvailabilityGetterSetter();
+
+                        sb.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                        list.add(sb);
+                    } while (dbcursor.moveToNext());
+                }
+                dbcursor.close();
+
+                if (list.size() > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "when fetching Records!!!!!!!!!!!!!!!!!!!!!" + e.toString());
+            return false;
+        }
+
+        Log.d("MSL_Availability ", "midday---------------------->Stop<-----------");
+        return false;
+    }
+
+    public void updateMSL_Availability(String storeId, String categoryId, List<MSL_AvailabilityGetterSetter> hashMapListHeaderData,
+                                       HashMap<MSL_AvailabilityGetterSetter, List<MSL_AvailabilityGetterSetter>> hashMapListChildData) {
+        ContentValues values = new ContentValues();
+
+        try {
+            db.beginTransaction();
+            for (int i = 0; i < hashMapListHeaderData.size(); i++) {
+
+                for (int j = 0; j < hashMapListChildData.get(hashMapListHeaderData.get(i)).size(); j++) {
+                    MSL_AvailabilityGetterSetter data = hashMapListChildData.get(hashMapListHeaderData.get(i)).get(j);
+
+                    values.put("TOGGLE_VALUE", data.getToggleValue());
+
+                    db.update(CommonString.TABLE_INSERT_MSL_AVAILABILITY, values,
+                            "Brand_Id ='" + hashMapListHeaderData.get(i).getBrand_id() + "' AND SKU_ID ='" + data.getSku_id() +
+                                    "' AND Category_Id='" + categoryId + "'", null);
                 }
             }
             db.setTransactionSuccessful();
@@ -611,6 +704,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     values.put("Store_Id", storeId);
                     values.put("Category_Id", categoryId);
+                    values.put("Brand_Id", hashMapListHeaderData.get(i).getBrand_id());
                     values.put("SKU_ID", data.getSku_id());
                     values.put("SKU", data.getSku());
                     values.put("SKU_SEQUENCE", data.getSku_sequence());
@@ -620,6 +714,144 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     values.put("FACEUP_VALUE", data.getFacing());
 
                     db.insert(CommonString.TABLE_INSERT_STOCK_FACING_CHILD, null, values);
+                }
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        } catch (Exception ex) {
+            Log.d("Exception ", " in Insert MSL_Availability " + ex.toString());
+        }
+    }
+
+    public ArrayList<Stock_FacingGetterSetter> getStockAndFacingHeader_AfterSaveData(String category_id) {
+        ArrayList<Stock_FacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Stock_Facing_Header_Data " +
+                    "where category_id='" + category_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    Stock_FacingGetterSetter cd = new Stock_FacingGetterSetter();
+
+                    cd.setSub_category_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
+                    cd.setSub_category(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
+                    cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
+                    cd.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND")));
+                    cd.setImage1(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE1")));
+                    cd.setImage2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE2")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get after save Stock_FacingHeader!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public ArrayList<Stock_FacingGetterSetter> getStockAndFacingSKU_AfterSaveData(String category_id, String brand_id) {
+        ArrayList<Stock_FacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Stock_Facing_Child_Data " +
+                    "where category_id='" + category_id + "' and Brand_Id='" + brand_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    Stock_FacingGetterSetter cd = new Stock_FacingGetterSetter();
+
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
+                    cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+                    cd.setStock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STOCK_VALUE")));
+                    cd.setFacing(dbcursor.getString(dbcursor.getColumnIndexOrThrow("FACEUP_VALUE")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get Stock_Facing Sku After Save Data!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public boolean checkStockAndFacingData(String store_id, String category_id) {
+        Log.d("Stock_Facing ", "Stock data--------------->Start<------------");
+        ArrayList<Stock_FacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Stock_Facing_Child_Data " +
+                    "where category_id='" + category_id + "' and Store_Id='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                if (dbcursor.moveToFirst()) {
+                    do {
+                        Stock_FacingGetterSetter sb = new Stock_FacingGetterSetter();
+
+                        sb.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                        list.add(sb);
+                    } while (dbcursor.moveToNext());
+                }
+                dbcursor.close();
+
+                if (list.size() > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "when fetching Records!!!!!!!!!!!!!!!!!!!!!" + e.toString());
+            return false;
+        }
+
+        Log.d("Stock_Facing ", "midday---------------------->Stop<-----------");
+        return false;
+    }
+
+    public void updateStockAndFacing(String storeId, String categoryId, List<Stock_FacingGetterSetter> hashMapListHeaderData,
+                                     HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> hashMapListChildData) {
+        ContentValues values = new ContentValues();
+        ContentValues values1 = new ContentValues();
+
+        try {
+            db.beginTransaction();
+            for (int i = 0; i < hashMapListHeaderData.size(); i++) {
+                Stock_FacingGetterSetter data1 = hashMapListHeaderData.get(i);
+
+                values1.put("IMAGE1", data1.getImage1());
+                values1.put("IMAGE2", data1.getImage2());
+
+                //db.insert(CommonString.TABLE_INSERT_STOCK_FACING_HEADER, null, values1);
+                db.update(CommonString.TABLE_INSERT_STOCK_FACING_HEADER, values1,
+                        "Category_Id='" + categoryId + "'", null);
+
+                for (int j = 0; j < hashMapListChildData.get(hashMapListHeaderData.get(i)).size(); j++) {
+                    Stock_FacingGetterSetter data = hashMapListChildData.get(hashMapListHeaderData.get(i)).get(j);
+
+                    values.put("STOCK_VALUE", data.getStock());
+                    values.put("FACEUP_VALUE", data.getFacing());
+
+                    //db.insert(CommonString.TABLE_INSERT_STOCK_FACING_CHILD, null, values);
+                    db.update(CommonString.TABLE_INSERT_STOCK_FACING_CHILD, values,
+                            "Brand_Id ='" + hashMapListHeaderData.get(i).getBrand_id() + "' AND SKU_ID ='" + data.getSku_id() +
+                                    "' AND Category_Id='" + categoryId + "'", null);
                 }
             }
             db.setTransactionSuccessful();
