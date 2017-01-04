@@ -60,13 +60,97 @@ public class CommonString {
             + "KEY_ID"
             + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
 
-            + "Common_ID"
+            + "Store_Id"
             + " VARCHAR,"
 
-            + "POST_WORK_IMAGE"
+            + "Category_Id"
             + " VARCHAR,"
 
-            + "POST_WORK_IMAGE1"
+            + "SKU_ID"
+            + " VARCHAR,"
+
+            + "SKU"
+            + " VARCHAR,"
+
+            + "SKU_SEQUENCE"
+            + " VARCHAR,"
+
+            + "MBQ"
+            + " VARCHAR,"
+
+            + "TOGGLE_VALUE"
+            + " VARCHAR"
+
+            + ")";
+
+
+    public static final String TABLE_INSERT_STOCK_FACING_HEADER = "Stock_Facing_Header_Data";
+
+    public static final String CREATE_TABLE_INSERT_STOCK_FACING_HEADER = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_STOCK_FACING_HEADER
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "Store_Id"
+            + " VARCHAR,"
+
+            + "Category_Id"
+            + " VARCHAR,"
+
+            + "SUB_CATEGORY_ID"
+            + " VARCHAR,"
+
+            + "SUB_CATEGORY"
+            + " VARCHAR,"
+
+            + "BRAND_ID"
+            + " VARCHAR,"
+
+            + "BRAND"
+            + " VARCHAR,"
+
+            + "IMAGE1"
+            + " VARCHAR,"
+
+            + "IMAGE2"
+            + " VARCHAR"
+
+            + ")";
+
+    public static final String TABLE_INSERT_STOCK_FACING_CHILD = "Stock_Facing_Child_Data";
+
+    public static final String CREATE_TABLE_INSERT_STOCK_FACING_CHILD = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_STOCK_FACING_CHILD
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "Store_Id"
+            + " VARCHAR,"
+
+            + "Category_Id"
+            + " VARCHAR,"
+
+            + "SKU_ID"
+            + " VARCHAR,"
+
+            + "SKU"
+            + " VARCHAR,"
+
+            + "SKU_SEQUENCE"
+            + " VARCHAR,"
+
+            + "MBQ"
+            + " VARCHAR,"
+
+            + "COMPANY_ID"
+            + " VARCHAR,"
+
+            + "STOCK_VALUE"
+            + " VARCHAR,"
+
+            + "FACEUP_VALUE"
             + " VARCHAR"
 
             + ")";

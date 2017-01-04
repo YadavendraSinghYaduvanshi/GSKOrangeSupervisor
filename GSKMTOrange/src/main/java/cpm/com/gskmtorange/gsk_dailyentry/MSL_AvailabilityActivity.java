@@ -1,6 +1,8 @@
 package cpm.com.gskmtorange.gsk_dailyentry;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
@@ -46,7 +49,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
     GSKOrangeDB db;
 
-    String categoryName, categoryId;
+    String categoryName, categoryId, storeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
         categoryName = getIntent().getStringExtra("categoryName");
         categoryId = getIntent().getStringExtra("categoryId");
+        storeId = "";
 
         txt_mslAvailabilityName.setText(categoryName);
 
@@ -75,8 +79,43 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                //if (validateData(listDataHeader, listDataChild)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
+                builder.setMessage("Are you sure you want to save")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                db.open();
+
+                                db.InsertMSL_Availability(storeId,categoryId, hashMapListHeaderData, hashMapListChildData);
+
+                                Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
+                                finish();
+                                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+                /*} else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
+                    builder.setMessage("Fill the value or fill 0 ")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }*/
+
             }
         });
 
@@ -103,7 +142,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                     getCurrentFocus().clearFocus();
                 }
 
-                expandableListView.invalidateViews();
+                //expandableListView.invalidateViews();
             }
         });
 
@@ -287,6 +326,10 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 holder.txt_skuName = (TextView) convertView.findViewById(R.id.txt_skuName);
                 holder.txt_mbq = (TextView) convertView.findViewById(R.id.txt_mbq);
                 holder.toggle_available = (ToggleButton) convertView.findViewById(R.id.toggle_available);
+
+                holder.toggle_available.setTextOff("No");
+                holder.toggle_available.setTextOn("Yes");
+
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -295,14 +338,11 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             holder.txt_skuName.setText(childData.getSku());
             holder.txt_mbq.setText(childData.getMbq());
 
-            holder.toggle_available.setTextOff("No");
-            holder.toggle_available.setTextOn("Yes");
-
-            if (childData.getToggleValue().equals("1")) {
-                holder.toggle_available.setChecked(true);
+            /*if (childData.getToggleValue().equals("1")) {
+                holder.toggle_available.setText("Yes");
             } else {
-                holder.toggle_available.setChecked(false);
-            }
+                holder.toggle_available.setText("No");
+            }*/
 
             holder.toggle_available.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -316,6 +356,12 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                     expandableListView.invalidateViews();
                 }
             });
+
+            if (childData.getToggleValue().equals("1")) {
+                holder.toggle_available.setChecked(true);
+            } else {
+                holder.toggle_available.setChecked(false);
+            }
 
             return convertView;
         }
