@@ -71,7 +71,8 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         categoryId = getIntent().getStringExtra("categoryId");
         storeId = "";
 
-        txt_mslAvailabilityName.setText(categoryName);
+        //txt_mslAvailabilityName.setText(categoryName);
+        txt_mslAvailabilityName.setText(getResources().getString(R.string.title_activity_msl__availability));
 
         prepareList();
 

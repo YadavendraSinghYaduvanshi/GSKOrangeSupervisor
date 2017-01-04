@@ -47,7 +47,8 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         categoryName = getIntent().getStringExtra("categoryName");
         categoryId = getIntent().getStringExtra("categoryId");
 
-        txt_categoryName.setText("CategoryWise Performance " + categoryName);
+        //txt_categoryName.setText("CategoryWise Performance " + categoryName);
+        txt_categoryName.setText(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

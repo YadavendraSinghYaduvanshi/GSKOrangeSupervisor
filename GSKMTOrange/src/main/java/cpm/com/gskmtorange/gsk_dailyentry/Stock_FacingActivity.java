@@ -84,7 +84,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
         categoryId = getIntent().getStringExtra("categoryId");
         storeId = "";
 
-        txt_stockFacingName.setText(categoryName);
+        //txt_stockFacingName.setText(categoryName);
+        txt_stockFacingName.setText(getResources().getString(R.string.title_activity_stock_facing));
 
         prepareList();
 

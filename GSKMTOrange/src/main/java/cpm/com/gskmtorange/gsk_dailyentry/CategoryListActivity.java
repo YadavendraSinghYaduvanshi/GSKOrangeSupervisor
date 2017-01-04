@@ -49,7 +49,8 @@ public class CategoryListActivity extends AppCompatActivity {
         db.open();
 
         txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
-        txt_categoryName.setText("Category List");
+        //txt_categoryName.setText("Category List");
+        txt_categoryName.setText(getResources().getString(R.string.title_activity_category_list));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,21 +68,6 @@ public class CategoryListActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         categoryList = new ArrayList<>();
-
-        /*CategoryGetterSetter data = new CategoryGetterSetter();
-        data.setCategory_name("Oral Health");
-        data.setCategory_img(R.drawable.category);
-        categoryList.add(data);
-
-        data = new CategoryGetterSetter();
-        data.setCategory_name("Nutritionals");
-        data.setCategory_img(R.drawable.category);
-        categoryList.add(data);
-
-        data = new CategoryGetterSetter();
-        data.setCategory_name("Wellness");
-        data.setCategory_img(R.drawable.category);
-        categoryList.add(data);*/
 
         categoryList = db.getCategoryListData("1", "1", "1");
 
