@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2"
+                android:weightSum="3"
                 android:background="@color/grey_background"
                 android:padding="5dp">
 
@@ -55,7 +55,7 @@
                     android:id="@+id/spinner_brand"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="2"/>
 
 
 
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2"
+                android:weightSum="3"
                 android:background="@color/grey_background"
                 android:padding="5dp">
 
@@ -81,7 +81,7 @@
                     android:id="@+id/spinner_sku"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="2"/>
 
 
 
@@ -91,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2"
+                android:weightSum="3"
                 android:background="@color/grey_background"
                 android:padding="5dp">
 
@@ -107,7 +107,8 @@
                     android:id="@+id/et_stock"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="2"
+                    android:inputType="number"/>
 
 
 
@@ -120,6 +121,7 @@
                 android:background="@color/grey_background">
 
                 <Button
+                    android:id="@+id/btn_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"

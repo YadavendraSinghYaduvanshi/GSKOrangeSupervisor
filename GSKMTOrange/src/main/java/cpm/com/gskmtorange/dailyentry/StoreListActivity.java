@@ -115,10 +115,14 @@ public class StoreListActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
+               
+
         if (id == android.R.id.home) {
 
             // NavUtils.navigateUpFromSameTask(this);
             finish();
+
 
             overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
 
