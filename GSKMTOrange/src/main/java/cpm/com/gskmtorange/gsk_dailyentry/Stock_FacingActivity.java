@@ -1,6 +1,8 @@
 package cpm.com.gskmtorange.gsk_dailyentry;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -28,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
@@ -38,6 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
@@ -52,11 +56,13 @@ public class Stock_FacingActivity extends AppCompatActivity {
     HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> hashMapListChildData;
 
     ExpandableListAdapter adapter;
+    GSKOrangeDB db;
 
-    String title;
+    String categoryName, categoryId, storeId;
 
     String path = "", str = "", _pathforcheck = "", img1 = "";
     static int child_position = -1;
+    boolean isDialogOpen = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +74,18 @@ public class Stock_FacingActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        db = new GSKOrangeDB(this);
+        db.open();
+
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         txt_stockFacingName = (TextView) findViewById(R.id.txt_stockFacingName);
 
-        title = getIntent().getStringExtra("categoryName");
-        txt_stockFacingName.setText(title);
+        categoryName = getIntent().getStringExtra("categoryName");
+        categoryId = getIntent().getStringExtra("categoryId");
+        storeId = "";
+
+        //txt_stockFacingName.setText(categoryName);
+        txt_stockFacingName.setText(getResources().getString(R.string.title_activity_stock_facing));
 
         prepareList();
 
@@ -82,8 +95,49 @@ public class Stock_FacingActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+
+                //if (validateData(listDataHeader, listDataChild)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
+                builder.setMessage("Are you sure you want to save")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                db.open();
+                                //db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+
+                                if (db.checkStockAndFacingData(storeId, categoryId)) {
+                                    db.updateStockAndFacing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                } else {
+                                    db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                }
+
+                                Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
+                                finish();
+                                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+                /*} else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
+                    builder.setMessage("Fill the value or fill 0 ")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }*/
             }
         });
 
@@ -150,58 +204,28 @@ public class Stock_FacingActivity extends AppCompatActivity {
     }
 
     private void prepareList() {
-        headerDataList = new ArrayList<>();
-
-        Stock_FacingGetterSetter msl = new Stock_FacingGetterSetter();
-        msl.setBrandName("Parodontax header 1");
-        msl.setMbq("1");
-        msl.setAvailable("No");
-        headerDataList.add(msl);
-
-        msl = new Stock_FacingGetterSetter();
-        msl.setBrandName("Parodontax header 2");
-        msl.setMbq("2");
-        msl.setAvailable("Yes");
-        headerDataList.add(msl);
-
-        msl = new Stock_FacingGetterSetter();
-        msl.setBrandName("Parodontax header 3");
-        msl.setMbq("3");
-        msl.setAvailable("Yes");
-        headerDataList.add(msl);
-
-        msl = new Stock_FacingGetterSetter();
-        msl.setBrandName("Parodontax header 4");
-        msl.setMbq("4");
-        msl.setAvailable("No");
-        headerDataList.add(msl);
-
-
         hashMapListHeaderData = new ArrayList<>();
         hashMapListChildData = new HashMap<>();
+
+        //Header Data
+        headerDataList = db.getStockAndFacingHeader_AfterSaveData(categoryId);
+        if (!(headerDataList.size() > 0)) {
+            headerDataList = db.getStockAndFacingHeaderData(categoryId);
+        }
 
         if (headerDataList.size() > 0) {
 
             for (int i = 0; i < headerDataList.size(); i++) {
                 hashMapListHeaderData.add(headerDataList.get(i));
 
-                childDataList = new ArrayList<>();
-
-                Stock_FacingGetterSetter msl1 = new Stock_FacingGetterSetter();
-                msl.setBrandName("Parodontax 1");
-                msl.setMbq("1");
-                msl.setAvailable("No");
-                childDataList.add(msl1);
-
-                msl1 = new Stock_FacingGetterSetter();
-                msl.setBrandName("Parodontax 2");
-                msl.setMbq("2");
-                msl.setAvailable("No");
-                childDataList.add(msl1);
+                //Child Data
+                childDataList = db.getStockAndFacingSKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id());
+                if (!(childDataList.size() > 0)) {
+                    childDataList = db.getStockAndFacingSKUData(categoryId, headerDataList.get(i).getBrand_id());
+                }
 
                 hashMapListChildData.put(hashMapListHeaderData.get(i), childDataList);
             }
-
         }
 
         adapter = new ExpandableListAdapter(this, hashMapListHeaderData, hashMapListChildData);
@@ -252,7 +276,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
             ImageView img_edit = (ImageView) convertView.findViewById(R.id.img_edit);
 
             txt_stockFaceupHeader.setTypeface(null, Typeface.BOLD);
-            txt_stockFaceupHeader.setText(headerTitle.getBrandName());
+            txt_stockFaceupHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
             img_camera1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -338,7 +362,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
         @Override
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                                  View convertView, ViewGroup parent) {
-            Stock_FacingGetterSetter childData = (Stock_FacingGetterSetter) getChild(groupPosition, childPosition);
+            final Stock_FacingGetterSetter childData = (Stock_FacingGetterSetter) getChild(groupPosition, childPosition);
             ViewHolder holder = null;
 
             if (convertView == null) {
@@ -357,8 +381,100 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.txt_skuName.setText(childData.getBrandName());
-            holder.ed_stock.setText(childData.getMbq());
+            holder.txt_skuName.setText(childData.getSku());
+
+            if (childData.getCompany_id().equals("1")) {
+                holder.txt_skuName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            } else {
+                holder.txt_skuName.setTextColor(getResources().getColor(R.color.black));
+            }
+
+
+            if (childData.getStock().equals("0")) {
+                holder.ed_facing.setEnabled(false);
+            } else {
+                holder.ed_facing.setEnabled(true);
+            }
+
+            final ViewHolder finalHolder = holder;
+            holder.ed_stock.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+
+                    final EditText caption = (EditText) v;
+                    String edStock = caption.getText().toString();
+
+                    if (!edStock.equals("")) {
+                        String stock = edStock.replaceFirst("^0+(?!$)", "");
+                        childData.setStock(stock);
+
+                        if (edStock.equals("0")) {
+                            childData.setFacing("0");
+
+                            finalHolder.ed_facing.setEnabled(false);
+                        } else {
+                            childData.setFacing(childData.getFacing());
+                            finalHolder.ed_facing.setEnabled(true);
+                        }
+                    } else {
+                        childData.setStock("");
+                        finalHolder.ed_facing.setEnabled(true);
+                    }
+                }
+            });
+
+            holder.ed_stock.setText(childData.getStock());
+
+            holder.ed_facing.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    final EditText caption = (EditText) v;
+                    final String edFaceup = caption.getText().toString().replaceFirst("^0+(?!$)", "");
+
+                    if (!childData.getStock().equals("")) {
+                        if (!edFaceup.equals("")) {
+                            if (Integer.parseInt(edFaceup) <= Integer.parseInt(childData.getStock())) {
+                                childData.setFacing(edFaceup);
+                            } else {
+                                if (isDialogOpen) {
+                                    isDialogOpen = !isDialogOpen;
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
+                                    builder.setMessage("Faceup can not be greater than stock value")
+                                            .setCancelable(false)
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.dismiss();
+                                                    isDialogOpen = !isDialogOpen;
+                                                }
+                                            });
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                }
+                            }
+                        } else {
+                            childData.setFacing("");
+                        }
+                    } else {
+                        if (isDialogOpen) {
+                            isDialogOpen = !isDialogOpen;
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
+                            builder.setMessage("First fill the stock value")
+                                    .setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                            isDialogOpen = !isDialogOpen;
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+                    }
+                }
+            });
+
+            holder.ed_facing.setText(childData.getFacing());
+
 
             return convertView;
         }

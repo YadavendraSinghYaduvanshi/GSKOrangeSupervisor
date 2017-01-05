@@ -30,7 +30,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
     ArrayList<DailyDataMenuGetterSetter> categoryList;
     DailyDataMenuAdapter adapter;
     TextView txt_categoryName;
-    String categoryName = "";
+    String categoryName = "", categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +46,19 @@ public class DailyDataMenuActivity extends AppCompatActivity {
         txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
 
         categoryName = getIntent().getStringExtra("categoryName");
+        categoryId = getIntent().getStringExtra("categoryId");
 
-        txt_categoryName.setText("Daily Data Menu - " + categoryName);
+        //txt_categoryName.setText("Daily Data Menu - " + categoryName);
+        txt_categoryName.setText(getResources().getString(R.string.title_activity_daily_main_menu) + " - " + categoryName);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
     }
 
     @Override
@@ -66,37 +68,44 @@ public class DailyDataMenuActivity extends AppCompatActivity {
         categoryList = new ArrayList<>();
 
         DailyDataMenuGetterSetter data = new DailyDataMenuGetterSetter();
-        data.setCategory_name("MSL Availability");
+        //data.setCategory_name("MSL Availability");
+        data.setCategory_name(getResources().getString(R.string.daily_data_menu_msl_availability));
         data.setCategory_img(R.drawable.category);
         categoryList.add(data);
 
         data = new DailyDataMenuGetterSetter();
-        data.setCategory_name("Stock & Facing");
+        data.setCategory_name(getResources().getString(R.string.daily_data_menu_stock_facing));
+        //data.setCategory_name("Stock & Facing");
         data.setCategory_img(R.drawable.category);
         categoryList.add(data);
 
         data = new DailyDataMenuGetterSetter();
-        data.setCategory_name("T2P Compliance");
+        data.setCategory_name(getResources().getString(R.string.daily_data_menu_t2p));
+        //data.setCategory_name("T2P Compliance");
         data.setCategory_img(R.drawable.category);
         categoryList.add(data);
 
         data = new DailyDataMenuGetterSetter();
-        data.setCategory_name("Additional Visibility");
+        data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_visibility));
+        //data.setCategory_name("Additional Visibility");
         data.setCategory_img(R.drawable.category);
         categoryList.add(data);
 
         data = new DailyDataMenuGetterSetter();
-        data.setCategory_name("Promo Compliance");
+        data.setCategory_name(getResources().getString(R.string.daily_data_menu_promo_compliance));
+        //data.setCategory_name("Promo Compliance");
         data.setCategory_img(R.drawable.category);
         categoryList.add(data);
 
         data = new DailyDataMenuGetterSetter();
-        data.setCategory_name("Competition Visibility");
+        data.setCategory_name(getResources().getString(R.string.daily_data_menu_competition_tracking));
+        //data.setCategory_name("Competition Tracking");
         data.setCategory_img(R.drawable.category);
         categoryList.add(data);
 
         data = new DailyDataMenuGetterSetter();
-        data.setCategory_name("Competition Promo");
+        data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_promotions));
+        //data.setCategory_name("Competition Promo");
         data.setCategory_img(R.drawable.category);
         categoryList.add(data);
 
@@ -133,16 +142,17 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             holder.lay_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (dailyData.getCategory_name().equalsIgnoreCase("MSL Availability")) {
+                    if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_msl_availability))) {
                         Intent intent = new Intent(DailyDataMenuActivity.this, MSL_AvailabilityActivity.class);
                         intent.putExtra("categoryName", dailyData.getCategory_name());
+                        intent.putExtra("categoryId", categoryId);
                         startActivity(intent);
-                    } else if (dailyData.getCategory_name().equalsIgnoreCase("Stock & Facing")) {
-                        Intent intent1 = new Intent(DailyDataMenuActivity.this, Stock_FacingActivity.class);
-                        intent1.putExtra("categoryName", dailyData.getCategory_name());
-                        startActivity(intent1);
+                    } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_stock_facing))) {
+                        Intent intent = new Intent(DailyDataMenuActivity.this, Stock_FacingActivity.class);
+                        intent.putExtra("categoryName", dailyData.getCategory_name());
+                        intent.putExtra("categoryId", categoryId);
+                        startActivity(intent);
                     }
-
                 }
             });
         }
