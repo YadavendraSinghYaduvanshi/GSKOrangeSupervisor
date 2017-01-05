@@ -56,15 +56,17 @@ public class Stock_FacingActivity extends AppCompatActivity {
     ArrayList<Stock_FacingGetterSetter> childDataList;
     List<Stock_FacingGetterSetter> hashMapListHeaderData;
     HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> hashMapListChildData;
+    List<Integer> checkHeaderArray = new ArrayList<>();
 
     ExpandableListAdapter adapter;
     GSKOrangeDB db;
 
-    String categoryName, categoryId, storeId;
+    String categoryName, categoryId, storeId, Error_Message = "";
 
     String path = "", str = "", _pathforcheck = "", img1 = "", img2 = "";
     static int child_position = -1;
     boolean isDialogOpen = true;
+    boolean checkflag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,43 +95,41 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
         str = CommonString.FILE_PATH + _pathforcheck;
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
 
-                //if (validateData(listDataHeader, listDataChild)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                builder.setMessage("Are you sure you want to save")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                db.open();
-                                //db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                if (validateData(hashMapListHeaderData, hashMapListChildData)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
+                    builder.setMessage("Are you sure you want to save")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    db.open();
 
-                                if (db.checkStockAndFacingData(storeId, categoryId)) {
-                                    db.updateStockAndFacing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
-                                } else {
-                                    db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                    if (db.checkStockAndFacingData(storeId, categoryId)) {
+                                        db.updateStockAndFacing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                    } else {
+                                        db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                    }
+
+                                    Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
+                                    finish();
+                                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                                 }
-
-                                Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
-                                finish();
-                                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
-
-                /*} else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
                     builder.setMessage("Fill the value or fill 0 ")
                             .setCancelable(false)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -139,13 +139,22 @@ public class Stock_FacingActivity extends AppCompatActivity {
                             });
                     AlertDialog alert = builder.create();
                     alert.show();
-                }*/
+                }
             }
         });
 
         expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int lastItem = firstVisibleItem + visibleItemCount;
+
+                if (firstVisibleItem == 0) {
+                    fab.setVisibility(View.VISIBLE);
+                } else if (lastItem == totalItemCount) {
+                    fab.setVisibility(View.INVISIBLE);
+                } else {
+                    fab.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -335,13 +344,14 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 img_camera2.setBackgroundResource(R.drawable.ic_menu_gallery);
             }
 
-            /*if (!checkflag) {
+
+            if (!checkflag) {
                 if (checkHeaderArray.contains(groupPosition)) {
-                    txt_header.setTextColor(getResources().getColor(R.color.red));
+                    txt_stockFaceupHeader.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
                 } else {
-                    txt_header.setTextColor(getResources().getColor(R.color.grey_dark));
+                    txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.black));
                 }
-            }*/
+            }
 
             return convertView;
         }
@@ -477,6 +487,29 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
             holder.ed_facing.setText(childData.getFacing());
 
+            if (!checkflag) {
+                boolean tempflag = false;
+
+                if (holder.ed_stock.getText().toString().equals("")) {
+                    holder.ed_stock.setBackgroundColor(getResources().getColor(R.color.white));
+                    holder.ed_stock.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    holder.ed_stock.setHint("Empty");
+                    tempflag = true;
+                }
+
+                if (holder.ed_facing.getText().toString().equals("")) {
+                    holder.ed_facing.setBackgroundColor(getResources().getColor(R.color.white));
+                    holder.ed_facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    holder.ed_facing.setHint("Empty");
+                    tempflag = true;
+                }
+
+                if (tempflag) {
+                    holder.cardView.setCardBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                } else {
+                    holder.cardView.setCardBackgroundColor(getResources().getColor(R.color.white));
+                }
+            }
 
             return convertView;
         }
@@ -497,6 +530,65 @@ public class Stock_FacingActivity extends AppCompatActivity {
         CardView cardView;
         TextView txt_skuName;
         LinearLayout lin_category;
+    }
+
+    boolean validateData(List<Stock_FacingGetterSetter> listDataHeader,
+                         HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listDataChild) {
+        boolean flag = true;
+        checkHeaderArray.clear();
+
+        for (int i = 0; i < listDataHeader.size(); i++) {
+            String imagePath = listDataHeader.get(i).getImage1();
+            String imagePath1 = listDataHeader.get(i).getImage2();
+
+            for (int j = 0; j < listDataChild.get(listDataHeader.get(i)).size(); j++) {
+                String stock = listDataChild.get(listDataHeader.get(i)).get(j).getStock();
+                String faceup = listDataChild.get(listDataHeader.get(i)).get(j).getFacing();
+
+                if (!imagePath.equals("") || !imagePath1.equals("")) {
+                    if (!stock.equals("0")) {
+                        if (stock.equals("") || faceup.equals("")) {
+                            if (!checkHeaderArray.contains(i)) {
+                                checkHeaderArray.add(i);
+                            }
+
+                            flag = false;
+                            Error_Message = "Please fill all the data";
+                            break;
+                        }
+                    } else {
+                        if (stock.equals("")) {
+                            if (!checkHeaderArray.contains(i)) {
+                                checkHeaderArray.add(i);
+                            }
+
+                            flag = false;
+                            Error_Message = "Please fill all the data";
+                            break;
+                        }
+                    }
+                } else {
+                    if (!checkHeaderArray.contains(i)) {
+                        checkHeaderArray.add(i);
+                    }
+
+                    flag = false;
+                    Error_Message = "Please click either 1 image";
+                    break;
+                }
+            }
+
+            if (flag == false) {
+                checkflag = false;
+                break;
+            } else {
+                checkflag = true;
+            }
+        }
+        //expListView.invalidate();
+        adapter.notifyDataSetChanged();
+
+        return checkflag;
     }
 
     private void startCameraActivity1(int position) {
