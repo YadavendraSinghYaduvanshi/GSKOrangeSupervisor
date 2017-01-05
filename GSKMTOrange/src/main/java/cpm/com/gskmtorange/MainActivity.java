@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
         } else if (id == R.id.nav_setting) {
-            startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
+            //startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
         } else if (id == R.id.nav_export) {
 
             AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);

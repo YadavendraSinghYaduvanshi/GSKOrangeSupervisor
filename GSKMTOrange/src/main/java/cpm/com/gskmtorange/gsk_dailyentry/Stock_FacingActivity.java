@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -61,12 +63,15 @@ public class Stock_FacingActivity extends AppCompatActivity {
     ExpandableListAdapter adapter;
     GSKOrangeDB db;
 
-    String categoryName, categoryId, storeId, Error_Message = "";
+    String categoryName, categoryId, Error_Message = "";
 
     String path = "", str = "", _pathforcheck = "", img1 = "", img2 = "";
     static int child_position = -1;
     boolean isDialogOpen = true;
     boolean checkflag = true;
+
+    private SharedPreferences preferences;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +89,19 @@ public class Stock_FacingActivity extends AppCompatActivity {
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         txt_stockFacingName = (TextView) findViewById(R.id.txt_stockFacingName);
 
+        //preference data
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
+        visit_date = preferences.getString(CommonString.KEY_DATE, null);
+        date = preferences.getString(CommonString.KEY_DATE, null);
+        username = preferences.getString(CommonString.KEY_USERNAME, null);
+        intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
+        keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
+        class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
+        storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+
         categoryName = getIntent().getStringExtra("categoryName");
         categoryId = getIntent().getStringExtra("categoryId");
-        storeId = "";
 
         //txt_stockFacingName.setText(categoryName);
         txt_stockFacingName.setText(getResources().getString(R.string.title_activity_stock_facing));
@@ -110,10 +125,10 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int id) {
                                     db.open();
 
-                                    if (db.checkStockAndFacingData(storeId, categoryId)) {
-                                        db.updateStockAndFacing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                    if (db.checkStockAndFacingData(store_id, categoryId)) {
+                                        db.updateStockAndFacing(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
                                     } else {
-                                        db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                        db.InsertStock_Facing(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
                                     }
 
                                     Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
@@ -292,10 +307,10 @@ public class Stock_FacingActivity extends AppCompatActivity {
             img_camera1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String date = new Date().toLocaleString().toString();
-                    String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+                    //String date = new Date().toLocaleString().toString();
+                    //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
 
-                    _pathforcheck = "Stock_Cam1_" + storeId + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck = "Stock_Cam1_" + store_id + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
                     child_position = groupPosition;
                     path = str + _pathforcheck;
 
@@ -320,10 +335,10 @@ public class Stock_FacingActivity extends AppCompatActivity {
             img_camera2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String date = new Date().toLocaleString().toString();
-                    String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+                    //String date = new Date().toLocaleString().toString();
+                    //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
 
-                    _pathforcheck = "Stock_Cam1_" + storeId + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck = "Stock_Cam2_" + store_id + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
                     child_position = groupPosition;
                     path = str + _pathforcheck;
 
