@@ -16,7 +16,6 @@ public class CommonString {
     public static final String KEY_STOREVISITED_STATUS = "STOREVISITED_STATUS";
 
 
-
     public static final String KEY_PATH = "path";
     public static final String KEY_VERSION = "APP_VERSION";
 
@@ -53,5 +52,113 @@ public class CommonString {
     public static final String MESSAGE_EXCEPTION = "Problem Occured : Report The Problem To Parinaam ";
     public static final String MESSAGE_SOCKETEXCEPTION = "Network Communication Failure. Check Your Network Connection";
 
+    public static final String TABLE_INSERT_MSL_AVAILABILITY = "Msl_Availability_Data";
+
+    public static final String CREATE_TABLE_INSERT_MSL_AVAILABILITY = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_MSL_AVAILABILITY
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "Store_Id"
+            + " VARCHAR,"
+
+            + "Category_Id"
+            + " VARCHAR,"
+
+            + "Brand_Id"
+            + " VARCHAR,"
+
+            + "SKU_ID"
+            + " VARCHAR,"
+
+            + "SKU"
+            + " VARCHAR,"
+
+            + "SKU_SEQUENCE"
+            + " VARCHAR,"
+
+            + "MBQ"
+            + " VARCHAR,"
+
+            + "TOGGLE_VALUE"
+            + " VARCHAR"
+
+            + ")";
+
+
+    public static final String TABLE_INSERT_STOCK_FACING_HEADER = "Stock_Facing_Header_Data";
+
+    public static final String CREATE_TABLE_INSERT_STOCK_FACING_HEADER = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_STOCK_FACING_HEADER
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "Store_Id"
+            + " VARCHAR,"
+
+            + "Category_Id"
+            + " VARCHAR,"
+
+            + "SUB_CATEGORY_ID"
+            + " VARCHAR,"
+
+            + "SUB_CATEGORY"
+            + " VARCHAR,"
+
+            + "BRAND_ID"
+            + " VARCHAR,"
+
+            + "BRAND"
+            + " VARCHAR,"
+
+            + "IMAGE1"
+            + " VARCHAR,"
+
+            + "IMAGE2"
+            + " VARCHAR"
+
+            + ")";
+
+    public static final String TABLE_INSERT_STOCK_FACING_CHILD = "Stock_Facing_Child_Data";
+
+    public static final String CREATE_TABLE_INSERT_STOCK_FACING_CHILD = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_STOCK_FACING_CHILD
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "Store_Id"
+            + " VARCHAR,"
+
+            + "Category_Id"
+            + " VARCHAR,"
+
+            + "Brand_Id"
+            + " VARCHAR,"
+
+            + "SKU_ID"
+            + " VARCHAR,"
+
+            + "SKU"
+            + " VARCHAR,"
+
+            + "SKU_SEQUENCE"
+            + " VARCHAR,"
+
+            + "MBQ"
+            + " VARCHAR,"
+
+            + "COMPANY_ID"
+            + " VARCHAR,"
+
+            + "STOCK_VALUE"
+            + " VARCHAR,"
+
+            + "FACEUP_VALUE"
+            + " VARCHAR"
+
+            + ")";
 
 }
