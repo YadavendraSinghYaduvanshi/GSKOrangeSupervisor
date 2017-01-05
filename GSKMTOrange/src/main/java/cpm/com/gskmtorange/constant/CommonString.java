@@ -1,5 +1,7 @@
 package cpm.com.gskmtorange.constant;
 
+import android.os.Environment;
+
 /**
  * Created by yadavendras on 19-12-2016.
  */
@@ -52,6 +54,11 @@ public class CommonString {
     public static final String MESSAGE_EXCEPTION = "Problem Occured : Report The Problem To Parinaam ";
     public static final String MESSAGE_SOCKETEXCEPTION = "Network Communication Failure. Check Your Network Connection";
 
+    //File Path
+    public static final String FILE_PATH = Environment.getExternalStorageDirectory() + "/GSK_MT_ORANGE_IMAGES/";
+
+
+    //Table
     public static final String TABLE_INSERT_MSL_AVAILABILITY = "Msl_Availability_Data";
 
     public static final String CREATE_TABLE_INSERT_MSL_AVAILABILITY = "CREATE TABLE IF NOT EXISTS "
