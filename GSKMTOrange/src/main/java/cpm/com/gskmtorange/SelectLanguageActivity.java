@@ -122,9 +122,11 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
     private static boolean updateResources(Context context, String language) {
         String lang;
 
-        if (language.equalsIgnoreCase("English")) {
+        if(language.equalsIgnoreCase("English")){
             lang = "EN";
-        } else if (language.equalsIgnoreCase("UAE")) {
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+
             lang = "AR";
         } else {
             lang = "TR";
