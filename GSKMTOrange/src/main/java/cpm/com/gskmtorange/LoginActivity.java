@@ -641,6 +641,7 @@ public class LoginActivity extends AppCompatActivity {
 
         return intime;
 
+
     }
 
     private static boolean updateResources(Context context, String language) {

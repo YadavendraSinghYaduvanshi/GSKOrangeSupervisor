@@ -1,4 +1,4 @@
-package cpm.com.gskmtorange.geotag;
+package cpm.com.gskmtorange.GeoTag;
 
 import android.content.SharedPreferences;
 import android.location.Location;
