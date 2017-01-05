@@ -21,6 +21,19 @@
         completions."
     </string>
 
+    <string name="save">Save</string>
+
+    <string name="brand">Brand</string>
+    <string name="display">Display</string>
+    <string name="image">Image</string>
+    <string name="gaps">Gaps</string>
+    <string name="sku">Sku</string>
+    <string name="ref_image">Ref. Image</string>
+    <string name="present">Present</string>
+    <string name="stock">Stock</string>
+    <string name="select">Select</string>
+    <string name="add">Add</string>
+
     <string name="select_language">Please select language</string>
     <string name="title_activity_select_language">SelectLanguageActivity</string>
 
@@ -40,9 +53,31 @@
     <string name="menu_services">Services</string>
 
     <string name="title_activity_category_list">Category List</string>
-    <string name="title_activity_category_wise_performance">CategoryWise Performance</string>
-    <string name="title_activity_daily_main_menu">DailyMainMenuActivity</string>
-    <string name="title_activity_msl__availability">MSL_AvailabilityActivity</string>
+    <string name="title_activity_t2_pcompliance">T2P Compliance</string>
+
+    <string name="title_activity_category_wise_performance">Categorywise Performance</string>
+    <string name="title_activity_daily_main_menu">Daily Data Menu</string>
+    <string name="title_activity_msl__availability">Must Stock Availability</string>
+    <string name="title_activity_stock_facing">Stock and Facing</string>
+
+    <string name="daily_data_menu_msl_availability">MSL Availability</string>
+    <string name="daily_data_menu_stock_facing">Stock and Facing</string>
+    <string name="daily_data_menu_t2p">T2P Compliance</string>
+    <string name="daily_data_menu_additional_visibility">Additional Visibility</string>
+    <string name="daily_data_menu_promo_compliance">Promo Compliance</string>
+    <string name="daily_data_menu_competition_tracking">Competition Visibility</string>
+    <string name="daily_data_menu_additional_promotions">Competition Promo</string>
+
+    <string name="msl_availability_sku">SKU Name</string>
+    <string name="msl_availability_mbq">MBQ</string>
+    <string name="msl_availability_availability">Availability</string>
+
+    <string name="stock_facing_reference_image">Reference Image</string>
+    <string name="stock_facing_sku_name">SKU Name</string>
+    <string name="stock_facing_stock">Stock</string>
+    <string name="stock_facing_faceup">Facing</string>
+    <string name="stock_facing_sos_target">SOS Target</string>
+
 
     <string name="title_geo_tag_activity_upload_data">Store Uploaded</string>
     <string name="title_geo_tag_activity_geo_data">Store Geo Data Uploaded</string>

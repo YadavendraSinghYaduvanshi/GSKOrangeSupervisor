@@ -14,6 +14,10 @@ public class TableBean {
     public static String DISPLAY_MASTER;
     public static String MAPPING_STOCK;
     public static String MAPPING_T2P;
+    public static String DISPLAY_CHECKLIST_MASTER;
+    public static String MAPPING_DISPLAY_CHECKLIST;
+    public static String NON_WORKING_REASON;
+    public static String MAPPING_PROMOTION;
 
     public static String getJourneyPlan() {
         return JOURNEY_PLAN;
@@ -77,5 +81,37 @@ public class TableBean {
 
     public static void setMappingT2p(String mappingT2p) {
         MAPPING_T2P = mappingT2p;
+    }
+
+    public static String getDisplayChecklistMaster() {
+        return DISPLAY_CHECKLIST_MASTER;
+    }
+
+    public static void setDisplayChecklistMaster(String displayChecklistMaster) {
+        DISPLAY_CHECKLIST_MASTER = displayChecklistMaster;
+    }
+
+    public static String getMappingDisplayChecklist() {
+        return MAPPING_DISPLAY_CHECKLIST;
+    }
+
+    public static void setMappingDisplayChecklist(String mappingDisplayChecklist) {
+        MAPPING_DISPLAY_CHECKLIST = mappingDisplayChecklist;
+    }
+
+    public static String getNonWorkingReason() {
+        return NON_WORKING_REASON;
+    }
+
+    public static void setNonWorkingReason(String nonWorkingReason) {
+        NON_WORKING_REASON = nonWorkingReason;
+    }
+
+    public static String getMappingPromotion() {
+        return MAPPING_PROMOTION;
+    }
+
+    public static void setMappingPromotion(String mappingPromotion) {
+        MAPPING_PROMOTION = mappingPromotion;
     }
 }

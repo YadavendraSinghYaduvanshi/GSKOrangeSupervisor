@@ -21,17 +21,19 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
-import cpm.com.gskmtorange.Database.GSKOrangeDB;
-import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 
+import cpm.com.gskmtorange.Database.GSKOrangeDB;
+import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
 import cpm.com.gskmtorange.download.DownloadActivity;
@@ -170,6 +172,11 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_services) {
 
+            Intent startDownload = 	new Intent(this,T2PComplianceActivity.class);
+            startActivity(startDownload);
+
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+
         } else if (id == R.id.nav_setting) {
             startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
         } else if (id == R.id.nav_export) {
@@ -206,6 +213,7 @@ public class MainActivity extends AppCompatActivity
                                     File backupDB = new File(path, backupDBPath);
 
                                     //Snackbar.make(rec_store_data, "Database Exported Successfully", Snackbar.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Database Exported Successfully", Toast.LENGTH_SHORT).show();
 
                                     if (currentDB.exists()) {
                                         @SuppressWarnings("resource")
@@ -258,7 +266,6 @@ public class MainActivity extends AppCompatActivity
             WebViewActivity.this.progress.setProgress(0);*/
             super.onPageStarted(view, url, favicon);
         }
-
 
     }
 }

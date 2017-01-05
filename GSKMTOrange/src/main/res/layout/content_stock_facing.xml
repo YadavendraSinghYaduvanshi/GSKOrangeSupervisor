@@ -5,8 +5,7 @@
     android:id="@+id/content_msl__availability"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_msl__availability">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,7 +45,7 @@
                     android:gravity="center"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    android:text="SKU"
+                    android:text="@string/stock_facing_sku_name"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#222" />
             </LinearLayout>
@@ -63,7 +62,7 @@
                     android:gravity="center"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    android:text="Stock"
+                    android:text="@string/stock_facing_stock"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#222" />
             </LinearLayout>
@@ -80,7 +79,7 @@
                     android:gravity="center"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    android:text="Faceup"
+                    android:text="@string/stock_facing_faceup"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#222" />
             </LinearLayout>

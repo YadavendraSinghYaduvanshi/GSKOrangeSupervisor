@@ -20,13 +20,25 @@
     <string name="menu_setting">Ayarlar</string>
     <string name="menu_services">Hizmetler</string>
 
+
     //changes after
     <string name="title_geo_tag_activity_upload_data">Store Uploaded</string>
     <string name="title_geo_tag_activity_geo_data">Store Geo Data Uploaded</string>
     <string name="title_geo_tag_activity_geo_already_done">Store Already Geotagged</string>
 
+    <string name="save">Sakla</string>
 
+    <string name="brand">Marka</string>
+    <string name="display">Teşhir Türü</string>
+    <string name="image">Fotoğraf</string>
+    <string name="gaps">Sorunlar</string>
+    <string name="sku">Ürünler</string>
+    <string name="ref_image">ref. Fotoğraf</string>
+    <string name="present">Teşhir var mı?</string>
+    <string name="add">Ekle</string>
 
+    <string name="select">Seç</string>
 
+    <string name="title_activity_t2_pcompliance">Kalıcı Teşhir</string>
 
 </resources>
