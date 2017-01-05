@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -43,6 +44,7 @@ import java.util.List;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 
@@ -60,7 +62,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
     String categoryName, categoryId, storeId;
 
-    String path = "", str = "", _pathforcheck = "", img1 = "";
+    String path = "", str = "", _pathforcheck = "", img1 = "", img2 = "";
     static int child_position = -1;
     boolean isDialogOpen = true;
 
@@ -89,7 +91,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
         prepareList();
 
-        str = Environment.getExternalStorageState();
+        str = CommonString.FILE_PATH + _pathforcheck;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -284,56 +286,56 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     String date = new Date().toLocaleString().toString();
                     String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
 
-                    _pathforcheck = "Stock Camera1_" + tempDate + ".jpg";
+                    _pathforcheck = "Stock_Cam1_" + storeId + "_" + getCurrentTime().replace(":", "") + ".jpg";
                     child_position = groupPosition;
                     path = str + _pathforcheck;
 
-                    startCameraActivity(groupPosition);
+                    startCameraActivity1(groupPosition);
                 }
             });
 
             if (!img1.equalsIgnoreCase("")) {
                 if (groupPosition == child_position) {
-                    //headerTitle.setImg_cam(img1);
+                    headerTitle.setImage1(img1);
                     img1 = "";
                 }
             }
 
-
-            /*if (headerTitle.getImg_cam().equals("")) {
+            if (headerTitle.getImage1().equals("")) {
                 img_camera1.setBackgroundResource(R.drawable.ic_menu_camera);
             } else {
-                //img_camera1.setBackgroundResource(R.drawable.camtick);
-            }*/
+                img_camera1.setBackgroundResource(R.drawable.ic_menu_gallery);
+            }
 
-            /*img_camera.setOnClickListener(new View.OnClickListener() {
+
+            img_camera2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String date = new Date().toLocaleString().toString();
-                    String TempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+                    String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
 
-                    _pathforcheck = "Stock" + headerTitle.getBrand_cd() + "_" + store_cd + "_" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck = "Stock_Cam1_" + storeId + "_" + getCurrentTime().replace(":", "") + ".jpg";
                     child_position = groupPosition;
                     path = str + _pathforcheck;
 
-                    startCameraActivity(groupPosition);
+                    startCameraActivity2(groupPosition);
                 }
             });
 
-            if (!img1.equalsIgnoreCase("")) {
+            if (!img2.equalsIgnoreCase("")) {
                 if (groupPosition == child_position) {
-                    headerTitle.setImg_cam(img1);
-                    img1 = "";
+                    headerTitle.setImage2(img2);
+                    img2 = "";
                 }
             }
 
-            if (headerTitle.getImg_cam().equals("")) {
-                img_camera.setBackgroundResource(R.drawable.cam);
+            if (headerTitle.getImage2().equals("")) {
+                img_camera2.setBackgroundResource(R.drawable.ic_menu_camera);
             } else {
-                img_camera.setBackgroundResource(R.drawable.camtick);
+                img_camera2.setBackgroundResource(R.drawable.ic_menu_gallery);
             }
 
-            if (!checkflag) {
+            /*if (!checkflag) {
                 if (checkHeaderArray.contains(groupPosition)) {
                     txt_header.setTextColor(getResources().getColor(R.color.red));
                 } else {
@@ -497,23 +499,38 @@ public class Stock_FacingActivity extends AppCompatActivity {
         LinearLayout lin_category;
     }
 
-    private void startCameraActivity(int position) {
+    private void startCameraActivity1(int position) {
         try {
-            Log.e("Stock & Facing ", "startCameraActivity()");
+            /*Log.e("Stock and Facing ", "startCameraActivity()");
             File file = new File(path);
             Uri outputFileUri = Uri.fromFile(file);
 
-            /*String defaultCameraPackage = "";
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            startActivityForResult(intent, position);*/
+
+            Log.i("Stock & Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
+
+            String defaultCameraPackage = "";
             final PackageManager packageManager = getPackageManager();
             List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
-
             for (int n = 0; n < list.size(); n++) {
                 if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-//                    Log.d("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
-//                    Log.d("TAG", "package name  : " + list.get(n).packageName);
-                    if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
-                        defaultCameraPackage = list.get(n).packageName;
-                        break;
+                    /*Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    Log.e("TAG", "package name  : " + list.get(n).packageName);*/
+
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
                     }
                 }
             }
@@ -521,11 +538,55 @@ public class Stock_FacingActivity extends AppCompatActivity {
             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             intent.setPackage(defaultCameraPackage);
-            startActivityForResult(intent, position);*/
+            startActivityForResult(intent, 1);
+            //startActivityForResult(intent, position);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startCameraActivity2(int position) {
+        try {
+            /*Log.e("Stock and Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
 
             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            startActivityForResult(intent, position);
+            startActivityForResult(intent, position);*/
+
+            Log.i("Stock & Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
+
+            String defaultCameraPackage = "";
+            final PackageManager packageManager = getPackageManager();
+            List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+            for (int n = 0; n < list.size(); n++) {
+                if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                    /*Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    Log.e("TAG", "package name  : " + list.get(n).packageName);*/
+
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(defaultCameraPackage);
+            startActivityForResult(intent, 2);
+            //startActivityForResult(intent, position);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -534,7 +595,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.e("Stock & Facing", "resultCode: " + resultCode);
-        switch (resultCode) {
+        /*switch (resultCode) {
             case 0:
                 Log.e("Stock & Facing", "User cancelled");
                 break;
@@ -542,13 +603,41 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 if (_pathforcheck != null && !_pathforcheck.equals("")) {
                     if (new File(str + _pathforcheck).exists()) {
                         img1 = _pathforcheck;
-                        //adapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
                         _pathforcheck = "";
                     }
                 }
                 break;
+        }*/
+
+        switch (requestCode) {
+            case 1:
+                if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img1 = _pathforcheck;
+                            adapter.notifyDataSetChanged();
+                            _pathforcheck = "";
+                        }
+                    }
+                } else {
+                    Log.e("Stock & Facing", "User cancelled");
+                }
+                break;
+            case 2:
+                if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img2 = _pathforcheck;
+                            adapter.notifyDataSetChanged();
+                            _pathforcheck = "";
+                        }
+                    }
+                } else {
+                    Log.e("Stock & Facing", "User cancelled");
+                }
+                break;
         }
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
     }
 
