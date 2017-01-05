@@ -52,9 +52,11 @@
     <string name="menu_setting">Setting</string>
     <string name="menu_services">Services</string>
 
-    <string name="title_activity_category_list">Category List</string>
     <string name="title_activity_t2_pcompliance">T2P Compliance</string>
 
+    <!--Gagan start code-->
+
+    <string name="title_activity_category_list">Category List</string>
     <string name="title_activity_category_wise_performance">Categorywise Performance</string>
     <string name="title_activity_daily_main_menu">Daily Data Menu</string>
     <string name="title_activity_msl__availability">Must Stock Availability</string>
@@ -78,12 +80,11 @@
     <string name="stock_facing_faceup">Facing</string>
     <string name="stock_facing_sos_target">SOS Target</string>
 
+    <!--Gagan end code-->
 
     <string name="title_geo_tag_activity_upload_data">Store Uploaded</string>
     <string name="title_geo_tag_activity_geo_data">Store Geo Data Uploaded</string>
     <string name="title_geo_tag_activity_geo_already_done">Store Already Geotagged</string>
-
-
 
     <string name="title_store_list_activity_store_already_done">Store Already Uploaded</string>
     <string name="title_store_list_activity_store_data_uploaded">Store Data Uploaded</string>
@@ -91,12 +92,7 @@
     <string name="title_store_list_activity_store_again_uploaded">Please Store data again Uploaded</string>
     <string name="title_store_list_activity_store_closed">Store Closed</string>
 
-
-
-
     <string name="title_store_list_checkout_current">Please checkout from current store</string>
     <string name="title_store_list_checkout_Already_filled">Data already filled</string>
-
-
 
 </resources>
