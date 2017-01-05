@@ -18,21 +18,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
+import cpm.com.gskmtorange.GeoTag.GeoTagActivity;
 
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
-
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
@@ -42,14 +46,10 @@ import cpm.com.gskmtorange.constant.CommonString;
  */
 
 public class StoreListActivity extends AppCompatActivity {
-
     ArrayList<CoverageBean> coverage;
-
-
     ArrayList<StoreBean> storelist = new ArrayList<StoreBean>();
     //ListView list;
     private SharedPreferences preferences;
-
     String date, visit_status;
     GSKOrangeDB db;
     StoreListActivity.ValueAdapter adapter;
@@ -79,9 +79,17 @@ public class StoreListActivity extends AppCompatActivity {
         db.open();
 
 
-
         linearlay = (LinearLayout) findViewById(R.id.linearlayout);
         recyclerView = (RecyclerView) findViewById(R.id.drawer_layout_recycle);
+
+
+
+    }
+
+
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
 
         storelist = db.getStoreData(date);
         coverage=db.getCoverageData(date);
@@ -92,20 +100,13 @@ public class StoreListActivity extends AppCompatActivity {
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
         } else {
 
             recyclerView.setVisibility(View.INVISIBLE);
             linearlay.setVisibility(View.VISIBLE);
-
-        if (storelist.size() > 0) {
-            list.setAdapter(new MyAdaptor());
-
         }
 
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -119,8 +120,6 @@ public class StoreListActivity extends AppCompatActivity {
             // NavUtils.navigateUpFromSameTask(this);
             finish();
 
-                //Toast.makeText(getApplicationContext(), "Click", Toast.LENGTH_LONG).show();
-
             overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
 
         }
@@ -130,7 +129,6 @@ public class StoreListActivity extends AppCompatActivity {
 
 
     public class ValueAdapter extends RecyclerView.Adapter<StoreListActivity.ValueAdapter.MyViewHolder> {
-
 
         private LayoutInflater inflator;
 
@@ -206,7 +204,6 @@ public class StoreListActivity extends AppCompatActivity {
                                     viewHolder.imageview.setVisibility(View.VISIBLE);
                                     viewHolder.imageview.setBackgroundResource(R.mipmap.checkin);
                                     viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-
 
                                 }
                                 break;
@@ -316,9 +313,6 @@ public class StoreListActivity extends AppCompatActivity {
                 chkbtn = (Button) itemView.findViewById(R.id.chkout);
 
             }
-
-            return convertView;
-
         }
 
     }
@@ -395,9 +389,11 @@ public class StoreListActivity extends AppCompatActivity {
         dialog.show();
     }
 
+
     public boolean setcheckedmenthod(String store_cd) {
 
-           for (int i = 0; i < coverage.size(); i++) {
+
+        for (int i = 0; i < coverage.size(); i++) {
             if (store_cd.equals(coverage.get(i).getStoreId())) {
                 if (coverage.get(i).getOutTime() != null) {
                     result_flag = true;
