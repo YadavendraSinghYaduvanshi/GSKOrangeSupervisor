@@ -7,12 +7,16 @@ import java.io.IOException;
 
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.LoginGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 
@@ -405,7 +409,7 @@ public class XMLHandlers {
         return stock;
     }
 
-    // MAPPING_STOCK XML HANDLER
+    // MAPPING_T2P XML HANDLER
     public static MAPPINGT2PGetterSetter mappingT2pXMLHandler(XmlPullParser xpp,
                                                                 int eventType) {
         MAPPINGT2PGetterSetter t2p = new MAPPINGT2PGetterSetter();
@@ -424,6 +428,142 @@ public class XMLHandlers {
                     }
                     if (xpp.getName().equals("DISPLAY_ID")) {
                         t2p.setDISPLAY_ID(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return t2p;
+    }
+
+    // DISPLAY_CHECKLIST_MASTER XML HANDLER
+    public static DisplayChecklistMasterGetterSetter mappingDisplayChecklistMasterXMLHandler(XmlPullParser xpp,
+                                                                                             int eventType) {
+        DisplayChecklistMasterGetterSetter checklist = new DisplayChecklistMasterGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+                    if (xpp.getName().equals("META_DATA")) {
+                        checklist.setTable_DISPLAY_CHECKLIST_MASTER(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CHECKLIST_ID")) {
+                        checklist.setCHECKLIST_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CHECKLIST")) {
+                        checklist.setCHECKLIST(xpp.nextText());
+                    }
+
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return checklist;
+    }
+
+    // MAPPING_DISPLAY_CHECKLIST XML HANDLER
+    public static MappingDisplayChecklistGetterSetter mappingMappingDisplayChecklistXMLHandler(XmlPullParser xpp,
+                                                                                              int eventType) {
+        MappingDisplayChecklistGetterSetter checklist = new MappingDisplayChecklistGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+                    if (xpp.getName().equals("META_DATA")) {
+                        checklist.setTable_MAPPING_DISPLAY_CHECKLIST(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CHECKLIST_ID")) {
+                        checklist.setCHECKLIST_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("DISPLAY_ID")) {
+                        checklist.setDISPLAY_ID(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return checklist;
+    }
+
+    // NON_WORKING_REASON XML HANDLER
+    public static NonWorkingReasonGetterSetter nonWorkingReasonXMLHandler(XmlPullParser xpp,
+                                                                                        int eventType) {
+        NonWorkingReasonGetterSetter reason = new NonWorkingReasonGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+                    if (xpp.getName().equals("META_DATA")) {
+                        reason.setTable_NON_WORKING_REASON(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("REASON_ID")) {
+                        reason.setREASON_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("REASON")) {
+                        reason.setREASON(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("ENTRY_ALLOW")) {
+                        reason.setENTRY_ALLOW(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("IMAGE_ALLOW")) {
+                        reason.setIMAGE_ALLOW(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return reason;
+    }
+
+    // MAPPING_PROMOTION XML HANDLER
+    public static MappingPromotionGetterSetter mappingPromotionXMLHandler(XmlPullParser xpp,
+                                                                          int eventType) {
+        MappingPromotionGetterSetter t2p = new MappingPromotionGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+                    if (xpp.getName().equals("META_DATA")) {
+                        t2p.setTable_MAPPING_PROMOTION(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("STORE_ID")) {
+                        t2p.setSTORE_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SKU_ID")) {
+                        t2p.setSKU_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SKU")) {
+                        t2p.setSKU(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("PROMO_ID")) {
+                        t2p.setPROMO_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("PROMO")) {
+                        t2p.setPROMO(xpp.nextText());
                     }
                 }
                 xpp.next();

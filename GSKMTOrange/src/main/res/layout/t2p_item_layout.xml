@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:id="@+id/parent_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/custom_margin"
+                    android:text="@string/brand"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_brand"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:padding="@dimen/custom_margin"
+                    android:text="@string/brand" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/custom_margin"
+                    android:text="@string/display"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_display"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:padding="@dimen/custom_margin"
+                    android:text="@string/display" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/custom_margin"
+                    android:text="@string/present"
+                    android:textStyle="bold"/>
+
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ToggleButton
+                        android:id="@+id/toggle_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/custom_margin"
+                        android:text="@string/brand"
+                        android:layout_centerInParent="true"/>
+
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/custom_margin"
+                    android:text="@string/image"
+                    android:textStyle="bold"/>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/img_cam"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:text="@string/image"
+                        android:layout_weight="1"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/cam_active"
+                        android:padding="@dimen/custom_margin"/>
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/img_remark"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:text="@string/image"
+                        android:layout_weight="1"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/edit_deactive"
+                        android:padding="@dimen/custom_margin"/>
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/btn_gaps"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="@string/gaps"
+                        android:textColor="@color/white"
+                        android:background="@color/colorPrimary"
+                        android:layout_centerInParent="true"
+                        android:textSize="@dimen/text_size_xsmall"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/btn_sku"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="@string/sku"
+                        android:textColor="@color/white"
+                        android:background="@color/colorPrimary"
+                        android:layout_centerInParent="true"
+                        android:textSize="@dimen/text_size_xsmall"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/btn_ref_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="@string/ref_image"
+                        android:textColor="@color/white"
+                        android:background="@color/colorPrimary"
+                        android:layout_centerInParent="true"
+                        android:textSize="@dimen/text_size_xsmall"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

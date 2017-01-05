@@ -27,16 +27,19 @@ import java.net.MalformedURLException;
 
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
-import cpm.com.gskmtorange.LoginActivity;
 
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
@@ -61,6 +64,10 @@ public class DownloadActivity extends AppCompatActivity {
     DisplayMasterGetterSetter displayMasterGetterSetter;
     MappingStockGetterSetter mappingStockGetterSetter;
     MAPPINGT2PGetterSetter mappingt2PGetterSetter;
+    DisplayChecklistMasterGetterSetter checklistMasterGetterSetter;
+    MappingDisplayChecklistGetterSetter mappingChecklistGetterSetter;
+    NonWorkingReasonGetterSetter nonWorkingReasonGetterSetter;
+    MappingPromotionGetterSetter mappingPromotionGetterSetter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -394,13 +401,149 @@ public class DownloadActivity extends AppCompatActivity {
                             TableBean.setMappingT2p(t2ptable);
                         }
                     } else {
-                        return "MAPPING_T2P";
+                        //return "MAPPING_T2P";
                     }
                     data.value = 100;
                     data.name = "MAPPING_T2P Data Download";
                 }
                 publishProgress(data);
 
+                // DISPLAY_CHECKLIST_MASTER
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "DISPLAY_CHECKLIST_MASTER");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = (Object) envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    checklistMasterGetterSetter = XMLHandlers.mappingDisplayChecklistMasterXMLHandler(xpp, eventType);
+                    if (checklistMasterGetterSetter.getCHECKLIST_ID().size() > 0) {
+                        String checklist_master_table = checklistMasterGetterSetter.getTable_DISPLAY_CHECKLIST_MASTER();
+                        if (checklist_master_table != null) {
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setDisplayChecklistMaster(checklist_master_table);
+                        }
+                    } else {
+                        return "DISPLAY_CHECKLIST_MASTER";
+                    }
+                    data.value = 100;
+                    data.name = "DISPLAY_CHECKLIST_MASTER Data Download";
+                }
+                publishProgress(data);
+
+                // MAPPING_DISPLAY_CHECKLIST
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_DISPLAY_CHECKLIST");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = (Object) envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mappingChecklistGetterSetter = XMLHandlers.mappingMappingDisplayChecklistXMLHandler(xpp, eventType);
+                    if (mappingChecklistGetterSetter.getCHECKLIST_ID().size() > 0) {
+                        String mapping_display_checklisttable = mappingChecklistGetterSetter.getTable_MAPPING_DISPLAY_CHECKLIST();
+                        if (mapping_display_checklisttable != null) {
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setMappingDisplayChecklist(mapping_display_checklisttable);
+                        }
+                    } else {
+                        //return "MAPPING_DISPLAY_CHECKLIST";
+                    }
+                    data.value = 100;
+                    data.name = "MAPPING_DISPLAY_CHECKLIST Data Download";
+                }
+                publishProgress(data);
+
+
+                // NON_WORKING_REASON
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "NON_WORKING_REASON");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = (Object) envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    nonWorkingReasonGetterSetter = XMLHandlers.nonWorkingReasonXMLHandler(xpp, eventType);
+                    if (nonWorkingReasonGetterSetter.getREASON_ID().size() > 0) {
+                        String reasontable = nonWorkingReasonGetterSetter.getTable_NON_WORKING_REASON();
+                        if (reasontable != null) {
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setNonWorkingReason(reasontable);
+                        }
+                    } else {
+                        return "NON_WORKING_REASON";
+                    }
+                    data.value = 100;
+                    data.name = "NON_WORKING_REASON Data Download";
+                }
+                publishProgress(data);
+
+                // MAPPING_PROMOTION
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_PROMOTION");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = (Object) envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mappingPromotionGetterSetter = XMLHandlers.mappingPromotionXMLHandler(xpp, eventType);
+                    if (mappingPromotionGetterSetter.getSTORE_ID().size() > 0) {
+                        String mapping_promotion_table = mappingPromotionGetterSetter.getTable_MAPPING_PROMOTION();
+                        if (mapping_promotion_table != null) {
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setMappingPromotion(mapping_promotion_table);
+                        }
+                    } else {
+                        //return "MAPPING_PROMOTION";
+                    }
+                    data.value = 100;
+                    data.name = "MAPPING_PROMOTION Data Download";
+                }
+                publishProgress(data);
 
                 db.open();
                 db.InsertJCP(jcpgettersetter);
@@ -412,7 +555,8 @@ public class DownloadActivity extends AppCompatActivity {
 
                 db.InsertMAPPING_T2P(mappingt2PGetterSetter);
                 db.InsertMappingStock(mappingStockGetterSetter);
-
+                db.InsertDisplayChecklistMaster(checklistMasterGetterSetter);
+                db.InsertMappingDisplayChecklist(mappingChecklistGetterSetter);
 
             } catch (MalformedURLException e) {
                 /*final AlertMessage message = new AlertMessage(

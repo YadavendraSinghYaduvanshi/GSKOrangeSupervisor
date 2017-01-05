@@ -21,10 +21,25 @@
         completions."
     </string>
 
+    <string name="save">Save</string>
+
+    <string name="brand">Brand</string>
+    <string name="display">Display</string>
+    <string name="image">Image</string>
+    <string name="gaps">Gaps</string>
+    <string name="sku">Sku</string>
+    <string name="ref_image">Ref. Image</string>
+    <string name="present">Present</string>
+    <string name="stock">Stock</string>
+    <string name="select">Select</string>
+    <string name="add">Add</string>
+
     <string name="select_language">Please select language</string>
     <string name="title_activity_select_language">SelectLanguageActivity</string>
 
     <string name="title_activity_store_list_geotag">Store List</string>
+
+    <string name="title_activity_store_geotag">Geo Tag</string>
 
 
     <string name="menu_daily_route_plan">Daily Route Plan</string>
@@ -38,6 +53,8 @@
     <string name="menu_services">Services</string>
 
     <string name="title_activity_category_list">Category List</string>
+    <string name="title_activity_t2_pcompliance">T2P Compliance</string>
+
     <string name="title_activity_category_wise_performance">Categorywise Performance</string>
     <string name="title_activity_daily_main_menu">Daily Data Menu</string>
     <string name="title_activity_msl__availability">Must Stock Availability</string>
@@ -60,6 +77,26 @@
     <string name="stock_facing_stock">Stock</string>
     <string name="stock_facing_faceup">Facing</string>
     <string name="stock_facing_sos_target">SOS Target</string>
+
+
+    <string name="title_geo_tag_activity_upload_data">Store Uploaded</string>
+    <string name="title_geo_tag_activity_geo_data">Store Geo Data Uploaded</string>
+    <string name="title_geo_tag_activity_geo_already_done">Store Already Geotagged</string>
+
+
+
+    <string name="title_store_list_activity_store_already_done">Store Already Uploaded</string>
+    <string name="title_store_list_activity_store_data_uploaded">Store Data Uploaded</string>
+    <string name="title_store_list_activity_store_already_checkout">Store Already Checkout</string>
+    <string name="title_store_list_activity_store_again_uploaded">Please Store data again Uploaded</string>
+    <string name="title_store_list_activity_store_closed">Store Closed</string>
+
+
+    <string name="save">SAVE</string>
+
+    <string name="title_store_list_checkout_current">Please checkout from current store</string>
+    <string name="title_store_list_checkout_Already_filled">Data already filled</string>
+
 
 
 </resources>
