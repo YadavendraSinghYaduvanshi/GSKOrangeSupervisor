@@ -1,4 +1,4 @@
-package cpm.com.gskmtorange.gettersetter;
+package cpm.com.gskmtorange.GetterSetter;
 
 public class GeotaggingBeans {
 	

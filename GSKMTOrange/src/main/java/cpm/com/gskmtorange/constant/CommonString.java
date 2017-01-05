@@ -15,7 +15,6 @@ public class CommonString {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_DATE = "date";
     public static final String KEY_STOREVISITED_STATUS = "STOREVISITED_STATUS";
-    public static final String FILE_PATH = Environment.getExternalStorageDirectory() + "/GSK_MT_Images/";
 
     public static final String KEY_PATH = "path";
     public static final String KEY_VERSION = "APP_VERSION";
@@ -155,6 +154,8 @@ public class CommonString {
 
 
 
+    //Gagan Code Start
+
     //File Path
     public static final String FILE_PATH = Environment.getExternalStorageDirectory() + "/GSK_MT_ORANGE_IMAGES/";
 
@@ -269,4 +270,5 @@ public class CommonString {
 
             + ")";
 
+    //Gagan Code End
 }

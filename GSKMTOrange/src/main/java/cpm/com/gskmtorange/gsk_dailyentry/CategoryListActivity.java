@@ -2,7 +2,9 @@ package cpm.com.gskmtorange.gsk_dailyentry;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,7 @@ import java.util.List;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryGetterSetter;
 
 public class CategoryListActivity extends AppCompatActivity {
@@ -34,6 +37,9 @@ public class CategoryListActivity extends AppCompatActivity {
     CategoryListAdapter adapter;
 
     GSKOrangeDB db;
+
+    private SharedPreferences preferences;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,17 @@ public class CategoryListActivity extends AppCompatActivity {
 
         db = new GSKOrangeDB(this);
         db.open();
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
+        visit_date = preferences.getString(CommonString.KEY_DATE, null);
+        date = preferences.getString(CommonString.KEY_DATE, null);
+        username = preferences.getString(CommonString.KEY_USERNAME, null);
+        intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
+        keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
+        class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
+        storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+
 
         txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
         //txt_categoryName.setText("Category List");
@@ -69,7 +86,7 @@ public class CategoryListActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         categoryList = new ArrayList<>();
 
-        categoryList = db.getCategoryListData("1", "1", "1");
+        categoryList = db.getCategoryListData(keyAccount_id, storeType_id, class_id);
 
         adapter = new CategoryListAdapter(CategoryListActivity.this, categoryList);
         recyclerView.setAdapter(adapter);
@@ -99,7 +116,16 @@ public class CategoryListActivity extends AppCompatActivity {
             final CategoryGetterSetter categoryData = list.get(position);
 
             holder.categoryName.setText(categoryData.getCategory());
-            holder.categoryIcon.setImageResource(R.drawable.category);
+            //holder.categoryIcon.setImageResource(R.drawable.category);
+
+            if (categoryData.getCategory().equalsIgnoreCase("Oral Health")) {
+                holder.categoryIcon.setImageResource(R.drawable.ohc);
+            } else if (categoryData.getCategory().equalsIgnoreCase("Wellness")) {
+                holder.categoryIcon.setImageResource(R.drawable.pdr);
+            } else if (categoryData.getCategory().equalsIgnoreCase("Nutritionals")) {
+                holder.categoryIcon.setImageResource(R.drawable.hfd);
+            }
+
 
             holder.lay_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
