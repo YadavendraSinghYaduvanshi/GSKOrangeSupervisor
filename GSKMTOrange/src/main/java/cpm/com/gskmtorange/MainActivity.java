@@ -22,6 +22,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -212,6 +213,7 @@ public class MainActivity extends AppCompatActivity
                                     File backupDB = new File(path, backupDBPath);
 
                                     //Snackbar.make(rec_store_data, "Database Exported Successfully", Snackbar.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Database Exported Successfully", Toast.LENGTH_SHORT).show();
 
                                     if (currentDB.exists()) {
                                         @SuppressWarnings("resource")

@@ -1,6 +1,8 @@
 package cpm.com.gskmtorange.gsk_dailyentry;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,18 +18,21 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 
@@ -42,7 +47,9 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
     ExpandableListAdapter adapter;
 
-    String title;
+    GSKOrangeDB db;
+
+    String categoryName, categoryId, storeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,26 +61,81 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        db = new GSKOrangeDB(this);
+        db.open();
+
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         txt_mslAvailabilityName = (TextView) findViewById(R.id.txt_mslAvailabilityName);
 
-        title = getIntent().getStringExtra("categoryName");
-        txt_mslAvailabilityName.setText(title);
+        categoryName = getIntent().getStringExtra("categoryName");
+        categoryId = getIntent().getStringExtra("categoryId");
+        storeId = "";
+
+        //txt_mslAvailabilityName.setText(categoryName);
+        txt_mslAvailabilityName.setText(getResources().getString(R.string.title_activity_msl__availability));
 
         prepareList();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                //if (validateData(listDataHeader, listDataChild)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
+                builder.setMessage("Are you sure you want to save")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                db.open();
+
+                                if (db.checkMsl_AvailabilityData(storeId, categoryId)) {
+                                    db.updateMSL_Availability(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                } else {
+                                    db.InsertMSL_Availability(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                }
+
+                                Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
+                                finish();
+                                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+                /*} else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
+                    builder.setMessage("Fill the value or fill 0 ")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }*/
+
             }
         });
 
         expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int lastItem = firstVisibleItem + visibleItemCount;
+
+                if (firstVisibleItem == 0) {
+                    fab.setVisibility(View.VISIBLE);
+                } else if (lastItem == totalItemCount) {
+                    fab.setVisibility(View.INVISIBLE);
+                } else {
+                    fab.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -85,7 +147,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                     getCurrentFocus().clearFocus();
                 }
 
-                expandableListView.invalidateViews();
+                //expandableListView.invalidateViews();
             }
         });
 
@@ -131,62 +193,27 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
 
     private void prepareList() {
-        headerDataList = new ArrayList<>();
-
-        MSL_AvailabilityGetterSetter msl = new MSL_AvailabilityGetterSetter();
-        msl.setBrandName("Parodontax header 1");
-        msl.setMbq("1");
-        msl.setAvailable("No");
-        headerDataList.add(msl);
-
-        msl = new MSL_AvailabilityGetterSetter();
-        msl.setBrandName("Parodontax header 2");
-        msl.setMbq("2");
-        msl.setAvailable("Yes");
-        headerDataList.add(msl);
-
-        msl = new MSL_AvailabilityGetterSetter();
-        msl.setBrandName("Parodontax header 3");
-        msl.setMbq("3");
-        msl.setAvailable("Yes");
-        headerDataList.add(msl);
-
-        msl = new MSL_AvailabilityGetterSetter();
-        msl.setBrandName("Parodontax header 4");
-        msl.setMbq("4");
-        msl.setAvailable("No");
-        headerDataList.add(msl);
-
-
         hashMapListHeaderData = new ArrayList<>();
         hashMapListChildData = new HashMap<>();
 
-        if (headerDataList.size() > 0) {
+        //Header
+        headerDataList = db.getMSL_AvailabilityHeaderData(categoryId);
 
+        if (headerDataList.size() > 0) {
             for (int i = 0; i < headerDataList.size(); i++) {
                 hashMapListHeaderData.add(headerDataList.get(i));
 
-                childDataList = new ArrayList<>();
-
-                MSL_AvailabilityGetterSetter msl1 = new MSL_AvailabilityGetterSetter();
-                msl.setBrandName("Parodontax 1");
-                msl.setMbq("1");
-                msl.setAvailable("No");
-                childDataList.add(msl1);
-
-                msl1 = new MSL_AvailabilityGetterSetter();
-                msl.setBrandName("Parodontax 2");
-                msl.setMbq("2");
-                msl.setAvailable("No");
-                childDataList.add(msl1);
+                //childDataList = new ArrayList<>();
+                childDataList = db.getMSL_AvailabilitySKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id());
+                if (!(childDataList.size() > 0)) {
+                    childDataList = db.getMSL_AvailabilitySKUData(categoryId, headerDataList.get(i).getBrand_id());
+                }
 
                 hashMapListChildData.put(hashMapListHeaderData.get(i), childDataList);
             }
-
         }
 
         adapter = new ExpandableListAdapter(this, hashMapListHeaderData, hashMapListChildData);
@@ -234,7 +261,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             ImageView img_camera = (ImageView) convertView.findViewById(R.id.img_camera);
 
             txt_categoryHeader.setTypeface(null, Typeface.BOLD);
-            txt_categoryHeader.setText(headerTitle.getBrandName());
+            txt_categoryHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
             /*img_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -292,7 +319,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         @Override
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                                  View convertView, ViewGroup parent) {
-            MSL_AvailabilityGetterSetter childData = (MSL_AvailabilityGetterSetter) getChild(groupPosition, childPosition);
+            final MSL_AvailabilityGetterSetter childData = (MSL_AvailabilityGetterSetter) getChild(groupPosition, childPosition);
             ViewHolder holder = null;
 
             if (convertView == null) {
@@ -304,18 +331,44 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 holder.lin_category = (LinearLayout) convertView.findViewById(R.id.lin_category);
 
                 holder.txt_skuName = (TextView) convertView.findViewById(R.id.txt_skuName);
-                holder.ed_mbq = (EditText) convertView.findViewById(R.id.ed_mbq);
+                holder.txt_mbq = (TextView) convertView.findViewById(R.id.txt_mbq);
                 holder.toggle_available = (ToggleButton) convertView.findViewById(R.id.toggle_available);
+
+                holder.toggle_available.setTextOff("No");
+                holder.toggle_available.setTextOn("Yes");
+
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.txt_skuName.setText(childData.getBrandName());
-            holder.ed_mbq.setText(childData.getMbq());
+            holder.txt_skuName.setText(childData.getSku());
+            holder.txt_mbq.setText(childData.getMbq());
 
-            holder.toggle_available.setTextOff("No");
-            holder.toggle_available.setTextOn("Yes");
+            /*if (childData.getToggleValue().equals("1")) {
+                holder.toggle_available.setText("Yes");
+            } else {
+                holder.toggle_available.setText("No");
+            }*/
+
+            holder.toggle_available.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        childData.setToggleValue("1");
+                    } else {
+                        childData.setToggleValue("0");
+                    }
+
+                    expandableListView.invalidateViews();
+                }
+            });
+
+            if (childData.getToggleValue().equals("1")) {
+                holder.toggle_available.setChecked(true);
+            } else {
+                holder.toggle_available.setChecked(false);
+            }
 
             return convertView;
         }
@@ -332,9 +385,8 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
     }
 
     public class ViewHolder {
-        EditText ed_mbq;
         CardView cardView;
-        TextView txt_skuName;
+        TextView txt_skuName, txt_mbq;
         ToggleButton toggle_available;
         LinearLayout lin_category;
     }

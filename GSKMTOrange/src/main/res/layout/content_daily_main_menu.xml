@@ -21,7 +21,7 @@
             android:paddingBottom="10dp"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
-            android:text="Category Performance"
+            android:text="Daily Data Menu"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black" />
 
