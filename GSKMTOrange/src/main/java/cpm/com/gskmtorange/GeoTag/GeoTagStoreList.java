@@ -1,4 +1,4 @@
-package cpm.com.gskmtorange.geotag;
+package cpm.com.gskmtorange.GeoTag;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,7 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
-import cpm.com.gskmtorange.gettersetter.StoreBean;
+import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 

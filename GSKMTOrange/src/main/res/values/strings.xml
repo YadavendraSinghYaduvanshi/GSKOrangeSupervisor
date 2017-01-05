@@ -21,6 +21,19 @@
         completions."
     </string>
 
+    <string name="save">Save</string>
+
+    <string name="brand">Brand</string>
+    <string name="display">Display</string>
+    <string name="image">Image</string>
+    <string name="gaps">Gaps</string>
+    <string name="sku">Sku</string>
+    <string name="ref_image">Ref. Image</string>
+    <string name="present">Present</string>
+    <string name="stock">Stock</string>
+    <string name="select">Select</string>
+    <string name="add">Add</string>
+
     <string name="select_language">Please select language</string>
     <string name="title_activity_select_language">SelectLanguageActivity</string>
 
@@ -41,5 +54,6 @@
     <string name="title_activity_category_wise_performance">CategoryWise Performance</string>
     <string name="title_activity_daily_main_menu">DailyMainMenuActivity</string>
     <string name="title_activity_msl__availability">MSL_AvailabilityActivity</string>
+    <string name="title_activity_t2_pcompliance">T2P Compliance</string>
 
 </resources>

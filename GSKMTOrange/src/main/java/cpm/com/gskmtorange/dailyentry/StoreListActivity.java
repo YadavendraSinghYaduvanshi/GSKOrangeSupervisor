@@ -24,7 +24,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
-import cpm.com.gskmtorange.gettersetter.StoreBean;
+
+import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 
@@ -32,7 +33,7 @@ import cpm.com.gskmtorange.constant.CommonString;
  * Created by ashishc on 29-12-2016.
  */
 
-public class StoreListActivity  extends AppCompatActivity {
+public class StoreListActivity extends AppCompatActivity {
 
     ArrayList<StoreBean> storelist = new ArrayList<StoreBean>();
 
@@ -40,7 +41,7 @@ public class StoreListActivity  extends AppCompatActivity {
     ListView list;
     private SharedPreferences preferences;
 
-    String date,visit_status;
+    String date, visit_status;
     GSKOrangeDB db;
 
 
@@ -63,13 +64,13 @@ public class StoreListActivity  extends AppCompatActivity {
         db.open();
 
 
-        list = (ListView)findViewById(R .id.list_id);
+        list = (ListView) findViewById(R.id.list_id);
 
 
         storelist = db.getStoreData(date);
 
 
-        if (storelist.size()>0) {
+        if (storelist.size() > 0) {
             list.setAdapter(new MyAdaptor());
         }
 
@@ -80,15 +81,12 @@ public class StoreListActivity  extends AppCompatActivity {
                                     int position, long id) {
 
 
-                Toast.makeText(getApplicationContext(),"Click",Toast.LENGTH_LONG).show();
-
-
+                Toast.makeText(getApplicationContext(), "Click", Toast.LENGTH_LONG).show();
 
             }
         });
 
     }
-
 
     private class MyAdaptor extends BaseAdapter {
 
@@ -142,9 +140,6 @@ public class StoreListActivity  extends AppCompatActivity {
             holder.storeaddress.setText(storelist.get(position).getCITY());
 
 
-
-
-
             holder.checkout.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -175,8 +170,6 @@ public class StoreListActivity  extends AppCompatActivity {
                 }
             });
 
-
-
             return convertView;
         }
 
@@ -200,7 +193,7 @@ public class StoreListActivity  extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if(id==android.R.id.home){
+        if (id == android.R.id.home) {
 
             // NavUtils.navigateUpFromSameTask(this);
             finish();
