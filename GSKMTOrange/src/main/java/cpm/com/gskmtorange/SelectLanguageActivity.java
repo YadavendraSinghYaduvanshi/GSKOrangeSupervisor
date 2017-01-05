@@ -127,10 +127,10 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
 
         String lang ;
 
-        if(language.equals("English")){
+        if(language.equalsIgnoreCase("English")){
             lang = "EN";
         }
-        else if(language.equals("UAE")) {
+        else if(language.equalsIgnoreCase("UAE")) {
             lang = "AR";
         }
         else {

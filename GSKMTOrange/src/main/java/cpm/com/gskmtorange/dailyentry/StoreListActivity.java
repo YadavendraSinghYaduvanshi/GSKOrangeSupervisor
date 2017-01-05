@@ -80,7 +80,6 @@ public class StoreListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-
                 Toast.makeText(getApplicationContext(), "Click", Toast.LENGTH_LONG).show();
 
             }
