@@ -117,12 +117,10 @@ public class LoginActivity extends AppCompatActivity {
         // Set up the login form.
         museridView = (AutoCompleteTextView) findViewById(R.id.userid);
         //populateAutoComplete();
-
         mPasswordView = (EditText) findViewById(R.id.password);
 
         museridView.setText("testmer");
         mPasswordView.setText("cpm123");
-
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

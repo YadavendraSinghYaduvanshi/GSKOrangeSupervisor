@@ -62,7 +62,7 @@
 
         >
 
-        <ListView
+       <!-- <ListView
             android:id="@+id/list_id"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -72,7 +72,44 @@
             android:dividerHeight="2dp"
             android:drawSelectorOnTop="false"
             android:fastScrollEnabled="true"
-            android:smoothScrollbar="true" />
+            android:smoothScrollbar="true" />-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/drawer_layout_recycle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearlayout"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:layout_weight="100"
+        android:visibility="gone"
+
+        >
+
+        <View
+            android:id="@+id/viewid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/sad_cloud"
+            >
+
+        </View>
+
+
 
 
     </LinearLayout>

@@ -1,9 +1,12 @@
 package cpm.com.gskmtorange;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +22,17 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import cpm.com.gskmtorange.geotag.GeoTagStoreList;
+
+import cpm.com.gskmtorange.Database.GSKOrangeDB;
+import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
 import cpm.com.gskmtorange.download.DownloadActivity;
 
@@ -47,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 
         webView = (WebView) findViewById(R.id.webview);
 
-        String url = preferences.getString(CommonString.KEY_NOTICE_BOARD_LINK,"");
+        String url = preferences.getString(CommonString.KEY_NOTICE_BOARD_LINK, "");
         user_name = preferences.getString(CommonString.KEY_USERNAME, null);
         //user_type = preferences.getString(CommonString.KEY_USER_TYPE, null);
 
@@ -55,7 +67,7 @@ public class MainActivity extends AppCompatActivity
 
         webView.getSettings().setJavaScriptEnabled(true);
 
-        if(!url.equals("")){
+        if (!url.equals("")) {
 
             webView.loadUrl(url);
 
@@ -80,7 +92,7 @@ public class MainActivity extends AppCompatActivity
 
         View headerView = LayoutInflater.from(this).inflate(R.layout.nav_header_main, navigationView, false);
 
-        TextView tv_username = (TextView)  headerView.findViewById(R.id.nav_user_name);
+        TextView tv_username = (TextView) headerView.findViewById(R.id.nav_user_name);
         //tv_usertype = (TextView) headerView.findViewById(R.id.nav_user_type);
 
         tv_username.setText(user_name);
@@ -130,7 +142,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_route_plan) {
 
-            Intent startDownload = 	new Intent(this,StoreListActivity.class);
+            Intent startDownload = new Intent(this, StoreListActivity.class);
             startActivity(startDownload);
 
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
@@ -154,32 +166,68 @@ public class MainActivity extends AppCompatActivity
 
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
-
-
-
-
-
-        }
-
-
-
-
-        //}
-
-        else if (id == R.id.nav_export) {
-
-
-
-
-        }
-
-
-        else if (id == R.id.nav_exit) {
+        } else if (id == R.id.nav_exit) {
 
         } else if (id == R.id.nav_services) {
 
-        }else if (id == R.id.nav_setting) {
+        } else if (id == R.id.nav_setting) {
+            startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
+        } else if (id == R.id.nav_export) {
 
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
+            builder1.setMessage("Are you sure you want to take the backup of your data")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @SuppressWarnings("resource")
+                        public void onClick(DialogInterface dialog, int id) {
+                            try {
+                                /*File file = new File(Environment
+                                        .getExternalStorageDirectory(),
+                                        "capital_backup");
+                                if (!file.isDirectory()) {
+                                    file.mkdir();
+                                }*/
+
+                                File sd = Environment.getExternalStorageDirectory();
+                                File data = Environment.getDataDirectory();
+
+                                if (sd.canWrite()) {
+                                    long date = System.currentTimeMillis();
+
+                                    SimpleDateFormat sdf = new SimpleDateFormat("MMM/dd/yy");
+                                    String dateString = sdf.format(date);
+
+                                    String currentDBPath = "//data//cpm.com.gskmtorange//databases//" + GSKOrangeDB.DATABASE_NAME;
+                                    String backupDBPath = "GSKMT_ORANGE_Database_backup" + dateString.replace('/', '-');
+
+                                    String path = Environment.getExternalStorageDirectory().getPath();
+
+                                    File currentDB = new File(data, currentDBPath);
+                                    File backupDB = new File(path, backupDBPath);
+
+                                    //Snackbar.make(rec_store_data, "Database Exported Successfully", Snackbar.LENGTH_SHORT).show();
+
+                                    if (currentDB.exists()) {
+                                        @SuppressWarnings("resource")
+                                        FileChannel src = new FileInputStream(currentDB).getChannel();
+                                        FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                                        dst.transferFrom(src, 0, src.size());
+                                        src.close();
+                                        dst.close();
+                                    }
+                                }
+                            } catch (Exception e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert1 = builder1.create();
+            alert1.show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
