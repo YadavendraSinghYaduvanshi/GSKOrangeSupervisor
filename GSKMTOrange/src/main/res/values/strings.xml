@@ -56,8 +56,9 @@
     <string name="msl_availability_availability">Availability</string>
 
     <string name="stock_facing_reference_image">Reference Image</string>
+    <string name="stock_facing_sku_name">SKU Name</string>
     <string name="stock_facing_stock">Stock</string>
-    <string name="stock_facing_facing">Facing</string>
+    <string name="stock_facing_faceup">Facing</string>
     <string name="stock_facing_sos_target">SOS Target</string>
 
 
