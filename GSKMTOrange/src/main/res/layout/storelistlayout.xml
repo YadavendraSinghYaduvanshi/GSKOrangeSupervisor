@@ -7,6 +7,10 @@
     android:orientation="vertical"
     android:weightSum="100">
 
+
+
+
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +64,7 @@
 
         >
 
-        <ListView
+       <!-- <ListView
             android:id="@+id/list_id"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -70,7 +74,21 @@
             android:dividerHeight="2dp"
             android:drawSelectorOnTop="false"
             android:fastScrollEnabled="true"
-            android:smoothScrollbar="true" />
+            android:smoothScrollbar="true" />-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/drawer_layout_recycle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+
+
+
+
+
 
 
     </LinearLayout>

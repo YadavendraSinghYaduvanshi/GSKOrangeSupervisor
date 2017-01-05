@@ -11,15 +11,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cpm.com.gskmtorange.GetterSetter.CoverageBean;
+import cpm.com.gskmtorange.GetterSetter.GeotaggingBeans;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
+
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
+
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
+
+import cpm.com.gskmtorange.constant.CommonString;
 
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
@@ -68,14 +74,19 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(TableBean.getMappingStock());
         db.execSQL(TableBean.getMappingT2p());
 
+
+        db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
+        db.execSQL(CommonString.CREATE_TABLE_COVERAGE_DATA);
+
+
         db.execSQL(TableBean.getDisplayChecklistMaster());
         db.execSQL(TableBean.getMappingDisplayChecklist());
-
 
         db.execSQL(CommonString.CREATE_TABLE_INSERT_MSL_AVAILABILITY);
 
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_HEADER);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_CHILD);
+
 
     }
 
@@ -563,6 +574,206 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
+    public void InsertSTOREgeotag(String storeid, double lat, double longitude, String path,String status) {
+
+        ContentValues values = new ContentValues();
+
+        try {
+
+            values.put("STORE_ID", storeid);
+            values.put("LATITUDE", Double.toString(lat));
+            values.put("LONGITUDE", Double.toString(longitude));
+            values.put("FRONT_IMAGE", path);
+            values.put("GEO_TAG", status);
+            values.put("STATUS", status);
+
+            db.insert(CommonString.TABLE_STORE_GEOTAGGING, null, values);
+
+        } catch (Exception ex) {
+            Log.d("Database Exception ", ex.toString());
+        }
+
+    }
+
+    public void updateStatus(String id, String status, double lat, double longtitude) {
+
+        ContentValues values = new ContentValues();
+
+        try {
+
+            values.put("GEO_TAG", status);
+
+            db.update(CommonString.KEY_JOURNEY_PLAN, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
+
+        } catch (Exception ex) {
+
+        }
+
+    }
+
+
+
+
+    public void updateCheckoutStatus(String id, String status) {
+
+        ContentValues values = new ContentValues();
+
+        try {
+
+            values.put("CHECKOUT_STATUS", status);
+
+            db.update(CommonString.KEY_JOURNEY_PLAN, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
+
+        } catch (Exception ex) {
+
+        }
+
+    }
+
+
+    public ArrayList<GeotaggingBeans> getinsertGeotaggingData(String status) {
+
+
+        ArrayList<GeotaggingBeans> geodata = new ArrayList<GeotaggingBeans>();
+
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT  * from " + CommonString.TABLE_STORE_GEOTAGGING + "  WHERE GEO_TAG = '" + status + "'", null);
+
+            if (dbcursor != null) {
+                int numrows = dbcursor.getCount();
+
+                dbcursor.moveToFirst();
+                for (int i = 1; i <= numrows; ++i) {
+
+                    GeotaggingBeans data = new GeotaggingBeans();
+
+                    data.setStoreid(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
+                    data.setLatitude(Double.parseDouble(dbcursor.getString(dbcursor.getColumnIndexOrThrow("LATITUDE"))));
+                    data.setLongitude(Double.parseDouble(dbcursor.getString(dbcursor.getColumnIndexOrThrow("LONGITUDE"))));
+                    data.setUrl1(dbcursor.getString(dbcursor.getColumnIndexOrThrow("FRONT_IMAGE")));
+
+                    geodata.add(data);
+                    dbcursor.moveToNext();
+                }
+
+                dbcursor.close();
+
+            }
+
+        } catch (Exception e) {
+
+        }
+        finally {
+            if (dbcursor != null && !dbcursor.isClosed()) {
+                dbcursor.close();
+            }
+        }
+
+
+        return geodata;
+
+    }
+
+
+    public void updateGeoTagData(String storeid,String status) {
+
+        try {
+
+            ContentValues values = new ContentValues();
+            values.put("GEO_TAG", status);
+
+            int l = db.update(CommonString.TABLE_STORE_GEOTAGGING, values,
+                    CommonString.KEY_STORE_ID + "=?", new String[] { storeid });
+            System.out.println("update : " + l);
+        } catch (Exception e) {
+            Log.d("Database Data ", e.toString());
+
+        }
+    }
+
+    public void updateDataStatus(String id,String status) {
+
+        ContentValues values = new ContentValues();
+
+        try {
+
+            values.put("GEO_TAG", status);
+
+            db.update(CommonString.KEY_JOURNEY_PLAN, values,
+                    CommonString.KEY_STORE_ID + "='" + id + "'", null);
+
+        } catch (Exception ex) {
+
+        }
+
+    }
+
+
+    public void deleteGeoTagData(String storeid) {
+
+        try {
+            db.delete(CommonString.TABLE_STORE_GEOTAGGING, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        } catch (Exception e) {
+
+        }
+    }
+
+    public ArrayList<CoverageBean> getCoverageData(String visitdate) {
+
+        ArrayList<CoverageBean> list = new ArrayList<CoverageBean>();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT  * from " + CommonString.TABLE_COVERAGE_DATA + " where "
+                            + CommonString.KEY_VISIT_DATE + "='" + visitdate + "'",
+                    null);
+
+
+            if (dbcursor != null) {
+
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    CoverageBean sb = new CoverageBean();
+
+                    sb.setStoreId(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_STORE_ID)));
+                    sb.setUserId((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_USER_ID))));
+                    sb.setInTime(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_IN_TIME)))));
+                    sb.setOutTime(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_OUT_TIME)))));
+                    sb.setVisitDate((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_VISIT_DATE))))));
+                    sb.setLatitude(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_LATITUDE)))));
+                    sb.setLongitude(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_LONGITUDE)))));
+                    sb.setStatus((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_COVERAGE_STATUS))))));
+                    sb.setImage((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE))))));
+                    sb.setReason((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_REASON))))));
+                    sb.setReasonid((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_REASON_ID))))));
+                    sb.setMID(Integer.parseInt(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_ID))))));
+                    if(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_COVERAGE_REMARK))==null){
+                        sb.setRemark("");
+                    }
+                    else{
+                        sb.setRemark((((dbcursor.getString(dbcursor
+                                .getColumnIndexOrThrow(CommonString.KEY_COVERAGE_REMARK))))));
+                    }
+
+                    list.add(sb);
+
+
     //Category List
     public ArrayList<CategoryGetterSetter> getCategoryListData(String keyAccountId, String storeTypeId, String classId) {
         ArrayList<CategoryGetterSetter> list = new ArrayList<>();
@@ -1001,17 +1212,52 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setFacing(dbcursor.getString(dbcursor.getColumnIndexOrThrow("FACEUP_VALUE")));
 
                     list.add(cd);
+
                     dbcursor.moveToNext();
                 }
                 dbcursor.close();
                 return list;
             }
+
         } catch (Exception e) {
             Log.d("Exception ", "get Stock_Facing Sku After Save Data!" + e.toString());
             return list;
         }
         return list;
     }
+          
+             public long InsertCoverageData(CoverageBean data) {
+
+        //db.delete(CommonString1.TABLE_COVERAGE_DATA, "STORE_ID" + "='" + data.getStoreId() + "'", null);
+
+        ContentValues values = new ContentValues();
+
+        try {
+
+            values.put(CommonString.KEY_STORE_ID, data.getStoreId());
+            values.put(CommonString.KEY_USER_ID, data.getUserId());
+            values.put(CommonString.KEY_IN_TIME, data.getInTime());
+            values.put(CommonString.KEY_OUT_TIME, data.getOutTime());
+            values.put(CommonString.KEY_VISIT_DATE, data.getVisitDate());
+            values.put(CommonString.KEY_LATITUDE, data.getLatitude());
+            values.put(CommonString.KEY_LONGITUDE, data.getLongitude());
+            values.put(CommonString.KEY_REASON_ID, data.getReasonid());
+            values.put(CommonString.KEY_REASON, data.getReason());
+            values.put(CommonString.KEY_COVERAGE_STATUS, data.getStatus());
+            values.put(CommonString.KEY_IMAGE, data.getImage());
+            values.put(CommonString.KEY_COVERAGE_REMARK, data.getRemark());
+            values.put(CommonString.KEY_REASON_ID, data.getReasonid());
+            values.put(CommonString.KEY_REASON, data.getReason());
+            values.put(CommonString.KEY_GEO_TAG, data.getGEO_TAG());
+
+            return db.insert(CommonString.TABLE_COVERAGE_DATA, null, values);
+
+        } catch (Exception ex) {
+            Log.d("Database Exception ", ex.toString());
+        }
+        return 0;
+    }
+
 
     public boolean checkStockAndFacingData(String store_id, String category_id) {
         Log.d("Stock_Facing ", "Stock data--------------->Start<------------");
@@ -1083,4 +1329,5 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             Log.d("Exception ", " in Insert MSL_Availability " + ex.toString());
         }
     }
+
 }

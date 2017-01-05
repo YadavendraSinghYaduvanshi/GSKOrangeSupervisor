@@ -158,10 +158,16 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+
+
+        // Create a Folder for Images
+
+ 
         File file = new File(Environment.getExternalStorageDirectory(), "GSK_MT_ORANGE_IMAGES");
         if (!file.isDirectory()) {
             file.mkdir();
         }
+
     }
 
   /*  private void populateAutoComplete() {

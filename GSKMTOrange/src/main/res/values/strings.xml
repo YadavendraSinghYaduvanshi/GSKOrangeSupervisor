@@ -39,6 +39,8 @@
 
     <string name="title_activity_store_list_geotag">Store List</string>
 
+    <string name="title_activity_store_geotag">Geo Tag</string>
+
 
     <string name="menu_daily_route_plan">Daily Route Plan</string>
     <string name="menu_daily_download">Daily Data Download</string>
@@ -75,6 +77,26 @@
     <string name="stock_facing_stock">Stock</string>
     <string name="stock_facing_faceup">Facing</string>
     <string name="stock_facing_sos_target">SOS Target</string>
+
+
+    <string name="title_geo_tag_activity_upload_data">Store Uploaded</string>
+    <string name="title_geo_tag_activity_geo_data">Store Geo Data Uploaded</string>
+    <string name="title_geo_tag_activity_geo_already_done">Store Already Geotagged</string>
+
+
+
+    <string name="title_store_list_activity_store_already_done">Store Already Uploaded</string>
+    <string name="title_store_list_activity_store_data_uploaded">Store Data Uploaded</string>
+    <string name="title_store_list_activity_store_already_checkout">Store Already Checkout</string>
+    <string name="title_store_list_activity_store_again_uploaded">Please Store data again Uploaded</string>
+    <string name="title_store_list_activity_store_closed">Store Closed</string>
+
+
+    <string name="save">SAVE</string>
+
+    <string name="title_store_list_checkout_current">Please checkout from current store</string>
+    <string name="title_store_list_checkout_Already_filled">Data already filled</string>
+
 
 
 </resources>

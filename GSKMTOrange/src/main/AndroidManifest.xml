@@ -46,6 +46,7 @@
         <activity android:name=".download.DownloadActivity"
             android:screenOrientation="portrait"/>
         <activity
+
             android:name=".GeoTag.GeoTagStoreList"
             android:label="@string/title_activity_store_list_geotag"
             android:theme="@style/AppTheme.NoActionBar"
@@ -80,6 +81,23 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".dailyentry.StoreimageActivity"
+            android:label="@string/title_activity_store_list_geotag"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".GeoTag.GeoTagActivity"
+            android:label="@string/title_activity_store_geotag"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyD02po19go2JMhXJeAnKDiZSiNloPsWqzI" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
             android:name=".gsk_dailyentry.Stock_FacingActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"
@@ -90,6 +108,7 @@
             android:label="@string/title_activity_t2_pcompliance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>
