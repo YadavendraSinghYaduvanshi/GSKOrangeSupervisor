@@ -116,14 +116,15 @@ public class CategoryListActivity extends AppCompatActivity {
             final CategoryGetterSetter categoryData = list.get(position);
 
             holder.categoryName.setText(categoryData.getCategory());
-            holder.categoryIcon.setImageResource(R.drawable.category);
-            /*if (categoryData.getCategory().equalsIgnoreCase("Oral Health")) {
+            //holder.categoryIcon.setImageResource(R.drawable.category);
+
+            if (categoryData.getCategory().equalsIgnoreCase("Oral Health")) {
                 holder.categoryIcon.setImageResource(R.drawable.ohc);
             } else if (categoryData.getCategory().equalsIgnoreCase("Wellness")) {
                 holder.categoryIcon.setImageResource(R.drawable.pdr);
             } else if (categoryData.getCategory().equalsIgnoreCase("Nutritionals")) {
                 holder.categoryIcon.setImageResource(R.drawable.hfd);
-            }*/
+            }
 
 
             holder.lay_menu.setOnClickListener(new View.OnClickListener() {
