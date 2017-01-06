@@ -268,11 +268,11 @@ public class CommonString {
             + "STORE_ID"
             + " INTEGER,"
 
-            + "SKU_ID"
+            /*+ "SKU_ID"
             + " INTEGER,"
 
             + "SKU"
-            + " VARCHAR,"
+            + " VARCHAR,"*/
 
             + "PROMO_ID"
             + " INTEGER,"

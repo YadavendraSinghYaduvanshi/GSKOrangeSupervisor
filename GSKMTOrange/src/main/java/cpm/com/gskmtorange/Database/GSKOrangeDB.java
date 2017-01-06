@@ -1456,8 +1456,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         try {
             values.put("STORE_ID", Integer.parseInt(data.getStore_id()));
-            values.put("SKU_ID", Integer.parseInt(data.getSku_id()));
-            values.put("SKU", data.getSku());
             values.put("PROMO_ID", Integer.parseInt(data.getPromo_id()));
             values.put("PROMO", data.getPromo());
             values.put("IN_STOCK_VALUE", Integer.parseInt(data.getPromo()));
