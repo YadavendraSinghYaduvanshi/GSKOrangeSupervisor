@@ -80,7 +80,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_CHILD);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_PROMO_SKU);
-        
+
         //Gagan End
 
         db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
