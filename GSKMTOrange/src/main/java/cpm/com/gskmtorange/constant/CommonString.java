@@ -291,5 +291,39 @@ public class CommonString {
 
             + ")";
 
+    public static final String TABLE_INSERT_PROMO_SKU = "Promo_SKU_Data";
+
+    public static final String CREATE_TABLE_INSERT_PROMO_SKU = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_PROMO_SKU
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "STORE_ID"
+            + " INTEGER,"
+
+            + "SKU_ID"
+            + " INTEGER,"
+
+            + "SKU"
+            + " VARCHAR,"
+
+            + "PROMO_ID"
+            + " INTEGER,"
+
+            + "PROMO"
+            + " VARCHAR,"
+
+            + "IN_STOCK_VALUE"
+            + " INTEGER,"
+
+            + "PROMO_ANNOUNCER_VALUE"
+            + " INTEGER,"
+
+            + "RUNNING_POS_VALUE"
+            + " INTEGER"
+
+            + ")";
+
     //Gagan Code End
 }

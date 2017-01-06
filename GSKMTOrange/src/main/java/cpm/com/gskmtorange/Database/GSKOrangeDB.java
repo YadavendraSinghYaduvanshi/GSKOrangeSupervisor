@@ -79,7 +79,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_HEADER);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_CHILD);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE);
-
+        db.execSQL(CommonString.CREATE_TABLE_INSERT_PROMO_SKU);
+        
         //Gagan End
 
         db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
@@ -250,11 +251,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
 
-
-          
-
-            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='"+key_account_id +"' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '"+ class_id +"') As Brand",null);
-            if(dbcursor != null){
+            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "') As Brand", null);
+            if (dbcursor != null) {
 
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
@@ -1500,6 +1498,31 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             return list;
         }
         return list;
+    }
+
+    public void InsertPromoSkuData(ArrayList<Promo_Compliance_DataGetterSetter> promoSkuListData) {
+        ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+            for (int i = 0; i < promoSkuListData.size(); i++) {
+                Promo_Compliance_DataGetterSetter data = promoSkuListData.get(i);
+
+                values.put("STORE_ID", Integer.parseInt(data.getStore_id()));
+                values.put("SKU_ID", Integer.parseInt(data.getSku_id()));
+                values.put("SKU", data.getSku());
+                values.put("PROMO_ID", Integer.parseInt(data.getPromo_id()));
+                values.put("PROMO", data.getPromo());
+                values.put("IN_STOCK_VALUE", Integer.parseInt(data.getIn_stock()));
+                values.put("PROMO_ANNOUNCER_VALUE", Integer.parseInt(data.getPromo_announcer()));
+                values.put("RUNNING_POS_VALUE", Integer.parseInt(data.getRunning_pos()));
+
+                db.insert(CommonString.TABLE_INSERT_PROMO_SKU, null, values);
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        } catch (Exception ex) {
+            Log.d("Exception ", " InsertAdditionalPromoData " + ex.toString());
+        }
     }
 
     //Gagan End Method
