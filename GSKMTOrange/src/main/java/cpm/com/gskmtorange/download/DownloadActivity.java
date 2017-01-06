@@ -552,11 +552,12 @@ public class DownloadActivity extends AppCompatActivity {
                 db.InsertBrandMaster(brandMasterGetterSetter);
                 db.InsertSkuMaster(skumastergettersetter);
                 db.InsertDisplayMaster(displayMasterGetterSetter);
-
                 db.InsertMAPPING_T2P(mappingt2PGetterSetter);
                 db.InsertMappingStock(mappingStockGetterSetter);
                 db.InsertDisplayChecklistMaster(checklistMasterGetterSetter);
                 db.InsertMappingDisplayChecklist(mappingChecklistGetterSetter);
+
+                db.insertNonWorkingData(nonWorkingReasonGetterSetter);
 
             } catch (MalformedURLException e) {
                 /*final AlertMessage message = new AlertMessage(

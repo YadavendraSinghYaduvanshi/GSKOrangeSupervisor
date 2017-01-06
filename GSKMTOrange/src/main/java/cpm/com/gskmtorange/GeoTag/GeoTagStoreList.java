@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.download.DownloadActivity;
 
 /**
  * Created by ashishc on 27-12-2016.
@@ -45,17 +47,19 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
     RecyclerView recyclerView;
     private SharedPreferences.Editor editor = null;
     LinearLayout parent_linear,nodata_linear;
+    LinearLayout linearlay;
+    FloatingActionButton fab;
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.storelistlayout);
+        setContentView(R.layout.geotagstorelistfab);
         //list = (ListView) findViewById(R.id.list_id);
 
         recyclerView=(RecyclerView) findViewById(R.id.drawer_layout_recycle);
-
+        linearlay = (LinearLayout) findViewById(R.id.no_data_lay);
        // nodata_linear = (LinearLayout) findViewById(R.id.no_data_lay);
         //parent_linear = (LinearLayout) findViewById(R.id.parent_linear);
-
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -70,6 +74,25 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
         db = new GSKOrangeDB(GeoTagStoreList.this);
         db.open();
 
+
+
+
+
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent in = new Intent(getApplicationContext(), DownloadActivity.class);
+                startActivity(in);
+
+                finish();
+
+
+            }
+        });
+
+
         storelist = db.getStoreData(date);
 
         if (storelist.size()>0) {
@@ -81,69 +104,14 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
         }
         else
         {
+            recyclerView.setVisibility(View.INVISIBLE);
+            linearlay.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
 
         }
-
 
     }
 
-/*
-    private class MyAdaptor extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-
-            return storelist.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            GeoTagStoreList.ViewHolder holder = null;
-            if (convertView == null) {
-                holder = new GeoTagStoreList.ViewHolder();
-
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.geotagstorelist, null);
-
-                holder.storename = (TextView) convertView.findViewById(R.id.geolistviewxml_storename);
-
-                holder.imgtick = (ImageView) convertView
-                        .findViewById(R.id.imageView1);
-
-                convertView.setTag(holder);
-
-            } else {
-                holder = (GeoTagStoreList.ViewHolder) convertView.getTag();
-            }
-            holder.storename.setText(storelist.get(position).getSTORE_NAME());
-            //holder.storeaddress.setText(storelist.get(position).getCITY());
-
-            return convertView;
-        }
-
-    }
-*/
-
-    /*private class ViewHolder {
-        TextView storename, storeaddress;
-        ImageView imgtick;
-        Button checkout;
-
-        RelativeLayout l1;
-
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -153,7 +121,6 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
         int id = item.getItemId();
 
         if(id==android.R.id.home){
-
 
             finish();
 
@@ -172,67 +139,6 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
         GeoTagStoreList.this.finish();
     }
 
-
-    /*protected void onListItemClick(ListView l, View v, int position, long id) {
-        // TODO Auto-generated method stub
-       // super.onListItemClick(l, v, position, id);
-
-        storelist = db.getStoreData(date);
-        StoreBean sb = storelist.get(position);
-
-        // When clicked, show a toast with the TextView text
-        if (storelist.get(position).getGEO_TAG().equalsIgnoreCase("U")) {
-
-
-            Snackbar.make(v, R.string.title_geo_tag_activity_upload_data, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
-
-        } else if (storelist.get(position).getGEO_TAG().equalsIgnoreCase("D")){
-
-
-            Snackbar.make(v, R.string.title_geo_tag_activity_geo_data, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
-
-        }
-
-        else if (storelist.get(position).getGEO_TAG().equalsIgnoreCase("Y")) {
-
-
-            Snackbar.make(v, R.string.title_geo_tag_activity_geo_already_done, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
-
-
-        } else if (storelist.get(position).getGEO_TAG().equalsIgnoreCase("P")) {
-
-            Snackbar.make(v, R.string.title_geo_tag_activity_geo_already_done, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
-        } else {
-
-            // PUT IN PREFERENCES
-            editor = preferences.edit();
-            editor.putString(CommonString.KEY_STORE_ID, sb.getSTORE_ID());
-            editor.putString(CommonString.KEY_STORE_NAME, sb.getSTORE_NAME());
-            editor.putString(CommonString.KEY_VISIT_DATE, sb.getVISIT_DATE());
-            editor.commit();
-
-            Intent intent = new Intent(GeoTagStoreList.this, GeoTagActivity.class);
-            startActivity(intent);
-            GeoTagStoreList();
-        }
-    }
-
-    @Override
-    public void onClick(View arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    public void GeoTagStoreList() {
-
-        this.finish();
-
-    }*/
 
     public class ValueAdapter extends RecyclerView.Adapter<ValueAdapter.MyViewHolder>{
 
