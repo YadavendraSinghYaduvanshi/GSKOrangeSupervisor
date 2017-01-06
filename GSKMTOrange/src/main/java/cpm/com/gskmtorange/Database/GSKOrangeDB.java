@@ -1458,9 +1458,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             values.put("STORE_ID", Integer.parseInt(data.getStore_id()));
             values.put("PROMO_ID", Integer.parseInt(data.getPromo_id()));
             values.put("PROMO", data.getPromo());
-            values.put("IN_STOCK_VALUE", Integer.parseInt(data.getPromo()));
-            values.put("PROMO_ANNOUNCER_VALUE", Integer.parseInt(data.getPromo()));
-            values.put("RUNNING_POS_VALUE", Integer.parseInt(data.getPromo()));
+            values.put("IN_STOCK_VALUE", Integer.parseInt(data.getIn_stock()));
+            values.put("PROMO_ANNOUNCER_VALUE", Integer.parseInt(data.getPromo_announcer()));
+            values.put("RUNNING_POS_VALUE", Integer.parseInt(data.getRunning_pos()));
 
             db.insert(CommonString.TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE, null, values);
         } catch (Exception ex) {
