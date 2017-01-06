@@ -8,8 +8,7 @@ import android.os.Environment;
 
 public class CommonString {
 
-// webservice constants
-
+    // webservice constants
 
     // preferenec keys
     public static final String KEY_USERNAME = "username";
