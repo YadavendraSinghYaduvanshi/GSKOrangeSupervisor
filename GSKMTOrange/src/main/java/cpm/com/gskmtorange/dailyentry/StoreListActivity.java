@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +41,7 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.download.DownloadActivity;
 
 /**
  * Created by ashishc on 29-12-2016.
@@ -59,30 +61,38 @@ public class StoreListActivity extends AppCompatActivity {
     String store_id;
     private Dialog dialog;
     boolean result_flag = false, leaveflag = false;
-
+    FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.storelist);
+        setContentView(R.layout.storelistfablayout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         date = preferences.getString(CommonString.KEY_DATE, null);
         visit_status = preferences.getString(CommonString.KEY_STOREVISITED_STATUS, "");
-
         db = new GSKOrangeDB(StoreListActivity.this);
         db.open();
 
-
-        linearlay = (LinearLayout) findViewById(R.id.linearlayout);
+        linearlay = (LinearLayout) findViewById(R.id.no_data_lay);
         recyclerView = (RecyclerView) findViewById(R.id.drawer_layout_recycle);
 
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent in = new Intent(getApplicationContext(), DownloadActivity.class);
+                startActivity(in);
+
+                finish();
+
+
+            }
+        });
 
     }
 
@@ -104,6 +114,7 @@ public class StoreListActivity extends AppCompatActivity {
 
             recyclerView.setVisibility(View.INVISIBLE);
             linearlay.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
         }
 
     }
@@ -190,7 +201,17 @@ public class StoreListActivity extends AppCompatActivity {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.tickl);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-            } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
+            }
+            else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+                viewHolder.imageview.setVisibility(View.VISIBLE);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.leave_tick);
+                viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+            }
+
+
+
+
+            else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
 
 
                 if (coverage.size() > 0) {
@@ -244,7 +265,12 @@ public class StoreListActivity extends AppCompatActivity {
                         Snackbar.make(v, R.string.title_store_list_activity_store_again_uploaded, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_L)) {
                         Snackbar.make(v, R.string.title_store_list_activity_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    } else {
+                    }
+                    else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+                        Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    }
+
+                    else {
 
                         // PUT IN PREFERENCES
                         editor = preferences.edit();
@@ -358,8 +384,8 @@ public class StoreListActivity extends AppCompatActivity {
 
 
 
-                                                /*Intent in  = new Intent(StoreListActivity.this, NonWorkingReason.class);
-                                                startActivity(in);*/
+                                                Intent in  = new Intent(StoreListActivity.this, NonWorkingReason.class);
+                                                startActivity(in);
 
                                             }
                                         })
@@ -380,8 +406,8 @@ public class StoreListActivity extends AppCompatActivity {
 
 
 
-                       /* Intent in  = new Intent(StoreListActivity.this, NonWorkingReason.class);
-                        startActivity(in);*/
+                        Intent in  = new Intent(StoreListActivity.this, NonWorkingReason.class);
+                        startActivity(in);
                     }
 
                 }

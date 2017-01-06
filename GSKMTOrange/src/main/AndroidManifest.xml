@@ -121,6 +121,13 @@
             android:windowSoftInputMode="adjustPan" />
 
         <!--Gagan End Declaration-->
+      
+       <activity
+            android:name=".dailyentry.NonWorkingReason"
+            android:label="@string/title_activity_t2_pcompliance"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@ public class CommonString {
     public static final String KEY_DATE = "date";
     public static final String KEY_STOREVISITED_STATUS = "STOREVISITED_STATUS";
 
+
     public static final String KEY_PATH = "path";
     public static final String KEY_VERSION = "APP_VERSION";
 

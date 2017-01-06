@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -29,9 +30,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
+import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
@@ -43,20 +46,20 @@ public class MainActivity extends AppCompatActivity
 
     WebView webView;
     ImageView imageView;
-
+    String date, visit_status;
     private SharedPreferences preferences = null;
-
+    GSKOrangeDB db;
     String user_name, user_type;
-
+    ArrayList<StoreBean> storelist = new ArrayList<StoreBean>();
+    View headerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
+        date = preferences.getString(CommonString.KEY_DATE, null);
         imageView = (ImageView) findViewById(R.id.img_main);
 
         webView = (WebView) findViewById(R.id.webview);
@@ -64,6 +67,9 @@ public class MainActivity extends AppCompatActivity
         String url = preferences.getString(CommonString.KEY_NOTICE_BOARD_LINK, "");
         user_name = preferences.getString(CommonString.KEY_USERNAME, null);
         //user_type = preferences.getString(CommonString.KEY_USER_TYPE, null);
+
+        db = new GSKOrangeDB(MainActivity.this);
+        db.open();
 
         webView.setWebViewClient(new MyWebViewClient());
 
@@ -92,7 +98,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        View headerView = LayoutInflater.from(this).inflate(R.layout.nav_header_main, navigationView, false);
+         headerView = LayoutInflater.from(this).inflate(R.layout.nav_header_main, navigationView, false);
 
         TextView tv_username = (TextView) headerView.findViewById(R.id.nav_user_name);
         //tv_usertype = (TextView) headerView.findViewById(R.id.nav_user_type);
@@ -162,11 +168,21 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_geotag) {
 
 
+            storelist = db.getStoreData(date);
 
-            Intent startDownload = 	new Intent(this,GeoTagStoreList.class);
-            startActivity(startDownload);
 
-            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+            if(storelist.size()>0)
+            {
+                Intent startDownload = 	new Intent(this,GeoTagStoreList.class);
+                startActivity(startDownload);
+
+                overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+            }
+            else
+            {
+                Snackbar.make(headerView, R.string.title_store_list_download_data, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+
 
         } else if (id == R.id.nav_exit) {
 
@@ -178,7 +194,9 @@ public class MainActivity extends AppCompatActivity
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
         } else if (id == R.id.nav_setting) {
-            //startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
+
+            startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
+
         } else if (id == R.id.nav_export) {
 
             AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
