@@ -4,12 +4,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -43,6 +46,7 @@ import java.util.List;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 
@@ -54,15 +58,20 @@ public class Stock_FacingActivity extends AppCompatActivity {
     ArrayList<Stock_FacingGetterSetter> childDataList;
     List<Stock_FacingGetterSetter> hashMapListHeaderData;
     HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> hashMapListChildData;
+    List<Integer> checkHeaderArray = new ArrayList<>();
 
     ExpandableListAdapter adapter;
     GSKOrangeDB db;
 
-    String categoryName, categoryId, storeId;
+    String categoryName, categoryId, Error_Message = "";
 
-    String path = "", str = "", _pathforcheck = "", img1 = "";
+    String path = "", str = "", _pathforcheck = "", img1 = "", img2 = "";
     static int child_position = -1;
     boolean isDialogOpen = true;
+    boolean checkflag = true;
+
+    private SharedPreferences preferences;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,54 +89,62 @@ public class Stock_FacingActivity extends AppCompatActivity {
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         txt_stockFacingName = (TextView) findViewById(R.id.txt_stockFacingName);
 
+        //preference data
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
+        visit_date = preferences.getString(CommonString.KEY_DATE, null);
+        date = preferences.getString(CommonString.KEY_DATE, null);
+        username = preferences.getString(CommonString.KEY_USERNAME, null);
+        intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
+        keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
+        class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
+        storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+
         categoryName = getIntent().getStringExtra("categoryName");
         categoryId = getIntent().getStringExtra("categoryId");
-        storeId = "";
 
         //txt_stockFacingName.setText(categoryName);
         txt_stockFacingName.setText(getResources().getString(R.string.title_activity_stock_facing));
 
         prepareList();
 
-        str = Environment.getExternalStorageState();
+        str = CommonString.FILE_PATH + _pathforcheck;
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
 
-                //if (validateData(listDataHeader, listDataChild)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                builder.setMessage("Are you sure you want to save")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                db.open();
-                                //db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                if (validateData(hashMapListHeaderData, hashMapListChildData)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
+                    builder.setMessage("Are you sure you want to save")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    db.open();
 
-                                if (db.checkStockAndFacingData(storeId, categoryId)) {
-                                    db.updateStockAndFacing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
-                                } else {
-                                    db.InsertStock_Facing(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                    if (db.checkStockAndFacingData(store_id, categoryId)) {
+                                        db.updateStockAndFacing(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                    } else {
+                                        db.InsertStock_Facing(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                    }
+
+                                    Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
+                                    finish();
+                                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                                 }
-
-                                Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
-                                finish();
-                                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
-
-                /*} else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
                     builder.setMessage("Fill the value or fill 0 ")
                             .setCancelable(false)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -137,13 +154,22 @@ public class Stock_FacingActivity extends AppCompatActivity {
                             });
                     AlertDialog alert = builder.create();
                     alert.show();
-                }*/
+                }
             }
         });
 
         expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int lastItem = firstVisibleItem + visibleItemCount;
+
+                if (firstVisibleItem == 0) {
+                    fab.setVisibility(View.VISIBLE);
+                } else if (lastItem == totalItemCount) {
+                    fab.setVisibility(View.INVISIBLE);
+                } else {
+                    fab.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -281,65 +307,66 @@ public class Stock_FacingActivity extends AppCompatActivity {
             img_camera1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String date = new Date().toLocaleString().toString();
-                    String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+                    //String date = new Date().toLocaleString().toString();
+                    //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
 
-                    _pathforcheck = "Stock Camera1_" + tempDate + ".jpg";
+                    _pathforcheck = "Stock_Cam1_" + store_id + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
                     child_position = groupPosition;
                     path = str + _pathforcheck;
 
-                    startCameraActivity(groupPosition);
+                    startCameraActivity1(groupPosition);
                 }
             });
 
             if (!img1.equalsIgnoreCase("")) {
                 if (groupPosition == child_position) {
-                    //headerTitle.setImg_cam(img1);
+                    headerTitle.setImage1(img1);
                     img1 = "";
                 }
             }
 
-
-            /*if (headerTitle.getImg_cam().equals("")) {
+            if (headerTitle.getImage1().equals("")) {
                 img_camera1.setBackgroundResource(R.drawable.ic_menu_camera);
             } else {
-                //img_camera1.setBackgroundResource(R.drawable.camtick);
-            }*/
+                img_camera1.setBackgroundResource(R.drawable.ic_menu_gallery);
+            }
 
-            /*img_camera.setOnClickListener(new View.OnClickListener() {
+
+            img_camera2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String date = new Date().toLocaleString().toString();
-                    String TempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+                    //String date = new Date().toLocaleString().toString();
+                    //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
 
-                    _pathforcheck = "Stock" + headerTitle.getBrand_cd() + "_" + store_cd + "_" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck = "Stock_Cam2_" + store_id + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
                     child_position = groupPosition;
                     path = str + _pathforcheck;
 
-                    startCameraActivity(groupPosition);
+                    startCameraActivity2(groupPosition);
                 }
             });
 
-            if (!img1.equalsIgnoreCase("")) {
+            if (!img2.equalsIgnoreCase("")) {
                 if (groupPosition == child_position) {
-                    headerTitle.setImg_cam(img1);
-                    img1 = "";
+                    headerTitle.setImage2(img2);
+                    img2 = "";
                 }
             }
 
-            if (headerTitle.getImg_cam().equals("")) {
-                img_camera.setBackgroundResource(R.drawable.cam);
+            if (headerTitle.getImage2().equals("")) {
+                img_camera2.setBackgroundResource(R.drawable.ic_menu_camera);
             } else {
-                img_camera.setBackgroundResource(R.drawable.camtick);
+                img_camera2.setBackgroundResource(R.drawable.ic_menu_gallery);
             }
+
 
             if (!checkflag) {
                 if (checkHeaderArray.contains(groupPosition)) {
-                    txt_header.setTextColor(getResources().getColor(R.color.red));
+                    txt_stockFaceupHeader.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
                 } else {
-                    txt_header.setTextColor(getResources().getColor(R.color.grey_dark));
+                    txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.black));
                 }
-            }*/
+            }
 
             return convertView;
         }
@@ -475,6 +502,29 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
             holder.ed_facing.setText(childData.getFacing());
 
+            if (!checkflag) {
+                boolean tempflag = false;
+
+                if (holder.ed_stock.getText().toString().equals("")) {
+                    holder.ed_stock.setBackgroundColor(getResources().getColor(R.color.white));
+                    holder.ed_stock.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    holder.ed_stock.setHint("Empty");
+                    tempflag = true;
+                }
+
+                if (holder.ed_facing.getText().toString().equals("")) {
+                    holder.ed_facing.setBackgroundColor(getResources().getColor(R.color.white));
+                    holder.ed_facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    holder.ed_facing.setHint("Empty");
+                    tempflag = true;
+                }
+
+                if (tempflag) {
+                    holder.cardView.setCardBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                } else {
+                    holder.cardView.setCardBackgroundColor(getResources().getColor(R.color.white));
+                }
+            }
 
             return convertView;
         }
@@ -497,23 +547,97 @@ public class Stock_FacingActivity extends AppCompatActivity {
         LinearLayout lin_category;
     }
 
-    private void startCameraActivity(int position) {
+    boolean validateData(List<Stock_FacingGetterSetter> listDataHeader,
+                         HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listDataChild) {
+        boolean flag = true;
+        checkHeaderArray.clear();
+
+        for (int i = 0; i < listDataHeader.size(); i++) {
+            String imagePath = listDataHeader.get(i).getImage1();
+            String imagePath1 = listDataHeader.get(i).getImage2();
+
+            for (int j = 0; j < listDataChild.get(listDataHeader.get(i)).size(); j++) {
+                String stock = listDataChild.get(listDataHeader.get(i)).get(j).getStock();
+                String faceup = listDataChild.get(listDataHeader.get(i)).get(j).getFacing();
+
+                if (!imagePath.equals("") || !imagePath1.equals("")) {
+                    if (!stock.equals("0")) {
+                        if (stock.equals("") || faceup.equals("")) {
+                            if (!checkHeaderArray.contains(i)) {
+                                checkHeaderArray.add(i);
+                            }
+
+                            flag = false;
+                            Error_Message = "Please fill all the data";
+                            break;
+                        }
+                    } else {
+                        if (stock.equals("")) {
+                            if (!checkHeaderArray.contains(i)) {
+                                checkHeaderArray.add(i);
+                            }
+
+                            flag = false;
+                            Error_Message = "Please fill all the data";
+                            break;
+                        }
+                    }
+                } else {
+                    if (!checkHeaderArray.contains(i)) {
+                        checkHeaderArray.add(i);
+                    }
+
+                    flag = false;
+                    Error_Message = "Please click either 1 image";
+                    break;
+                }
+            }
+
+            if (flag == false) {
+                checkflag = false;
+                break;
+            } else {
+                checkflag = true;
+            }
+        }
+        //expListView.invalidate();
+        adapter.notifyDataSetChanged();
+
+        return checkflag;
+    }
+
+    private void startCameraActivity1(int position) {
         try {
-            Log.e("Stock & Facing ", "startCameraActivity()");
+            /*Log.e("Stock and Facing ", "startCameraActivity()");
             File file = new File(path);
             Uri outputFileUri = Uri.fromFile(file);
 
-            /*String defaultCameraPackage = "";
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            startActivityForResult(intent, position);*/
+
+            Log.i("Stock & Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
+
+            String defaultCameraPackage = "";
             final PackageManager packageManager = getPackageManager();
             List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
-
             for (int n = 0; n < list.size(); n++) {
                 if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-//                    Log.d("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
-//                    Log.d("TAG", "package name  : " + list.get(n).packageName);
-                    if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
-                        defaultCameraPackage = list.get(n).packageName;
-                        break;
+                    /*Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    Log.e("TAG", "package name  : " + list.get(n).packageName);*/
+
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
                     }
                 }
             }
@@ -521,11 +645,55 @@ public class Stock_FacingActivity extends AppCompatActivity {
             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             intent.setPackage(defaultCameraPackage);
-            startActivityForResult(intent, position);*/
+            startActivityForResult(intent, 1);
+            //startActivityForResult(intent, position);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startCameraActivity2(int position) {
+        try {
+            /*Log.e("Stock and Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
 
             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            startActivityForResult(intent, position);
+            startActivityForResult(intent, position);*/
+
+            Log.i("Stock & Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
+
+            String defaultCameraPackage = "";
+            final PackageManager packageManager = getPackageManager();
+            List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+            for (int n = 0; n < list.size(); n++) {
+                if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                    /*Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    Log.e("TAG", "package name  : " + list.get(n).packageName);*/
+
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(defaultCameraPackage);
+            startActivityForResult(intent, 2);
+            //startActivityForResult(intent, position);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -534,7 +702,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.e("Stock & Facing", "resultCode: " + resultCode);
-        switch (resultCode) {
+        /*switch (resultCode) {
             case 0:
                 Log.e("Stock & Facing", "User cancelled");
                 break;
@@ -542,13 +710,41 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 if (_pathforcheck != null && !_pathforcheck.equals("")) {
                     if (new File(str + _pathforcheck).exists()) {
                         img1 = _pathforcheck;
-                        //adapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
                         _pathforcheck = "";
                     }
                 }
                 break;
+        }*/
+
+        switch (requestCode) {
+            case 1:
+                if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img1 = _pathforcheck;
+                            adapter.notifyDataSetChanged();
+                            _pathforcheck = "";
+                        }
+                    }
+                } else {
+                    Log.e("Stock & Facing", "User cancelled");
+                }
+                break;
+            case 2:
+                if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img2 = _pathforcheck;
+                            adapter.notifyDataSetChanged();
+                            _pathforcheck = "";
+                        }
+                    }
+                } else {
+                    Log.e("Stock & Facing", "User cancelled");
+                }
+                break;
         }
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
     }
 

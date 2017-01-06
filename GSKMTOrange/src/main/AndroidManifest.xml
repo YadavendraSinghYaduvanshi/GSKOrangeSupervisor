@@ -35,51 +35,31 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".autoupdate.AutoUpdateActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".autoupdate.AutoUpdateActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SelectLanguageActivity"
             android:label="@string/title_activity_select_language"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".download.DownloadActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".download.DownloadActivity"
+            android:screenOrientation="portrait" />
         <activity
 
             android:name=".GeoTag.GeoTagStoreList"
             android:label="@string/title_activity_store_list_geotag"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity
-            android:name=".gsk_dailyentry.CategoryWisePerformanceActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
-        <!-- android:label="@string/title_activity_category_wise_performance" -->
 
-        <activity
-            android:name=".gsk_dailyentry.DailyDataMenuActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
-        <!-- android:label="@string/title_activity_daily_main_menu" -->
-
-        <activity
-            android:name=".gsk_dailyentry.MSL_AvailabilityActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
-        <!-- android:label="@string/title_activity_msl__availability" -->
         <activity
             android:name=".dailyentry.StoreListActivity"
             android:label="@string/title_activity_store_list_geotag"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".dailyentry.StoreimageActivity"
             android:label="@string/title_activity_store_list_geotag"
@@ -97,26 +77,56 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name=".gsk_dailyentry.Stock_FacingActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".dailyentry.T2PComplianceActivity"
             android:label="@string/title_activity_t2_pcompliance"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--Gagan Start Declaration-->
 
         <activity
+            android:name=".gsk_dailyentry.CategoryListActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".gsk_dailyentry.CategoryWisePerformanceActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".gsk_dailyentry.DailyDataMenuActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".gsk_dailyentry.MSL_AvailabilityActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".gsk_dailyentry.Stock_FacingActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <!--Gagan End Declaration-->
+      
+       <activity
             android:name=".dailyentry.NonWorkingReason"
             android:label="@string/title_activity_t2_pcompliance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-
-
-
 
     </application>
 

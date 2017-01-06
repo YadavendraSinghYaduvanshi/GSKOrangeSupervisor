@@ -3,8 +3,10 @@ package cpm.com.gskmtorange.gsk_dailyentry;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +36,7 @@ import java.util.List;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 
 public class MSL_AvailabilityActivity extends AppCompatActivity {
@@ -51,6 +54,9 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
     String categoryName, categoryId, storeId;
 
+    private SharedPreferences preferences;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,15 +67,27 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        db = new GSKOrangeDB(this);
-        db.open();
-
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         txt_mslAvailabilityName = (TextView) findViewById(R.id.txt_mslAvailabilityName);
 
+        db = new GSKOrangeDB(this);
+        db.open();
+
+        //preference data
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
+        visit_date = preferences.getString(CommonString.KEY_DATE, null);
+        date = preferences.getString(CommonString.KEY_DATE, null);
+        username = preferences.getString(CommonString.KEY_USERNAME, null);
+        intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
+        keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
+        class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
+        storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+
+        //Intent data
         categoryName = getIntent().getStringExtra("categoryName");
         categoryId = getIntent().getStringExtra("categoryId");
-        storeId = "";
+
 
         //txt_mslAvailabilityName.setText(categoryName);
         txt_mslAvailabilityName.setText(getResources().getString(R.string.title_activity_msl__availability));
@@ -89,10 +107,10 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 db.open();
 
-                                if (db.checkMsl_AvailabilityData(storeId, categoryId)) {
-                                    db.updateMSL_Availability(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                if (db.checkMsl_AvailabilityData(store_id, categoryId)) {
+                                    db.updateMSL_Availability(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
                                 } else {
-                                    db.InsertMSL_Availability(storeId, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                    db.InsertMSL_Availability(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
                                 }
 
                                 Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
