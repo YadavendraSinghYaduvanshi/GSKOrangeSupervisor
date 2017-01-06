@@ -82,7 +82,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         //Gagan End
 
-
         db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
         db.execSQL(CommonString.CREATE_TABLE_COVERAGE_DATA);
 
