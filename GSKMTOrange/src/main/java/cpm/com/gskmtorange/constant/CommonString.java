@@ -51,7 +51,6 @@ public class CommonString {
     public static final String KEY_MERCHANDISER_ID = "MERCHANDISER_ID";
 
 
-
     public static final String KEY_JOURNEY_PLAN = "JOURNEY_PLAN";
 
     public static final String KEY_P = "P";
@@ -63,7 +62,7 @@ public class CommonString {
     public static final String KEY_INVALID = "INVALID";
     public static final String STORE_STATUS_LEAVE = "L";
     public static final String KEY_VALID = "Valid";
-    public static final String DATA_DELETE_ALERT_MESSAGE="Saved data will be lost - Do you want to continue?";
+    public static final String DATA_DELETE_ALERT_MESSAGE = "Saved data will be lost - Do you want to continue?";
     public static final String KEY_CHECK_IN = "I";
     // webservice constants
 
@@ -97,11 +96,6 @@ public class CommonString {
     //Alert Messages
 
 
-
-
-
-
-
     public static final String MESSAGE_FAILURE = "Server Error.Please Access After Some Time";
     public static final String MESSAGE_FALSE = "Invalid User";
     public static final String MESSAGE_CHANGED = "Invalid UserId Or Password / Password Has Been Changed.";
@@ -112,22 +106,16 @@ public class CommonString {
     public static final String TABLE_COVERAGE_DATA = "COVERAGE_DATA";
 
 
-
     public static final String CREATE_TABLE_COVERAGE_DATA = "CREATE TABLE  IF NOT EXISTS "
             + TABLE_COVERAGE_DATA + " (" + KEY_ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT ," + KEY_STORE_ID
             + " VARCHAR,USER_ID VARCHAR, " + KEY_IN_TIME + " VARCHAR,"
             + KEY_OUT_TIME + " VARCHAR," + KEY_VISIT_DATE + " VARCHAR,"
-            + KEY_LATITUDE + " VARCHAR," + KEY_LONGITUDE + " VARCHAR,"+ KEY_MERCHANDISER_ID + " VARCHAR,"
-            + KEY_COVERAGE_STATUS + " VARCHAR,"+ KEY_IMAGE + " VARCHAR,"
+            + KEY_LATITUDE + " VARCHAR," + KEY_LONGITUDE + " VARCHAR," + KEY_MERCHANDISER_ID + " VARCHAR,"
+            + KEY_COVERAGE_STATUS + " VARCHAR," + KEY_IMAGE + " VARCHAR,"
             + KEY_GEO_TAG + " VARCHAR,"
             + KEY_REASON_ID + " VARCHAR," + KEY_COVERAGE_REMARK
             + " VARCHAR," + KEY_REASON + " VARCHAR)";
-
-
-
-
-
 
 
     public static final String CREATE_TABLE_STORE_GEOTAGGING = "CREATE TABLE IF NOT EXISTS "
@@ -152,7 +140,6 @@ public class CommonString {
             + " VARCHAR,"
 
             + "FRONT_IMAGE" + " VARCHAR)";
-
 
 
     //Gagan Code Start
@@ -268,6 +255,40 @@ public class CommonString {
 
             + "FACEUP_VALUE"
             + " VARCHAR"
+
+            + ")";
+
+    public static final String TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE = "Additional_Promo_Compliance_Data";
+
+    public static final String CREATE_TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "STORE_ID"
+            + " INTEGER,"
+
+            + "SKU_ID"
+            + " INTEGER,"
+
+            + "SKU"
+            + " VARCHAR,"
+
+            + "PROMO_ID"
+            + " INTEGER,"
+
+            + "PROMO"
+            + " VARCHAR,"
+
+            + "IN_STOCK_VALUE"
+            + " INTEGER,"
+
+            + "PROMO_ANNOUNCER_VALUE"
+            + " INTEGER,"
+
+            + "RUNNING_POS_VALUE"
+            + " INTEGER"
 
             + ")";
 

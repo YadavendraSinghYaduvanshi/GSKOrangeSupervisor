@@ -69,7 +69,7 @@ public class CategoryListActivity extends AppCompatActivity {
         //txt_categoryName.setText("Category List");
         txt_categoryName.setText(getResources().getString(R.string.title_activity_category_list));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_category);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

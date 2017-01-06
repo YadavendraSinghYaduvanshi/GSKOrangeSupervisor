@@ -94,5 +94,6 @@
 
     <string name="title_store_list_checkout_current">Please checkout from current store</string>
     <string name="title_store_list_checkout_Already_filled">Data already filled</string>
+    <string name="title_activity_promo_compliance">PromoCompliance</string>
 
 </resources>
