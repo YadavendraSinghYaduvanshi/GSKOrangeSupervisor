@@ -784,7 +784,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                                 && !geotaglist.get(i).getUrl1()
                                 .equalsIgnoreCase("")) {
 
-                            if (new File(Environment.getExternalStorageDirectory() + "/GSK_MT_Images/"
+                            if (new File(Environment.getExternalStorageDirectory() + "/GSK_MT_ORANGE_IMAGES/"
                                     + geotaglist.get(i).getUrl1()).exists()) {
                                 result = UploadGeoImage(geotaglist.get(i).getUrl1(), "GeoTag");
 
@@ -910,7 +910,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         errormsg = "";
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/GSK_MT_Images/" + path, o);
+        BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/GSK_MT_ORANGE_IMAGES/" + path, o);
 
         // The new size we want to scale to
         final int REQUIRED_SIZE = 1024;
@@ -930,7 +930,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         // Decode with inSampleSize
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
-        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/GSK_MT_Images/" + path, o2);
+        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/GSK_MT_ORANGE_IMAGES/" + path, o2);
 
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bao);
@@ -958,7 +958,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
         if (result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
 
-            new File(Environment.getExternalStorageDirectory() + "/GSK_MT_Images/" + path).delete();
+            new File(Environment.getExternalStorageDirectory() + "/GSK_MT_ORANGE_IMAGES/" + path).delete();
 
 
 

@@ -14,6 +14,19 @@ import java.util.List;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.GeotaggingBeans;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
+
+import cpm.com.gskmtorange.xmlGetterSetter.CategoryGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
+
+import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
+
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryGetterSetter;
@@ -82,6 +95,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(CommonString.CREATE_TABLE_INSERT_PROMO_SKU);
 
         //Gagan End
+        db.execSQL(TableBean.getNonWorkingReason());
 
         db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
         db.execSQL(CommonString.CREATE_TABLE_COVERAGE_DATA);
@@ -1524,4 +1538,84 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
     //Gagan End Method
+
+//Non Working data
+
+    public void insertNonWorkingData(NonWorkingReasonGetterSetter data) {
+        db.delete("NON_WORKING_REASON", null, null);
+        ContentValues values = new ContentValues();
+
+        try {
+
+            for (int i = 0; i < data.getREASON_ID().size(); i++) {
+
+                values.put("REASON_ID", Integer.parseInt(data.getREASON_ID().get(i)));
+                values.put("REASON", data.getREASON().get(i));
+                values.put("ENTRY_ALLOW", data.getENTRY_ALLOW().get(i));
+                values.put("IMAGE_ALLOW", data.getIMAGE_ALLOW().get(i));
+
+                db.insert("NON_WORKING_REASON", null, values);
+
+            }
+
+        } catch (Exception ex) {
+            Log.d("Database Exception  ", ex.toString());
+        }
+
+    }
+
+    // get NonWorking data
+    public ArrayList<NonWorkingReasonGetterSetter> getNonWorkingData() {
+
+        ArrayList<NonWorkingReasonGetterSetter> list = new ArrayList<NonWorkingReasonGetterSetter>();
+        Cursor dbcursor = null;
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM NON_WORKING_REASON", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    NonWorkingReasonGetterSetter sb = new NonWorkingReasonGetterSetter();
+
+                    sb.setREASON_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("REASON_ID")));
+
+                    sb.setREASON(dbcursor.getString(dbcursor.getColumnIndexOrThrow("REASON")));
+
+                    sb.setENTRY_ALLOW(dbcursor.getString(dbcursor.getColumnIndexOrThrow("ENTRY_ALLOW")));
+
+                    list.add(sb);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+
+        } catch (Exception e) {
+
+            return list;
+        }
+
+
+        return list;
+    }
+
+    public void updateStoreStatusOnLeave(String storeid, String visitdate,
+                                         String status) {
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put("UPLOAD_STATUS", status);
+
+            db.update("JOURNEY_PLAN", values,
+                    CommonString.KEY_STORE_ID + "='" + storeid + "' AND "
+                            + CommonString.KEY_VISIT_DATE + "='" + visitdate
+                            + "'", null);
+        } catch (Exception e) {
+
+        }
+    }
+
+
+
+
 }

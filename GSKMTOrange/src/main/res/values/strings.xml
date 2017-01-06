@@ -91,9 +91,11 @@
     <string name="title_store_list_activity_store_already_checkout">Store Already Checkout</string>
     <string name="title_store_list_activity_store_again_uploaded">Please Store data again Uploaded</string>
     <string name="title_store_list_activity_store_closed">Store Closed</string>
+    <string name="title_store_list_activity_already_store_closed">Store Already Closed</string>
 
     <string name="title_store_list_checkout_current">Please checkout from current store</string>
     <string name="title_store_list_checkout_Already_filled">Data already filled</string>
     <string name="title_activity_promo_compliance">PromoCompliance</string>
+    <string name="title_store_list_download_data">Please Download Data First</string>
 
 </resources>
