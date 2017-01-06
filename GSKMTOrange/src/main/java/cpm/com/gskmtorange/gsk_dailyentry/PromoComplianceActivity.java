@@ -15,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -34,11 +36,15 @@ import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
 
+import static android.R.attr.data;
+import static cpm.com.gskmtorange.R.id.toggle_inStock;
+
 public class PromoComplianceActivity extends AppCompatActivity {
     LinearLayout lin_promo_sku, lin_addtional_promo;
     View view_promo_sku, view_additional_promo;
     Spinner sp_promo;
     ToggleButton toggle_add_InStock, toggle_add_promoAnnouncer, toggle_add_runningPos;
+    Button btn_add;
 
     ArrayList<Promo_Compliance_DataGetterSetter> promoSkuListData;
     ArrayList<Promo_Compliance_DataGetterSetter> promoSpinnerListData;
@@ -69,6 +75,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
         toggle_add_InStock = (ToggleButton) findViewById(R.id.toggle_add_InStock);
         toggle_add_promoAnnouncer = (ToggleButton) findViewById(R.id.toggle_add_promoAnnouncer);
         toggle_add_runningPos = (ToggleButton) findViewById(R.id.toggle_add_runningPos);
+        btn_add = (Button) findViewById(R.id.btn_add);
 
         db = new GSKOrangeDB(this);
         db.open();
@@ -94,17 +101,102 @@ public class PromoComplianceActivity extends AppCompatActivity {
         additionalPromoListData = new ArrayList<>();
         //AdditionalPromoListView();
 
-        Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
-
-        cd.setStore_id("");
-        cd.setSku_id("");
-        cd.setSku("");
+        final Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
+        cd.setStore_id(store_id);
         cd.setPromo_id("");
         cd.setPromo("");
         cd.setIn_stock("1");
         cd.setPromo_announcer("1");
         cd.setRunning_pos("1");
         cd.setSp_promo("0");
+
+        toggle_add_InStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cd.setIn_stock("1");
+                } else {
+                    cd.setIn_stock("0");
+                }
+            }
+        });
+
+        if (cd.getIn_stock().equals("1")) {
+            toggle_add_InStock.setChecked(true);
+        } else {
+            toggle_add_InStock.setChecked(false);
+        }
+
+        toggle_add_promoAnnouncer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cd.setPromo_announcer("1");
+                } else {
+                    cd.setPromo_announcer("0");
+                }
+            }
+        });
+
+        if (cd.getPromo_announcer().equals("1")) {
+            toggle_add_promoAnnouncer.setChecked(true);
+        } else {
+            toggle_add_promoAnnouncer.setChecked(false);
+        }
+
+        toggle_add_runningPos.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cd.setRunning_pos("1");
+                } else {
+                    cd.setRunning_pos("0");
+                }
+            }
+        });
+
+        if (cd.getRunning_pos().equals("1")) {
+            toggle_add_runningPos.setChecked(true);
+        } else {
+            toggle_add_runningPos.setChecked(false);
+        }
+
+        sp_promo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+//                childData.setSp_condition(position);
+//                childData.setConditionName(item);
+
+                for (int i = 0; i < promoSpinnerListData.size(); i++) {
+                    if (position == i) {
+                        cd.setSp_promo(promoSpinnerListData.get(i).getPromo_id());
+                        cd.setPromo(promoSpinnerListData.get(i).getPromo());
+                        cd.setPromo_id(promoSpinnerListData.get(i).getPromo_id());
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        for (int i = 0; i < promoSpinnerListData.size(); i++) {
+            if (cd.getSp_promo() == promoSpinnerListData.get(i).getPromo_id()) {
+                sp_promo.setSelection(i);
+            }
+        }
+
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                db.InsertAdditionalPromoData(cd);
+                AdditionalPromoListView();
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
