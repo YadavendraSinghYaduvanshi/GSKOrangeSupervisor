@@ -1,43 +1,30 @@
 package cpm.com.gskmtorange.gsk_dailyentry;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.ScrollingView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
-import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
-
-import static android.R.attr.data;
-import static cpm.com.gskmtorange.R.id.toggle_inStock;
 
 public class PromoComplianceActivity extends AppCompatActivity {
     LinearLayout lin_promo_sku, lin_addtional_promo;
@@ -191,20 +178,55 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                db.InsertAdditionalPromoData(cd);
-                AdditionalPromoListView();
+            public void onClick(final View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(PromoComplianceActivity.this);
+                builder.setMessage("Are you sure you want to add")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                db.InsertAdditionalPromoData(cd);
+                                AdditionalPromoListView();
+
+                                Snackbar.make(v, "promo is add", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                //Toast.makeText(getApplicationContext(), "promo is add", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
+            public void onClick(final View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(PromoComplianceActivity.this);
+                builder.setMessage("Are you sure you want to save")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
-                db.InsertPromoSkuData(promoSkuListData);
+                                db.InsertPromoSkuData(promoSkuListData);
+
+                                Snackbar.make(view, "Data has been saved", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                //Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
+                                finish();
+                                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
@@ -307,6 +329,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
     private void AdditionalPromoListView() {
         additionalPromoListData.clear();
+        lin_addtional_promo.removeAllViews();
 
         //Additional Promo List
         additionalPromoListData = db.getAdditionalPromoData();
@@ -318,12 +341,12 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
             final Promo_Compliance_DataGetterSetter data = additionalPromoListData.get(i);
 
-            TextView txt_promoSkuName = (TextView) view.findViewById(R.id.txt_promoSkuName);
+            TextView txt_promoName = (TextView) view.findViewById(R.id.txt_promoName);
             TextView txt_inStock = (TextView) view.findViewById(R.id.txt_inStock);
             TextView txt_promoAnnouncer = (TextView) view.findViewById(R.id.txt_promoAnnouncer);
             TextView txt_runningPos = (TextView) view.findViewById(R.id.txt_runningPos);
 
-            txt_promoSkuName.setText(data.getPromo());
+            txt_promoName.setText(data.getPromo());
 
             //In Stock
             if (data.getIn_stock().equals("1")) {
