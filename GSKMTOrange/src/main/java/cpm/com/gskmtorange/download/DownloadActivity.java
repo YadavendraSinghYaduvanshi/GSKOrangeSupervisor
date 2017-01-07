@@ -603,6 +603,8 @@ public class DownloadActivity extends AppCompatActivity {
 
                 db.insertNonWorkingData(nonWorkingReasonGetterSetter);
 
+                db.insertNonWorkingData(nonWorkingReasonGetterSetter);
+
             } catch (MalformedURLException e) {
                 /*final AlertMessage message = new AlertMessage(
                         CompleteDownloadActivity.this,

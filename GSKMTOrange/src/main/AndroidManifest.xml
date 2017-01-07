@@ -118,7 +118,8 @@
 
         <!-- Gagan End Declaration -->
 
-        <activity
+      
+       <activity
             android:name=".dailyentry.NonWorkingReason"
             android:label="@string/title_activity_t2_pcompliance"
             android:screenOrientation="portrait"

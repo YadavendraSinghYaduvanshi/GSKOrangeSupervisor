@@ -15,18 +15,7 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.GeotaggingBeans;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 
-import cpm.com.gskmtorange.xmlGetterSetter.CategoryGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
-
-import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
-
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryGetterSetter;
@@ -95,13 +84,14 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(CommonString.CREATE_TABLE_INSERT_PROMO_SKU);
 
         //Gagan End
-        db.execSQL(TableBean.getNonWorkingReason());
 
         db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
         db.execSQL(CommonString.CREATE_TABLE_COVERAGE_DATA);
 
         db.execSQL(TableBean.getDisplayChecklistMaster());
         db.execSQL(TableBean.getMappingDisplayChecklist());
+      
+        db.execSQL(TableBean.getNonWorkingReason());
     }
 
     @Override
@@ -677,39 +667,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return list;
     }
-
-    public long InsertCoverageData(CoverageBean data) {
-
-        //db.delete(CommonString1.TABLE_COVERAGE_DATA, "STORE_ID" + "='" + data.getStoreId() + "'", null);
-
-        ContentValues values = new ContentValues();
-
-        try {
-
-            values.put(CommonString.KEY_STORE_ID, data.getStoreId());
-            values.put(CommonString.KEY_USER_ID, data.getUserId());
-            values.put(CommonString.KEY_IN_TIME, data.getInTime());
-            values.put(CommonString.KEY_OUT_TIME, data.getOutTime());
-            values.put(CommonString.KEY_VISIT_DATE, data.getVisitDate());
-            values.put(CommonString.KEY_LATITUDE, data.getLatitude());
-            values.put(CommonString.KEY_LONGITUDE, data.getLongitude());
-            values.put(CommonString.KEY_REASON_ID, data.getReasonid());
-            values.put(CommonString.KEY_REASON, data.getReason());
-            values.put(CommonString.KEY_COVERAGE_STATUS, data.getStatus());
-            values.put(CommonString.KEY_IMAGE, data.getImage());
-            values.put(CommonString.KEY_COVERAGE_REMARK, data.getRemark());
-            values.put(CommonString.KEY_REASON_ID, data.getReasonid());
-            values.put(CommonString.KEY_REASON, data.getReason());
-            values.put(CommonString.KEY_GEO_TAG, data.getGEO_TAG());
-
-            return db.insert(CommonString.TABLE_COVERAGE_DATA, null, values);
-
-        } catch (Exception ex) {
-            Log.d("Database Exception ", ex.toString());
-        }
-        return 0;
-    }
-
+  
     //Gagan Start Method
 
     public void InsertCategory(CategoryMasterGetterSetter data) {
@@ -1281,6 +1239,40 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
 
+
+       public long InsertCoverageData(CoverageBean data) {
+
+        //db.delete(CommonString1.TABLE_COVERAGE_DATA, "STORE_ID" + "='" + data.getStoreId() + "'", null);
+
+        ContentValues values = new ContentValues();
+
+        try {
+
+            values.put(CommonString.KEY_STORE_ID, data.getStoreId());
+            values.put(CommonString.KEY_USER_ID, data.getUserId());
+            values.put(CommonString.KEY_IN_TIME, data.getInTime());
+            values.put(CommonString.KEY_OUT_TIME, data.getOutTime());
+            values.put(CommonString.KEY_VISIT_DATE, data.getVisitDate());
+            values.put(CommonString.KEY_LATITUDE, data.getLatitude());
+            values.put(CommonString.KEY_LONGITUDE, data.getLongitude());
+            values.put(CommonString.KEY_REASON_ID, data.getReasonid());
+            values.put(CommonString.KEY_REASON, data.getReason());
+            values.put(CommonString.KEY_COVERAGE_STATUS, data.getStatus());
+            values.put(CommonString.KEY_IMAGE, data.getImage());
+            values.put(CommonString.KEY_COVERAGE_REMARK, data.getRemark());
+            values.put(CommonString.KEY_REASON_ID, data.getReasonid());
+            values.put(CommonString.KEY_REASON, data.getReason());
+            values.put(CommonString.KEY_GEO_TAG, data.getGEO_TAG());
+
+            return db.insert(CommonString.TABLE_COVERAGE_DATA, null, values);
+
+        } catch (Exception ex) {
+            Log.d("Database Exception ", ex.toString());
+        }
+        return 0;
+    }
+
+
     public boolean checkStockAndFacingData(String store_id, String category_id) {
         Log.d("Stock_Facing ", "Stock data--------------->Start<------------");
         ArrayList<Stock_FacingGetterSetter> list = new ArrayList<>();
@@ -1350,9 +1342,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         } catch (Exception ex) {
             Log.d("Exception ", " in Insert MSL_Availability " + ex.toString());
         }
-    }
-
-
+   
     public void InsertMAPPING_ADDITIONAL_PROMOTION(MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter data) {
         db.delete("MAPPING_ADDITIONAL_PROMOTION", null, null);
 
@@ -1614,8 +1604,5 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         }
     }
-
-
-
 
 }
