@@ -15,9 +15,6 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.GeotaggingBeans;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 
-import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
-
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
@@ -28,9 +25,12 @@ import cpm.com.gskmtorange.xmlGetterSetter.DisplayMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
@@ -73,11 +73,15 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(TableBean.getDisplayMaster());
         db.execSQL(TableBean.getMappingStock());
         db.execSQL(TableBean.getMappingT2p());
+        db.execSQL(TableBean.getMappingAdditionalPromotion());
+        db.execSQL(TableBean.getMappingPromotion());
 
         db.execSQL(CommonString.CREATE_TABLE_INSERT_MSL_AVAILABILITY);
 
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_HEADER);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_CHILD);
+        db.execSQL(CommonString.CREATE_TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE);
+        db.execSQL(CommonString.CREATE_TABLE_INSERT_PROMO_SKU);
 
         //Gagan End
 
@@ -251,11 +255,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
 
-
-          
-
-            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='"+key_account_id +"' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '"+ class_id +"') As Brand",null);
-            if(dbcursor != null){
+            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "') As Brand", null);
+            if (dbcursor != null) {
 
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
@@ -1025,7 +1026,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     db.update(CommonString.TABLE_INSERT_MSL_AVAILABILITY, values,
                             "Brand_Id ='" + hashMapListHeaderData.get(i).getBrand_id() + "' AND SKU_ID ='" + data.getSku_id() +
-                                    "' AND Category_Id='" + categoryId + "'", null);
+                                    "' AND Category_Id='" + categoryId + "' AND Store_Id='" + storeId + "'", null);
                 }
             }
             db.setTransactionSuccessful();
@@ -1322,7 +1323,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                 //db.insert(CommonString.TABLE_INSERT_STOCK_FACING_HEADER, null, values1);
                 db.update(CommonString.TABLE_INSERT_STOCK_FACING_HEADER, values1,
-                        "Category_Id='" + categoryId + "'", null);
+                        "Category_Id='" + categoryId + "' AND Store_Id='" + storeId + "' ", null);
 
                 for (int j = 0; j < hashMapListChildData.get(hashMapListHeaderData.get(i)).size(); j++) {
                     Stock_FacingGetterSetter data = hashMapListChildData.get(hashMapListHeaderData.get(i)).get(j);
@@ -1333,7 +1334,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     //db.insert(CommonString.TABLE_INSERT_STOCK_FACING_CHILD, null, values);
                     db.update(CommonString.TABLE_INSERT_STOCK_FACING_CHILD, values,
                             "Brand_Id ='" + hashMapListHeaderData.get(i).getBrand_id() + "' AND SKU_ID ='" + data.getSku_id() +
-                                    "' AND Category_Id='" + categoryId + "'", null);
+                                    "' AND Category_Id='" + categoryId + "' AND Store_Id='" + storeId + "'", null);
                 }
             }
             db.setTransactionSuccessful();
@@ -1341,12 +1342,193 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         } catch (Exception ex) {
             Log.d("Exception ", " in Insert MSL_Availability " + ex.toString());
         }
+   
+    public void InsertMAPPING_ADDITIONAL_PROMOTION(MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter data) {
+        db.delete("MAPPING_ADDITIONAL_PROMOTION", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getSTORE_ID().size(); i++) {
+
+                values.put("STORE_ID", data.getSTORE_ID().get(i));
+                values.put("SKU_ID", data.getSKU_ID().get(i));
+                values.put("SKU", data.getSKU().get(i));
+                values.put("PROMO_ID", data.getPROMO_ID().get(i));
+                values.put("PROMO", data.getPROMO().get(i));
+
+                db.insert("MAPPING_ADDITIONAL_PROMOTION", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " in MAPPING_ADDITIONAL_PROMOTION " + ex.toString());
+        }
     }
 
+    public void InsertMAPPING_PROMOTION(MappingPromotionGetterSetter data) {
+        db.delete("MAPPING_PROMOTION", null, null);
 
-    //Gagan End Method----------------------------------------
-  
-  
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getSTORE_ID().size(); i++) {
+
+                values.put("STORE_ID", data.getSTORE_ID().get(i));
+                values.put("SKU_ID", data.getSKU_ID().get(i));
+                values.put("SKU", data.getSKU().get(i));
+                values.put("PROMO_ID", data.getPROMO_ID().get(i));
+                values.put("PROMO", data.getPROMO().get(i));
+
+                db.insert("MAPPING_PROMOTION", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " in MAPPING_PROMOTION " + ex.toString());
+        }
+    }
+
+    //Promo Compliance
+    public ArrayList<Promo_Compliance_DataGetterSetter> getPromoComplianceSkuData(String store_id) {
+        ArrayList<Promo_Compliance_DataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from MAPPING_PROMOTION " +
+                    "where STORE_ID='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
+
+                    cd.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setPromo_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ID")));
+                    cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
+                    cd.setIn_stock("1");
+                    cd.setPromo_announcer("1");
+                    cd.setRunning_pos("1");
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "getPromoComplianceSkuData!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public ArrayList<Promo_Compliance_DataGetterSetter> getPromoSpinnerData(String store_id) {
+        ArrayList<Promo_Compliance_DataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            Promo_Compliance_DataGetterSetter promo = new Promo_Compliance_DataGetterSetter();
+            promo.setPromo_id("0");
+            promo.setPromo("Select");
+
+            list.add(promo);
+
+            dbcursor = db.rawQuery("Select * from MAPPING_ADDITIONAL_PROMOTION " +
+                    "where STORE_ID='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
+
+                    cd.setPromo_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ID")));
+                    cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "getPromoComplianceSkuData!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public void InsertAdditionalPromoData(Promo_Compliance_DataGetterSetter data) {
+        ContentValues values = new ContentValues();
+        try {
+            values.put("STORE_ID", Integer.parseInt(data.getStore_id()));
+            values.put("PROMO_ID", Integer.parseInt(data.getPromo_id()));
+            values.put("PROMO", data.getPromo());
+            values.put("IN_STOCK_VALUE", Integer.parseInt(data.getIn_stock()));
+            values.put("PROMO_ANNOUNCER_VALUE", Integer.parseInt(data.getPromo_announcer()));
+            values.put("RUNNING_POS_VALUE", Integer.parseInt(data.getRunning_pos()));
+
+            db.insert(CommonString.TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE, null, values);
+        } catch (Exception ex) {
+            Log.d("Exception ", " InsertAdditionalPromoData " + ex.toString());
+        }
+    }
+
+    public ArrayList<Promo_Compliance_DataGetterSetter> getAdditionalPromoData() {
+        ArrayList<Promo_Compliance_DataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Additional_Promo_Compliance_Data ", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
+
+                    cd.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
+                    cd.setPromo_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ID")));
+                    cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
+                    cd.setIn_stock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IN_STOCK_VALUE")));
+                    cd.setPromo_announcer(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ANNOUNCER_VALUE")));
+                    cd.setRunning_pos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("RUNNING_POS_VALUE")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "getPromoComplianceSkuData!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public void InsertPromoSkuData(ArrayList<Promo_Compliance_DataGetterSetter> promoSkuListData) {
+        ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+            for (int i = 0; i < promoSkuListData.size(); i++) {
+                Promo_Compliance_DataGetterSetter data = promoSkuListData.get(i);
+
+                values.put("STORE_ID", Integer.parseInt(data.getStore_id()));
+                values.put("SKU_ID", Integer.parseInt(data.getSku_id()));
+                values.put("SKU", data.getSku());
+                values.put("PROMO_ID", Integer.parseInt(data.getPromo_id()));
+                values.put("PROMO", data.getPromo());
+                values.put("IN_STOCK_VALUE", Integer.parseInt(data.getIn_stock()));
+                values.put("PROMO_ANNOUNCER_VALUE", Integer.parseInt(data.getPromo_announcer()));
+                values.put("RUNNING_POS_VALUE", Integer.parseInt(data.getRunning_pos()));
+
+                db.insert(CommonString.TABLE_INSERT_PROMO_SKU, null, values);
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        } catch (Exception ex) {
+            Log.d("Exception ", " InsertAdditionalPromoData " + ex.toString());
+        }
+    }
+
+    //Gagan End Method
+
 //Non Working data
 
     public void insertNonWorkingData(NonWorkingReasonGetterSetter data) {

@@ -97,7 +97,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
         data.setCategory_img(R.drawable.category);
         categoryList.add(data);
 
-        data = new DailyDataMenuGetterSetter();
+        /*data = new DailyDataMenuGetterSetter();
         data.setCategory_name(getResources().getString(R.string.daily_data_menu_competition_tracking));
         //data.setCategory_name("Competition Tracking");
         data.setCategory_img(R.drawable.category);
@@ -107,7 +107,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
         data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_promotions));
         //data.setCategory_name("Competition Promo");
         data.setCategory_img(R.drawable.category);
-        categoryList.add(data);
+        categoryList.add(data);*/
 
         adapter = new DailyDataMenuAdapter(DailyDataMenuActivity.this, categoryList);
         recyclerView.setAdapter(adapter);
@@ -149,6 +149,11 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                         startActivity(intent);
                     } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_stock_facing))) {
                         Intent intent = new Intent(DailyDataMenuActivity.this, Stock_FacingActivity.class);
+                        intent.putExtra("categoryName", dailyData.getCategory_name());
+                        intent.putExtra("categoryId", categoryId);
+                        startActivity(intent);
+                    } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_promo_compliance))) {
+                        Intent intent = new Intent(DailyDataMenuActivity.this, PromoComplianceActivity.class);
                         intent.putExtra("categoryName", dailyData.getCategory_name());
                         intent.putExtra("categoryId", categoryId);
                         startActivity(intent);

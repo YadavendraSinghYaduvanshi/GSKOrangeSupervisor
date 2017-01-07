@@ -3,11 +3,11 @@ package cpm.com.gskmtorange.xmlGetterSetter;
 import java.util.ArrayList;
 
 /**
- * Created by yadavendras on 03-01-2017.
+ * Created by gagang on 06-01-2017.
  */
 
-public class MappingPromotionGetterSetter {
-    String table_MAPPING_PROMOTION;
+public class MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter {
+    String table_MAPPING_ADDITIONAL_PROMOTION;
 
     ArrayList<String> STORE_ID = new ArrayList<>();
     ArrayList<String> SKU_ID = new ArrayList<>();
@@ -15,12 +15,12 @@ public class MappingPromotionGetterSetter {
     ArrayList<String> PROMO_ID = new ArrayList<>();
     ArrayList<String> PROMO = new ArrayList<>();
 
-    public String getTable_MAPPING_PROMOTION() {
-        return table_MAPPING_PROMOTION;
+    public String getTable_MAPPING_ADDITIONAL_PROMOTION() {
+        return table_MAPPING_ADDITIONAL_PROMOTION;
     }
 
-    public void setTable_MAPPING_PROMOTION(String table_MAPPING_PROMOTION) {
-        this.table_MAPPING_PROMOTION = table_MAPPING_PROMOTION;
+    public void setTable_MAPPING_ADDITIONAL_PROMOTION(String table_MAPPING_ADDITIONAL_PROMOTION) {
+        this.table_MAPPING_ADDITIONAL_PROMOTION = table_MAPPING_ADDITIONAL_PROMOTION;
     }
 
     public ArrayList<String> getSTORE_ID() {

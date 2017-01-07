@@ -48,13 +48,10 @@
             android:name=".download.DownloadActivity"
             android:screenOrientation="portrait" />
         <activity
-
             android:name=".GeoTag.GeoTagStoreList"
             android:label="@string/title_activity_store_list_geotag"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-
         <activity
             android:name=".dailyentry.StoreListActivity"
             android:label="@string/title_activity_store_list_geotag"
@@ -64,7 +61,6 @@
             android:name=".dailyentry.StoreimageActivity"
             android:label="@string/title_activity_store_list_geotag"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".GeoTag.GeoTagActivity"
             android:label="@string/title_activity_store_geotag"
@@ -77,42 +73,37 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
         <activity
             android:name=".dailyentry.T2PComplianceActivity"
             android:label="@string/title_activity_t2_pcompliance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <!--Gagan Start Declaration-->
+        <!-- Gagan Start Declaration -->
 
         <activity
             android:name=".gsk_dailyentry.CategoryListActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".gsk_dailyentry.CategoryWisePerformanceActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".gsk_dailyentry.DailyDataMenuActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".gsk_dailyentry.MSL_AvailabilityActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".gsk_dailyentry.Stock_FacingActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -120,7 +111,13 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
 
-        <!--Gagan End Declaration-->
+        <activity
+            android:name=".gsk_dailyentry.PromoComplianceActivity"
+            android:label="@string/title_activity_promo_compliance"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- Gagan End Declaration -->
+
       
        <activity
             android:name=".dailyentry.NonWorkingReason"
