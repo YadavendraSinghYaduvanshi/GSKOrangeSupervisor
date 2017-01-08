@@ -91,8 +91,8 @@
                         android:id="@+id/toggle_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/custom_margin"
-                        android:text="@string/brand"
+                        android:textOn="Yes"
+                        android:textOff="No"
                         android:layout_centerInParent="true"/>
 
 
