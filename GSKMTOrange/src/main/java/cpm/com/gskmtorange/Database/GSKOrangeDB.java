@@ -90,7 +90,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         db.execSQL(TableBean.getDisplayChecklistMaster());
         db.execSQL(TableBean.getMappingDisplayChecklist());
-      
+
         db.execSQL(TableBean.getNonWorkingReason());
     }
 
@@ -295,7 +295,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            dbcursor = db.rawQuery("SELECT DISTINCT SM.SKU, SM.SKU_ID, BR.BRAND_ID FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = " + class_id + "' AND SM.BRAND_ID='" + brand_id + "'", null);
+            dbcursor = db.rawQuery("SELECT DISTINCT SM.SKU, SM.SKU_ID, BR.BRAND_ID FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "' AND SM.BRAND_ID='" + brand_id + "'", null);
             if (dbcursor != null) {
 
                 dbcursor.moveToFirst();
@@ -667,7 +667,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return list;
     }
-  
+
     //Gagan Start Method
 
     public void InsertCategory(CategoryMasterGetterSetter data) {
@@ -1240,7 +1240,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-       public long InsertCoverageData(CoverageBean data) {
+    public long InsertCoverageData(CoverageBean data) {
 
         //db.delete(CommonString1.TABLE_COVERAGE_DATA, "STORE_ID" + "='" + data.getStoreId() + "'", null);
 
@@ -1342,7 +1342,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         } catch (Exception ex) {
             Log.d("Exception ", " in Insert MSL_Availability " + ex.toString());
         }
-   
+
+    }
+
     public void InsertMAPPING_ADDITIONAL_PROMOTION(MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter data) {
         db.delete("MAPPING_ADDITIONAL_PROMOTION", null, null);
 

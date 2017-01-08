@@ -1,6 +1,7 @@
 package cpm.com.gskmtorange.dailyentry;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +46,9 @@ import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
  */
 public class StoreimageActivity extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    String gallery_package = "";
+    Uri outputFileUri;
 
     ImageView img_cam, img_clicked;
     Button btn_save;
@@ -231,7 +235,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
             Log.i("MakeMachine", "startCameraActivity()");
             File file = new File(_path);
-            Uri outputFileUri = Uri.fromFile(file);
+            outputFileUri = Uri.fromFile(file);
 
             String defaultCameraPackage = "";
             final PackageManager packageManager = getPackageManager();
@@ -240,6 +244,11 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                 if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
                     Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
                     Log.e("TAG", "package name  : " + list.get(n).packageName);
+
+                    //temp value in case camera is gallery app above jellybean
+                    if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                        gallery_package = list.get(n).packageName;
+                    }
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
@@ -255,11 +264,23 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                 }
             }
 
+            //com.android.gallery3d
+
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             intent.setPackage(defaultCameraPackage);
             startActivityForResult(intent, 0);
-        } catch (Exception e) {
+        }
+        catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(gallery_package);
+            startActivityForResult(intent, 0);
+
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
