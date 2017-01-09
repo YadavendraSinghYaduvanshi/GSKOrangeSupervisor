@@ -1531,7 +1531,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     //Gagan End Method
 
-//Non Working data
+    //Non Working data
 
     public void insertNonWorkingData(NonWorkingReasonGetterSetter data) {
         db.delete("NON_WORKING_REASON", null, null);
@@ -1607,4 +1607,45 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
+
+    //Gagan start new code 1
+
+    public void updatePromoComplianceSKU(String storeId, String categoryId, List<Stock_FacingGetterSetter> hashMapListHeaderData,
+                                         HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> hashMapListChildData) {
+        ContentValues values = new ContentValues();
+        ContentValues values1 = new ContentValues();
+
+        try {
+            db.beginTransaction();
+            for (int i = 0; i < hashMapListHeaderData.size(); i++) {
+                Stock_FacingGetterSetter data1 = hashMapListHeaderData.get(i);
+
+                values1.put("IMAGE1", data1.getImage1());
+                values1.put("IMAGE2", data1.getImage2());
+
+                //db.insert(CommonString.TABLE_INSERT_STOCK_FACING_HEADER, null, values1);
+                db.update(CommonString.TABLE_INSERT_STOCK_FACING_HEADER, values1,
+                        "Category_Id='" + categoryId + "' AND Store_Id='" + storeId + "' ", null);
+
+                for (int j = 0; j < hashMapListChildData.get(hashMapListHeaderData.get(i)).size(); j++) {
+                    Stock_FacingGetterSetter data = hashMapListChildData.get(hashMapListHeaderData.get(i)).get(j);
+
+                    values.put("STOCK_VALUE", data.getStock());
+                    values.put("FACEUP_VALUE", data.getFacing());
+
+                    //db.insert(CommonString.TABLE_INSERT_STOCK_FACING_CHILD, null, values);
+                    db.update(CommonString.TABLE_INSERT_STOCK_FACING_CHILD, values,
+                            "Brand_Id ='" + hashMapListHeaderData.get(i).getBrand_id() + "' AND SKU_ID ='" + data.getSku_id() +
+                                    "' AND Category_Id='" + categoryId + "' AND Store_Id='" + storeId + "'", null);
+                }
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        } catch (Exception ex) {
+            Log.d("Exception ", " in Insert MSL_Availability " + ex.toString());
+        }
+
+    }
+
+    //Gagan end new code 1
 }
