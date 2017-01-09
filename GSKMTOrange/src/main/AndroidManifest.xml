@@ -111,11 +111,15 @@
 
         <activity
             android:name=".dailyentry.NonWorkingReason"
-            android:label="@string/title_activity_t2_pcompliance"
+            android:label="@string/title_activity_Non_Work"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-
+        <activity
+            android:name=".dailyentry.AdditionalVisibility"
+            android:label="@string/title_activity_Additional_visibility"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
 
     </application>

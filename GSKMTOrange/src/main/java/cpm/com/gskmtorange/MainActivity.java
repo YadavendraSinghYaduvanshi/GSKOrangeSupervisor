@@ -36,6 +36,7 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.dailyentry.AdditionalVisibility;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_geotag) {
 
-
+            db.open();
             storelist = db.getStoreData(date);
 
 
@@ -185,6 +186,14 @@ public class MainActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_exit) {
+
+
+            Intent startDownload = 	new Intent(this,AdditionalVisibility.class);
+            startActivity(startDownload);
+
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+
+
 
         } else if (id == R.id.nav_services) {
 

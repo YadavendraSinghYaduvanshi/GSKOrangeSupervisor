@@ -34,6 +34,7 @@
     <string name="select">Select</string>
     <string name="add">Add</string>
 
+
     <string name="select_language">Please select language</string>
     <string name="title_activity_select_language">SelectLanguageActivity</string>
 
@@ -99,5 +100,11 @@
 
 
     <string name="title_store_list_download_data">Please Download Data First</string>
+
+    <string name="AdditionalDisplay">Is there any Additional Display</string>
+    <string name="Display">Display</string>
+    <string name="Photo">Photo</string>
+    <string name="title_activity_Additional_visibility">Additional Visibility</string>
+    <string name="title_activity_Non_Work">Non-Work Reason</string>
 
 </resources>

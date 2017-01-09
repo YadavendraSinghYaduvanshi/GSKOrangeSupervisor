@@ -50,10 +50,18 @@ public class CommonString {
     public static final String KEY_IMAGE = "IMAGE";
     public static final String KEY_ID = "Id";
     public static final String KEY_MERCHANDISER_ID = "MERCHANDISER_ID";
-
-
-
+    public static final String KEY_BRAND = "BRAND";
+    public static final String KEY_BRAND_ID = "BRAND_ID";
+    public static final String KEY_DISPLAY_ID = "DISPLAY_ID";
+    public static final String KEY_QUANTITY = "QUANTITY";
+    public static final String KEY_SKU_ID = "SKU_ID";
+    public static final String KEY_SKUNAME = "SKUNAME";
+    public static final String UNIQUE_KEY_ID = "UNIQUE_KEY_ID";
+    public static final String KEY_CATEGORY_ID = "CATEGORY_ID";
+    public static final String KEY_PROCESS_ID = "PROCESS_ID";
     public static final String KEY_JOURNEY_PLAN = "JOURNEY_PLAN";
+    public static final String TABLE_INSERT_STOCK_DIALOG = "STOCK_DIALOG";
+    public static final String TABLE_INSERT_STOCK_ADDITIONAL_DATA = "ADDITIONAL_STOCK_DATA";
 
     public static final String KEY_P = "P";
     public static final String KEY_D = "D";
@@ -270,4 +278,25 @@ public class CommonString {
 
             + ")";
 
+
+    public static final String CREATE_TABLE_STOCK_DIALOG = "CREATE TABLE "
+            + TABLE_INSERT_STOCK_DIALOG + " (" + KEY_ID
+            + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " VARCHAR,"
+            + KEY_BRAND_ID + " VARCHAR," + KEY_BRAND + " VARCHAR,"
+            + KEY_DISPLAY_ID +" VARCHAR,"
+            + KEY_SKU_ID + " VARCHAR," + KEY_QUANTITY + " VARCHAR," + UNIQUE_KEY_ID + " VARCHAR,"
+            + KEY_CATEGORY_ID + " VARCHAR,"
+            + KEY_SKUNAME + " VARCHAR,"
+            + KEY_PROCESS_ID + " VARCHAR)";
+
+
+    public static final String CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA = "CREATE TABLE "
+            + TABLE_INSERT_STOCK_ADDITIONAL_DATA + " (" + KEY_ID
+            + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " VARCHAR,"
+            + KEY_BRAND_ID + " VARCHAR," + KEY_BRAND + " VARCHAR,"
+
+            + KEY_SKU_ID + " VARCHAR," + KEY_IMAGE + " VARCHAR,"
+
+            + KEY_SKUNAME + " VARCHAR,"
+            + KEY_IMAGE + " VARCHAR)";
 }
