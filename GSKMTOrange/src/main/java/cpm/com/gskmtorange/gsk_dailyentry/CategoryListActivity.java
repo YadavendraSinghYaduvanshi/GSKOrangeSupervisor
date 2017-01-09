@@ -47,9 +47,6 @@ public class CategoryListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         db = new GSKOrangeDB(this);
         db.open();
@@ -65,9 +62,12 @@ public class CategoryListActivity extends AppCompatActivity {
         storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
 
 
-        txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
-        //txt_categoryName.setText("Category List");
-        txt_categoryName.setText(getResources().getString(R.string.title_activity_category_list));
+        /*txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
+        txt_categoryName.setText(getResources().getString(R.string.title_activity_category_list));*/
+        toolbar.setTitle(getResources().getString(R.string.title_activity_category_list));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_category);
         fab.setOnClickListener(new View.OnClickListener() {

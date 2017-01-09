@@ -48,12 +48,9 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             setContentView(R.layout.activity_daily_data_menu);
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-            txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
+            //txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
 
             db = new GSKOrangeDB(this);
             db.open();
@@ -73,8 +70,11 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             categoryName = getIntent().getStringExtra("categoryName");
             categoryId = getIntent().getStringExtra("categoryId");
 
-            //txt_categoryName.setText("Daily Data Menu - " + categoryName);
-            txt_categoryName.setText(getResources().getString(R.string.title_activity_daily_main_menu) + " - " + categoryName);
+            //txt_categoryName.setText(getResources().getString(R.string.title_activity_daily_main_menu) + " - " + categoryName);
+            toolbar.setTitle(getResources().getString(R.string.title_activity_daily_main_menu) + " - " + categoryName);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

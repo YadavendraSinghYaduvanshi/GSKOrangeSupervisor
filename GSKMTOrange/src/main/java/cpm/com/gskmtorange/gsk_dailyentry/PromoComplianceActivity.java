@@ -52,6 +52,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
             setContentView(R.layout.activity_promo_compliance);
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.setTitle(getResources().getString(R.string.title_activity_promo_compliance));
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -81,15 +81,12 @@ public class Stock_FacingActivity extends AppCompatActivity {
             setContentView(R.layout.activity_stock_facing);
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             db = new GSKOrangeDB(this);
             db.open();
 
             expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
-            txt_stockFacingName = (TextView) findViewById(R.id.txt_stockFacingName);
+            //txt_stockFacingName = (TextView) findViewById(R.id.txt_stockFacingName);
 
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -105,8 +102,11 @@ public class Stock_FacingActivity extends AppCompatActivity {
             categoryName = getIntent().getStringExtra("categoryName");
             categoryId = getIntent().getStringExtra("categoryId");
 
-            //txt_stockFacingName.setText(categoryName);
-            txt_stockFacingName.setText(getResources().getString(R.string.title_activity_stock_facing));
+            //txt_stockFacingName.setText(getResources().getString(R.string.title_activity_stock_facing));
+            toolbar.setTitle(getResources().getString(R.string.title_activity_stock_facing));
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             prepareList();
 
