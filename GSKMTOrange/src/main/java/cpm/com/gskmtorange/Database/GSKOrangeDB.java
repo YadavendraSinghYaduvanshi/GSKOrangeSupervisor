@@ -1645,6 +1645,100 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
+    //get specific store data
+    public StoreBean getSpecificStoreData(String date, String store_id) {
+        //ArrayList<StoreBean> list = new ArrayList<StoreBean>();
+        StoreBean sb = new StoreBean();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT * from JOURNEY_PLAN  " +
+                    "where VISIT_DATE ='" + date + "' AND STORE_ID'="+ store_id +"'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+
+                    sb.setSTORE_ID(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("STORE_ID")));
+
+                    sb.setEMP_ID((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("EMP_ID"))));
+
+                    sb.setKEYACCOUNT(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("KEYACCOUNT")));
+
+                    sb.setSTORE_NAME(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("STORE_NAME")));
+
+                    sb.setADDRESS((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("ADDRESS"))));
+                    sb.setCITY(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CITY")));
+
+                    sb.setSTORETYPE(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("STORETYPE")));
+
+                    sb.setCLASSIFICATION(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CLASSIFICATION")));
+
+                    sb.setKEYACCOUNT_ID(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("KEYACCOUNT_ID")));
+
+                    sb.setSTORETYPE_ID(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("STORETYPE_ID")));
+
+                    sb.setCLASS_ID(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CLASS_ID")));
+
+                    sb.setVISIT_DATE(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("VISIT_DATE")));
+
+                    sb.setCAMERA_ALLOW(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CAMERA_ALLOW")));
+
+                    sb.setUPLOAD_STATUS(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("UPLOAD_STATUS")));
+                    sb.setCHECKOUT_STATUS(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CHECKOUT_STATUS")));
+
+                    sb.setGEO_TAG(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("GEO_TAG")));
+
+                    //dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return sb;
+            }
+
+        } catch (Exception e) {
+            Log.d("Exception get JCP!", e.toString());
+            return sb;
+        }
+
+        return sb;
+    }
+
+    //update coverage status
+
+    public void updateCoverageStatus(String id, String status) {
+
+        ContentValues values = new ContentValues();
+
+        try {
+
+            values.put(CommonString.KEY_COVERAGE_STATUS, status);
+
+            db.update(CommonString.TABLE_COVERAGE_DATA, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
+
+        } catch (Exception e) {
+
+            Log.d("Excep update checkout", e.toString());
+        }
+
+    }
+
 
     //Gagan start new code 1
 
@@ -1708,4 +1802,5 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
     //Gagan end new code 1
+
 }

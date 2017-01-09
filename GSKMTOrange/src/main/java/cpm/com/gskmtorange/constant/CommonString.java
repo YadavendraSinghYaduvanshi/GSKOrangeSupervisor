@@ -93,6 +93,15 @@ public class CommonString {
     public static final String SOAP_ACTION_DR_STORE_IMAGES_GEO = "http://tempuri.org/"
             + METHOD_Get_DR_STORE_IMAGES_GEO;
 
+    public static final String METHOD_UPLOAD_COVERAGE = "UPLOAD_COVERAGE";
+
+    public static final String METHOD_UPLOAD_COVERAGE_STATUS = "UploadCoverage_Status";
+
+    public static final String SOAP_ACTION = "http://tempuri.org/";
+
+    public static final String SOAP_ACTION_UPLOAD_STORE_COVERAGE = "http://tempuri.org/"
+            + METHOD_UPLOAD_COVERAGE;
+
     //Alert Messages
 
 
