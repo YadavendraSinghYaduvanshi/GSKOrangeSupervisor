@@ -245,7 +245,7 @@ public class UploadActivity extends AppCompatActivity {
                             //Stock and Facing
 
 
-                            
+
 
                             // SET COVERAGE STATUS
                             String final_xml = "";
