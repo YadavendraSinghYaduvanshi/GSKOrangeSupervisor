@@ -2,7 +2,10 @@ package cpm.com.gskmtorange.gsk_dailyentry;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.DailyDataMenuGetterSetter;
 
@@ -29,26 +34,47 @@ public class DailyDataMenuActivity extends AppCompatActivity {
     ArrayList<DailyDataMenuGetterSetter> categoryList;
     DailyDataMenuAdapter adapter;
     TextView txt_categoryName;
+
+    GSKOrangeDB db;
     String categoryName = "", categoryId;
+
+    private SharedPreferences preferences;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_daily_data_menu);
+        try {
+            setContentView(R.layout.activity_daily_data_menu);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
 
-        categoryName = getIntent().getStringExtra("categoryName");
-        categoryId = getIntent().getStringExtra("categoryId");
+            db = new GSKOrangeDB(this);
+            db.open();
 
-        //txt_categoryName.setText("Daily Data Menu - " + categoryName);
-        txt_categoryName.setText(getResources().getString(R.string.title_activity_daily_main_menu) + " - " + categoryName);
+            //preference data
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
+            visit_date = preferences.getString(CommonString.KEY_DATE, null);
+            date = preferences.getString(CommonString.KEY_DATE, null);
+            username = preferences.getString(CommonString.KEY_USERNAME, null);
+            intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
+            keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
+            class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
+            storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+
+            //Intent data
+            categoryName = getIntent().getStringExtra("categoryName");
+            categoryId = getIntent().getStringExtra("categoryId");
+
+            //txt_categoryName.setText("Daily Data Menu - " + categoryName);
+            txt_categoryName.setText(getResources().getString(R.string.title_activity_daily_main_menu) + " - " + categoryName);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -58,59 +84,79 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        categoryList = new ArrayList<>();
+        try {
+            categoryList = new ArrayList<>();
 
-        DailyDataMenuGetterSetter data = new DailyDataMenuGetterSetter();
-        //data.setCategory_name("MSL Availability");
-        data.setCategory_name(getResources().getString(R.string.daily_data_menu_msl_availability));
-        data.setCategory_img(R.drawable.category);
-        categoryList.add(data);
+            DailyDataMenuGetterSetter data = new DailyDataMenuGetterSetter();
+            //data.setCategory_name("MSL Availability");
+            data.setCategory_name(getResources().getString(R.string.daily_data_menu_msl_availability));
+            if (db.checkMsl_AvailabilityData(store_id, categoryId)) {
+                data.setCategory_img(R.mipmap.msl_availability_done);
+            } else {
+                data.setCategory_img(R.mipmap.msl_availability);
+            }
+            categoryList.add(data);
 
-        data = new DailyDataMenuGetterSetter();
-        data.setCategory_name(getResources().getString(R.string.daily_data_menu_stock_facing));
-        //data.setCategory_name("Stock & Facing");
-        data.setCategory_img(R.drawable.category);
-        categoryList.add(data);
+            data = new DailyDataMenuGetterSetter();
+            //data.setCategory_name("Stock & Facing");
+            data.setCategory_name(getResources().getString(R.string.daily_data_menu_stock_facing));
+            if (db.checkStockAndFacingData(store_id, categoryId)) {
+                data.setCategory_img(R.mipmap.stock_and_facing_done);
+            } else {
+                data.setCategory_img(R.mipmap.stock_and_facing);
+            }
+            categoryList.add(data);
 
-        data = new DailyDataMenuGetterSetter();
-        data.setCategory_name(getResources().getString(R.string.daily_data_menu_t2p));
-        //data.setCategory_name("T2P Compliance");
-        data.setCategory_img(R.drawable.category);
-        categoryList.add(data);
+            data = new DailyDataMenuGetterSetter();
+            //data.setCategory_name("T2P Compliance");
+            data.setCategory_name(getResources().getString(R.string.daily_data_menu_t2p));
+            data.setCategory_img(R.mipmap.t2p_compliance);
+            categoryList.add(data);
 
-        data = new DailyDataMenuGetterSetter();
-        data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_visibility));
-        //data.setCategory_name("Additional Visibility");
-        data.setCategory_img(R.drawable.category);
-        categoryList.add(data);
+            data = new DailyDataMenuGetterSetter();
+            //data.setCategory_name("Additional Visibility");
+            data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_visibility));
+            data.setCategory_img(R.mipmap.additional_visibility);
+            categoryList.add(data);
 
-        data = new DailyDataMenuGetterSetter();
-        data.setCategory_name(getResources().getString(R.string.daily_data_menu_promo_compliance));
-        //data.setCategory_name("Promo Compliance");
-        data.setCategory_img(R.drawable.category);
-        categoryList.add(data);
+            data = new DailyDataMenuGetterSetter();
+            //data.setCategory_name("Promo Compliance");
+            data.setCategory_name(getResources().getString(R.string.daily_data_menu_promo_compliance));
+            if (db.checkPromoComplianceData(store_id, categoryId)) {
+                data.setCategory_img(R.mipmap.promo_compliance_done);
+            } else {
+                data.setCategory_img(R.mipmap.promo_compliance);
+            }
+            categoryList.add(data);
 
-        /*data = new DailyDataMenuGetterSetter();
-        data.setCategory_name(getResources().getString(R.string.daily_data_menu_competition_tracking));
-        //data.setCategory_name("Competition Tracking");
-        data.setCategory_img(R.drawable.category);
-        categoryList.add(data);
+            /*data = new DailyDataMenuGetterSetter();
+            data.setCategory_name(getResources().getString(R.string.daily_data_menu_competition_tracking));
+            //data.setCategory_name("Competition Tracking");
+            data.setCategory_img(R.drawable.category);
+            categoryList.add(data);
 
-        data = new DailyDataMenuGetterSetter();
-        data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_promotions));
-        //data.setCategory_name("Competition Promo");
-        data.setCategory_img(R.drawable.category);
-        categoryList.add(data);*/
+            data = new DailyDataMenuGetterSetter();
+            data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_promotions));
+            //data.setCategory_name("Competition Promo");
+            data.setCategory_img(R.drawable.category);
+            categoryList.add(data);*/
 
-        adapter = new DailyDataMenuAdapter(DailyDataMenuActivity.this, categoryList);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+            adapter = new DailyDataMenuAdapter(DailyDataMenuActivity.this, categoryList);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public class DailyDataMenuAdapter extends RecyclerView.Adapter<DailyDataMenuAdapter.MyViewHolder> {
@@ -156,7 +202,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                         intent.putExtra("categoryName", dailyData.getCategory_name());
                         intent.putExtra("categoryId", categoryId);
                         startActivity(intent);
-                    } else if(dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_t2p)))){
+                    } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_t2p)))) {
                         Intent intent = new Intent(DailyDataMenuActivity.this, T2PComplianceActivity.class);
                         intent.putExtra("categoryName", dailyData.getCategory_name());
                         intent.putExtra("categoryId", categoryId);

@@ -312,6 +312,9 @@ public class CommonString {
             + "STORE_ID"
             + " INTEGER,"
 
+            + "CATEGORY_ID"
+            + " INTEGER,"
+
             + "SKU_ID"
             + " INTEGER,"
 
