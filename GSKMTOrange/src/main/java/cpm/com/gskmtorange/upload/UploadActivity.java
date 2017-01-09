@@ -282,7 +282,16 @@ public class UploadActivity extends AppCompatActivity {
             }
 
 
-            return null;
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if(result.equals("")){
+                finish();
+            }
         }
     }
 }
