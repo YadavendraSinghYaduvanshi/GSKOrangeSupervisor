@@ -23,7 +23,7 @@
                 android:paddingBottom="5dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
-                android:text="Promos SKU"
+                android:text="@string/promo_compliance_promos_sku"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/black" />
 
@@ -73,7 +73,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="10dp"
-                            android:text="In Stock"
+                            android:text="@string/promo_compliance_inStock"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
                     </LinearLayout>
 
@@ -94,7 +94,7 @@
                             android:id="@+id/txt_inStock"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Yes"
+                            android:text="@string/yes"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/black" />
                     </LinearLayout>
@@ -118,7 +118,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="10dp"
-                            android:text="Promo Announcer"
+                            android:text="@string/promo_compliance_promoAnnouncer"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
                     </LinearLayout>
 
@@ -139,7 +139,7 @@
                             android:id="@+id/txt_promoAnnouncer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Yes"
+                            android:text="@string/yes"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/black" />
                     </LinearLayout>
@@ -184,7 +184,7 @@
                             android:id="@+id/txt_runningPos"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Yes"
+                            android:text="@string/yes"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/black" />
 
