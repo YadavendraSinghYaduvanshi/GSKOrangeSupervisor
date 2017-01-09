@@ -173,8 +173,6 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
                                     alert.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
-                                    String status = "INVALID";
-
                                     CoverageBean cdata = new CoverageBean();
                                     cdata.setStoreId(store_id);
                                     cdata.setVisitDate(visit_date);
@@ -186,11 +184,11 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                                     cdata.setLongitude(lon);
                                     cdata.setImage(img_str);
                                     cdata.setRemark("");
-                                    cdata.setStatus(CommonString.KEY_CHECK_IN);
+                                    cdata.setStatus(CommonString.KEY_INVALID);
 
                                     database.InsertCoverageData(cdata);
 
-                                    database.updateCheckoutStatus(store_id, status);
+                                    database.updateCheckoutStatus(store_id, CommonString.KEY_INVALID);
                                             
                                            /* SharedPreferences.Editor editor = preferences.edit();
 

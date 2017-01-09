@@ -1,10 +1,13 @@
 package cpm.com.gskmtorange;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -33,11 +36,13 @@ import java.util.ArrayList;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
+import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
 import cpm.com.gskmtorange.download.DownloadActivity;
 import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
+import cpm.com.gskmtorange.upload.UploadActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,6 +55,11 @@ public class MainActivity extends AppCompatActivity
     String user_name, user_type;
     ArrayList<StoreBean> storelist = new ArrayList<StoreBean>();
     View headerView;
+
+    ArrayList<CoverageBean> coverageList;
+
+    String error_msg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +78,8 @@ public class MainActivity extends AppCompatActivity
 
         db = new GSKOrangeDB(MainActivity.this);
         db.open();
+
+        coverageList = db.getCoverageData(date);
 
         webView.setWebViewClient(new MyWebViewClient());
 
@@ -96,7 +108,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-         headerView = LayoutInflater.from(this).inflate(R.layout.nav_header_main, navigationView, false);
+        headerView = LayoutInflater.from(this).inflate(R.layout.nav_header_main, navigationView, false);
 
         TextView tv_username = (TextView) headerView.findViewById(R.id.nav_user_name);
         //tv_usertype = (TextView) headerView.findViewById(R.id.nav_user_type);
@@ -162,22 +174,73 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_upload) {
 
-        }
-        else if (id == R.id.nav_geotag) {
+            db.open();
+
+            if (checkNetIsAvailable()) {
+
+                storelist = db.getStoreData(date);
+
+                if (storelist.size() == 0) {
+
+                    Snackbar.make(webView, R.string.title_store_list_download_data, Snackbar.LENGTH_SHORT)
+                            .setAction("Action", null).show();
+
+                    //  Toast.makeText(getBaseContext(), "Please Download Data First", Toast.LENGTH_LONG).show();
+                } else {
+
+                    if (coverageList.size() == 0) {
+
+                        Snackbar.make(webView, R.string.no_data_for_upload, Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+
+                    } else {
+                        if (isStoreCheckedIn()&& isValid()) {
+
+                            Intent i = new Intent(getBaseContext(),
+                                    UploadActivity.class);
+                            startActivity(i);
+
+                            finish();
+
+                        } else {
+
+                            Snackbar.make(webView, error_msg, Snackbar.LENGTH_SHORT)
+                                    .setAction("Action", null).show();
+                        }
+
+                    }
+
+
+
+
+					/*
+                    intent = new Intent(getBaseContext(),
+							UploadOptionActivity.class);
+					startActivity(intent);
+
+					MainMenuActivity.this.finish();*/
+
+                }
+
+            } else {
+
+                Snackbar.make(webView, "No Network Available", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+
+                //  Toast.makeText(getApplicationContext(), "No Network Available", Toast.LENGTH_SHORT).show();
+            }
+        } else if (id == R.id.nav_geotag) {
 
 
             storelist = db.getStoreData(date);
 
 
-            if(storelist.size()>0)
-            {
-                Intent startDownload = 	new Intent(this,GeoTagStoreList.class);
+            if (storelist.size() > 0) {
+                Intent startDownload = new Intent(this, GeoTagStoreList.class);
                 startActivity(startDownload);
 
                 overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-            }
-            else
-            {
+            } else {
                 Snackbar.make(headerView, R.string.title_store_list_download_data, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
 
@@ -284,4 +347,56 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
+    public boolean checkNetIsAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
+    }
+
+    public boolean isStoreCheckedIn() {
+
+        boolean result_flag = true;
+        for (int i = 0; i < coverageList.size(); i++) {
+
+            String status = coverageList.get(i).getStatus();
+            if (status.equals(CommonString.KEY_INVALID) || status.equals(CommonString.KEY_VALID)) {
+                result_flag = false;
+                error_msg = getResources().getString(R.string.title_store_list_checkout_current);
+                break;
+            }
+        }
+
+        return result_flag;
+    }
+
+    public boolean isValid(){
+        boolean flag = false;
+        String storestatus;
+        for (int i = 0; i < coverageList.size(); i++) {
+
+            storestatus = db.getSpecificStoreData(date, coverageList.get(i).getStoreId()).getUPLOAD_STATUS();
+
+            if (!storestatus.equalsIgnoreCase(CommonString.KEY_U)) {
+                if ((storestatus.equalsIgnoreCase(
+                        CommonString.KEY_C)
+                        || storestatus.equalsIgnoreCase(CommonString.KEY_P) ||
+                        storestatus.equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE))) {
+                    flag = true;
+                    break;
+
+                }
+            }
+        }
+
+        if(!flag)
+            error_msg = getResources().getString(R.string.no_data_for_upload);
+
+        return flag;
+    }
+
 }
