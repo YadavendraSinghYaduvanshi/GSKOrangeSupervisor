@@ -69,31 +69,31 @@ public class DailyDataMenuActivity extends AppCompatActivity {
         DailyDataMenuGetterSetter data = new DailyDataMenuGetterSetter();
         //data.setCategory_name("MSL Availability");
         data.setCategory_name(getResources().getString(R.string.daily_data_menu_msl_availability));
-        data.setCategory_img(R.drawable.category);
+        data.setCategory_img(R.mipmap.msl_availability);
         categoryList.add(data);
 
         data = new DailyDataMenuGetterSetter();
         data.setCategory_name(getResources().getString(R.string.daily_data_menu_stock_facing));
         //data.setCategory_name("Stock & Facing");
-        data.setCategory_img(R.drawable.category);
+        data.setCategory_img(R.mipmap.stock_and_facing);
         categoryList.add(data);
 
         data = new DailyDataMenuGetterSetter();
         data.setCategory_name(getResources().getString(R.string.daily_data_menu_t2p));
         //data.setCategory_name("T2P Compliance");
-        data.setCategory_img(R.drawable.category);
+        data.setCategory_img(R.mipmap.t2p_compliance);
         categoryList.add(data);
 
         data = new DailyDataMenuGetterSetter();
         data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_visibility));
         //data.setCategory_name("Additional Visibility");
-        data.setCategory_img(R.drawable.category);
+        data.setCategory_img(R.mipmap.additional_visibility);
         categoryList.add(data);
 
         data = new DailyDataMenuGetterSetter();
         data.setCategory_name(getResources().getString(R.string.daily_data_menu_promo_compliance));
         //data.setCategory_name("Promo Compliance");
-        data.setCategory_img(R.drawable.category);
+        data.setCategory_img(R.mipmap.promo_compliance);
         categoryList.add(data);
 
         /*data = new DailyDataMenuGetterSetter();
@@ -156,7 +156,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                         intent.putExtra("categoryName", dailyData.getCategory_name());
                         intent.putExtra("categoryId", categoryId);
                         startActivity(intent);
-                    } else if(dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_t2p)))){
+                    } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_t2p)))) {
                         Intent intent = new Intent(DailyDataMenuActivity.this, T2PComplianceActivity.class);
                         intent.putExtra("categoryName", dailyData.getCategory_name());
                         intent.putExtra("categoryId", categoryId);
