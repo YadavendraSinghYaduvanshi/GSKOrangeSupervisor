@@ -1239,7 +1239,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
 
-
     public long InsertCoverageData(CoverageBean data) {
 
         //db.delete(CommonString1.TABLE_COVERAGE_DATA, "STORE_ID" + "='" + data.getStoreId() + "'", null);
@@ -1271,7 +1270,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return 0;
     }
-
 
     public boolean checkStockAndFacingData(String store_id, String category_id) {
         Log.d("Stock_Facing ", "Stock data--------------->Start<------------");
@@ -1654,7 +1652,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
             dbcursor = db.rawQuery("SELECT * from JOURNEY_PLAN  " +
-                    "where VISIT_DATE ='" + date + "' AND STORE_ID'="+ store_id +"'", null);
+                    "where VISIT_DATE ='" + date + "' AND STORE_ID'=" + store_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -1742,6 +1740,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     //Gagan start new code 1
 
+    //Promo Compliance update data
     public void updatePromoComplianceSKU(ArrayList<Promo_Compliance_DataGetterSetter> promoSkuListData,
                                          String categoryId, String storeId) {
         ContentValues values = new ContentValues();
@@ -1801,6 +1800,43 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return list;
     }
+
+    //MSL_Availability Server Upload Data
+    public ArrayList<MSL_AvailabilityGetterSetter> getMSL_AvailabilityUploadServerData(String store_id) {
+        ArrayList<MSL_AvailabilityGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Msl_Availability_Data " +
+                    "where Store_Id='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    MSL_AvailabilityGetterSetter cd = new MSL_AvailabilityGetterSetter();
+
+                    cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Category_Id")));
+                    cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Brand_Id")));
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
+                    cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
+                    cd.setToggleValue(dbcursor.getString(dbcursor.getColumnIndexOrThrow("TOGGLE_VALUE")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_Availability server upload Data!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+
     //Gagan end new code 1
 
 }

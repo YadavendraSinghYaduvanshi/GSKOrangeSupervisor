@@ -24,6 +24,7 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 
 public class UploadActivity extends AppCompatActivity {
 
@@ -41,9 +42,11 @@ public class UploadActivity extends AppCompatActivity {
     String[] words;
     String validity;
     int mid;
-    private int factor, k=0;
+    private int factor, k = 0;
 
     Data data;
+
+    ArrayList<MSL_AvailabilityGetterSetter> msl_availabilityList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +71,6 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private class UploadTask extends AsyncTask<Void, Data, String> {
-
         private Context context;
 
         UploadTask(Context context) {
@@ -96,24 +98,18 @@ public class UploadActivity extends AppCompatActivity {
             pb.setProgress(values[0].value);
             percentage.setText(values[0].value + "%");
             message.setText(values[0].name);
-
         }
 
         @Override
         protected String doInBackground(Void... params) {
-
             try {
-
                 data = new Data();
-
                 coverageList = db.getCoverageData(date);
 
                 if (coverageList.size() > 0) {
-
                     if (coverageList.size() == 1) {
                         factor = 50;
                     } else {
-
                         factor = 100 / (coverageList.size());
                     }
                 }
@@ -128,159 +124,184 @@ public class UploadActivity extends AppCompatActivity {
 
                             String camera_allow = storeData.getCAMERA_ALLOW();
 
-                            String onXML = "[DATA][USER_DATA][STORE_CD]"
-                                    + coverageList.get(i).getStoreId()
-                                    + "[/STORE_CD]" + "[VISIT_DATE]"
-                                    + coverageList.get(i).getVisitDate()
-                                    + "[/VISIT_DATE][LATITUDE]"
-                                    + coverageList.get(i).getLatitude()
-                                    + "[/LATITUDE][APP_VERSION]"
-                                    + app_version
-                                    + "[/APP_VERSION][LONGITUDE]"
-                                    + coverageList.get(i).getLongitude()
-                                    + "[/LONGITUDE][IN_TIME]"
-                                    + coverageList.get(i).getInTime()
-                                    + "[/IN_TIME][OUT_TIME]"
-                                    + coverageList.get(i).getOutTime()
-                                    + "[/OUT_TIME][UPLOAD_STATUS]"
-                                    + "N"
-                                    + "[/UPLOAD_STATUS][USER_ID]" + userId
-                                    + "[/USER_ID][IMAGE_URL]" + coverageList.get(i).getImage()
-                                    + "[/IMAGE_URL][REASON_ID]"
-                                    + coverageList.get(i).getReasonid()
-                                    + "[/REASON_ID][REASON_REMARK]"
-                                    + coverageList.get(i).getRemark()
-                                    + "[/REASON_REMARK][CAMERA_ALLOWED]"
-                                    + camera_allow
-                                    + "[/CAMERA_ALLOWED][/USER_DATA][/DATA]";
+                            String onXML =
+                                    "[DATA][USER_DATA][STORE_CD]"
+                                            + coverageList.get(i).getStoreId()
+                                            + "[/STORE_CD]" + "[VISIT_DATE]"
+                                            + coverageList.get(i).getVisitDate()
+                                            + "[/VISIT_DATE][LATITUDE]"
+                                            + coverageList.get(i).getLatitude()
+                                            + "[/LATITUDE][APP_VERSION]"
+                                            + app_version
+                                            + "[/APP_VERSION][LONGITUDE]"
+                                            + coverageList.get(i).getLongitude()
+                                            + "[/LONGITUDE][IN_TIME]"
+                                            + coverageList.get(i).getInTime()
+                                            + "[/IN_TIME][OUT_TIME]"
+                                            + coverageList.get(i).getOutTime()
+                                            + "[/OUT_TIME][UPLOAD_STATUS]"
+                                            + "N"
+                                            + "[/UPLOAD_STATUS][USER_ID]" + userId
+                                            + "[/USER_ID][IMAGE_URL]" + coverageList.get(i).getImage()
+                                            + "[/IMAGE_URL][REASON_ID]"
+                                            + coverageList.get(i).getReasonid()
+                                            + "[/REASON_ID][REASON_REMARK]"
+                                            + coverageList.get(i).getRemark()
+                                            + "[/REASON_REMARK][CAMERA_ALLOWED]"
+                                            + camera_allow
+                                            + "[/CAMERA_ALLOWED][/USER_DATA][/DATA]";
 
-
-
-                            SoapObject request = new SoapObject(
-                                    CommonString.NAMESPACE,
-                                    CommonString.METHOD_UPLOAD_COVERAGE);
+                            SoapObject request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_COVERAGE);
                             request.addProperty("onXML", onXML);
 
-                            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                                    SoapEnvelope.VER11);
+                            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                             envelope.dotNet = true;
                             envelope.setOutputSoapObject(request);
 
-                            HttpTransportSE androidHttpTransport = new HttpTransportSE(
-                                    CommonString.URL);
-
-
-                            androidHttpTransport
-                                    .call(CommonString.SOAP_ACTION_UPLOAD_STORE_COVERAGE,
-                                            envelope);
+                            HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                            androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_STORE_COVERAGE, envelope);
 
                             Object result = (Object) envelope.getResponse();
-
 
                             datacheck = result.toString();
                             words = datacheck.split("\\;");
                             validity = (words[0]);
 
-                            if (validity
-                                    .equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                db.updateCoverageStatus(coverageList
-                                        .get(i).getStoreId(), CommonString.KEY_P);
+                            if (validity.equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                db.updateCoverageStatus(coverageList.get(i).getStoreId(), CommonString.KEY_P);
 
-                                db.updateStoreStatusOnLeave(
-                                        coverageList.get(i).getStoreId(),
-                                        date, CommonString.KEY_P);
+                                db.updateStoreStatusOnLeave(coverageList.get(i).getStoreId(), date, CommonString.KEY_P);
                             } else {
-
                                 return CommonString.METHOD_UPLOAD_COVERAGE;
-
                             }
+
+
+                            mid = Integer.parseInt((words[1]));
+
+                            k = k + factor;
+                            data.value = k;
+                            data.name = "Uploading";
+
+                            publishProgress(data);
+
+
+                            //MSL_Availability
+                            String mslAvailability_xml = "";
+                            onXML = "";
+                            msl_availabilityList = db.getMSL_AvailabilityUploadServerData(coverageList.get(i).getStoreId());
+
+                            if (msl_availabilityList.size() > 0) {
+                                for (int j = 0; j < msl_availabilityList.size(); j++) {
+                                    if (!msl_availabilityList.get(j).getSku_id().equals("0")) {
+
+                                        onXML = "[MSL_AVAILABILITY_DATA]"
+                                                + "[MID]" + mid + "[/MID]"
+                                                + "[USER_ID]" + userId + "[/USER_ID]"
+                                                + "[CATEGORY_ID]" + Integer.parseInt(msl_availabilityList.get(j).getCategory_id()) + "[/CATEGORY_ID]"
+                                                + "[BRAND_ID]" + Integer.parseInt(msl_availabilityList.get(j).getBrand_id()) + "[/BRAND_ID]"
+                                                + "[SKU_ID]" + Integer.parseInt(msl_availabilityList.get(j).getSku_id()) + "[/SKU_ID]"
+                                                + "[SKU]" + msl_availabilityList.get(j).getSku() + "[/SKU]"
+                                                + "[TOGGLE_VALUE]" + Integer.parseInt(msl_availabilityList.get(j).getToggleValue()) + "[/TOGGLE_VALUE]"
+                                                + "[/MSL_AVAILABILITY_DATA]";
+
+                                        mslAvailability_xml = mslAvailability_xml + onXML;
+                                    }
+                                }
+
+                                final String sos_xml = "[DATA]" + mslAvailability_xml + "[/DATA]";
+
+                                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                                request.addProperty("XMLDATA", sos_xml);
+                                request.addProperty("KEYS", "MSL_AVAILABILITY_DATA");
+                                request.addProperty("USERNAME", userId);
+                                request.addProperty("MID", mid);
+
+                                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                                envelope.dotNet = true;
+                                envelope.setOutputSoapObject(request);
+
+                                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                                androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                                result = (Object) envelope.getResponse();
+
+                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+                            }
+                            data.value = 10;
+                            data.name = "MSL_Availability Uploading";
+                            publishProgress(data);
+
+
+                            //Stock and Facing
+
+
+                            
+
+                            // SET COVERAGE STATUS
+                            String final_xml = "";
+                            onXML = "";
+                            onXML = "[COVERAGE_STATUS][STORE_ID]"
+                                    + coverageList.get(i).getStoreId()
+                                    + "[/STORE_ID]"
+                                    + "[VISIT_DATE]"
+                                    + coverageList.get(i).getVisitDate()
+                                    + "[/VISIT_DATE]"
+                                    + "[USER_ID]"
+                                    + coverageList.get(i).getUserId()
+                                    + "[/USER_ID]"
+                                    + "[STATUS]"
+                                    + CommonString.KEY_U
+                                    + "[/STATUS]"
+                                    + "[/COVERAGE_STATUS]";
+
+                            final_xml = final_xml + onXML;
+
+                            final String sos_xml = "[DATA]" + final_xml + "[/DATA]";
+
+                            request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_COVERAGE_STATUS);
+                            request.addProperty("onXML", sos_xml);
+
+                            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                            envelope.dotNet = true;
+                            envelope.setOutputSoapObject(request);
+
+                            androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                            androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_COVERAGE_STATUS, envelope);
+
+                            result = (Object) envelope.getResponse();
+
+                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
+                            }
+                            if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
+                                return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
+                            }
+                            if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
+                            }
+
+                            db.open();
+                            db.updateCoverageStatus(coverageList.get(i).getStoreId(), CommonString.KEY_U);
+                            db.updateStoreStatusOnLeave(coverageList.get(i).getStoreId(), coverageList.get(i)
+                                    .getVisitDate(), CommonString.KEY_U);
                         }
-
-                        mid = Integer.parseInt((words[1]));
-
-                        k = k + factor;
-                        data.value = k;
-                        data.name = "Uploading";
-
-                        publishProgress(data);
-
-                        String final_xml = "";
-                        // Add below------------------
-
-
-                        // SET COVERAGE STATUS
-
-                         final_xml = "";
-                        String onXML = "";
-                        onXML = "[COVERAGE_STATUS][STORE_ID]"
-                                + coverageList.get(i).getStoreId()
-                                + "[/STORE_ID]"
-                                + "[VISIT_DATE]"
-                                + coverageList.get(i).getVisitDate()
-                                + "[/VISIT_DATE]"
-                                + "[USER_ID]"
-                                + coverageList.get(i).getUserId()
-                                + "[/USER_ID]"
-                                + "[STATUS]"
-                                + CommonString.KEY_U
-                                + "[/STATUS]"
-                                + "[/COVERAGE_STATUS]";
-
-                        final_xml = final_xml + onXML;
-
-                        final String sos_xml = "[DATA]" + final_xml
-                                + "[/DATA]";
-
-                        SoapObject request = new SoapObject(
-                                CommonString.NAMESPACE,
-                                CommonString.METHOD_UPLOAD_COVERAGE_STATUS);
-                        request.addProperty("onXML", sos_xml);
-
-                        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                                SoapEnvelope.VER11);
-                        envelope.dotNet = true;
-                        envelope.setOutputSoapObject(request);
-
-                        HttpTransportSE androidHttpTransport = new HttpTransportSE(
-                                CommonString.URL);
-
-                        androidHttpTransport.call(
-                                CommonString.SOAP_ACTION+CommonString.METHOD_UPLOAD_COVERAGE_STATUS,
-                                envelope);
-                        Object result = (Object) envelope.getResponse();
-
-                        if (!result.toString().equalsIgnoreCase(
-                                CommonString.KEY_SUCCESS)) {
-                            return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
-                        }
-
-                        if (result.toString().equalsIgnoreCase(
-                                CommonString.KEY_NO_DATA)) {
-                            return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
-                        }
-
-                        if (result.toString().equalsIgnoreCase(
-                                CommonString.KEY_FAILURE)) {
-                            return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
-                        }
-
-                        db.open();
-
-                        db.updateCoverageStatus(coverageList.get(i)
-                                .getStoreId(), CommonString.KEY_U);
-                        db.updateStoreStatusOnLeave(coverageList.get(i)
-                                .getStoreId(), coverageList.get(i)
-                                .getVisitDate(), CommonString.KEY_U);
-
                     }
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (XmlPullParserException e) {
                 e.printStackTrace();
             }
-
 
             return "";
         }
@@ -289,7 +310,7 @@ public class UploadActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            if(result.equals("")){
+            if (result.equals("")) {
                 finish();
             }
         }
