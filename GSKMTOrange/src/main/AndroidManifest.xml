@@ -113,8 +113,10 @@
 
         <activity
             android:name=".gsk_dailyentry.PromoComplianceActivity"
-            android:label="@string/title_activity_promo_compliance"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
 
         <!-- Gagan End Declaration -->
 
@@ -123,7 +125,7 @@
             android:name=".dailyentry.NonWorkingReason"
             android:label="@string/title_activity_t2_pcompliance"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
     </application>
 

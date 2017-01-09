@@ -352,7 +352,6 @@ public class PromoComplianceActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    
 
     private void AdditionalPromoListView() {
         try {
