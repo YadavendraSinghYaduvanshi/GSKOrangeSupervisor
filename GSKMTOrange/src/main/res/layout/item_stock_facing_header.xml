@@ -51,7 +51,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="10dp"
-                    android:src="@android:drawable/btn_star_big_off" />
+                    android:src="@mipmap/star" />
 
                 <ImageView
                     android:id="@+id/img_camera1"
@@ -72,7 +72,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginRight="20dp"
-                    android:src="@android:drawable/ic_menu_edit" />
+                    android:src="@mipmap/no_camera" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

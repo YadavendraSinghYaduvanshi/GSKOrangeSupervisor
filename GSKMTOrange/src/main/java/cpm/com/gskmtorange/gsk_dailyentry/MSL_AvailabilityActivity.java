@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -60,182 +61,192 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_msl__availability);
+        try {
+            setContentView(R.layout.activity_msl__availability);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
-        txt_mslAvailabilityName = (TextView) findViewById(R.id.txt_mslAvailabilityName);
+            expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
+            txt_mslAvailabilityName = (TextView) findViewById(R.id.txt_mslAvailabilityName);
 
-        db = new GSKOrangeDB(this);
-        db.open();
+            db = new GSKOrangeDB(this);
+            db.open();
 
-        //preference data
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
-        visit_date = preferences.getString(CommonString.KEY_DATE, null);
-        date = preferences.getString(CommonString.KEY_DATE, null);
-        username = preferences.getString(CommonString.KEY_USERNAME, null);
-        intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
-        keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
-        class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
-        storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+            //preference data
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
+            visit_date = preferences.getString(CommonString.KEY_DATE, null);
+            date = preferences.getString(CommonString.KEY_DATE, null);
+            username = preferences.getString(CommonString.KEY_USERNAME, null);
+            intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
+            keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
+            class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
+            storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
 
-        //Intent data
-        categoryName = getIntent().getStringExtra("categoryName");
-        categoryId = getIntent().getStringExtra("categoryId");
+            //Intent data
+            categoryName = getIntent().getStringExtra("categoryName");
+            categoryId = getIntent().getStringExtra("categoryId");
 
 
-        //txt_mslAvailabilityName.setText(categoryName);
-        txt_mslAvailabilityName.setText(getResources().getString(R.string.title_activity_msl__availability));
+            //txt_mslAvailabilityName.setText(categoryName);
+            txt_mslAvailabilityName.setText(getResources().getString(R.string.title_activity_msl__availability));
 
-        prepareList();
+            prepareList();
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
 
-                //if (validateData(listDataHeader, listDataChild)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
-                builder.setMessage("Are you sure you want to save")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                db.open();
-
-                                if (db.checkMsl_AvailabilityData(store_id, categoryId)) {
-                                    db.updateMSL_Availability(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
-                                } else {
-                                    db.InsertMSL_Availability(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
-                                }
-
-                                Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
-                                finish();
-                                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
-
-                /*} else {
+                    //if (validateData(listDataHeader, listDataChild)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
-                    builder.setMessage("Fill the value or fill 0 ")
+                    builder.setMessage("Are you sure you want to save")
                             .setCancelable(false)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    dialog.dismiss();
+                                    db.open();
+
+                                    if (db.checkMsl_AvailabilityData(store_id, categoryId)) {
+                                        db.updateMSL_Availability(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                        Snackbar.make(view, "Data has been updated", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                    } else {
+                                        db.InsertMSL_Availability(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
+                                        Snackbar.make(view, "Data has been saved", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                    }
+
+                                    //Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
+                                    finish();
+                                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
                                 }
                             });
                     AlertDialog alert = builder.create();
                     alert.show();
-                }*/
 
-            }
-        });
+                    /*} else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
+                        builder.setMessage("Fill the value or fill 0 ")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }*/
 
-        expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int lastItem = firstVisibleItem + visibleItemCount;
-
-                if (firstVisibleItem == 0) {
-                    fab.setVisibility(View.VISIBLE);
-                } else if (lastItem == totalItemCount) {
-                    fab.setVisibility(View.INVISIBLE);
-                } else {
-                    fab.setVisibility(View.VISIBLE);
                 }
-            }
+            });
 
-            @Override
-            public void onScrollStateChanged(AbsListView arg0, int arg1) {
-                InputMethodManager inputManager = (InputMethodManager) getApplicationContext()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (getCurrentFocus() != null) {
-                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    getCurrentFocus().clearFocus();
+            expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    int lastItem = firstVisibleItem + visibleItemCount;
+
+                    if (firstVisibleItem == 0) {
+                        fab.setVisibility(View.VISIBLE);
+                    } else if (lastItem == totalItemCount) {
+                        fab.setVisibility(View.INVISIBLE);
+                    } else {
+                        fab.setVisibility(View.VISIBLE);
+                    }
                 }
 
-                //expandableListView.invalidateViews();
-            }
-        });
+                @Override
+                public void onScrollStateChanged(AbsListView arg0, int arg1) {
+                    InputMethodManager inputManager = (InputMethodManager) getApplicationContext()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (getCurrentFocus() != null) {
+                        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        getCurrentFocus().clearFocus();
+                    }
 
-        // Listview Group click listener
-        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return false;
-            }
-        });
-
-        // Listview Group expanded listener
-        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                InputMethodManager inputManager = (InputMethodManager) getApplicationContext()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (getWindow().getCurrentFocus() != null) {
-                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    getCurrentFocus().clearFocus();
+                    //expandableListView.invalidateViews();
                 }
-            }
-        });
+            });
 
-        // Listview Group collasped listener
-        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                InputMethodManager inputManager = (InputMethodManager) getApplicationContext()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (getWindow().getCurrentFocus() != null) {
-                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    getCurrentFocus().clearFocus();
+            // Listview Group click listener
+            expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                @Override
+                public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                    return false;
                 }
-            }
-        });
+            });
 
-        // Listview on child click listener
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
-                                        int childPosition, long id) {
-                return false;
-            }
-        });
+            // Listview Group expanded listener
+            expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+                @Override
+                public void onGroupExpand(int groupPosition) {
+                    InputMethodManager inputManager = (InputMethodManager) getApplicationContext()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (getWindow().getCurrentFocus() != null) {
+                        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        getCurrentFocus().clearFocus();
+                    }
+                }
+            });
+
+            // Listview Group collasped listener
+            expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+                @Override
+                public void onGroupCollapse(int groupPosition) {
+                    InputMethodManager inputManager = (InputMethodManager) getApplicationContext()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (getWindow().getCurrentFocus() != null) {
+                        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        getCurrentFocus().clearFocus();
+                    }
+                }
+            });
+
+            // Listview on child click listener
+            expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
+                                            int childPosition, long id) {
+                    return false;
+                }
+            });
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void prepareList() {
-        hashMapListHeaderData = new ArrayList<>();
-        hashMapListChildData = new HashMap<>();
+        try {
+            hashMapListHeaderData = new ArrayList<>();
+            hashMapListChildData = new HashMap<>();
 
-        //Header
-        headerDataList = db.getMSL_AvailabilityHeaderData(categoryId);
+            //Header
+            headerDataList = db.getMSL_AvailabilityHeaderData(categoryId);
 
-        if (headerDataList.size() > 0) {
-            for (int i = 0; i < headerDataList.size(); i++) {
-                hashMapListHeaderData.add(headerDataList.get(i));
+            if (headerDataList.size() > 0) {
+                for (int i = 0; i < headerDataList.size(); i++) {
+                    hashMapListHeaderData.add(headerDataList.get(i));
 
-                //childDataList = new ArrayList<>();
-                childDataList = db.getMSL_AvailabilitySKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id());
-                if (!(childDataList.size() > 0)) {
-                    childDataList = db.getMSL_AvailabilitySKUData(categoryId, headerDataList.get(i).getBrand_id());
+                    //childDataList = new ArrayList<>();
+                    childDataList = db.getMSL_AvailabilitySKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id());
+                    if (!(childDataList.size() > 0)) {
+                        childDataList = db.getMSL_AvailabilitySKUData(categoryId, headerDataList.get(i).getBrand_id());
+                    }
+
+                    hashMapListChildData.put(hashMapListHeaderData.get(i), childDataList);
                 }
-
-                hashMapListChildData.put(hashMapListHeaderData.get(i), childDataList);
             }
-        }
 
-        adapter = new ExpandableListAdapter(this, hashMapListHeaderData, hashMapListChildData);
-        expandableListView.setAdapter(adapter);
+            adapter = new ExpandableListAdapter(this, hashMapListHeaderData, hashMapListChildData);
+            expandableListView.setAdapter(adapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
