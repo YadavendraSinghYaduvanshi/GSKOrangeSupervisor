@@ -42,4 +42,9 @@
 
     <string name="title_activity_t2_pcompliance">Kalıcı Teşhir</string>
 
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+
+    <string name="title_activity_upload">Veri Paylaş</string>
+
 </resources>

@@ -60,10 +60,13 @@
         <activity
             android:name=".dailyentry.StoreimageActivity"
             android:label="@string/title_activity_store_list_geotag"
+            android:screenOrientation="portrait"
+            android:configChanges="screenSize|orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".GeoTag.GeoTagActivity"
             android:label="@string/title_activity_store_geotag"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
@@ -110,7 +113,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".gsk_dailyentry.PromoComplianceActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -120,13 +122,15 @@
 
         <!-- Gagan End Declaration -->
 
-      
-       <activity
+        <activity
             android:name=".dailyentry.NonWorkingReason"
             android:label="@string/title_activity_t2_pcompliance"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".upload.UploadActivity"
+            android:label="@string/title_activity_upload"
+            />
     </application>
 
 </manifest>
