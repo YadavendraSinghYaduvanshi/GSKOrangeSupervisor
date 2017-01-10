@@ -19,6 +19,10 @@ public class TableBean {
     public static String NON_WORKING_REASON;
     public static String MAPPING_PROMOTION;
 
+    //Gagan start code
+    public static String MAPPING_ADDITIONAL_PROMOTION;
+    //Gagan end code
+
     public static String getJourneyPlan() {
         return JOURNEY_PLAN;
     }
@@ -114,4 +118,16 @@ public class TableBean {
     public static void setMappingPromotion(String mappingPromotion) {
         MAPPING_PROMOTION = mappingPromotion;
     }
+
+    //Gagan start code
+
+    public static String getMappingAdditionalPromotion() {
+        return MAPPING_ADDITIONAL_PROMOTION;
+    }
+
+    public static void setMappingAdditionalPromotion(String mappingAdditionalPromotion) {
+        MAPPING_ADDITIONAL_PROMOTION = mappingAdditionalPromotion;
+    }
+
+    //Gagan end code
 }

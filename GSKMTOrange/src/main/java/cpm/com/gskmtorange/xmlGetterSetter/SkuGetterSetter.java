@@ -1,13 +1,11 @@
 package cpm.com.gskmtorange.xmlGetterSetter;
 
-import java.util.ArrayList;
-
 /**
  * Created by yadavendras on 28-12-2016.
  */
 
 public class SkuGetterSetter {
-    String SKU_ID, SKU, BRAND_ID, MRP, SKU_SEQUENCE;
+    String SKU_ID, SKU, BRAND_ID, BRAND, MRP, SKU_SEQUENCE,STOCK;
 
     public String getSKU_ID() {
         return SKU_ID;
@@ -47,5 +45,21 @@ public class SkuGetterSetter {
 
     public void setSKU_SEQUENCE(String SKU_SEQUENCE) {
         this.SKU_SEQUENCE = SKU_SEQUENCE;
+    }
+
+    public String getBRAND() {
+        return BRAND;
+    }
+
+    public void setBRAND(String BRAND) {
+        this.BRAND = BRAND;
+    }
+
+    public String getSTOCK() {
+        return STOCK;
+    }
+
+    public void setSTOCK(String STOCK) {
+        this.STOCK = STOCK;
     }
 }

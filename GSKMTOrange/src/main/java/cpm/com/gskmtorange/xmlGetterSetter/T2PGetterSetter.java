@@ -1,5 +1,7 @@
 package cpm.com.gskmtorange.xmlGetterSetter;
 
+import java.util.ArrayList;
+
 /**
  * Created by yadavendras on 02-01-2017.
  */
@@ -8,6 +10,9 @@ public class T2PGetterSetter {
 
     String brand_id, display_id, brand, display, image, remark;
     boolean isPresent;
+
+    ArrayList<GapsChecklistGetterSetter> gapsChecklist = new ArrayList<>();
+    ArrayList<SkuGetterSetter> skulist = new ArrayList<>();
 
     public String getBrand_id() {
         return brand_id;
@@ -63,5 +68,21 @@ public class T2PGetterSetter {
 
     public void setPresent(boolean present) {
         isPresent = present;
+    }
+
+    public ArrayList<GapsChecklistGetterSetter> getGapsChecklist() {
+        return gapsChecklist;
+    }
+
+    public void setGapsChecklist(ArrayList<GapsChecklistGetterSetter> gapsChecklist) {
+        this.gapsChecklist = gapsChecklist;
+    }
+
+    public ArrayList<SkuGetterSetter> getSkulist() {
+        return skulist;
+    }
+
+    public void setSkulist(ArrayList<SkuGetterSetter> skulist) {
+        this.skulist = skulist;
     }
 }

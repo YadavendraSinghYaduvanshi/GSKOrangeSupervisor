@@ -7,7 +7,6 @@ import java.util.ArrayList;
  */
 
 public class MappingPromotionGetterSetter {
-
     String table_MAPPING_PROMOTION;
 
     ArrayList<String> STORE_ID = new ArrayList<>();

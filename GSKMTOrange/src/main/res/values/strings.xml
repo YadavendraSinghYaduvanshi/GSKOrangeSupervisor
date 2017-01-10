@@ -33,6 +33,9 @@
     <string name="stock">Stock</string>
     <string name="select">Select</string>
     <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 
     <string name="select_language">Please select language</string>
@@ -53,9 +56,11 @@
     <string name="menu_setting">Setting</string>
     <string name="menu_services">Services</string>
 
-    <string name="title_activity_category_list">Category List</string>
     <string name="title_activity_t2_pcompliance">T2P Compliance</string>
 
+    <!--Gagan start code-->
+
+    <string name="title_activity_category_list">Category List</string>
     <string name="title_activity_category_wise_performance">Categorywise Performance</string>
     <string name="title_activity_daily_main_menu">Daily Data Menu</string>
     <string name="title_activity_msl__availability">Must Stock Availability</string>
@@ -79,12 +84,11 @@
     <string name="stock_facing_faceup">Facing</string>
     <string name="stock_facing_sos_target">SOS Target</string>
 
+    <!--Gagan end code-->
 
     <string name="title_geo_tag_activity_upload_data">Store Uploaded</string>
     <string name="title_geo_tag_activity_geo_data">Store Geo Data Uploaded</string>
     <string name="title_geo_tag_activity_geo_already_done">Store Already Geotagged</string>
-
-
 
     <string name="title_store_list_activity_store_already_done">Store Already Uploaded</string>
     <string name="title_store_list_activity_store_data_uploaded">Store Data Uploaded</string>
@@ -93,13 +97,29 @@
     <string name="title_store_list_activity_store_closed">Store Closed</string>
     <string name="title_store_list_activity_already_store_closed">Store Already Closed</string>
 
-
-
     <string name="title_store_list_checkout_current">Please checkout from current store</string>
     <string name="title_store_list_checkout_Already_filled">Data already filled</string>
-
-
     <string name="title_store_list_download_data">Please Download Data First</string>
+    <string name="enter_the_values">Enter the values</string>
+
+    <string name="title_activity_upload">Upload Data</string>
+    <string name="no_data_for_upload">No Data For Upload</string>
+    <string name="first_checkout_store">First checkout of store</string>
+
+    <!--Gagan start new code 1-->
+    <string name="title_activity_promo_compliance">Promotion Compliance</string>
+
+    <string name="promo_compliance_additional_promo">Additional Promos</string>
+    <string name="promo_compliance_promo">Promos</string>
+    <string name="promo_compliance_promos_sku">Promos SKU</string>
+    <string name="promo_compliance_sku">SKU</string>
+    <string name="promo_compliance_inStock">In Stock</string>
+    <string name="promo_compliance_promoAnnouncer">Promo Announcer</string>
+    <string name="promo_compliance_runningPOS">Running on POS</string>
+    <string name="promo_compliance_add">Add</string>
+
+    <!--Gagan end new code 1-->
+
 
     <string name="AdditionalDisplay">Is there any Additional Display</string>
     <string name="Display">Display</string>

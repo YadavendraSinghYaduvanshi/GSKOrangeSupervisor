@@ -6,7 +6,7 @@ package cpm.com.gskmtorange.xmlGetterSetter;
 
 public class MSL_AvailabilityGetterSetter {
     String sub_category_id, sub_category, brand_id, brand,
-            sku_id, sku, mrp, sku_sequence, toggleValue,mbq;
+            sku_id, sku, mrp, sku_sequence, toggleValue,mbq,category_id;
 
     public String getSub_category_id() {
         return sub_category_id;
@@ -86,5 +86,13 @@ public class MSL_AvailabilityGetterSetter {
 
     public void setMbq(String mbq) {
         this.mbq = mbq;
+    }
+
+    public String getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
     }
 }
