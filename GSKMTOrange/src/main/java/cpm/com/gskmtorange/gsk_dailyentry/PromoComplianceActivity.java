@@ -52,6 +52,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
             setContentView(R.layout.activity_promo_compliance);
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.setTitle(getResources().getString(R.string.title_activity_promo_compliance));
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -95,6 +96,8 @@ public class PromoComplianceActivity extends AppCompatActivity {
             cd.setStore_id(store_id);
             cd.setPromo_id("");
             cd.setPromo("");
+            cd.setSku_id("");
+            cd.setSku("");
             cd.setIn_stock("1");
             cd.setPromo_announcer("1");
             cd.setRunning_pos("1");
@@ -160,6 +163,8 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
                     for (int i = 0; i < promoSpinnerListData.size(); i++) {
                         if (position == i) {
+                            cd.setSku_id(promoSpinnerListData.get(i).getSku_id());
+                            cd.setSku(promoSpinnerListData.get(i).getSku());
                             cd.setSp_promo(promoSpinnerListData.get(i).getPromo_id());
                             cd.setPromo(promoSpinnerListData.get(i).getPromo());
                             cd.setPromo_id(promoSpinnerListData.get(i).getPromo_id());
@@ -188,7 +193,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
-                                    db.InsertAdditionalPromoData(cd);
+                                    db.InsertAdditionalPromoData(cd, categoryId);
                                     AdditionalPromoListView();
 
                                     sp_promo.setSelection(0);
@@ -359,7 +364,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
             lin_addtional_promo.removeAllViews();
 
             //Additional Promo List
-            additionalPromoListData = db.getAdditionalPromoData();
+            additionalPromoListData = db.getAdditionalPromoData(store_id, categoryId);
 
             View view;
 

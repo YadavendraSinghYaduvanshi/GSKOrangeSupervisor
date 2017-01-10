@@ -65,9 +65,6 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             setContentView(R.layout.activity_msl__availability);
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
             txt_mslAvailabilityName = (TextView) findViewById(R.id.txt_mslAvailabilityName);
@@ -90,9 +87,11 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             categoryName = getIntent().getStringExtra("categoryName");
             categoryId = getIntent().getStringExtra("categoryId");
 
-
-            //txt_mslAvailabilityName.setText(categoryName);
-            txt_mslAvailabilityName.setText(getResources().getString(R.string.title_activity_msl__availability));
+            //txt_mslAvailabilityName.setText(getResources().getString(R.string.title_activity_msl__availability));
+            toolbar.setTitle(getResources().getString(R.string.title_activity_msl__availability));
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             prepareList();
 

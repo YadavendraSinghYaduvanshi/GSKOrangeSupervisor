@@ -37,18 +37,18 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category_wise_performance);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
+        //txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
 
         categoryName = getIntent().getStringExtra("categoryName");
         categoryId = getIntent().getStringExtra("categoryId");
 
-        //txt_categoryName.setText("CategoryWise Performance " + categoryName);
-        txt_categoryName.setText(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
+        //txt_categoryName.setText(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
+        toolbar.setTitle(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

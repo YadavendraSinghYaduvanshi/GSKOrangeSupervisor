@@ -115,8 +115,10 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".gsk_dailyentry.PromoComplianceActivity"
-            android:label="@string/title_activity_promo_compliance"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
 
         <!-- Gagan End Declaration -->
 
