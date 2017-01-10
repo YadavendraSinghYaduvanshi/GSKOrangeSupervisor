@@ -440,7 +440,7 @@ public class UploadActivity extends AppCompatActivity {
                         //Image Upload
 
                         //Stock Facing Images Upload
-                        /*if (stock_facingHeaderList.size() > 0) {
+                        if (stock_facingHeaderList.size() > 0) {
                             for (int i1 = 0; i1 < stock_facingHeaderList.size(); i1++) {
 
                                 if (stock_facingHeaderList.get(i1).getImage1() != null && !stock_facingHeaderList.get(i1).getImage1().equals("")) {
@@ -484,7 +484,7 @@ public class UploadActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                        }*/
+                        }
 
 
                         // SET COVERAGE STATUS
@@ -586,7 +586,7 @@ public class UploadActivity extends AppCompatActivity {
         byte[] ba = bao.toByteArray();
         String ba1 = Base64.encodeBytes(ba);
 
-        SoapObject request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+        SoapObject request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_IMAGE);
 
         String[] split = path.split("/");
         String path1 = split[split.length - 1];
@@ -600,8 +600,7 @@ public class UploadActivity extends AppCompatActivity {
         envelope.setOutputSoapObject(request);
 
         HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
-        androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
-        //androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_IMAGE, envelope);
+        androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_IMAGE, envelope);
 
         Object result = (Object) envelope.getResponse();
 
@@ -629,7 +628,7 @@ public class UploadActivity extends AppCompatActivity {
                 return CommonString.KEY_FAILURE;
             }
         } else {
-            new File(Path + path).delete();
+            //new File(Path + path).delete();
         }
 
         return result.toString();

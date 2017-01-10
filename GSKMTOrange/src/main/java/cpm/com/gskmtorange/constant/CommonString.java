@@ -102,6 +102,10 @@ public class CommonString {
     public static final String SOAP_ACTION_UPLOAD_STORE_COVERAGE = "http://tempuri.org/"
             + METHOD_UPLOAD_COVERAGE;
 
+    public static final String METHOD_UPLOAD_IMAGE = "GetImageWithFolderName";
+
+    public static final String SOAP_ACTION_UPLOAD_IMAGE = "http://tempuri.org/" + METHOD_UPLOAD_IMAGE;
+
     //Alert Messages
 
 
