@@ -85,11 +85,11 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(TableBean.getMappingDisplayChecklist());
 
         db.execSQL(CommonString.CREATE_TABLE_INSERT_MSL_AVAILABILITY);
-
+        db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_HEADER);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_CHILD);
         db.execSQL(CommonString.CREATE_TABLE_STOCK_DIALOG);
-        db.execSQL(CommonString.CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA);
+
 
 
     }
@@ -143,7 +143,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                 values.put("CAMERA_ALLOW", data.getCAMERA_ALLOW().get(i));
                 values.put("GEO_TAG", data.getGEO_TAG().get(i));
-
+                values.put("CHANNEL_ID", data.getCHANNEL_ID().get(i));
 
                 db.insert("JOURNEY_PLAN", null, values);
 
@@ -1533,7 +1533,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     public void deleteStockEntry(String id) {
         try {
-            db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_DATA, "Id" + "='" + id + "'", null);
+            db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL, "KEY_ID" + "='" + id + "'", null);
         } catch (Exception e) {
             System.out.println("" + e);
         }
@@ -1625,20 +1625,44 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     }
 
-    public void InsertAdditionalData(AddittionalGetterSetter data) {
+    public void InsertAdditionalData(AddittionalGetterSetter data,ArrayList<AdditionalDialogGetterSetter> dialog) {
         ContentValues values = new ContentValues();
-
+        ContentValues values1 = new ContentValues();
         try {
 
 
-            values.put(CommonString.KEY_STORE_ID, data.getStore_id());
-            values.put(CommonString.KEY_BRAND, data.getBrand());
-            values.put(CommonString.KEY_BRAND_ID, data.getBrand_id());
-            values.put(CommonString.KEY_IMAGE, data.getImage());
-            values.put(CommonString.KEY_SKU_ID, data.getSku_id());
-            values.put(CommonString.KEY_SKUNAME, data.getSku());
+            values.put("Store_Id", data.getStore_id());
+            values.put("brand_name", data.getBrand());
+            values.put("brand_id", data.getBrand_id());
+            values.put("image_url", data.getImage());
+            values.put("sku_id", data.getSku_id());
+            values.put("sku_name", data.getSku());
+            values.put("toggle_value", data.getBtn_toogle());
 
-            db.insert(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_DATA, null, values);
+           long key_id = db.insert(CommonString.TABLE_INSERT_STOCK_ADDITIONAL, null, values);
+
+            for(int i=0;i<dialog.size();i++)
+            {
+                values1.put(CommonString.KEY_Common_ID, key_id);
+                values1.put(CommonString.KEY_STORE_ID, dialog.get(i).getStore_id());
+                values1.put(CommonString.KEY_BRAND, dialog.get(i).getBrand());
+                values1.put(CommonString.KEY_BRAND_ID, dialog.get(i).getBrand_id());
+                values1.put(CommonString.KEY_QUANTITY, dialog.get(i).getQuantity());
+                values1.put(CommonString.KEY_SKU_ID, dialog.get(i).getSku_id());
+                values1.put(CommonString.KEY_SKUNAME, dialog.get(i).getSku_name());
+
+
+                db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG, null, values1);
+
+
+
+
+
+            }
+
+
+
+
 
 
         } catch (Exception ex) {
@@ -1654,7 +1678,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            cursordata = db.rawQuery("SELECT * FROM ADDITIONAL_STOCK_DATA WHERE STORE_ID = '"+store_id + "'", null);
+            cursordata = db.rawQuery("SELECT * FROM Stock_Additional_visibility WHERE Store_Id = '"+store_id + "'", null);
 
 
             if (cursordata != null) {
@@ -1664,27 +1688,27 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
 
                     sb.setKey_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_ID)));
+                            .getColumnIndexOrThrow("KEY_ID")));
 
 
                     sb.setStore_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_STORE_ID)));
+                            .getColumnIndexOrThrow("Store_Id")));
 
                     sb.setBrand_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_BRAND_ID)));
+                            .getColumnIndexOrThrow("brand_id")));
 
                     sb.setBrand(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_BRAND)));
+                            .getColumnIndexOrThrow("brand_name")));
 
 
                     sb.setImage(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE)));
+                            .getColumnIndexOrThrow("image_url")));
 
                     sb.setSku_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_SKU_ID)));
+                            .getColumnIndexOrThrow("sku_id")));
 
                     sb.setSku(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_SKUNAME)));
+                            .getColumnIndexOrThrow("sku_name")));
 
                     productData.add(sb);
                     cursordata.moveToNext();

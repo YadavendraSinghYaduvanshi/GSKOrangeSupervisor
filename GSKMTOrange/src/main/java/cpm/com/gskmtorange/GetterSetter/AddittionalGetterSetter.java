@@ -66,4 +66,15 @@ public class AddittionalGetterSetter {
 
     String key_id;
 
+    public String getBtn_toogle() {
+        return btn_toogle;
+    }
+
+    public void setBtn_toogle(String btn_toogle) {
+        this.btn_toogle = btn_toogle;
+    }
+
+    String btn_toogle;
+
+
 }

@@ -24,6 +24,19 @@ public class JourneyPlanGetterSetter {
 	ArrayList<String> CLASS_ID  = new ArrayList<String>();
 	ArrayList<String> CAMERA_ALLOW  = new ArrayList<String>();
 
+	public ArrayList<String> getCHANNEL_ID() {
+		return CHANNEL_ID;
+	}
+
+	public void setCHANNEL_ID(String CHANNEL_ID) {
+		this.CHANNEL_ID.add(CHANNEL_ID);
+	}
+
+	ArrayList<String> CHANNEL_ID  = new ArrayList<String>();
+
+
+
+
 	public ArrayList<String> getCHECKOUT_STATUS() {
 		return CHECKOUT_STATUS;
 	}

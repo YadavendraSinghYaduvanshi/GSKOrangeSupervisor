@@ -21,6 +21,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -60,11 +62,13 @@
                     android:id="@+id/btntoggle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+
                     android:layout_weight=".5" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/tv_brandlayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="30"
@@ -92,6 +96,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/tv_displaylayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="30"
@@ -120,6 +125,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/tv_cameralayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="15"
@@ -176,6 +182,7 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/tv_skulayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="8"
@@ -210,7 +217,10 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
+
+
     <android.support.v7.widget.CardView
+
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
