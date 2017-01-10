@@ -1438,6 +1438,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 while (!dbcursor.isAfterLast()) {
                     Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
 
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
                     cd.setPromo_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ID")));
                     cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
 
@@ -1454,11 +1456,14 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
 
-    public void InsertAdditionalPromoData(Promo_Compliance_DataGetterSetter data) {
+    public void InsertAdditionalPromoData(Promo_Compliance_DataGetterSetter data, String category_id) {
         try {
             ContentValues values = new ContentValues();
 
             values.put("STORE_ID", Integer.parseInt(data.getStore_id()));
+            values.put("CATEGORY_ID", Integer.parseInt(category_id));
+            values.put("SKU_ID", Integer.parseInt(data.getSku_id()));
+            values.put("SKU", data.getSku());
             values.put("PROMO_ID", Integer.parseInt(data.getPromo_id()));
             values.put("PROMO", data.getPromo());
             values.put("IN_STOCK_VALUE", Integer.parseInt(data.getIn_stock()));
@@ -1471,12 +1476,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<Promo_Compliance_DataGetterSetter> getAdditionalPromoData() {
+    public ArrayList<Promo_Compliance_DataGetterSetter> getAdditionalPromoData(String store_id, String category_id) {
         ArrayList<Promo_Compliance_DataGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("Select * from Additional_Promo_Compliance_Data ", null);
+            dbcursor = db.rawQuery("Select * from Additional_Promo_Compliance_Data " +
+                    "where STORE_ID='" + store_id + "' AND CATEGORY_ID='" + category_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -1484,6 +1490,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
 
                     cd.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
+                    cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY_ID")));
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
                     cd.setPromo_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ID")));
                     cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
                     cd.setIn_stock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IN_STOCK_VALUE")));
@@ -1650,9 +1659,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
 
         try {
-
             dbcursor = db.rawQuery("SELECT * from JOURNEY_PLAN  " +
-                    "where VISIT_DATE ='" + date + "' AND STORE_ID'=" + store_id + "'", null);
+                    "where VISIT_DATE ='" + date + "' AND STORE_ID='" + store_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -1704,7 +1712,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     sb.setGEO_TAG(dbcursor.getString(dbcursor
                             .getColumnIndexOrThrow("GEO_TAG")));
 
-                    //dbcursor.moveToNext();
+                    dbcursor.moveToNext();
                 }
                 dbcursor.close();
                 return sb;
@@ -1836,7 +1844,149 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
 
+    //Stock Facing Server Upload Data
+    public ArrayList<Stock_FacingGetterSetter> getStockAndFacingHeaderServerUploadData(String store_id) {
+        ArrayList<Stock_FacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
 
+        try {
+            dbcursor = db.rawQuery("Select * from Stock_Facing_Header_Data " +
+                    "where Store_Id='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    Stock_FacingGetterSetter cd = new Stock_FacingGetterSetter();
+
+                    cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Category_Id")));
+                    cd.setSub_category_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
+                    cd.setSub_category(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
+                    cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
+                    cd.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND")));
+                    cd.setImage1(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE1")));
+                    cd.setImage2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE2")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get Stock_FacingHeader server upload !" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public ArrayList<Stock_FacingGetterSetter> getStockAndFacingSKUServerUploadData(String category_id, String brand_id) {
+        ArrayList<Stock_FacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Stock_Facing_Child_Data " +
+                    "where category_id='" + category_id + "' and Brand_Id='" + brand_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    Stock_FacingGetterSetter cd = new Stock_FacingGetterSetter();
+
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
+                    cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+                    cd.setStock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STOCK_VALUE")));
+                    cd.setFacing(dbcursor.getString(dbcursor.getColumnIndexOrThrow("FACEUP_VALUE")));
+
+                    list.add(cd);
+
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+
+        } catch (Exception e) {
+            Log.d("Exception ", "get Stock_Facing Sku After Save Data!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    //Promo Compliance Promotion Data
+    public ArrayList<Promo_Compliance_DataGetterSetter> getPromoComplianceSkuServerUploadData(String store_id) {
+        ArrayList<Promo_Compliance_DataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Promo_SKU_Data " +
+                    "where STORE_ID='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
+
+                    cd.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
+                    cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY_ID")));
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setPromo_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ID")));
+                    cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
+                    cd.setIn_stock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IN_STOCK_VALUE")));
+                    cd.setPromo_announcer(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ANNOUNCER_VALUE")));
+                    cd.setRunning_pos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("RUNNING_POS_VALUE")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "getPromoComplianceSkuAfterData!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public ArrayList<Promo_Compliance_DataGetterSetter> getAdditionalPromotionServerUploadData(String store_id) {
+        ArrayList<Promo_Compliance_DataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Additional_Promo_Compliance_Data " +
+                    "where STORE_ID='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
+
+                    cd.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
+                    cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY_ID")));
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setPromo_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ID")));
+                    cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
+                    cd.setIn_stock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IN_STOCK_VALUE")));
+                    cd.setPromo_announcer(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ANNOUNCER_VALUE")));
+                    cd.setRunning_pos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("RUNNING_POS_VALUE")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "getPromoComplianceSkuData!" + e.toString());
+            return list;
+        }
+        return list;
+    }
     //Gagan end new code 1
 
 }

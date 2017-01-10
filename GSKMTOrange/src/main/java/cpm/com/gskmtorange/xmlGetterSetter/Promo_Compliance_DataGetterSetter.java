@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 public class Promo_Compliance_DataGetterSetter {
-    String store_id, sku_id, sku, promo_id, promo, in_stock, promo_announcer, running_pos, sp_promo;
+    String store_id, sku_id, sku, promo_id, promo, in_stock, promo_announcer, running_pos, sp_promo, category_id;
 
     public String getStore_id() {
         return store_id;
@@ -79,5 +79,13 @@ public class Promo_Compliance_DataGetterSetter {
 
     public void setSp_promo(String sp_promo) {
         this.sp_promo = sp_promo;
+    }
+
+    public String getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
     }
 }

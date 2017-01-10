@@ -194,19 +194,18 @@ public class MainActivity extends AppCompatActivity
                                 .setAction("Action", null).show();
 
                     } else {
-                        if (isStoreCheckedIn()&& isValid()) {
+                        //if (isStoreCheckedIn()&& isValid()) {
 
-                            Intent i = new Intent(getBaseContext(),
-                                    UploadActivity.class);
-                            startActivity(i);
+                        Intent i = new Intent(getBaseContext(), UploadActivity.class);
+                        startActivity(i);
 
-                            finish();
+                        //finish();
 
-                        } else {
+                        /*} else {
 
                             Snackbar.make(webView, error_msg, Snackbar.LENGTH_SHORT)
                                     .setAction("Action", null).show();
-                        }
+                        }*/
 
                     }
 
@@ -374,7 +373,7 @@ public class MainActivity extends AppCompatActivity
         return result_flag;
     }
 
-    public boolean isValid(){
+    public boolean isValid() {
         boolean flag = false;
         String storestatus;
         for (int i = 0; i < coverageList.size(); i++) {
@@ -393,7 +392,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        if(!flag)
+        if (!flag)
             error_msg = getResources().getString(R.string.no_data_for_upload);
 
         return flag;
