@@ -124,13 +124,23 @@
 
         <activity
             android:name=".dailyentry.NonWorkingReason"
-            android:label="@string/title_activity_t2_pcompliance"
+            android:label="@string/title_activity_Non_Work"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+   
+     <activity
+            android:name=".dailyentry.AdditionalVisibility"
+            android:label="@string/title_activity_Additional_visibility"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <activity
             android:name=".upload.UploadActivity"
             android:label="@string/title_activity_upload"
             />
+
     </application>
 
 </manifest>

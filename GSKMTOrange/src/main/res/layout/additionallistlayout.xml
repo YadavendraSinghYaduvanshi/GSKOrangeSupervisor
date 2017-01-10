@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="184dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:weightSum="100">
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="10"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:weightSum="25">
+
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+                android:layout_weight="10"
+                android:text="Brand Name"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/brand_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="15"
+                android:inputType="text">
+
+            </TextView>
+        </LinearLayout>
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="10"
+            android:orientation="horizontal"
+            android:weightSum="25">
+
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+                android:layout_weight="10"
+                android:text="SKU Name"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/display_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+                android:layout_weight="15">
+
+            </TextView>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/third"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="10"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="25">
+
+            <TextView
+                android:id="@+id/facing"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+                android:layout_weight="10"
+                android:text="Quantity"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/qty_bought"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="15"
+                android:inputType="number">
+
+            </TextView>
+        </LinearLayout>
+
+
+        <!--         </LinearLayout> -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:weightSum="25">
+
+            <Button
+                android:id="@+id/delete_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:background="@color/grey_background"
+                android:layout_marginLeft="30dp"
+                android:text="Delete" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

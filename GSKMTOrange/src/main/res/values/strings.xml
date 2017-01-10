@@ -37,6 +37,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
+
     <string name="select_language">Please select language</string>
     <string name="title_activity_select_language">SelectLanguageActivity</string>
 
@@ -119,5 +120,11 @@
 
     <!--Gagan end new code 1-->
 
+
+    <string name="AdditionalDisplay">Is there any Additional Display</string>
+    <string name="Display">Display</string>
+    <string name="Photo">Photo</string>
+    <string name="title_activity_Additional_visibility">Additional Visibility</string>
+    <string name="title_activity_Non_Work">Non-Work Reason</string>
 
 </resources>
