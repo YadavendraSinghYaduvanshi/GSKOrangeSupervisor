@@ -92,7 +92,8 @@
                         android:id="@+id/toggle_available"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
+                        android:layout_gravity="center"
+                        android:background="@drawable/toggle_selector_background" />
                 </LinearLayout>
             </LinearLayout>
 
