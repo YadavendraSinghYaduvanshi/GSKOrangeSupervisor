@@ -111,7 +111,10 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TableBean.getJourneyPlan());
     }
 
-    public void deleteTableWithStoreID(String storeid, String process_id) {
+    public void deleteTableWithStoreID(String storeid) {
+
+        db.delete( CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+
     }
 
     public void deleteAllTables() {
@@ -2265,6 +2268,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     sb.setSku(cursordata.getString(cursordata
                             .getColumnIndexOrThrow("sku_name")));
+                    sb.setBtn_toogle(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("toggle_value")));
+
 
                     productData.add(sb);
                     cursordata.moveToNext();
@@ -2279,6 +2285,19 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return productData;
 
+    }
+    public void updateStoreStatus(String storeid, String visitdate,
+                                            String status) {
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put(CommonString.KEY_CHECKOUT_STATUS, status);
+
+            db.update("JOURNEY_PLAN", values, CommonString.KEY_STORE_ID + "='" + storeid + "' AND " + CommonString.KEY_VISIT_DATE + "='" + visitdate + "'", null);
+        } catch (Exception e) {
+
+
+        }
     }
 
     public void InsertT2PData(ArrayList<T2PGetterSetter> data, String store_id, String category_id) {
