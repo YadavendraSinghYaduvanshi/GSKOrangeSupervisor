@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,8 +51,11 @@ import java.util.Calendar;
 import java.util.List;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
+import cpm.com.gskmtorange.LoginActivity;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.fonts.FontManager;
+import cpm.com.gskmtorange.fonts.TextDrawable;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
@@ -64,28 +71,30 @@ public class T2PComplianceActivity extends AppCompatActivity {
     T2PAdapter t2PAdapter;
     RecyclerView rec_t2p;
 
-    String categoryName, categoryId, storeId;
+    String categoryName, categoryId;
 
     private SharedPreferences preferences;
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
 
     String path = "", str = CommonString.FILE_PATH, _pathforcheck = "", img = "";
     int child_position = -1;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
+    String error_msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_t2_pcompliance);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        //Intent data
+        categoryName = getIntent().getStringExtra("categoryName");
+        categoryId = getIntent().getStringExtra("categoryId");
+        // toolbar.setTitle(R.string.title_activity_t2_pcompliance + " - " + categoryName);
+
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         db = new GSKOrangeDB(T2PComplianceActivity.this);
         db.open();
@@ -108,24 +117,47 @@ public class T2PComplianceActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Data Saved", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                finish();
+
+                if (isValid()) {
+
+                    db.InsertT2PData(t2PGetterSetters, store_id, categoryId);
+
+                    Snackbar.make(view, "Data Saved", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+
+                    finish();
+                } else {
+                    Snackbar.make(view, error_msg, Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+
             }
         });
 
-        t2PGetterSetters = db.getT2PDefaultData(store_id);
+        t2PGetterSetters = db.getT2pComplianceData(store_id, categoryId);
+
+        if (t2PGetterSetters.size() == 0) {
+            t2PGetterSetters = db.getT2PDefaultData(store_id);
+        } else {
+            for (int i = 0; i < t2PGetterSetters.size(); i++) {
+                ArrayList<GapsChecklistGetterSetter> gapsList = db.getGapsData(t2PGetterSetters.get(i).getKey_id());
+                ArrayList<SkuGetterSetter> skuList = db.getT2PSKUData(t2PGetterSetters.get(i).getKey_id());
+
+                t2PGetterSetters.get(i).setGapsChecklist(gapsList);
+                t2PGetterSetters.get(i).setSkulist(skuList);
+            }
+
+        }
 
         if (t2PGetterSetters.size() > 0) {
 
-            for (int i = 0; i < t2PGetterSetters.size(); i++) {
+           /* for (int i = 0; i < t2PGetterSetters.size(); i++) {
 
                 ArrayList<GapsChecklistGetterSetter> gapsChecklist = db.getGapsDefaultData(t2PGetterSetters.get(i).getDisplay_id());
 
                 t2PGetterSetters.get(i).setGapsChecklist(gapsChecklist);
 
-            }
-
+            }*/
 
             rec_t2p.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             t2PAdapter = new T2PAdapter(t2PGetterSetters);
@@ -133,9 +165,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         }
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -168,11 +197,16 @@ public class T2PComplianceActivity extends AppCompatActivity {
             holder.tv_brand.setText(mItem.getBrand());
             holder.tv_display.setText(mItem.getDisplay().trim());
 
+            //holder.tv_display.setTypeface(FontManager.getTypeface(getApplicationContext(),FontManager.FONTAWESOME));
+
+           /* Typeface iconFont = FontManager.getTypeface(getApplicationContext(), FontManager.FONTAWESOME);
+            FontManager.markAsIconContainer(findViewById(R.id.icons_container), iconFont);
+*/
             holder.btn_gaps.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    showGapsDialog(mItem.getGapsChecklist());
+                    showGapsDialog(mItem);
 
                 }
             });
@@ -181,11 +215,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    if (((ToggleButton) v).getText().toString().equalsIgnoreCase("Yes")) {
-                        mItem.setPresent(true);
-                    } else {
-                        mItem.setPresent(false);
-                    }
+                    mItem.setPresent(((ToggleButton) v).getText().toString().equalsIgnoreCase("Yes"));
 
                     t2PAdapter.notifyDataSetChanged();
                 }
@@ -217,13 +247,24 @@ public class T2PComplianceActivity extends AppCompatActivity {
             }
 
             if (mItem.getImage().equals("")) {
-                holder.img_cam.setBackgroundResource(R.drawable.cam_deactive);
+                holder.img_cam.setBackgroundResource(R.mipmap.camera);
             } else {
-                holder.img_cam.setBackgroundResource(R.drawable.cam_active);
+                holder.img_cam.setBackgroundResource(R.mipmap.camera_done);
             }
 
             holder.toggle_btn.setChecked(mItem.isPresent());
 
+            if (mItem.getGapsChecklist().size() > 0) {
+                holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.green));
+            } else {
+                holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            }
+
+            if (mItem.getSkulist().size() > 0) {
+                holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.green));
+            } else {
+                holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            }
 
         }
 
@@ -261,8 +302,16 @@ public class T2PComplianceActivity extends AppCompatActivity {
         }
     }
 
-    public void showGapsDialog(ArrayList<GapsChecklistGetterSetter> gapsChecklist) {
-        //ArrayList<GapsChecklistGetterSetter> gapsChecklist = db.getGapsDefaultData(display_id);
+    public void showGapsDialog(final T2PGetterSetter t2p) {
+
+        final ArrayList<GapsChecklistGetterSetter> gapsChecklist;
+
+        if (t2p.getGapsChecklist().size() > 0) {
+
+            gapsChecklist = t2p.getGapsChecklist();
+        } else {
+            gapsChecklist = db.getGapsDefaultData(t2p.getDisplay_id());
+        }
 
         final Dialog dialog = new Dialog(T2PComplianceActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -279,8 +328,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                t2p.setGapsChecklist(gapsChecklist);
                 dialog.cancel();
-
+                t2PAdapter.notifyDataSetChanged();
             }
         });
 
@@ -315,7 +365,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         final ArrayList<SkuGetterSetter> sku_list = new ArrayList<>();
 
-        if(skuAddedList.size()>0){
+        if (skuAddedList.size() > 0) {
 
             rec_sku.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             SkuAddedAdapter skuAdapter = new SkuAddedAdapter(skuAddedList);
@@ -327,11 +377,10 @@ public class T2PComplianceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(brand_selected[0] ==null || sku_selected[0]==null || et_stock.getText().toString().equals("")){
+                if (brand_selected[0] == null || sku_selected[0] == null || et_stock.getText().toString().equals("")) {
 
-                    Snackbar.make(v, getResources().getString(R.string.enter_the_values),Snackbar.LENGTH_SHORT).show();
-                }
-                else{
+                    Snackbar.make(v, getResources().getString(R.string.enter_the_values), Snackbar.LENGTH_SHORT).show();
+                } else {
                     SkuGetterSetter sku = new SkuGetterSetter();
                     sku.setBRAND_ID(brand_selected[0].getBRAND_ID().get(0));
                     sku.setBRAND(brand_selected[0].getBRAND().get(0));
@@ -360,7 +409,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
                     brand_selected[0] = null;
                     sku_selected[0] = null;
-
                 }
 
             }
@@ -369,7 +417,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 dialog.cancel();
+                t2PAdapter.notifyDataSetChanged();
             }
         });
 
@@ -394,13 +444,13 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
                     sku_list.clear();
 
-                   brand_selected[0] = brandList.get(position);
+                    brand_selected[0] = brandList.get(position);
 
                     String brand_id = brandList.get(position).getBRAND_ID().get(0);
 
                     ArrayList<SkuGetterSetter> temp_list = db.getSkuT2PData(storeType_id, class_id, keyAccount_id, brand_id);
 
-                    for (int k=0;k<temp_list.size();k++){
+                    for (int k = 0; k < temp_list.size(); k++) {
                         sku_list.add(temp_list.get(k));
                     }
 
@@ -428,7 +478,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if(position!=0){
+                if (position != 0) {
 
                     sku_selected[0] = sku_list.get(position);
                 }
@@ -470,9 +520,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
             holder.tb_present.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (((ToggleButton) v).getText().toString().equalsIgnoreCase("Yes")) {
-                        mItem.setPresent(true);
-                    }
+
+                    mItem.setPresent(((ToggleButton) v).getText().toString().equalsIgnoreCase("Yes"));
+
                 }
             });
 
@@ -786,4 +836,46 @@ public class T2PComplianceActivity extends AppCompatActivity {
         }
     }
 
+    public boolean isValid() {
+        boolean flag = true;
+
+        for (int i = 0; i < t2PGetterSetters.size(); i++) {
+
+            if (t2PGetterSetters.get(i).getImage().equals("")) {
+                flag = false;
+                error_msg = getResources().getString(R.string.click_image);
+                break;
+            } else if (t2PGetterSetters.get(i).getGapsChecklist().size() == 0) {
+                flag = false;
+                error_msg = getResources().getString(R.string.fill_gaps_data);
+                break;
+            } else if (t2PGetterSetters.get(i).getSkulist().size() == 0) {
+                flag = false;
+                error_msg = getResources().getString(R.string.fill_sku_data);
+                break;
+            }
+        }
+
+        return flag;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(T2PComplianceActivity.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                       /* Intent i = new Intent(activity, StorelistActivity.class);
+                        activity.startActivity(i);
+                        activity.finish();*/
+
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+    }
 }
