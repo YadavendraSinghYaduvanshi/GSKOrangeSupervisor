@@ -408,4 +408,14 @@ public class CommonString {
 
     //Gagan Code End
 
+    public static final String TABLE_INSERT_STOCK_ADDITIONAL_DATA = "ADDITIONAL_STOCK_DATA";
+    public static final String CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA = "CREATE TABLE "
+            + TABLE_INSERT_STOCK_ADDITIONAL_DATA + " (" + KEY_ID
+            + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " VARCHAR,"
+            + KEY_BRAND_ID + " VARCHAR," + KEY_BRAND + " VARCHAR,"
+            + KEY_SKU_ID + " VARCHAR,"
+            + KEY_SKUNAME + " VARCHAR,"
+            + KEY_IMAGE + " VARCHAR)";
+
+
 }

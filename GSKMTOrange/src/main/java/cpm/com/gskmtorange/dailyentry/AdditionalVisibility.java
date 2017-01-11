@@ -85,11 +85,11 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
 
     ArrayList<SkuGetterSetter> empty_list = new ArrayList<>();
-    String _pathforcheck, _path, str,msg;
+    String _pathforcheck, _path, str, msg;
     private SharedPreferences preferences;
     String store_id, date, intime, img_str, togglevalue = "1";
     ImageView img_cam, img_clicked;
-    Button btn_add;
+    Button btn_add, btn_close;
     EditText Edt_txt;
     MyAdaptorStock adapterData;
     ListView listviewlay;
@@ -197,9 +197,8 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
         listdata = db.getAdditionalStock(store_id);
 
-        for(int k=0;k<listdata.size();k++)
-        {
-           String KeyID= listdata.get(k).getKey_id();
+        for (int k = 0; k < listdata.size(); k++) {
+            String KeyID = listdata.get(k).getKey_id();
 
             uploadlist = db.getDialogStock(KeyID);
 
@@ -225,7 +224,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 adGt.setStore_id(store_id);
                 adGt.setBtn_toogle(togglevalue);
 
-                if (validateData(adGt,defdata)) {
+                if (validateData(adGt, defdata)) {
 
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                             AdditionalVisibility.this);
@@ -240,7 +239,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
-                                    db.InsertAdditionalData(adGt,defdata);
+                                    db.InsertAdditionalData(adGt, defdata);
 
                                     spinner_brand_list.setSelection(0);
 
@@ -637,12 +636,14 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         final Dialog dialog = new Dialog(AdditionalVisibility.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setContentView(R.layout.t2p_sku_dialog_layout);
+        dialog.setContentView(R.layout.additionalvisibilitydialoglayout);
         //pb = (ProgressBar) dialog.findViewById(R.id.progressBar1);
         //dialog.setCancelable(false);
         spinner_brand = (Spinner) dialog.findViewById(R.id.spinner_brand);
         spinner_sku = (Spinner) dialog.findViewById(R.id.spinner_sku);
         btn_add = (Button) dialog.findViewById(R.id.btn_add);
+        btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
+
         Edt_txt = (EditText) dialog.findViewById(R.id.et_stock);
         listview = (ListView) dialog.findViewById(R.id.lv);
         linearlay = (LinearLayout) dialog.findViewById(R.id.list_layout);
@@ -679,6 +680,14 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             }
         });
 
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.cancel();
+            }
+        });
+
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -699,8 +708,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 // ab.setCategory_id(category_id);
 
 
-                if(validateDialogData(ab))
-                {
+                if (validateDialogData(ab)) {
 
 
                     defdata.add(ab);
@@ -717,9 +725,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                     listview.invalidateViews();
 
 
-                }
-                else
-                {
+                } else {
                     Snackbar.make(v, msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
 
@@ -901,7 +907,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
-                                   // db.deletedialogStockEntry(list.get(position1).getKEY_ID());
+                                    // db.deletedialogStockEntry(list.get(position1).getKEY_ID());
 
                                     defdata.remove(position1);
 
@@ -1075,7 +1081,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         }
     }
 
-    boolean validateData(AddittionalGetterSetter data,ArrayList<AdditionalDialogGetterSetter> dialog) {
+    boolean validateData(AddittionalGetterSetter data, ArrayList<AdditionalDialogGetterSetter> dialog) {
         boolean flag = true;
 
         String brandid = data.getBrand_id();
@@ -1087,8 +1093,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
         if (toggleid.equalsIgnoreCase("0")) {
             flag = true;
-        }
-        else {
+        } else {
 
 
             if (brandid.equalsIgnoreCase("") || skuid.equalsIgnoreCase("")) {
@@ -1101,17 +1106,13 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                 errormsg = "Please Take a image";
 
-            }
-            else if (dialog.size()==0) {
+            } else if (dialog.size() == 0) {
 
                 errormsg = "Please fill sku data";
                 flag = false;
 
 
-            }
-
-
-            else {
+            } else {
                 flag = true;
             }
 
@@ -1125,31 +1126,22 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     boolean validateDialogData(AdditionalDialogGetterSetter data) {
         boolean flag = true;
 
-        String brandid=data.getBrand_id();
-        String displayid=data.getSku_id();
-        String QTy=data.getQuantity();
+        String brandid = data.getBrand_id();
+        String displayid = data.getSku_id();
+        String QTy = data.getQuantity();
 
 
-        if(brandid.equalsIgnoreCase("")||brandid==null)
-        {
+        if (brandid.equalsIgnoreCase("") || brandid == null) {
             flag = false;
 
-            msg="Please Select Dropdown";
-        }
-        else if(displayid==null||displayid.equalsIgnoreCase(""))
-        {
+            msg = "Please Select Dropdown";
+        } else if (displayid == null || displayid.equalsIgnoreCase("")) {
             flag = false;
-            msg="Please Select Dropdown";
-        }
-
-
-        else if(QTy.equalsIgnoreCase("") || QTy==null)
-        {
+            msg = "Please Select Dropdown";
+        } else if (QTy.equalsIgnoreCase("") || QTy == null) {
             flag = false;
-            msg="Please enter Quantity";
-        }
-        else
-        {
+            msg = "Please enter Quantity";
+        } else {
             flag = true;
         }
 
