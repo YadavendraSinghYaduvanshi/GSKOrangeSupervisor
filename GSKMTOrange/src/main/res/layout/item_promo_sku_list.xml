@@ -89,7 +89,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textOff="@string/no"
-                            android:textOn="@string/yes" />
+                            android:textOn="@string/yes"
+                            android:background="@drawable/toggle_selector_background" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -127,7 +128,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textOff="@string/no"
-                            android:textOn="@string/yes"/>
+                            android:textOn="@string/yes"
+                            android:background="@drawable/toggle_selector_background"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -165,7 +167,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textOff="@string/no"
-                            android:textOn="@string/yes"/>
+                            android:textOn="@string/yes"
+                            android:background="@drawable/toggle_selector_background"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
