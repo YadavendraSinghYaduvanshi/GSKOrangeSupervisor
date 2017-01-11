@@ -26,6 +26,8 @@ public class CommonString {
     public static final String KEY_LOGIN_DATA = "LOGIN_DATA";
     public static final String KEY_CULTURE_ID = "CULTURE_ID";
     public static final String KEY_STORE_ID = "STORE_ID";
+    public static final String KEY_Common_ID = "COMMON_ID";
+
     public static final String KEY_STORE_NAME = "STORE_NAME";
     public static final String KEY_VISIT_DATE = "VISIT_DATE";
     public static final String KEY_CAMERA_ALLOW = "CAMERA_ALLOW";
@@ -47,7 +49,8 @@ public class CommonString {
     public static final String KEY_REASON = "REASON";
     public static final String KEY_COVERAGE_REMARK = "REMARK";
     public static final String KEY_IMAGE = "IMAGE";
-    public static final String KEY_ID = "Id";
+    public static final String KEY_IMAGE_URL = "IMAGE_URL";
+        public static final String KEY_ID = "Id";
     public static final String KEY_MERCHANDISER_ID = "MERCHANDISER_ID";
 
     public static final String KEY_BRAND = "BRAND";
@@ -62,7 +65,7 @@ public class CommonString {
 
     public static final String KEY_JOURNEY_PLAN = "JOURNEY_PLAN";
     public static final String TABLE_INSERT_STOCK_DIALOG = "STOCK_DIALOG";
-    public static final String TABLE_INSERT_STOCK_ADDITIONAL_DATA = "ADDITIONAL_STOCK_DATA";
+
 
     public static final String KEY_P = "P";
     public static final String KEY_D = "D";
@@ -289,21 +292,45 @@ public class CommonString {
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " VARCHAR,"
             + KEY_BRAND_ID + " VARCHAR," + KEY_BRAND + " VARCHAR,"
             + KEY_DISPLAY_ID +" VARCHAR,"
-            + KEY_SKU_ID + " VARCHAR," + KEY_QUANTITY + " VARCHAR," + UNIQUE_KEY_ID + " VARCHAR,"
+            + KEY_SKU_ID + " VARCHAR," + KEY_QUANTITY + " VARCHAR," + KEY_Common_ID + " VARCHAR,"
             + KEY_CATEGORY_ID + " VARCHAR,"
             + KEY_SKUNAME + " VARCHAR,"
             + KEY_PROCESS_ID + " VARCHAR)";
 
 
-    public static final String CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA = "CREATE TABLE "
-            + TABLE_INSERT_STOCK_ADDITIONAL_DATA + " (" + KEY_ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " VARCHAR,"
-            + KEY_BRAND_ID + " VARCHAR," + KEY_BRAND + " VARCHAR,"
+    public static final String TABLE_INSERT_STOCK_ADDITIONAL = "Stock_Additional_visibility";
 
-            + KEY_SKU_ID + " VARCHAR," + KEY_IMAGE + " VARCHAR,"
+    public static final String CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_STOCK_ADDITIONAL
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
 
-            + KEY_SKUNAME + " VARCHAR,"
-            + KEY_IMAGE + " VARCHAR)";
+            + "Store_Id"
+            + " VARCHAR,"
+
+            + "brand_name"
+            + " VARCHAR,"
+
+            + "brand_id"
+            + " VARCHAR,"
+
+            + "image_url"
+            + " VARCHAR,"
+
+            + "sku_id"
+            + " VARCHAR,"
+
+            + "sku_name"
+            + " VARCHAR,"
+
+            + "toggle_value"
+            + " VARCHAR,"
+
+            + "IMAGE2"
+            + " VARCHAR"
+
+            + ")";
 
     public static final String TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE = "Additional_Promo_Compliance_Data";
 
