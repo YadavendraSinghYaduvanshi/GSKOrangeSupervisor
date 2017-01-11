@@ -13,6 +13,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.LoginGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
@@ -191,7 +192,7 @@ public class XMLHandlers {
 
     // SKU_MASTER XML HANDLER
     public static SkuMasterGetterSetter skuMasterXMLHandler(XmlPullParser xpp,
-                                                        int eventType) {
+                                                            int eventType) {
         SkuMasterGetterSetter sku = new SkuMasterGetterSetter();
 
         try {
@@ -231,7 +232,7 @@ public class XMLHandlers {
 
     // BRAND_MASTER XML HANDLER
     public static BrandMasterGetterSetter brandMasterXMLHandler(XmlPullParser xpp,
-                                                              int eventType) {
+                                                                int eventType) {
         BrandMasterGetterSetter brand = new BrandMasterGetterSetter();
 
         try {
@@ -308,7 +309,7 @@ public class XMLHandlers {
 
     // CATEGORY_MASTER XML HANDLER
     public static CategoryMasterGetterSetter categoryMasterXMLHandler(XmlPullParser xpp,
-                                                                         int eventType) {
+                                                                      int eventType) {
         CategoryMasterGetterSetter category = new CategoryMasterGetterSetter();
 
         try {
@@ -374,7 +375,7 @@ public class XMLHandlers {
 
     // MAPPING_STOCK XML HANDLER
     public static MappingStockGetterSetter mappingStockXMLHandler(XmlPullParser xpp,
-                                                                    int eventType) {
+                                                                  int eventType) {
         MappingStockGetterSetter stock = new MappingStockGetterSetter();
 
         try {
@@ -416,7 +417,7 @@ public class XMLHandlers {
 
     // MAPPING_T2P XML HANDLER
     public static MAPPINGT2PGetterSetter mappingT2pXMLHandler(XmlPullParser xpp,
-                                                                int eventType) {
+                                                              int eventType) {
         MAPPINGT2PGetterSetter t2p = new MAPPINGT2PGetterSetter();
 
         try {
@@ -480,7 +481,7 @@ public class XMLHandlers {
 
     // MAPPING_DISPLAY_CHECKLIST XML HANDLER
     public static MappingDisplayChecklistGetterSetter mappingMappingDisplayChecklistXMLHandler(XmlPullParser xpp,
-                                                                                              int eventType) {
+                                                                                               int eventType) {
         MappingDisplayChecklistGetterSetter checklist = new MappingDisplayChecklistGetterSetter();
 
         try {
@@ -510,7 +511,7 @@ public class XMLHandlers {
 
     // NON_WORKING_REASON XML HANDLER
     public static NonWorkingReasonGetterSetter nonWorkingReasonXMLHandler(XmlPullParser xpp,
-                                                                                        int eventType) {
+                                                                          int eventType) {
         NonWorkingReasonGetterSetter reason = new NonWorkingReasonGetterSetter();
 
         try {
@@ -545,13 +546,13 @@ public class XMLHandlers {
     }
 
     // MAPPING_PROMOTION XML HANDLER
-    public static MappingPromotionGetterSetter mappingPromotionXMLHandler(XmlPullParser xpp,
-                                                                          int eventType) {
+    public static MappingPromotionGetterSetter mappingPromotionXMLHandler(XmlPullParser xpp, int eventType) {
         MappingPromotionGetterSetter t2p = new MappingPromotionGetterSetter();
 
         try {
             while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
                 if (xpp.getEventType() == XmlPullParser.START_TAG) {
+
                     if (xpp.getName().equals("META_DATA")) {
                         t2p.setTable_MAPPING_PROMOTION(xpp.nextText());
                     }
@@ -574,12 +575,51 @@ public class XMLHandlers {
                 xpp.next();
             }
         } catch (XmlPullParserException e) {
-
             e.printStackTrace();
         } catch (IOException e) {
-
             e.printStackTrace();
         }
         return t2p;
     }
+
+    //Gagan Start Code
+
+    //MAPPING_ADDITIONAL_PROMOTION
+    public static MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter mappingAdditionalPromotionXMLHandler(XmlPullParser xpp, int eventType) {
+        MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter map = new MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+
+                    if (xpp.getName().equals("META_DATA")) {
+                        map.setTable_MAPPING_ADDITIONAL_PROMOTION(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("STORE_ID")) {
+                        map.setSTORE_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SKU_ID")) {
+                        map.setSKU_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SKU")) {
+                        map.setSKU(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("PROMO_ID")) {
+                        map.setPROMO_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("PROMO")) {
+                        map.setPROMO(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    //Gagan End Code
 }

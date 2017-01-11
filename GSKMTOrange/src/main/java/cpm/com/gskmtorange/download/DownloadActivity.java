@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,9 +25,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 
-
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
-
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
@@ -36,6 +34,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
@@ -68,6 +67,7 @@ public class DownloadActivity extends AppCompatActivity {
     MappingDisplayChecklistGetterSetter mappingChecklistGetterSetter;
     NonWorkingReasonGetterSetter nonWorkingReasonGetterSetter;
     MappingPromotionGetterSetter mappingPromotionGetterSetter;
+    MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter mapping_additional_promotion_masterGetterSetter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -511,6 +511,7 @@ public class DownloadActivity extends AppCompatActivity {
                 }
                 publishProgress(data);
 
+
                 // MAPPING_PROMOTION
                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
@@ -531,19 +532,60 @@ public class DownloadActivity extends AppCompatActivity {
                     xpp.next();
                     eventType = xpp.getEventType();
                     mappingPromotionGetterSetter = XMLHandlers.mappingPromotionXMLHandler(xpp, eventType);
-                    if (mappingPromotionGetterSetter.getSTORE_ID().size() > 0) {
-                        String mapping_promotion_table = mappingPromotionGetterSetter.getTable_MAPPING_PROMOTION();
-                        if (mapping_promotion_table != null) {
-                            resultHttp = CommonString.KEY_SUCCESS;
-                            TableBean.setMappingPromotion(mapping_promotion_table);
-                        }
-                    } else {
-                        //return "MAPPING_PROMOTION";
+                    //if (mappingPromotionGetterSetter.getSTORE_ID().size() > 0) {
+                    String mapping_promotion_table = mappingPromotionGetterSetter.getTable_MAPPING_PROMOTION();
+                    if (mapping_promotion_table != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setMappingPromotion(mapping_promotion_table);
                     }
+                    /*} else {
+                        //return "MAPPING_PROMOTION";
+                    }*/
                     data.value = 100;
                     data.name = "MAPPING_PROMOTION Data Download";
                 }
                 publishProgress(data);
+
+
+                //Gagan start code
+
+                // MAPPING_ADDITIONAL_PROMOTION
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_ADDITIONAL_PROMOTION");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = (Object) envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mapping_additional_promotion_masterGetterSetter = XMLHandlers.mappingAdditionalPromotionXMLHandler(xpp, eventType);
+
+                    //if (mapping_additional_promotion_masterGetterSetter.getSTORE_ID().size() > 0) {
+                    String mapping_additional_promotion_table = mapping_additional_promotion_masterGetterSetter.getTable_MAPPING_ADDITIONAL_PROMOTION();
+                    if (mapping_additional_promotion_table != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setMappingAdditionalPromotion(mapping_additional_promotion_table);
+                    }
+                    /*} else {
+                        //return "MAPPING_ADDITIONAL_PROMOTION";
+                    }*/
+                    data.value = 100;
+                    data.name = "MAPPING_ADDITIONAL_PROMOTION Data Download";
+                }
+                publishProgress(data);
+
+                //Gagan end code
+
 
                 db.open();
                 db.InsertJCP(jcpgettersetter);
@@ -556,6 +598,10 @@ public class DownloadActivity extends AppCompatActivity {
                 db.InsertMappingStock(mappingStockGetterSetter);
                 db.InsertDisplayChecklistMaster(checklistMasterGetterSetter);
                 db.InsertMappingDisplayChecklist(mappingChecklistGetterSetter);
+                db.InsertMAPPING_PROMOTION(mappingPromotionGetterSetter);
+                db.InsertMAPPING_ADDITIONAL_PROMOTION(mapping_additional_promotion_masterGetterSetter);
+
+                db.insertNonWorkingData(nonWorkingReasonGetterSetter);
 
                 db.insertNonWorkingData(nonWorkingReasonGetterSetter);
 

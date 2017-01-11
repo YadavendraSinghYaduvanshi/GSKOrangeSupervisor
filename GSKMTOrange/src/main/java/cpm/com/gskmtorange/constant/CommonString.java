@@ -8,15 +8,14 @@ import android.os.Environment;
 
 public class CommonString {
 
-// webservice constants
-
+    // webservice constants
 
     // preferenec keys
     public static final String KEY_USERNAME = "username";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_DATE = "date";
     public static final String KEY_STOREVISITED_STATUS = "STOREVISITED_STATUS";
-    //public static final String FILE_PATH = Environment.getExternalStorageDirectory() + "/GSK_MT_Images/";
+
 
     public static final String KEY_PATH = "path";
     public static final String KEY_VERSION = "APP_VERSION";
@@ -53,6 +52,7 @@ public class CommonString {
     public static final String KEY_IMAGE_URL = "IMAGE_URL";
         public static final String KEY_ID = "Id";
     public static final String KEY_MERCHANDISER_ID = "MERCHANDISER_ID";
+
     public static final String KEY_BRAND = "BRAND";
     public static final String KEY_BRAND_ID = "BRAND_ID";
     public static final String KEY_DISPLAY_ID = "DISPLAY_ID";
@@ -62,6 +62,7 @@ public class CommonString {
     public static final String UNIQUE_KEY_ID = "UNIQUE_KEY_ID";
     public static final String KEY_CATEGORY_ID = "CATEGORY_ID";
     public static final String KEY_PROCESS_ID = "PROCESS_ID";
+
     public static final String KEY_JOURNEY_PLAN = "JOURNEY_PLAN";
     public static final String TABLE_INSERT_STOCK_DIALOG = "STOCK_DIALOG";
 
@@ -75,7 +76,7 @@ public class CommonString {
     public static final String KEY_INVALID = "INVALID";
     public static final String STORE_STATUS_LEAVE = "L";
     public static final String KEY_VALID = "Valid";
-    public static final String DATA_DELETE_ALERT_MESSAGE="Saved data will be lost - Do you want to continue?";
+    public static final String DATA_DELETE_ALERT_MESSAGE = "Saved data will be lost - Do you want to continue?";
     public static final String KEY_CHECK_IN = "I";
     // webservice constants
 
@@ -106,12 +107,20 @@ public class CommonString {
     public static final String SOAP_ACTION_DR_STORE_IMAGES_GEO = "http://tempuri.org/"
             + METHOD_Get_DR_STORE_IMAGES_GEO;
 
+    public static final String METHOD_UPLOAD_COVERAGE = "UPLOAD_COVERAGE";
+
+    public static final String METHOD_UPLOAD_COVERAGE_STATUS = "UploadCoverage_Status";
+
+    public static final String SOAP_ACTION = "http://tempuri.org/";
+
+    public static final String SOAP_ACTION_UPLOAD_STORE_COVERAGE = "http://tempuri.org/"
+            + METHOD_UPLOAD_COVERAGE;
+
+    public static final String METHOD_UPLOAD_IMAGE = "GetImageWithFolderName";
+
+    public static final String SOAP_ACTION_UPLOAD_IMAGE = "http://tempuri.org/" + METHOD_UPLOAD_IMAGE;
+
     //Alert Messages
-
-
-
-
-
 
 
     public static final String MESSAGE_FAILURE = "Server Error.Please Access After Some Time";
@@ -124,22 +133,16 @@ public class CommonString {
     public static final String TABLE_COVERAGE_DATA = "COVERAGE_DATA";
 
 
-
     public static final String CREATE_TABLE_COVERAGE_DATA = "CREATE TABLE  IF NOT EXISTS "
             + TABLE_COVERAGE_DATA + " (" + KEY_ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT ," + KEY_STORE_ID
             + " VARCHAR,USER_ID VARCHAR, " + KEY_IN_TIME + " VARCHAR,"
             + KEY_OUT_TIME + " VARCHAR," + KEY_VISIT_DATE + " VARCHAR,"
-            + KEY_LATITUDE + " VARCHAR," + KEY_LONGITUDE + " VARCHAR,"+ KEY_MERCHANDISER_ID + " VARCHAR,"
-            + KEY_COVERAGE_STATUS + " VARCHAR,"+ KEY_IMAGE + " VARCHAR,"
+            + KEY_LATITUDE + " VARCHAR," + KEY_LONGITUDE + " VARCHAR," + KEY_MERCHANDISER_ID + " VARCHAR,"
+            + KEY_COVERAGE_STATUS + " VARCHAR," + KEY_IMAGE + " VARCHAR,"
             + KEY_GEO_TAG + " VARCHAR,"
             + KEY_REASON_ID + " VARCHAR," + KEY_COVERAGE_REMARK
             + " VARCHAR," + KEY_REASON + " VARCHAR)";
-
-
-
-
-
 
 
     public static final String CREATE_TABLE_STORE_GEOTAGGING = "CREATE TABLE IF NOT EXISTS "
@@ -166,6 +169,7 @@ public class CommonString {
             + "FRONT_IMAGE" + " VARCHAR)";
 
 
+    //Gagan Code Start
 
     //File Path
     public static final String FILE_PATH = Environment.getExternalStorageDirectory() + "/GSK_MT_ORANGE_IMAGES/";
@@ -282,6 +286,7 @@ public class CommonString {
             + ")";
 
 
+
     public static final String CREATE_TABLE_STOCK_DIALOG = "CREATE TABLE "
             + TABLE_INSERT_STOCK_DIALOG + " (" + KEY_ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " VARCHAR,"
@@ -326,5 +331,81 @@ public class CommonString {
             + " VARCHAR"
 
             + ")";
+
+    public static final String TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE = "Additional_Promo_Compliance_Data";
+
+    public static final String CREATE_TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "STORE_ID"
+            + " INTEGER,"
+
+            + "CATEGORY_ID"
+            + " INTEGER,"
+
+            + "SKU_ID"
+            + " INTEGER,"
+
+            + "SKU"
+            + " VARCHAR,"
+
+            + "PROMO_ID"
+            + " INTEGER,"
+
+            + "PROMO"
+            + " VARCHAR,"
+
+            + "IN_STOCK_VALUE"
+            + " INTEGER,"
+
+            + "PROMO_ANNOUNCER_VALUE"
+            + " INTEGER,"
+
+            + "RUNNING_POS_VALUE"
+            + " INTEGER"
+
+            + ")";
+
+    public static final String TABLE_INSERT_PROMO_SKU = "Promo_SKU_Data";
+
+    public static final String CREATE_TABLE_INSERT_PROMO_SKU = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_PROMO_SKU
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "STORE_ID"
+            + " INTEGER,"
+
+            + "CATEGORY_ID"
+            + " INTEGER,"
+
+            + "SKU_ID"
+            + " INTEGER,"
+
+            + "SKU"
+            + " VARCHAR,"
+
+            + "PROMO_ID"
+            + " INTEGER,"
+
+            + "PROMO"
+            + " VARCHAR,"
+
+            + "IN_STOCK_VALUE"
+            + " INTEGER,"
+
+            + "PROMO_ANNOUNCER_VALUE"
+            + " INTEGER,"
+
+            + "RUNNING_POS_VALUE"
+            + " INTEGER"
+
+            + ")";
+
+    //Gagan Code End
 
 }

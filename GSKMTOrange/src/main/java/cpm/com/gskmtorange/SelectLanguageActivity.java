@@ -21,7 +21,7 @@ import java.util.Locale;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.LoginGetterSetter;
 
-public class SelectLanguageActivity extends AppCompatActivity implements View.OnClickListener{
+public class SelectLanguageActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btn_lang_1, btn_lang_2;
 
@@ -51,7 +51,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
         language = login_data.getCULTURE_NAME();
         culture_id = login_data.getCULTURE_ID();
 
-        if(language.size()>1){
+        if (language.size() > 1) {
 
             btn_lang_1.setText(language.get(0));
             btn_lang_2.setText(language.get(1));
@@ -61,20 +61,18 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
         }
 
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(selected_flag){
+                if (selected_flag) {
                     Intent intent = new Intent(getBaseContext(),
                             MainActivity.class);
 
                     intent.putExtra(CommonString.KEY_LOGIN_DATA, login_data);
                     startActivity(intent);
-                }
-                else {
+                } else {
                     Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
@@ -84,16 +82,14 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(View view) {
-
         int id = view.getId();
 
-        switch (id){
-
+        switch (id) {
             case R.id.btn_language_one:
 
                 selected_flag = true;
 
-                updateResources(getApplicationContext(),language.get(0));
+                updateResources(getApplicationContext(), language.get(0));
 
                 btn_lang_1.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 btn_lang_2.setBackgroundColor(getResources().getColor(R.color.grey_background));
@@ -109,7 +105,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
 
                 selected_flag = true;
 
-                updateResources(getApplicationContext(),language.get(1));
+                updateResources(getApplicationContext(), language.get(1));
 
                 btn_lang_1.setBackgroundColor(getResources().getColor(R.color.grey_background));
                 btn_lang_2.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -124,16 +120,15 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
     }
 
     private static boolean updateResources(Context context, String language) {
+        String lang;
 
-        String lang ;
-
-        if(language.equals("English")){
+        if(language.equalsIgnoreCase("English")){
             lang = "EN";
         }
-        else if(language.equals("UAE")) {
+        else if(language.equalsIgnoreCase("UAE")) {
+
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 

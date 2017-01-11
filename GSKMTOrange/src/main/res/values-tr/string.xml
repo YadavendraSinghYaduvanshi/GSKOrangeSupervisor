@@ -16,6 +16,7 @@
     <string name="menu_daily_download">Günlük Veri Indir</string>
     <string name="menu_upload_data">Veri Paylaş</string>
     <string name="menu_geotag">Coğrafi Konum</string>
+    <string name="menu_export">Data Export</string>
     <string name="menu_exit">Çıkış</string>
     <string name="menu_setting">Ayarlar</string>
     <string name="menu_services">Hizmetler</string>
@@ -40,5 +41,10 @@
     <string name="select">Seç</string>
 
     <string name="title_activity_t2_pcompliance">Kalıcı Teşhir</string>
+
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+
+    <string name="title_activity_upload">Veri Paylaş</string>
 
 </resources>
