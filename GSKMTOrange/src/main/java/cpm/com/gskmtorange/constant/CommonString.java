@@ -298,6 +298,14 @@ public class CommonString {
             + KEY_PROCESS_ID + " VARCHAR)";
 
 
+    public static final String CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA = "CREATE TABLE "
+            + TABLE_INSERT_STOCK_ADDITIONAL_DATA + " (" + KEY_ID
+            + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " VARCHAR,"
+            + KEY_BRAND_ID + " VARCHAR," + KEY_BRAND + " VARCHAR,"
+            + KEY_SKU_ID + " VARCHAR,"
+            + KEY_SKUNAME + " VARCHAR,"
+            + KEY_IMAGE + " VARCHAR)";
+
     public static final String TABLE_INSERT_STOCK_ADDITIONAL = "Stock_Additional_visibility";
 
     public static final String CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY = "CREATE TABLE IF NOT EXISTS "
@@ -331,6 +339,7 @@ public class CommonString {
             + " VARCHAR"
 
             + ")";
+
 
     public static final String TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE = "Additional_Promo_Compliance_Data";
 
