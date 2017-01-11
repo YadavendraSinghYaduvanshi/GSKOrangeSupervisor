@@ -119,11 +119,34 @@ public class CategoryListActivity extends AppCompatActivity {
             //holder.categoryIcon.setImageResource(R.drawable.category);
 
             if (categoryData.getCategory().equalsIgnoreCase("Oral Health")) {
-                holder.categoryIcon.setImageResource(R.drawable.ohc);
+                if (db.checkMsl_AvailabilityData(store_id, categoryData.getCategory_id())
+                        && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
+                        && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
+
+                    holder.categoryIcon.setImageResource(R.drawable.ohc_done);
+                } else {
+                    holder.categoryIcon.setImageResource(R.drawable.ohc);
+                }
             } else if (categoryData.getCategory().equalsIgnoreCase("Wellness")) {
-                holder.categoryIcon.setImageResource(R.drawable.pdr);
+                if (db.checkMsl_AvailabilityData(store_id, categoryData.getCategory_id())
+                        && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
+                        && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
+
+                    holder.categoryIcon.setImageResource(R.drawable.pdr_done);
+                } else {
+
+                    holder.categoryIcon.setImageResource(R.drawable.pdr);
+                }
             } else if (categoryData.getCategory().equalsIgnoreCase("Nutritionals")) {
-                holder.categoryIcon.setImageResource(R.drawable.hfd);
+
+                if (db.checkMsl_AvailabilityData(store_id, categoryData.getCategory_id())
+                        && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
+                        && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
+
+                    holder.categoryIcon.setImageResource(R.drawable.hfd_done);
+                } else {
+                    holder.categoryIcon.setImageResource(R.drawable.hfd);
+                }
             }
 
 

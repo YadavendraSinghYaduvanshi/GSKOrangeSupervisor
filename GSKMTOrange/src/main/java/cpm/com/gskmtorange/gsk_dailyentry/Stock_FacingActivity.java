@@ -321,7 +321,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     //String date = new Date().toLocaleString().toString();
                     //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
 
-                    _pathforcheck = "Stock_Cam1_" + store_id + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck = "Stock_Cam1_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
                     child_position = groupPosition;
                     path = str + _pathforcheck;
 
@@ -349,7 +349,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     //String date = new Date().toLocaleString().toString();
                     //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
 
-                    _pathforcheck = "Stock_Cam2_" + store_id + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck = "Stock_Cam2_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
                     child_position = groupPosition;
                     path = str + _pathforcheck;
 

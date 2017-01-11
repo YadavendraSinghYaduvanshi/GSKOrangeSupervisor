@@ -628,7 +628,7 @@ public class UploadActivity extends AppCompatActivity {
                 return CommonString.KEY_FAILURE;
             }
         } else {
-            //new File(Path + path).delete();
+            new File(Path + path).delete();
         }
 
         return result.toString();

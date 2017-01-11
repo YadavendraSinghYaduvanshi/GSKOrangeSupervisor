@@ -21,6 +21,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -60,14 +62,16 @@
                     android:id="@+id/btntoggle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+
                     android:layout_weight=".5" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/tv_brandlayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="30"
+                android:layout_weight="40"
                 android:background="@color/grey_background"
                 android:orientation="horizontal"
                 android:padding="5dp"
@@ -86,15 +90,16 @@
                 <Spinner
                     android:id="@+id/spinner_Brand1"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="50dp"
                     android:layout_weight="2" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/tv_displaylayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="30"
+                android:layout_weight="40"
                 android:background="@color/grey_background"
                 android:orientation="horizontal"
                 android:padding="5dp"
@@ -112,14 +117,14 @@
                 <Spinner
                     android:id="@+id/spinner_SkuMaster"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="50dp"
                     android:layout_weight="2"
                     />
-
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/tv_cameralayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="15"
@@ -175,22 +180,17 @@
 
             </LinearLayout>
 
-            <RelativeLayout
+            <!--<RelativeLayout
+                android:id="@+id/tv_skulayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="8"
                 android:background="@color/grey_background"
                 android:padding="5dp">
 
-                <Button
-                    android:id="@+id/btn_sku"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:background="@color/colorPrimary"
-                    android:text="@string/sku" />
 
-            </RelativeLayout>
+
+            </RelativeLayout>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -198,19 +198,28 @@
                 android:layout_weight="9"
                 android:background="@color/grey_background"
                 android:padding="5dp">
-
+                <Button
+                    android:id="@+id/btn_sku"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:background="@color/colorPrimary"
+                    android:text="@string/sku" />
                 <Button
                     android:id="@+id/btadd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_alignParentRight="true"
                     android:background="@color/colorPrimary"
                     android:text="@string/add" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
+
+
     <android.support.v7.widget.CardView
+
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
