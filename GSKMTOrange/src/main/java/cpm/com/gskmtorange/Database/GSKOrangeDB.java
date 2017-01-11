@@ -1453,22 +1453,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<AdditionalDialogGetterSetter> getDialogStock(String store_id) {
+    public ArrayList<AdditionalDialogGetterSetter> getDialogStock(String keyid) {
         Cursor cursordata = null;
         ArrayList<AdditionalDialogGetterSetter> productData = new ArrayList<AdditionalDialogGetterSetter>();
 
         try {
 
-            cursordata = db.rawQuery("SELECT * FROM STOCK_DIALOG WHERE STORE_ID = '"+store_id + "'", null);
-
-           /* cursordata = db.rawQuery("SELECT  * from "
-                            + CommonString.TABLE_INSERT_STOCK_TOT + " WHERE "
-                            + CommonString.KEY_STORE_ID + "='" + store_id + "' AND "
-                            + CommonString.KEY_CATEGORY_ID + "='" + cate_id + "' AND "
-                            + CommonString.KEY_PROCESS_ID + " ='" + process_id + "' AND "
-                            + CommonString.KEY_DISPLAY_ID + "= '" + display_id + "' AND "
-                            + CommonString.UNIQUE_KEY_ID + "= '" + unique_id + "'",
-                    null);*/
+            cursordata = db.rawQuery("SELECT * FROM STOCK_DIALOG WHERE COMMON_ID = '"+keyid + "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
@@ -1484,12 +1475,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     sb.setBrand(cursordata.getString(cursordata
                             .getColumnIndexOrThrow(CommonString.KEY_BRAND)));
 
-                    /*sb.setCategory_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
-
-
-                    sb.setDisplay_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_DISPLAY_ID)));*/
 
                     sb.setQuantity(cursordata.getString(cursordata
                             .getColumnIndexOrThrow(CommonString.KEY_QUANTITY)));
@@ -1499,12 +1484,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                    sb.setSku_name(cursordata.getString(cursordata
                             .getColumnIndexOrThrow(CommonString.KEY_SKUNAME)));
-
-                   /* sb.setProcess_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.KEY_PROCESS_ID)));
-
-                    sb.setUnique_id(cursordata.getString(cursordata
-                            .getColumnIndexOrThrow(CommonString.UNIQUE_KEY_ID)));*/
 
 
                     productData.add(sb);

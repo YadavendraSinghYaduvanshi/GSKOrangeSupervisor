@@ -64,7 +64,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     ArrayList<AdditionalDialogGetterSetter> list = new ArrayList<AdditionalDialogGetterSetter>();
     ArrayList<AddittionalGetterSetter> listdata = new ArrayList<AddittionalGetterSetter>();
 
-
+    ArrayList<AdditionalDialogGetterSetter> uploadlist = new ArrayList<AdditionalDialogGetterSetter>();
     ArrayList<AdditionalDialogGetterSetter> defdata = new ArrayList<AdditionalDialogGetterSetter>();
     Spinner spinner_brand, spinner_sku;
     Spinner spinner_brand_list, spinner_sku_list;
@@ -97,7 +97,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     MyAdaptorAdditionalStock adapteradditional;
     AddittionalGetterSetter adGt;
     LinearLayout brandlayout, diaplylayout, cameralayout;
-    RelativeLayout skulayout;
+    //RelativeLayout skulayout;
 
     ////String brand_id,SKU_ID;
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +114,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
 
 
-       // store_id = "1";
+        store_id = "1";
         date = preferences.getString(CommonString.KEY_DATE, null);
         intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
 
@@ -133,7 +133,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         diaplylayout = (LinearLayout) findViewById(R.id.tv_displaylayout);
         cameralayout = (LinearLayout) findViewById(R.id.tv_cameralayout);
 
-        skulayout = (RelativeLayout) findViewById(R.id.tv_skulayout);
+        //skulayout = (RelativeLayout) findViewById(R.id.tv_skulayout);
 
         btntoggle.setChecked(true);
 
@@ -197,6 +197,15 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
         listdata = db.getAdditionalStock(store_id);
 
+        for(int k=0;k<listdata.size();k++)
+        {
+           String KeyID= listdata.get(k).getKey_id();
+
+            uploadlist = db.getDialogStock(KeyID);
+
+        }
+
+
         if (listdata.size() > 0) {
             adapteradditional = new MyAdaptorAdditionalStock(AdditionalVisibility.this, listdata);
             listviewlay.setAdapter(adapteradditional);
@@ -245,14 +254,13 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                                     defdata.clear();
 
-
                                     btntoggle.setChecked(true);
 
                                     togglevalue = "1";
                                     brandlayout.setVisibility(View.VISIBLE);
                                     diaplylayout.setVisibility(View.VISIBLE);
                                     cameralayout.setVisibility(View.VISIBLE);
-                                    skulayout.setVisibility(View.VISIBLE);
+                                    btnsku.setVisibility(View.VISIBLE);
 
                                     listdata = db.getAdditionalStock(store_id);
 
@@ -287,7 +295,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             }
         });
 
-
         btntoggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -298,15 +305,15 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                     brandlayout.setVisibility(View.VISIBLE);
                     diaplylayout.setVisibility(View.VISIBLE);
                     cameralayout.setVisibility(View.VISIBLE);
-                    skulayout.setVisibility(View.VISIBLE);
+                    btnsku.setVisibility(View.VISIBLE);
 
                 } else {
                     togglevalue = "0";
 
-                    brandlayout.setVisibility(View.GONE);
-                    diaplylayout.setVisibility(View.GONE);
-                    cameralayout.setVisibility(View.GONE);
-                    skulayout.setVisibility(View.GONE);
+                    brandlayout.setVisibility(View.INVISIBLE);
+                    diaplylayout.setVisibility(View.INVISIBLE);
+                    cameralayout.setVisibility(View.INVISIBLE);
+                    btnsku.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -904,7 +911,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                                             list.get(position1).getDisplay_id(),list.get(position1).getUnique_id());*/
 
 
-                                   // list = db.getDialogStock(store_id);
+                                    //list = db.getDialogStock(store_id);
 
                                     listview.setAdapter(new MyAdaptorStock(AdditionalVisibility.this, defdata));
                                     listview.invalidateViews();
