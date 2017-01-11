@@ -80,6 +80,7 @@
             android:name=".dailyentry.T2PComplianceActivity"
             android:label="@string/title_activity_t2_pcompliance"
             android:screenOrientation="portrait"
+            android:configChanges="screenSize|orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- Gagan Start Declaration -->
