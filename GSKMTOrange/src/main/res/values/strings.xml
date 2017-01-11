@@ -117,6 +117,18 @@
     <string name="promo_compliance_runningPOS">Running on POS</string>
     <string name="promo_compliance_add">Add</string>
 
+    <string name="category_performance_period">Period</string>
+    <string name="category_performance_msl_availability">MSL Availability</string>
+    <string name="category_performance_sos">SOS</string>
+    <string name="category_performance_t2p">T2P</string>
+    <string name="category_performance_promo">Promo</string>
+    <string name="category_performance_oss">OSS</string>
+
+    <string name="category_performance_ltm">LTM</string>
+    <string name="category_performance_mtd">MTD</string>
+    <string name="category_performance_lsv">LSV</string>
+
+    <string name="title_activity_store_wise_performance">Store wise Performance</string>
     <!--Gagan end new code 1-->
 
 

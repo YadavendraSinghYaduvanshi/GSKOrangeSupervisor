@@ -59,9 +59,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".dailyentry.StoreimageActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_store_list_geotag"
             android:screenOrientation="portrait"
-            android:configChanges="screenSize|orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".GeoTag.GeoTagActivity"
@@ -120,6 +120,12 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity
+            android:name=".gsk_dailyentry.StoreWisePerformanceActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <!-- Gagan End Declaration -->
 
         <activity
@@ -129,8 +135,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".upload.UploadActivity"
-            android:label="@string/title_activity_upload"
-            />
+            android:label="@string/title_activity_upload" />
     </application>
 
 </manifest>
