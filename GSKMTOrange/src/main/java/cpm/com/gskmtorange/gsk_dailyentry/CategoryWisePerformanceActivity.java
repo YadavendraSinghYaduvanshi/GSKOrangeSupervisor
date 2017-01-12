@@ -24,24 +24,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
 
 public class CategoryWisePerformanceActivity extends AppCompatActivity {
-    TextView txt_categoryName;
     RecyclerView recyclerView;
+    Toolbar toolbar;
 
     String categoryName = "", categoryId;
 
     ArrayList<CategoryWisePerformaceGetterSetter> categoryWisePerformanceList;
     CategoryWisePerformaceAdapter adapter;
-
     private SharedPreferences preferences;
+    GSKOrangeDB db;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_category_wise_performance);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -72,12 +75,55 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        try {
+            setContentView(R.layout.activity_category_wise_performance);
+
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+            db = new GSKOrangeDB(this);
+            db.open();
+
+               store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
+            visit_date = preferences.getString(CommonString.KEY_DATE, null);
+            date = preferences.getString(CommonString.KEY_DATE, null);
+            username = preferences.getString(CommonString.KEY_USERNAME, null);
+            intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
+            keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
+            class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
+            storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+
+            //Intent data
+            categoryName = getIntent().getStringExtra("categoryName");
+            categoryId = getIntent().getStringExtra("categoryId");
+
+            //txt_categoryName.setText(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
+            toolbar.setTitle(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(CategoryWisePerformanceActivity.this, DailyDataMenuActivity.class);
+                    intent.putExtra("categoryName", categoryName);
+                    intent.putExtra("categoryId", categoryId);
+                    startActivity(intent);
+                }
+            });
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+      
         updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         categoryWisePerformanceList = new ArrayList<>();
@@ -148,6 +194,17 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         adapter = new CategoryWisePerformaceAdapter(CategoryWisePerformanceActivity.this, categoryWisePerformanceList);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        try {
+            categoryWisePerformanceList = db.getCategoryWisePerformance(store_id, categoryId);
+
+            adapter = new CategoryWisePerformaceAdapter(CategoryWisePerformanceActivity.this, categoryWisePerformanceList);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public class CategoryWisePerformaceAdapter extends RecyclerView.Adapter<CategoryWisePerformaceAdapter.MyViewHolder> {
@@ -172,11 +229,18 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         public void onBindViewHolder(CategoryWisePerformaceAdapter.MyViewHolder holder, int position) {
             final CategoryWisePerformaceGetterSetter categoryData = list.get(position);
 
-            holder.txt_period.setText(categoryData.getPeriod());
+            if (categoryData.getPeriod().equalsIgnoreCase("LTM")) {
+                holder.txt_period.setText(getResources().getString(R.string.category_performance_ltm));
+            } else if (categoryData.getPeriod().equalsIgnoreCase("MTD")) {
+                holder.txt_period.setText(getResources().getString(R.string.category_performance_mtd));
+            } else if (categoryData.getPeriod().equalsIgnoreCase("LSV")) {
+                holder.txt_period.setText(getResources().getString(R.string.category_performance_lsv));
+            }
+            //holder.txt_period.setText(categoryData.getPeriod());
+            holder.txt_msl_availability.setText(categoryData.getMsl_availability());
             holder.txt_sos.setText(categoryData.getSos());
             holder.txt_t2p.setText(categoryData.getT2p());
             holder.txt_promo.setText(categoryData.getPromo());
-            holder.txt_msl_availability.setText(categoryData.getMsl_availability());
             holder.txt_oss.setText(categoryData.getOss());
         }
 
@@ -200,7 +264,6 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
                 txt_oss = (TextView) itemView.findViewById(R.id.txt_oss);
             }
         }
-
     }
 
     @Override

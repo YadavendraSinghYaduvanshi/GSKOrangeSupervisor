@@ -4,7 +4,7 @@ package cpm.com.gskmtorange.xmlGetterSetter;
  * Created by gagang on 23-12-2016.
  */
 
-public class CategoryWisePerformaceGetterSetter {
+public class StoreWisePerformaceGetterSetter {
     String store_id, category_id, period, msl_availability, sos, t2p, promo, oss, order_id;
 
     public String getStore_id() {

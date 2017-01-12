@@ -81,6 +81,7 @@
     <string name="stock_facing_stock">Stock</string>
     <string name="stock_facing_faceup">Facing</string>
     <string name="stock_facing_sos_target">SOS Target</string>
+    <string name="stock_facing_sos">SOS</string>
 
     <!--Gagan end code-->
 
@@ -121,6 +122,18 @@
     <string name="promo_compliance_runningPOS">Running on POS</string>
     <string name="promo_compliance_add">Add</string>
 
+    <string name="category_performance_period">Period</string>
+    <string name="category_performance_msl_availability">MSL Availability</string>
+    <string name="category_performance_sos">SOS</string>
+    <string name="category_performance_t2p">T2P</string>
+    <string name="category_performance_promo">Promo</string>
+    <string name="category_performance_oss">OSS</string>
+
+    <string name="category_performance_ltm">LTM</string>
+    <string name="category_performance_mtd">MTD</string>
+    <string name="category_performance_lsv">LSV</string>
+
+    <string name="title_activity_store_wise_performance">Store wise Performance</string>
     <!--Gagan end new code 1-->
 
 
@@ -145,5 +158,8 @@
     <string name="select_reason">Select Reason</string>
     <string name="daily_activity_menu">Daily Data Menu</string>
 
+    <!--Gagan start new code 2-->
+    <string name="stock_facing_planogram_dialog_title">Planogram</string>
+    <!--Gagan end new code 2-->
 
 </resources>

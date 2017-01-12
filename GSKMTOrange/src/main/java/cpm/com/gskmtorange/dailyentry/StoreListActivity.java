@@ -45,6 +45,7 @@ import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.download.DownloadActivity;
+import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
 
 /**
  * Created by ashishc on 29-12-2016.
@@ -256,7 +257,6 @@ public class StoreListActivity extends AppCompatActivity {
 
                     store_id = current.getSTORE_ID();
 
-
                     if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_U)) {
                         Snackbar.make(v, R.string.title_store_list_activity_store_already_done, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_D)) {
@@ -367,13 +367,29 @@ public class StoreListActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // find which radio button is selected
                 if (checkedId == R.id.yes) {
-
-                    Intent in = new Intent(StoreListActivity.this, StoreimageActivity.class);
-                    startActivity(in);
-
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-
-                    dialog.cancel();
+                   boolean flag=true;
+                    if(coverage.size()>0) {
+                        for (int i = 0; i < coverage.size(); i++) {
+                            if (store_id.equals(coverage.get(i).getStoreId())) {
+                                flag=false;
+                                break;
+                            }
+                        }
+                    }
+                    if(flag==true)
+                    {
+                        Intent in = new Intent(StoreListActivity.this, StoreimageActivity.class);
+                        startActivity(in);
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                        dialog.cancel();
+                    }
+                    else
+                    {
+                        Intent in=new Intent(StoreListActivity.this,CategoryListActivity.class);
+                        startActivity(in);
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                        dialog.cancel();
+                    }
 
                 } else if (checkedId == R.id.no) {
 
@@ -387,6 +403,9 @@ public class StoreListActivity extends AppCompatActivity {
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog,
                                                                 int id) {
+
+
+                                                UpdateStore(store_id);
 
 
 
@@ -408,8 +427,6 @@ public class StoreListActivity extends AppCompatActivity {
 
                         alert.show();
                     } else {
-
-
 
 
                         Intent in  = new Intent(StoreListActivity.this, NonWorkingReason.class);
@@ -445,6 +462,7 @@ public class StoreListActivity extends AppCompatActivity {
         return result_flag;
     }
 
+
     private static boolean updateResources(Context context, String language) {
 
         String lang ;
@@ -470,5 +488,14 @@ public class StoreListActivity extends AppCompatActivity {
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 
         return true;
+}
+
+    public void UpdateStore(String storeid) {
+
+        db.open();
+        db.deleteTableWithStoreID(storeid);
+
+        db.updateStoreStatus(storeid, storelist.get(0).getVISIT_DATE(), "N");
+
     }
 }

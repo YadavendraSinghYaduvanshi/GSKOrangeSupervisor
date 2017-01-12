@@ -1,6 +1,7 @@
 package cpm.com.gskmtorange.gsk_dailyentry;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +10,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,12 +28,16 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -50,31 +59,27 @@ import java.util.Locale;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 
 public class Stock_FacingActivity extends AppCompatActivity {
+    static int child_position = -1;
     ExpandableListView expandableListView;
     TextView txt_stockFacingName;
-
     ArrayList<Stock_FacingGetterSetter> headerDataList;
     ArrayList<Stock_FacingGetterSetter> childDataList;
     List<Stock_FacingGetterSetter> hashMapListHeaderData;
     HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> hashMapListChildData;
     List<Integer> checkHeaderArray = new ArrayList<>();
-
     ExpandableListAdapter adapter;
     GSKOrangeDB db;
-
     String categoryName, categoryId, Error_Message = "";
-
     String path = "", str = "", _pathforcheck = "", img1 = "", img2 = "";
-    static int child_position = -1;
     boolean isDialogOpen = true;
     boolean checkflag = true;
-
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
     private SharedPreferences preferences;
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +108,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
             keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
             class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
             storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+            camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
 
             categoryName = getIntent().getStringExtra("categoryName");
             categoryId = getIntent().getStringExtra("categoryId");
@@ -274,6 +280,305 @@ public class Stock_FacingActivity extends AppCompatActivity {
         }
     }
 
+    boolean validateData(List<Stock_FacingGetterSetter> listDataHeader,
+                         HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listDataChild) {
+        boolean flag = true;
+        checkHeaderArray.clear();
+
+        for (int i = 0; i < listDataHeader.size(); i++) {
+            String imagePath = listDataHeader.get(i).getImage1();
+            String imagePath1 = listDataHeader.get(i).getImage2();
+
+            for (int j = 0; j < listDataChild.get(listDataHeader.get(i)).size(); j++) {
+                String stock = listDataChild.get(listDataHeader.get(i)).get(j).getStock();
+                String faceup = listDataChild.get(listDataHeader.get(i)).get(j).getFacing();
+
+                //Camera allow enable
+                if (camera_allow.equalsIgnoreCase("1")) {
+
+                    if (!imagePath.equals("") || !imagePath1.equals("")) {
+                        if (!stock.equals("0")) {
+                            if (stock.equals("") || faceup.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = "Please fill all the data";
+                                break;
+                            }
+                        } else {
+                            if (stock.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = "Please fill all the data";
+                                break;
+                            }
+                        }
+                    } else {
+                        if (!checkHeaderArray.contains(i)) {
+                            checkHeaderArray.add(i);
+                        }
+
+                        flag = false;
+                        Error_Message = "Please click either 1 image";
+                        break;
+                    }
+
+                } else {
+                    //Camera allow disable
+                    if (!stock.equals("0")) {
+                        if (stock.equals("") || faceup.equals("")) {
+                            if (!checkHeaderArray.contains(i)) {
+                                checkHeaderArray.add(i);
+                            }
+
+                            flag = false;
+                            Error_Message = "Please fill all the data";
+                            break;
+                        }
+                    } else {
+                        if (stock.equals("")) {
+                            if (!checkHeaderArray.contains(i)) {
+                                checkHeaderArray.add(i);
+                            }
+
+                            flag = false;
+                            Error_Message = "Please fill all the data";
+                            break;
+                        }
+                    }
+
+                }
+            }
+
+            if (flag == false) {
+                checkflag = false;
+                break;
+            } else {
+                checkflag = true;
+            }
+        }
+        //expListView.invalidate();
+        adapter.notifyDataSetChanged();
+
+        return checkflag;
+    }
+
+    private void startCameraActivity1(int position) {
+        try {
+            /*Log.e("Stock and Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            startActivityForResult(intent, position);*/
+
+            Log.i("Stock & Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
+
+            String defaultCameraPackage = "";
+            final PackageManager packageManager = getPackageManager();
+            List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+            for (int n = 0; n < list.size(); n++) {
+                if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                    /*Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    Log.e("TAG", "package name  : " + list.get(n).packageName);*/
+
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(defaultCameraPackage);
+            startActivityForResult(intent, 1);
+            //startActivityForResult(intent, position);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startCameraActivity2(int position) {
+        try {
+            /*Log.e("Stock and Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            startActivityForResult(intent, position);*/
+
+            Log.i("Stock & Facing ", "startCameraActivity()");
+            File file = new File(path);
+            Uri outputFileUri = Uri.fromFile(file);
+
+            String defaultCameraPackage = "";
+            final PackageManager packageManager = getPackageManager();
+            List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+            for (int n = 0; n < list.size(); n++) {
+                if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                    /*Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    Log.e("TAG", "package name  : " + list.get(n).packageName);*/
+
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(defaultCameraPackage);
+            startActivityForResult(intent, 2);
+            //startActivityForResult(intent, position);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("Stock & Facing", "resultCode: " + resultCode);
+        /*switch (resultCode) {
+            case 0:
+                Log.e("Stock & Facing", "User cancelled");
+                break;
+            case -1:
+                if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                    if (new File(str + _pathforcheck).exists()) {
+                        img1 = _pathforcheck;
+                        adapter.notifyDataSetChanged();
+                        _pathforcheck = "";
+                    }
+                }
+                break;
+        }*/
+
+        switch (requestCode) {
+            case 1:
+                if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img1 = _pathforcheck;
+                            adapter.notifyDataSetChanged();
+                            _pathforcheck = "";
+                        }
+                    }
+                } else {
+                    Log.e("Stock & Facing", "User cancelled");
+                }
+                break;
+            case 2:
+                if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img2 = _pathforcheck;
+                            adapter.notifyDataSetChanged();
+                            _pathforcheck = "";
+                        }
+                    }
+                } else {
+                    Log.e("Stock & Facing", "User cancelled");
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public String getCurrentTime() {
+        Calendar m_cal = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        String cdate = formatter.format(m_cal.getTime());
+       /* String intime = m_cal.get(Calendar.HOUR_OF_DAY) + ":"
+                + m_cal.get(Calendar.MINUTE) + ":" + m_cal.get(Calendar.SECOND);*/
+
+        return cdate;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.planogram, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+        }
+
+        //Planogram Dialog
+        if (id == R.id.action_planogram) {
+            //final Dialog dialog = new Dialog(Stock_FacingActivity.this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+            final Dialog dialog = new Dialog(Stock_FacingActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.setContentView(R.layout.planogram_dialog_layout);
+            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+            ImageView img_planogram = (ImageView) dialog.findViewById(R.id.img_planogram);
+
+            String planogram_image = "";
+            if (new File(str + planogram_image).exists()) {
+                Bitmap bmp = BitmapFactory.decodeFile(str + planogram_image);
+                img_planogram.setImageBitmap(bmp);
+            } else {
+                img_planogram.setBackgroundResource(R.drawable.sad_cloud);
+            }
+
+            /*if (new File(str + "Stock_Cam1_3_9_01122017_162052.jpg").exists()) {
+                Bitmap bmp = BitmapFactory.decodeFile(str + "Stock_Cam1_3_9_01122017_162052.jpg");
+                img_planogram.setImageBitmap(bmp);
+            } else {
+                img_planogram.setBackgroundResource(R.drawable.sad_cloud);
+            }*/
+
+
+            ImageView cancel = (ImageView) dialog.findViewById(R.id.img_cancel);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
         private Context _context;
         private List<Stock_FacingGetterSetter> _listDataHeader;
@@ -311,70 +616,84 @@ public class Stock_FacingActivity extends AppCompatActivity {
             }
 
             TextView txt_stockFaceupHeader = (TextView) convertView.findViewById(R.id.txt_stockFaceupHeader);
+            TextView txt_sosHeader = (TextView) convertView.findViewById(R.id.txt_sosHeader);
             LinearLayout lin_stockFaceupHeader = (LinearLayout) convertView.findViewById(R.id.lin_stockFaceupHeader);
-            ImageView img_reference = (ImageView) convertView.findViewById(R.id.img_reference);
             ImageView img_camera1 = (ImageView) convertView.findViewById(R.id.img_camera1);
             ImageView img_camera2 = (ImageView) convertView.findViewById(R.id.img_camera2);
-            ImageView img_edit = (ImageView) convertView.findViewById(R.id.img_edit);
+            //ImageView img_reference = (ImageView) convertView.findViewById(R.id.img_reference);
+            //ImageView img_edit = (ImageView) convertView.findViewById(R.id.img_edit);
 
             txt_stockFaceupHeader.setTypeface(null, Typeface.BOLD);
             txt_stockFaceupHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
-            img_camera1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //String date = new Date().toLocaleString().toString();
-                    //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
-
-                    _pathforcheck = "Stock_Cam1_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
-                    child_position = groupPosition;
-                    path = str + _pathforcheck;
-
-                    startCameraActivity1(groupPosition);
-                }
-            });
-
-            if (!img1.equalsIgnoreCase("")) {
-                if (groupPosition == child_position) {
-                    headerTitle.setImage1(img1);
-                    img1 = "";
-                }
-            }
-
-            if (headerTitle.getImage1().equals("")) {
-                img_camera1.setBackgroundResource(R.mipmap.camera);
+            if (headerTitle.getCompany_id().equals("1")) {
+                txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             } else {
-                img_camera1.setBackgroundResource(R.mipmap.camera_done);
+                txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.black));
             }
 
+            //Camera allow enable
+            if (camera_allow.equalsIgnoreCase("1")) {
 
-            img_camera2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //String date = new Date().toLocaleString().toString();
-                    //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+                img_camera1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //String date = new Date().toLocaleString().toString();
+                        //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
 
-                    _pathforcheck = "Stock_Cam2_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
-                    child_position = groupPosition;
-                    path = str + _pathforcheck;
+                        _pathforcheck = "Stock_Cam1_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                        child_position = groupPosition;
+                        path = str + _pathforcheck;
 
-                    startCameraActivity2(groupPosition);
+                        startCameraActivity1(groupPosition);
+                    }
+                });
+
+                if (!img1.equalsIgnoreCase("")) {
+                    if (groupPosition == child_position) {
+                        headerTitle.setImage1(img1);
+                        img1 = "";
+                    }
                 }
-            });
 
-            if (!img2.equalsIgnoreCase("")) {
-                if (groupPosition == child_position) {
-                    headerTitle.setImage2(img2);
-                    img2 = "";
+                if (headerTitle.getImage1().equals("")) {
+                    img_camera1.setBackgroundResource(R.mipmap.camera_orange);
+                } else {
+                    img_camera1.setBackgroundResource(R.mipmap.camera_green);
                 }
-            }
 
-            if (headerTitle.getImage2().equals("")) {
-                img_camera2.setBackgroundResource(R.mipmap.camera);
+
+                img_camera2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //String date = new Date().toLocaleString().toString();
+                        //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+
+                        _pathforcheck = "Stock_Cam2_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                        child_position = groupPosition;
+                        path = str + _pathforcheck;
+
+                        startCameraActivity2(groupPosition);
+                    }
+                });
+
+                if (!img2.equalsIgnoreCase("")) {
+                    if (groupPosition == child_position) {
+                        headerTitle.setImage2(img2);
+                        img2 = "";
+                    }
+                }
+
+                if (headerTitle.getImage2().equals("")) {
+                    img_camera2.setBackgroundResource(R.mipmap.camera_orange);
+                } else {
+                    img_camera2.setBackgroundResource(R.mipmap.camera_green);
+                }
             } else {
-                img_camera2.setBackgroundResource(R.mipmap.camera_done);
+                //Camera allow disable
+                img_camera1.setBackgroundResource(R.mipmap.camera_grey);
+                img_camera2.setBackgroundResource(R.mipmap.camera_grey);
             }
-
 
             if (!checkflag) {
                 if (checkHeaderArray.contains(groupPosition)) {
@@ -825,4 +1144,5 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
         return true;
     }
+
 }

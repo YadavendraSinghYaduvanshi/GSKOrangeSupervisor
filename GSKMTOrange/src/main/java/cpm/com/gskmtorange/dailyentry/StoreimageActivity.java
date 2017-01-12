@@ -44,6 +44,7 @@ import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
+import cpm.com.gskmtorange.gsk_dailyentry.StoreWisePerformanceActivity;
 
 /**
  * Created by ashishc on 31-05-2016.
@@ -204,7 +205,8 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                                             editor.commit();*/
 
 
-                                    Intent in = new Intent(StoreimageActivity.this, CategoryListActivity.class);
+                                    //Intent in = new Intent(StoreimageActivity.this, CategoryListActivity.class);
+                                    Intent in = new Intent(StoreimageActivity.this, StoreWisePerformanceActivity.class);
                                     startActivity(in);
                                     finish();
                                 }
@@ -274,8 +276,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             intent.setPackage(defaultCameraPackage);
             startActivityForResult(intent, 0);
-        }
-        catch (ActivityNotFoundException e) {
+        } catch (ActivityNotFoundException e) {
             e.printStackTrace();
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -283,8 +284,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
             intent.setPackage(gallery_package);
             startActivityForResult(intent, 0);
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

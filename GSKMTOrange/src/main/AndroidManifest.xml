@@ -68,7 +68,6 @@
             android:label="@string/title_activity_store_geotag"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD02po19go2JMhXJeAnKDiZSiNloPsWqzI" />
@@ -121,6 +120,12 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity
+            android:name=".gsk_dailyentry.StoreWisePerformanceActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <!-- Gagan End Declaration -->
 
         <activity
@@ -128,21 +133,21 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_Non_Work"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
-
-        <activity
+            android:theme="@style/AppTheme.NoActionBar"/>
+   
+     <activity
             android:name=".dailyentry.AdditionalVisibility"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_Additional_visibility"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".upload.UploadActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_upload"
             android:screenOrientation="portrait" />
+         
 
     </application>
 
