@@ -74,7 +74,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
     String categoryName, categoryId;
 
     private SharedPreferences preferences;
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
 
     String path = "", str = CommonString.FILE_PATH, _pathforcheck = "", img = "";
     int child_position = -1;
@@ -109,7 +109,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
         class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
         storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
-
+        camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
 
         rec_t2p = (RecyclerView) findViewById(R.id.rec_t2p);
 
@@ -221,16 +221,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 }
             });
 
-            holder.img_cam.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    _pathforcheck = "T2P_Image_" + store_id + "_" + mItem.getBrand_id() + mItem.getDisplay_id() + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
-                    child_position = position;
-                    path = str + _pathforcheck;
-
-                    startCameraActivity();
-                }
-            });
 
             holder.btn_sku.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -246,11 +236,29 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 }
             }
 
-            if (mItem.getImage().equals("")) {
-                holder.img_cam.setBackgroundResource(R.mipmap.camera);
-            } else {
-                holder.img_cam.setBackgroundResource(R.mipmap.camera_done);
+            if(camera_allow.equals("1")){
+
+                holder.img_cam.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        _pathforcheck = "T2P_Image_" + store_id + "_" + mItem.getBrand_id() + mItem.getDisplay_id() + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                        child_position = position;
+                        path = str + _pathforcheck;
+
+                        startCameraActivity();
+                    }
+                });
+
+                if (mItem.getImage().equals("")) {
+                    holder.img_cam.setBackgroundResource(R.mipmap.camera_orange);
+                } else {
+                    holder.img_cam.setBackgroundResource(R.mipmap.camera_green);
+                }
             }
+            else {
+                holder.img_cam.setBackgroundResource(R.mipmap.camera_grey);
+            }
+
 
             holder.toggle_btn.setChecked(mItem.isPresent());
 
@@ -841,7 +849,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         for (int i = 0; i < t2PGetterSetters.size(); i++) {
 
-            if (t2PGetterSetters.get(i).getImage().equals("")) {
+            if (camera_allow.equals("1") && t2PGetterSetters.get(i).getImage().equals("")) {
                 flag = false;
                 error_msg = getResources().getString(R.string.click_image);
                 break;
@@ -869,9 +877,12 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                       /* Intent i = new Intent(activity, StorelistActivity.class);
-                        activity.startActivity(i);
-                        activity.finish();*/
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
                     }
                 });

@@ -36,9 +36,12 @@ import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
 import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
 
 public class UploadActivity extends AppCompatActivity {
@@ -66,6 +69,7 @@ public class UploadActivity extends AppCompatActivity {
     ArrayList<MSL_AvailabilityGetterSetter> msl_availabilityList;
     ArrayList<Stock_FacingGetterSetter> stock_facingHeaderList, stock_facingChildList;
     ArrayList<Promo_Compliance_DataGetterSetter> promotionSkuList, additionalPromotionList;
+    ArrayList<T2PGetterSetter> t2PGetterSetters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -434,6 +438,136 @@ public class UploadActivity extends AppCompatActivity {
                         }
                         data.value = 35;
                         data.name = "Additional Promotion Data Uploading";
+                        publishProgress(data);
+
+                        //T2p Upload Data
+
+                        String t2p_data_xml = "";
+                        onXML = "";
+                        t2PGetterSetters = db.getT2pComplianceData(coverageList.get(i).getStoreId(), null);
+
+                        if (t2PGetterSetters.size() > 0) {
+                            for (int i1 = 0; i1 < t2PGetterSetters.size(); i1++) {
+
+                                ArrayList<GapsChecklistGetterSetter> gapsList = db.getGapsData(t2PGetterSetters.get(i).getKey_id());
+                                ArrayList<SkuGetterSetter> skuList = db.getT2PSKUData(t2PGetterSetters.get(i).getKey_id());
+
+                                String gaps_xml = "";
+                                String gaps_child;
+
+                                for (int l = 0; l < gapsList.size(); l++) {
+
+                                    String present = "";
+                                    if (gapsList.get(l).isPresent()) {
+                                        present = "1";
+                                    } else {
+                                        present = "0";
+                                    }
+
+                                    gaps_child = "[GAPS]"
+                                            + "[CHECK_LIST_ID]"
+                                            + gapsList.get(l).getChecklist_id()
+                                            + "[/CHECK_LIST_ID]"
+                                            + "[DISPLAY_ID]"
+                                            + gapsList.get(l).getDisplay_id()
+                                            + "[/DISPLAY_ID]"
+                                            + "[PRESENT]"
+                                            + present
+                                            + "[/PRESENT]"
+                                            + "[/GAPS]";
+                                    gaps_xml = gaps_xml + gaps_child;
+                                }
+
+                                String sku_xml = "";
+                                String sku_child;
+
+                                for (int k = 0; k < skuList.size(); k++) {
+
+                                    sku_child = "[SKU]"
+                                            + "[SKU_ID]"
+                                            + skuList.get(k).getSKU_ID()
+                                            + "[/SKU_ID]"
+                                            + "[BRAND_ID]"
+                                            + skuList.get(k).getBRAND_ID()
+                                            + "[/BRAND_ID]"
+                                            + "[STOCK]"
+                                            + skuList.get(k).getSTOCK()
+                                            + "[/STOCK]"
+                                            + "[/SKU]";
+                                    sku_xml = sku_xml + sku_child;
+                                }
+
+                                String present = "";
+                                if (t2PGetterSetters.get(i1).isPresent()) {
+                                    present = "1";
+                                } else {
+                                    present = "0";
+                                }
+
+                                onXML = "[T2P_DATA]"
+                                        + "[MID]" + mid + "[/MID]"
+                                        + "[USER_ID]" + userId + "[/USER_ID]"
+                                        + "[CATEGORY_ID]"
+                                        + Integer.parseInt(t2PGetterSetters.get(i1).getCategory_id())
+                                        + "[/CATEGORY_ID]"
+                                        + "[BRAND_ID]"
+                                        + Integer.parseInt(t2PGetterSetters.get(i1).getBrand_id())
+                                        + "[/BRAND_ID]"
+                                        + "[DISPLAY_ID]"
+                                        + Integer.parseInt(t2PGetterSetters.get(i1).getDisplay_id())
+                                        + "[/DISPLAY_ID]"
+                                        + "[COMMON_ID]"
+                                        + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
+                                        + "[/COMMON_ID]"
+                                        + "[IMAGE]"
+                                        + t2PGetterSetters.get(i1).getImage()
+                                        + "[/IMAGE]"
+                                        + "[PRESENT]"
+                                        + present
+                                        + "[/PRESENT]"
+                                        + "[GAPS_DATA]"
+                                        + gaps_xml
+                                        + "[/GAPS_DATA]"
+                                        + "[SKU_DATA]"
+                                        + sku_xml
+                                        + "[/SKU_DATA]"
+                                        + "[/T2P_DATA]";
+
+                                t2p_data_xml = t2p_data_xml + onXML;
+
+                            }
+
+                            final String t2p_final_xml = "[DATA]" + t2p_data_xml + "[/DATA]";
+
+                            request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                            request.addProperty("XMLDATA", t2p_final_xml);
+                            request.addProperty("KEYS", "T2P_DATA");
+                            request.addProperty("USERNAME", userId);
+                            request.addProperty("MID", mid);
+
+                            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                            envelope.dotNet = true;
+                            envelope.setOutputSoapObject(request);
+
+                            androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                            androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                            result = (Object) envelope.getResponse();
+
+                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                            }
+
+                            if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
+                                return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                            }
+
+                            if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                            }
+                        }
+                        data.value = 40;
+                        data.name = "T2P Data Uploading";
                         publishProgress(data);
 
 
