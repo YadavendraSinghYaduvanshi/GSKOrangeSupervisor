@@ -282,7 +282,6 @@ public class DailyDataMenuActivity extends AppCompatActivity {
         }
     }
 
-
     private static boolean updateResources(Context context, String language) {
 
         String lang ;
