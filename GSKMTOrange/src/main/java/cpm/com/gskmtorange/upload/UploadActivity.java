@@ -465,6 +465,8 @@ public class UploadActivity extends AppCompatActivity {
                                     }
 
                                     gaps_child = "[GAPS]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
                                             + "[CHECK_LIST_ID]"
                                             + gapsList.get(l).getChecklist_id()
                                             + "[/CHECK_LIST_ID]"
@@ -474,6 +476,9 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[PRESENT]"
                                             + present
                                             + "[/PRESENT]"
+                                            + "[COMMON_ID]"
+                                            + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
+                                            + "[/COMMON_ID]"
                                             + "[/GAPS]";
                                     gaps_xml = gaps_xml + gaps_child;
                                 }
@@ -484,6 +489,8 @@ public class UploadActivity extends AppCompatActivity {
                                 for (int k = 0; k < skuList.size(); k++) {
 
                                     sku_child = "[SKU]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
                                             + "[SKU_ID]"
                                             + skuList.get(k).getSKU_ID()
                                             + "[/SKU_ID]"
@@ -493,6 +500,9 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[STOCK]"
                                             + skuList.get(k).getSTOCK()
                                             + "[/STOCK]"
+                                            + "[COMMON_ID]"
+                                            + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
+                                            + "[/COMMON_ID]"
                                             + "[/SKU]";
                                     sku_xml = sku_xml + sku_child;
                                 }
@@ -618,6 +628,31 @@ public class UploadActivity extends AppCompatActivity {
                                     }
                                 }
                             }
+                        }
+
+
+                        for(int m=0;m<t2PGetterSetters.size();m++){
+
+                            if (t2PGetterSetters.get(m).getImage() != null && !t2PGetterSetters.get(m).getImage().equals("")) {
+                                if (new File(CommonString.FILE_PATH + t2PGetterSetters.get(m).getImage()).exists()) {
+
+                                    try {
+                                        result = UploadImage(t2PGetterSetters.get(m).getImage(), "T2PImages");
+                                        if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                            return "T2PImages";
+                                        }
+
+                                        runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                message.setText("T2P Images Uploaded");
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
                         }
 
 

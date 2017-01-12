@@ -116,7 +116,7 @@ public class DownloadActivity extends AppCompatActivity {
                 data = new Data();
 
                 data.value = 10;
-                data.name = "JCP Data Downloading";
+                data.name = "JCP "+getResources().getString(R.string.download_data);
                 publishProgress(data);
 
                 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -157,7 +157,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 10;
-                    data.name = "JCP Data Downloading";
+                    data.name = "JCP "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -193,7 +193,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 20;
-                    data.name = "SKU_MASTER Data Download";
+                    data.name = "SKU_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -229,7 +229,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 30;
-                    data.name = "BRAND_MASTER Data Download";
+                    data.name = "BRAND_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -264,7 +264,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "SUB_CATEGORY_MASTER";
                     }
                     data.value = 40;
-                    data.name = "SUB_CATEGORY_MASTER Data Download";
+                    data.name = "SUB_CATEGORY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -299,7 +299,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "CATEGORY_MASTER";
                     }
                     data.value = 50;
-                    data.name = "CATEGORY_MASTER Data Download";
+                    data.name = "CATEGORY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -334,7 +334,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "DISPLAY_MASTER";
                     }
                     data.value = 60;
-                    data.name = "DISPLAY_MASTER Data Download";
+                    data.name = "DISPLAY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -369,7 +369,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "MAPPING_STOCK";
                     }
                     data.value = 80;
-                    data.name = "MAPPING_STOCK Data Download";
+                    data.name = "MAPPING_STOCK "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -404,7 +404,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_T2P";
                     }
                     data.value = 100;
-                    data.name = "MAPPING_T2P Data Download";
+                    data.name = "MAPPING_T2P "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -438,7 +438,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "DISPLAY_CHECKLIST_MASTER";
                     }
                     data.value = 100;
-                    data.name = "DISPLAY_CHECKLIST_MASTER Data Download";
+                    data.name = "DISPLAY_CHECKLIST_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -472,7 +472,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_DISPLAY_CHECKLIST";
                     }
                     data.value = 100;
-                    data.name = "MAPPING_DISPLAY_CHECKLIST Data Download";
+                    data.name = "MAPPING_DISPLAY_CHECKLIST "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -507,7 +507,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "NON_WORKING_REASON";
                     }
                     data.value = 100;
-                    data.name = "NON_WORKING_REASON Data Download";
+                    data.name = "NON_WORKING_REASON "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -542,7 +542,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_PROMOTION";
                     }*/
                     data.value = 100;
-                    data.name = "MAPPING_PROMOTION Data Download";
+                    data.name = "MAPPING_PROMOTION "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -580,7 +580,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_ADDITIONAL_PROMOTION";
                     }*/
                     data.value = 100;
-                    data.name = "MAPPING_ADDITIONAL_PROMOTION Data Download";
+                    data.name = "MAPPING_ADDITIONAL_PROMOTION "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 

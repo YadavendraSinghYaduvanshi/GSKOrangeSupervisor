@@ -215,7 +215,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    mItem.setPresent(((ToggleButton) v).getText().toString().equalsIgnoreCase("Yes"));
+                    mItem.setPresent(((ToggleButton) v).getText().toString().equalsIgnoreCase(getResources().getString(R.string.yes)));
 
                     t2PAdapter.notifyDataSetChanged();
                 }
@@ -406,7 +406,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     spinner_brand.setSelection(0);
 
                     SkuGetterSetter select = new SkuGetterSetter();
-                    select.setSKU("Select");
+                    select.setSKU(getString(R.string.select));
                     sku_list.clear();
                     sku_list.add(select);
                     CustomSkuAdapter skuadapter = new CustomSkuAdapter(T2PComplianceActivity.this, R.layout.custom_spinner_item, sku_list);
@@ -438,7 +438,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
 
         SkuGetterSetter select = new SkuGetterSetter();
-        select.setSKU("Select");
+        select.setSKU(getString(R.string.select));
         sku_list.add(select);
         CustomSkuAdapter skuadapter = new CustomSkuAdapter(T2PComplianceActivity.this, R.layout.custom_spinner_item, sku_list);
         spinner_sku.setAdapter(skuadapter);
@@ -463,7 +463,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     }
 
                     SkuGetterSetter select = new SkuGetterSetter();
-                    select.setSKU("Select");
+                    select.setSKU(getString(R.string.select));
                     sku_list.add(0, select);
                     // Create custom adapter object ( see below CustomSkuAdapter.java )
                     CustomSkuAdapter skuadapter = new CustomSkuAdapter(T2PComplianceActivity.this, R.layout.custom_spinner_item, sku_list);

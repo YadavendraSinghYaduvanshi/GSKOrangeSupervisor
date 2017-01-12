@@ -267,7 +267,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
 
-            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "' AND BR.COMPANY_ID ='1') As Brand", null);
+            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "' AND BR.COMPANY_ID ='1' ORDER BY  SCM.SUB_CATEGORY_SEQUENCE, BR.BRAND_SEQUENCE) As Brand", null);
             if (dbcursor != null) {
 
                 dbcursor.moveToFirst();
@@ -1670,7 +1670,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
             dbcursor = db.rawQuery("SELECT * from JOURNEY_PLAN  " +
-                    "where VISIT_DATE ='" + date + "' AND STORE_ID'="+ store_id +"'", null);
+                    "where VISIT_DATE ='" + date + "' AND STORE_ID='"+ store_id +"'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();

@@ -49,11 +49,12 @@
 
             <ImageView
                 android:id="@+id/img_main"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_width="153dp"
+                android:layout_height="133dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/gsk_logo"
+                android:src="@drawable/gsklogo"
+                android:layout_centerInParent="true"
                 />
 
             <WebView
