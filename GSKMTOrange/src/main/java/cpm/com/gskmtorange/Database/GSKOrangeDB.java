@@ -1672,7 +1672,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
             dbcursor = db.rawQuery("SELECT * from JOURNEY_PLAN  " +
-                    "where VISIT_DATE ='" + date + "' AND STORE_ID'=" + store_id + "'", null);
+                    "where VISIT_DATE ='" + date + "' AND STORE_ID='" + store_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
