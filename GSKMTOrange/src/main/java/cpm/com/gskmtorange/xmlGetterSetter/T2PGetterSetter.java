@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class T2PGetterSetter {
 
-    String brand_id, display_id, brand, display, image, remark, key_id;
+    String brand_id, display_id, brand, display, image, remark, key_id, category_id;
     boolean isPresent;
 
     ArrayList<GapsChecklistGetterSetter> gapsChecklist = new ArrayList<>();
@@ -92,5 +92,13 @@ public class T2PGetterSetter {
 
     public void setKey_id(String key_id) {
         this.key_id = key_id;
+    }
+
+    public String getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
     }
 }

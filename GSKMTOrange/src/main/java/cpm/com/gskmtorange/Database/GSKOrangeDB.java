@@ -279,7 +279,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
 
-            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "') As Brand", null);
+            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "' AND BR.COMPANY_ID ='1') As Brand", null);
             if (dbcursor != null) {
 
                 dbcursor.moveToFirst();
@@ -2449,14 +2449,22 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
     // get T2P Compliance data
-    public ArrayList<T2PGetterSetter> getT2pComplianceData(String store_id, String common_id) {
+    public ArrayList<T2PGetterSetter> getT2pComplianceData(String store_id, String category_id) {
 
         ArrayList<T2PGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
         try {
-            dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
-                    CommonString.KEY_STORE_ID + "='" + store_id + "' AND " +
-                    CommonString.KEY_CATEGORY_ID + "='" + common_id + "'", null);
+
+            if(category_id == null){
+                dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
+                        CommonString.KEY_STORE_ID + "='" + store_id + "'", null);
+            }
+            else{
+                dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
+                        CommonString.KEY_STORE_ID + "='" + store_id + "' AND " +
+                        CommonString.KEY_CATEGORY_ID + "='" + category_id + "'", null);
+            }
+
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -2470,6 +2478,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     tp.setDisplay(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_DISPLAY)));
                     tp.setImage(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE)));
                     tp.setRemark(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_REMARK)));
+                    tp.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
                     tp.setPresent((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PRESENT)).equalsIgnoreCase("1")));
 
                     list.add(tp);
