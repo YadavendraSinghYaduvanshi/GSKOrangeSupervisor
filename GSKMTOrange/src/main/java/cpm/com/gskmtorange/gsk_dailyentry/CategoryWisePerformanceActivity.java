@@ -2,7 +2,11 @@ package cpm.com.gskmtorange.gsk_dailyentry;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,8 +22,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
 
 public class CategoryWisePerformanceActivity extends AppCompatActivity {
@@ -30,6 +36,8 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
 
     ArrayList<CategoryWisePerformaceGetterSetter> categoryWisePerformanceList;
     CategoryWisePerformaceAdapter adapter;
+
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,10 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
 
         categoryName = getIntent().getStringExtra("categoryName");
         categoryId = getIntent().getStringExtra("categoryId");
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         //txt_categoryName.setText(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
         toolbar.setTitle(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
@@ -65,6 +77,8 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         categoryWisePerformanceList = new ArrayList<>();
         CategoryWisePerformaceGetterSetter data = new CategoryWisePerformaceGetterSetter();
@@ -206,5 +220,32 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
     }
 }
