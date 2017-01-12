@@ -26,15 +26,14 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.StoreWisePerformaceGetterSetter;
 
-public class CategoryWisePerformanceActivity extends AppCompatActivity {
+public class StoreWisePerformanceActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     Toolbar toolbar;
 
-    String categoryName = "", categoryId;
-
-    ArrayList<CategoryWisePerformaceGetterSetter> categoryWisePerformanceList;
-    CategoryWisePerformaceAdapter adapter;
+    ArrayList<StoreWisePerformaceGetterSetter> storeWisePerformanceList;
+    StoreWisePerformaceAdapter adapter;
 
     GSKOrangeDB db;
     private SharedPreferences preferences;
@@ -44,7 +43,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            setContentView(R.layout.activity_category_wise_performance);
+            setContentView(R.layout.activity_store_wise_performance);
 
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -63,12 +62,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
             class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
             storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
 
-            //Intent data
-            categoryName = getIntent().getStringExtra("categoryName");
-            categoryId = getIntent().getStringExtra("categoryId");
-
-            //txt_categoryName.setText(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
-            toolbar.setTitle(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
+            toolbar.setTitle(getResources().getString(R.string.title_activity_store_wise_performance));
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -77,9 +71,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(CategoryWisePerformanceActivity.this, DailyDataMenuActivity.class);
-                    intent.putExtra("categoryName", categoryName);
-                    intent.putExtra("categoryId", categoryId);
+                    Intent intent = new Intent(StoreWisePerformanceActivity.this, CategoryListActivity.class);
                     startActivity(intent);
                 }
             });
@@ -92,9 +84,9 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         try {
-            categoryWisePerformanceList = db.getCategoryWisePerformance(store_id, categoryId);
+            storeWisePerformanceList = db.getStoreWisePerformance(store_id);
 
-            adapter = new CategoryWisePerformaceAdapter(CategoryWisePerformanceActivity.this, categoryWisePerformanceList);
+            adapter = new StoreWisePerformaceAdapter(StoreWisePerformanceActivity.this, storeWisePerformanceList);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         } catch (Exception e) {
@@ -102,27 +94,27 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         }
     }
 
-    public class CategoryWisePerformaceAdapter extends RecyclerView.Adapter<CategoryWisePerformaceAdapter.MyViewHolder> {
+    public class StoreWisePerformaceAdapter extends RecyclerView.Adapter<StoreWisePerformaceAdapter.MyViewHolder> {
         Context context;
         private LayoutInflater inflator;
-        List<CategoryWisePerformaceGetterSetter> list = Collections.emptyList();
+        List<StoreWisePerformaceGetterSetter> list = Collections.emptyList();
 
-        public CategoryWisePerformaceAdapter(Context context, List<CategoryWisePerformaceGetterSetter> list) {
+        public StoreWisePerformaceAdapter(Context context, List<StoreWisePerformaceGetterSetter> list) {
             inflator = LayoutInflater.from(context);
             this.list = list;
             this.context = context;
         }
 
         @Override
-        public CategoryWisePerformaceAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-            View view = inflator.inflate(R.layout.item_category_wise_performance, parent, false);
-            CategoryWisePerformaceAdapter.MyViewHolder holder = new CategoryWisePerformaceAdapter.MyViewHolder(view);
+        public StoreWisePerformaceAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+            View view = inflator.inflate(R.layout.item_store_wise_performance, parent, false);
+            StoreWisePerformaceAdapter.MyViewHolder holder = new StoreWisePerformaceAdapter.MyViewHolder(view);
             return holder;
         }
 
         @Override
-        public void onBindViewHolder(CategoryWisePerformaceAdapter.MyViewHolder holder, int position) {
-            final CategoryWisePerformaceGetterSetter categoryData = list.get(position);
+        public void onBindViewHolder(StoreWisePerformaceAdapter.MyViewHolder holder, int position) {
+            final StoreWisePerformaceGetterSetter categoryData = list.get(position);
 
             if (categoryData.getPeriod().equalsIgnoreCase("LTM")) {
                 holder.txt_period.setText(getResources().getString(R.string.category_performance_ltm));
@@ -131,7 +123,6 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
             } else if (categoryData.getPeriod().equalsIgnoreCase("LSV")) {
                 holder.txt_period.setText(getResources().getString(R.string.category_performance_lsv));
             }
-            //holder.txt_period.setText(categoryData.getPeriod());
             holder.txt_msl_availability.setText(categoryData.getMsl_availability());
             holder.txt_sos.setText(categoryData.getSos());
             holder.txt_t2p.setText(categoryData.getT2p());
