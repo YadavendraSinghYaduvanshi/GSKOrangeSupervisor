@@ -77,7 +77,6 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         });
 
         try {
-            setContentView(R.layout.activity_category_wise_performance);
 
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -104,7 +103,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-          
+
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
