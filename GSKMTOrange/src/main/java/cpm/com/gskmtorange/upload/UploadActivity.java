@@ -291,6 +291,7 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[CATEGORY_ID]" + Integer.parseInt(msl_availabilityList.get(j).getCategory_id()) + "[/CATEGORY_ID]"
                                             + "[BRAND_ID]" + Integer.parseInt(msl_availabilityList.get(j).getBrand_id()) + "[/BRAND_ID]"
                                             + "[SKU_ID]" + Integer.parseInt(msl_availabilityList.get(j).getSku_id()) + "[/SKU_ID]"
+                                            + "[MBQ]" + Integer.parseInt(msl_availabilityList.get(j).getMbq()) + "[/MBQ]"
                                             //+ "[SKU]" + msl_availabilityList.get(j).getSku() + "[/SKU]"
                                             + "[TOGGLE_VALUE]" + Integer.parseInt(msl_availabilityList.get(j).getToggleValue()) + "[/TOGGLE_VALUE]"
                                             + "[/MSL_AVAILABILITY_DATA]";
