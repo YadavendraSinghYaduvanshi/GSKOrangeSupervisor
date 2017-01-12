@@ -48,33 +48,28 @@ import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
 
 public class UploadActivity extends AppCompatActivity {
 
-    private Dialog dialog;
-    private ProgressBar pb;
-    private TextView percentage, message;
     GSKOrangeDB db;
     ArrayList<CoverageBean> coverageList;
-
-    private FailureGetterSetter failureGetterSetter = null;
-    private SharedPreferences preferences;
     String date, userId, app_version;
-
     StoreBean storeData;
     String datacheck = "";
     String[] words;
     String validity;
     int mid;
-    private int factor, k = 0;
     String errormsg = "", Path;
-
     Data data;
-
     ArrayList<MSL_AvailabilityGetterSetter> msl_availabilityList;
     ArrayList<Stock_FacingGetterSetter> stock_facingHeaderList, stock_facingChildList;
     ArrayList<Promo_Compliance_DataGetterSetter> promotionSkuList, additionalPromotionList;
     ArrayList<T2PGetterSetter> t2PGetterSetters;
     ArrayList<AddittionalGetterSetter>  additionalVisibilityList;
     ArrayList<AdditionalDialogGetterSetter> additionalVisibilitySkuList;
-
+    private Dialog dialog;
+    private ProgressBar pb;
+    private TextView percentage, message;
+    private FailureGetterSetter failureGetterSetter = null;
+    private SharedPreferences preferences;
+    private int factor, k = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +90,85 @@ public class UploadActivity extends AppCompatActivity {
 
         //start upload
         new UploadTask(this).execute();
+    }
+
+    public String UploadImage(String path, String folder_name) throws Exception {
+        errormsg = "";
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(Path + path, o);
+
+        // The new size we want to scale to
+        final int REQUIRED_SIZE = 1639;
+
+        // Find the correct scale value. It should be the power of 2.
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+
+        while (true) {
+            if (width_tmp < REQUIRED_SIZE && height_tmp < REQUIRED_SIZE)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        // Decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        Bitmap bitmap = BitmapFactory.decodeFile(Path + path, o2);
+
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bao);
+        byte[] ba = bao.toByteArray();
+        String ba1 = Base64.encodeBytes(ba);
+
+        SoapObject request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_IMAGE);
+
+        String[] split = path.split("/");
+        String path1 = split[split.length - 1];
+
+        request.addProperty("img", ba1);
+        request.addProperty("name", path1);
+        request.addProperty("FolderName", folder_name);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(request);
+
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
+        androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_IMAGE, envelope);
+
+        Object result = envelope.getResponse();
+
+        if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+            if (result.toString().equalsIgnoreCase(CommonString.KEY_FALSE)) {
+                return CommonString.KEY_FALSE;
+            }
+
+            SAXParserFactory saxPF = SAXParserFactory.newInstance();
+            SAXParser saxP = saxPF.newSAXParser();
+            XMLReader xmlR = saxP.getXMLReader();
+
+            // for failure
+            FailureXMLHandler failureXMLHandler = new FailureXMLHandler();
+            xmlR.setContentHandler(failureXMLHandler);
+
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(result.toString()));
+            xmlR.parse(is);
+
+            failureGetterSetter = failureXMLHandler.getFailureGetterSetter();
+
+            if (failureGetterSetter.getStatus().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                errormsg = failureGetterSetter.getErrorMsg();
+                return CommonString.KEY_FAILURE;
+            }
+        } else {
+            new File(Path + path).delete();
+        }
+
+        return result.toString();
     }
 
     class Data {
@@ -185,7 +259,7 @@ public class UploadActivity extends AppCompatActivity {
                         HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
                         androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_STORE_COVERAGE, envelope);
 
-                        Object result = (Object) envelope.getResponse();
+                        Object result = envelope.getResponse();
 
                         datacheck = result.toString();
                         words = datacheck.split("\\;");
@@ -240,7 +314,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -309,7 +383,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -368,7 +442,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -427,7 +501,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -532,7 +606,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -547,7 +621,7 @@ public class UploadActivity extends AppCompatActivity {
                             }
                         }
 
-                   
+
                         data.value = 35;
                         data.name = "Additional Visibility Data";
                         publishProgress(data);
@@ -666,7 +740,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -680,7 +754,7 @@ public class UploadActivity extends AppCompatActivity {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
                             }
                         }
-                          
+
                         data.value = 40;
                         data.name = "T2P Data Uploading";
                         publishProgress(data);
@@ -759,7 +833,7 @@ public class UploadActivity extends AppCompatActivity {
                         androidHttpTransport = new HttpTransportSE(CommonString.URL);
                         androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_COVERAGE_STATUS, envelope);
 
-                        result = (Object) envelope.getResponse();
+                        result = envelope.getResponse();
 
                         if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                             return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
@@ -801,84 +875,5 @@ public class UploadActivity extends AppCompatActivity {
                 finish();
             }
         }
-    }
-
-    public String UploadImage(String path, String folder_name) throws Exception {
-        errormsg = "";
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(Path + path, o);
-
-        // The new size we want to scale to
-        final int REQUIRED_SIZE = 1639;
-
-        // Find the correct scale value. It should be the power of 2.
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-
-        while (true) {
-            if (width_tmp < REQUIRED_SIZE && height_tmp < REQUIRED_SIZE)
-                break;
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
-        }
-
-        // Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        Bitmap bitmap = BitmapFactory.decodeFile(Path + path, o2);
-
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bao);
-        byte[] ba = bao.toByteArray();
-        String ba1 = Base64.encodeBytes(ba);
-
-        SoapObject request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_IMAGE);
-
-        String[] split = path.split("/");
-        String path1 = split[split.length - 1];
-
-        request.addProperty("img", ba1);
-        request.addProperty("name", path1);
-        request.addProperty("FolderName", folder_name);
-
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(request);
-
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
-        androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_IMAGE, envelope);
-
-        Object result = (Object) envelope.getResponse();
-
-        if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-            if (result.toString().equalsIgnoreCase(CommonString.KEY_FALSE)) {
-                return CommonString.KEY_FALSE;
-            }
-
-            SAXParserFactory saxPF = SAXParserFactory.newInstance();
-            SAXParser saxP = saxPF.newSAXParser();
-            XMLReader xmlR = saxP.getXMLReader();
-
-            // for failure
-            FailureXMLHandler failureXMLHandler = new FailureXMLHandler();
-            xmlR.setContentHandler(failureXMLHandler);
-
-            InputSource is = new InputSource();
-            is.setCharacterStream(new StringReader(result.toString()));
-            xmlR.parse(is);
-
-            failureGetterSetter = failureXMLHandler.getFailureGetterSetter();
-
-            if (failureGetterSetter.getStatus().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
-                errormsg = failureGetterSetter.getErrorMsg();
-                return CommonString.KEY_FAILURE;
-            }
-        } else {
-            new File(Path + path).delete();
-        }
-
-        return result.toString();
     }
 }
