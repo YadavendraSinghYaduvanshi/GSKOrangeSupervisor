@@ -171,6 +171,143 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
     }
 
+
+    public class T2PAdapter extends RecyclerView.Adapter<T2PAdapter.ViewHolder> {
+
+        private ArrayList<T2PGetterSetter> list;
+
+        public T2PAdapter(ArrayList<T2PGetterSetter> t2PList) {
+            list = t2PList;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.t2p_item_layout, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+            final T2PGetterSetter mItem = list.get(position);
+            holder.tv_brand.setText(mItem.getBrand());
+            holder.tv_display.setText(mItem.getDisplay().trim());
+
+            //holder.tv_display.setTypeface(FontManager.getTypeface(getApplicationContext(),FontManager.FONTAWESOME));
+
+           /* Typeface iconFont = FontManager.getTypeface(getApplicationContext(), FontManager.FONTAWESOME);
+            FontManager.markAsIconContainer(findViewById(R.id.icons_container), iconFont);
+*/
+            holder.btn_gaps.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    showGapsDialog(mItem);
+
+                }
+            });
+
+            holder.toggle_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    mItem.setPresent(((ToggleButton) v).getText().toString().equalsIgnoreCase(getResources().getString(R.string.yes)));
+
+                    t2PAdapter.notifyDataSetChanged();
+                }
+            });
+
+
+            holder.btn_sku.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showSkuDialog(mItem.getSkulist());
+                }
+            });
+
+            if (!img.equalsIgnoreCase("")) {
+                if (position == child_position) {
+                    mItem.setImage(img);
+                    img = "";
+                }
+            }
+
+            if(camera_allow.equals("1")){
+
+                holder.img_cam.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        _pathforcheck = "T2P_Image_" + store_id + "_" + mItem.getBrand_id() + mItem.getDisplay_id() + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                        child_position = position;
+                        path = str + _pathforcheck;
+
+                        startCameraActivity();
+                    }
+                });
+
+                if (mItem.getImage().equals("")) {
+                    holder.img_cam.setBackgroundResource(R.mipmap.camera_orange);
+                } else {
+                    holder.img_cam.setBackgroundResource(R.mipmap.camera_green);
+                }
+            }
+            else {
+                holder.img_cam.setBackgroundResource(R.mipmap.camera_grey);
+            }
+
+
+            holder.toggle_btn.setChecked(mItem.isPresent());
+
+            if (mItem.getGapsChecklist().size() > 0) {
+                holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.green));
+            } else {
+                holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            }
+
+            if (mItem.getSkulist().size() > 0) {
+                holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.green));
+            } else {
+                holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            }
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public final View mView;
+            public final LinearLayout parentLayout;
+            public final TextView tv_brand, tv_display;
+            public final ImageView img_cam, img_remark;
+            public final Button btn_gaps, btn_sku, btn_ref_img;
+            public final ToggleButton toggle_btn;
+
+
+            public ViewHolder(View view) {
+                super(view);
+
+                mView = view;
+
+                tv_brand = (TextView) mView.findViewById(R.id.tv_brand);
+                tv_display = (TextView) mView.findViewById(R.id.tv_display);
+                img_cam = (ImageView) mView.findViewById(R.id.img_cam);
+                img_remark = (ImageView) mView.findViewById(R.id.img_remark);
+                btn_gaps = (Button) mView.findViewById(R.id.btn_gaps);
+                btn_sku = (Button) mView.findViewById(R.id.btn_sku);
+                btn_ref_img = (Button) mView.findViewById(R.id.btn_ref_image);
+                parentLayout = (LinearLayout) mView.findViewById(R.id.parent_layout);
+                toggle_btn = (ToggleButton) mView.findViewById(R.id.toggle_btn);
+
+            }
+
+        }
+    }
+
+
     public void showGapsDialog(final T2PGetterSetter t2p) {
 
         final ArrayList<GapsChecklistGetterSetter> gapsChecklist;
@@ -267,7 +404,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     spinner_brand.setSelection(0);
 
                     SkuGetterSetter select = new SkuGetterSetter();
-                    select.setSKU("Select");
+                    select.setSKU(getString(R.string.select));
                     sku_list.clear();
                     sku_list.add(select);
                     CustomSkuAdapter skuadapter = new CustomSkuAdapter(T2PComplianceActivity.this, R.layout.custom_spinner_item, sku_list);
@@ -299,7 +436,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
 
         SkuGetterSetter select = new SkuGetterSetter();
-        select.setSKU("Select");
+        select.setSKU(getString(R.string.select));
         sku_list.add(select);
         CustomSkuAdapter skuadapter = new CustomSkuAdapter(T2PComplianceActivity.this, R.layout.custom_spinner_item, sku_list);
         spinner_sku.setAdapter(skuadapter);
@@ -324,7 +461,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     }
 
                     SkuGetterSetter select = new SkuGetterSetter();
-                    select.setSKU("Select");
+                    select.setSKU(getString(R.string.select));
                     sku_list.add(0, select);
                     // Create custom adapter object ( see below CustomSkuAdapter.java )
                     CustomSkuAdapter skuadapter = new CustomSkuAdapter(T2PComplianceActivity.this, R.layout.custom_spinner_item, sku_list);

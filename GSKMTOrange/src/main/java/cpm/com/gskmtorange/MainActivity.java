@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity
 
             //startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
 
-        } else if (id == R.id.nav_export) {
+        } /*else if (id == R.id.nav_export) {
 
             AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
             builder1.setMessage("Are you sure you want to take the backup of your data")
@@ -276,12 +276,12 @@ public class MainActivity extends AppCompatActivity
                         @SuppressWarnings("resource")
                         public void onClick(DialogInterface dialog, int id) {
                             try {
-                                /*File file = new File(Environment
+                                *//*File file = new File(Environment
                                         .getExternalStorageDirectory(),
                                         "capital_backup");
                                 if (!file.isDirectory()) {
                                     file.mkdir();
-                                }*/
+                                }*//*
 
                                 File sd = Environment.getExternalStorageDirectory();
                                 File data = Environment.getDataDirectory();
@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity
                     });
             AlertDialog alert1 = builder1.create();
             alert1.show();
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

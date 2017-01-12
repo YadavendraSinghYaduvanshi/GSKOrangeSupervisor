@@ -41,7 +41,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="3sp"
             android:layout_marginTop="20dp"
-            android:text="Reason"
+            android:text=""
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />

@@ -4,28 +4,24 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_route_plan"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@mipmap/entry_grey"
             android:title="@string/menu_daily_route_plan" />
         <item
             android:id="@+id/nav_download"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@mipmap/download_grey"
             android:title="@string/menu_daily_download" />
         <item
             android:id="@+id/nav_upload"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@mipmap/upload_grey"
             android:title="@string/menu_upload_data" />
         <item
             android:id="@+id/nav_geotag"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@mipmap/geotag_grey"
             android:title="@string/menu_geotag" />
-        <item
-            android:id="@+id/nav_export"
-            android:icon="@drawable/ic_menu_share"
-            android:title="@string/menu_export" />
 
         <item
             android:id="@+id/nav_exit"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@mipmap/exit_grey"
             android:title="@string/menu_exit" />
     </group>
 
@@ -33,11 +29,11 @@
         <menu>
             <item
                 android:id="@+id/nav_setting"
-                android:icon="@drawable/ic_menu_manage"
+                android:icon="@mipmap/settings_grey"
                 android:title="@string/menu_setting" />
             <item
                 android:id="@+id/nav_services"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@mipmap/services_grey"
                 android:title="@string/menu_services" />
         </menu>
     </item>

@@ -108,7 +108,7 @@ public class NonWorkingReason extends AppCompatActivity implements
         reason_adapter = new ArrayAdapter<CharSequence>(this,
                 android.R.layout.simple_spinner_item);
 
-        reason_adapter.add("Select Reason");
+        reason_adapter.add(getResources().getString(R.string.select_reason));
 
         for (int i = 0; i < reasondata.size(); i++) {
             reason_adapter.add(reasondata.get(i).getREASON().get(0));

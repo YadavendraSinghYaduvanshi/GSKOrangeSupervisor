@@ -34,10 +34,10 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="300dp"
-            android:layout_height="204dp"
+            android:layout_width="153dp"
+            android:layout_height="133dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/gsk_logo" />
+            android:background="@drawable/gsklogo" />
 
     </RelativeLayout>
 

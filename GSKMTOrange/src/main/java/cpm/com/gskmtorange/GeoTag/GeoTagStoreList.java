@@ -133,9 +133,9 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        Intent intent = new Intent(GeoTagStoreList.this, MainActivity.class);
+       /* Intent intent = new Intent(GeoTagStoreList.this, MainActivity.class);
 
-        startActivity(intent);
+        startActivity(intent);*/
         GeoTagStoreList.this.finish();
     }
 
