@@ -119,7 +119,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     public void deleteTableWithStoreID(String storeid) {
 
-        db.delete( CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
 
     }
 
@@ -920,7 +920,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setMrp(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MRP")));
                     cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
                     cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
-                    cd.setToggleValue("0");
+                    cd.setToggleValue("1");
 
                     list.add(cd);
                     dbcursor.moveToNext();
@@ -1017,11 +1017,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 }
                 dbcursor.close();
 
-                if (list.size() > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return list.size() > 0;
             }
         } catch (Exception e) {
             Log.d("Exception ", "when fetching Records!!!!!!!!!!!!!!!!!!!!!" + e.toString());
@@ -1063,7 +1059,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("Select DISTINCT SB.SUB_CATEGORY_ID,SB.SUB_CATEGORY,BR.BRAND_ID,BR.BRAND " +
+            dbcursor = db.rawQuery("Select DISTINCT SB.SUB_CATEGORY_ID,SB.SUB_CATEGORY,BR.BRAND_ID,BR.BRAND,BR.COMPANY_ID " +
                     "from MAPPING_STOCK M " +
                     "inner join SKU_MASTER SK " +
                     "on M.SKU_ID=SK.SKU_ID " +
@@ -1074,13 +1070,14 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     "inner join CATEGORY_MASTER CA " +
                     "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
                     "where CA.CATEGORY_ID='" + category_id + "' " +
-                    "order by SB.SUB_CATEGORY,BR.BRAND", null);
+                    "order by SB.SUB_CATEGORY,BR.COMPANY_ID,BR.BRAND", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
                     Stock_FacingGetterSetter cd = new Stock_FacingGetterSetter();
 
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
                     cd.setSub_category_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
                     cd.setSub_category(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
                     cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
@@ -1158,6 +1155,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                 values1.put("Store_Id", storeId);
                 values1.put("Category_Id", categoryId);
+                values1.put("COMPANY_ID", data1.getCompany_id());
                 values1.put("SUB_CATEGORY_ID", data1.getSub_category_id());
                 values1.put("SUB_CATEGORY", data1.getSub_category());
                 values1.put("BRAND_ID", data1.getBrand_id());
@@ -1204,6 +1202,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 while (!dbcursor.isAfterLast()) {
                     Stock_FacingGetterSetter cd = new Stock_FacingGetterSetter();
 
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
                     cd.setSub_category_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
                     cd.setSub_category(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
                     cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
@@ -1312,11 +1311,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 }
                 dbcursor.close();
 
-                if (list.size() > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return list.size() > 0;
             }
         } catch (Exception e) {
             Log.d("Exception ", "when fetching Records!!!!!!!!!!!!!!!!!!!!!" + e.toString());
@@ -1530,7 +1525,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
 
-
     public void InsertPromoSkuData(ArrayList<Promo_Compliance_DataGetterSetter> promoSkuListData, String category_id) {
         ContentValues values = new ContentValues();
         try {
@@ -1577,11 +1571,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 }
                 dbcursor.close();
 
-                if (list.size() > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return list.size() > 0;
             }
         } catch (Exception e) {
             Log.d("Exception ", "when fetching Records!!!!!!!!!!!!!!!!!!!!!" + e.toString());
@@ -1679,7 +1669,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
             dbcursor = db.rawQuery("SELECT * from JOURNEY_PLAN  " +
-                    "where VISIT_DATE ='" + date + "' AND STORE_ID'="+ store_id +"'", null);
+                    "where VISIT_DATE ='" + date + "' AND STORE_ID'=" + store_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -2111,7 +2101,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     //Gagan end new code 1
 
-         public void InsertStockDialog(AdditionalDialogGetterSetter data) {
+    public void InsertStockDialog(AdditionalDialogGetterSetter data) {
         ContentValues values = new ContentValues();
 
         try {
@@ -2121,16 +2111,16 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             values.put(CommonString.KEY_BRAND, data.getBrand());
             values.put(CommonString.KEY_BRAND_ID, data.getBrand_id());
 
-           // values.put(CommonString.KEY_DISPLAY_ID, data.getDisplay_id());
+            // values.put(CommonString.KEY_DISPLAY_ID, data.getDisplay_id());
 
             values.put(CommonString.KEY_QUANTITY, data.getQuantity());
             values.put(CommonString.KEY_SKU_ID, data.getSku_id());
             values.put(CommonString.KEY_SKUNAME, data.getSku_name());
-           // values.put(CommonString.UNIQUE_KEY_ID, data.getUnique_id());
+            // values.put(CommonString.UNIQUE_KEY_ID, data.getUnique_id());
 
-           // values.put(CommonString.KEY_CATEGORY_ID, data.getCategory_id());
+            // values.put(CommonString.KEY_CATEGORY_ID, data.getCategory_id());
 
-           // values.put(CommonString.KEY_PROCESS_ID, data.getProcess_id());
+            // values.put(CommonString.KEY_PROCESS_ID, data.getProcess_id());
 
 
             db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG, null, values);
@@ -2148,7 +2138,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            cursordata = db.rawQuery("SELECT * FROM STOCK_DIALOG WHERE COMMON_ID = '"+keyid + "'", null);
+            cursordata = db.rawQuery("SELECT * FROM STOCK_DIALOG WHERE COMMON_ID = '" + keyid + "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
@@ -2171,7 +2161,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     sb.setSku_id(cursordata.getString(cursordata
                             .getColumnIndexOrThrow(CommonString.KEY_SKU_ID)));
 
-                   sb.setSku_name(cursordata.getString(cursordata
+                    sb.setSku_name(cursordata.getString(cursordata
                             .getColumnIndexOrThrow(CommonString.KEY_SKUNAME)));
 
 
@@ -2209,8 +2199,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-
-
     public ArrayList<BrandMasterGetterSetter> getBrandMasterData(String store_id) {
         Cursor cursordata = null;
         ArrayList<BrandMasterGetterSetter> Data = new ArrayList<BrandMasterGetterSetter>();
@@ -2229,7 +2217,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     sb.setBRAND(cursordata.getString(cursordata.getColumnIndexOrThrow("BRAND")));
 
                     sb.setSUB_CATEGORY_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
-
 
 
                     sb.setCOMPANY_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("COMPANY_ID")));
@@ -2252,7 +2239,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-
     public ArrayList<SkuMasterGetterSetter> getSKUMasterData(String store_id) {
         Cursor cursordata = null;
         ArrayList<SkuMasterGetterSetter> Data = new ArrayList<SkuMasterGetterSetter>();
@@ -2271,7 +2257,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     sb.setSKU(cursordata.getString(cursordata.getColumnIndexOrThrow("SKU")));
 
                     sb.setBRAND_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("BRAND_ID")));
-
 
 
                     sb.setMRP(cursordata.getString(cursordata.getColumnIndexOrThrow("MRP")));
@@ -2293,7 +2278,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     }
 
-    public void InsertAdditionalData(AddittionalGetterSetter data,ArrayList<AdditionalDialogGetterSetter> dialog) {
+    public void InsertAdditionalData(AddittionalGetterSetter data, ArrayList<AdditionalDialogGetterSetter> dialog) {
         ContentValues values = new ContentValues();
         ContentValues values1 = new ContentValues();
         try {
@@ -2307,10 +2292,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             values.put("sku_name", data.getSku());
             values.put("toggle_value", data.getBtn_toogle());
 
-           long key_id = db.insert(CommonString.TABLE_INSERT_STOCK_ADDITIONAL, null, values);
+            long key_id = db.insert(CommonString.TABLE_INSERT_STOCK_ADDITIONAL, null, values);
 
-            for(int i=0;i<dialog.size();i++)
-            {
+            for (int i = 0; i < dialog.size(); i++) {
                 values1.put(CommonString.KEY_Common_ID, key_id);
                 values1.put(CommonString.KEY_STORE_ID, dialog.get(i).getStore_id());
                 values1.put(CommonString.KEY_BRAND, dialog.get(i).getBrand());
@@ -2323,14 +2307,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG, null, values1);
 
 
-
-
-
             }
-
-
-
-
 
 
         } catch (Exception ex) {
@@ -2346,7 +2323,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            cursordata = db.rawQuery("SELECT * FROM Stock_Additional_visibility WHERE Store_Id = '"+store_id + "'", null);
+            cursordata = db.rawQuery("SELECT * FROM Stock_Additional_visibility WHERE Store_Id = '" + store_id + "'", null);
 
 
             if (cursordata != null) {
@@ -2395,8 +2372,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return productData;
 
     }
+
     public void updateStoreStatus(String storeid, String visitdate,
-                                            String status) {
+                                  String status) {
 
         try {
             ContentValues values = new ContentValues();
