@@ -15,7 +15,9 @@ import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.GeotaggingBeans;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
+import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
+
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
@@ -32,9 +34,11 @@ import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.StoreWisePerformaceGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
@@ -91,6 +95,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(CommonString.CREATE_TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_PROMO_SKU);
 
+        db.execSQL(TableBean.getStorePerformance());
+
         //Gagan End
 
         db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
@@ -111,7 +117,10 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TableBean.getJourneyPlan());
     }
 
-    public void deleteTableWithStoreID(String storeid, String process_id) {
+    public void deleteTableWithStoreID(String storeid) {
+
+        db.delete( CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+
     }
 
     public void deleteAllTables() {
@@ -1997,6 +2006,109 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return list;
     }
+
+    //Store wise Performance
+    public void InsertSTORE_PERFORMANCE(STORE_PERFORMANCE_MasterGetterSetter data) {
+        db.delete("STORE_PERFORMANCE", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getSTORE_ID().size(); i++) {
+
+                values.put("STORE_ID", data.getSTORE_ID().get(i));
+                values.put("CATEGORY_ID", data.getCATEGORY_ID().get(i));
+                values.put("PERIOD", data.getPERIOD().get(i));
+                values.put("MSL_AVAILABILITY", data.getMSL_AVAILABILITY().get(i));
+                values.put("SOS", data.getSOS().get(i));
+                values.put("T2P", data.getT2P().get(i));
+                values.put("PROMO", data.getPROMO().get(i));
+                values.put("OSS", data.getOSS().get(i));
+                values.put("ORDERID", data.getORDERID().get(i));
+
+                db.insert("STORE_PERFORMANCE", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " STORE_PERFORMANCE " + ex.toString());
+        }
+    }
+
+    //Category wise Performance
+    public ArrayList<CategoryWisePerformaceGetterSetter> getCategoryWisePerformance(String store_id, String category_id) {
+        ArrayList<CategoryWisePerformaceGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from STORE_PERFORMANCE " +
+                    "where STORE_ID='" + store_id + "' and CATEGORY_ID='" + category_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    CategoryWisePerformaceGetterSetter cd = new CategoryWisePerformaceGetterSetter();
+
+                    cd.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
+                    cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY_ID")));
+                    cd.setPeriod(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PERIOD")));
+                    cd.setMsl_availability(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MSL_AVAILABILITY")));
+                    cd.setSos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SOS")));
+                    cd.setT2p(dbcursor.getString(dbcursor.getColumnIndexOrThrow("T2P")));
+                    cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
+                    cd.setOss(dbcursor.getString(dbcursor.getColumnIndexOrThrow("OSS")));
+                    cd.setOrder_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("ORDERID")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "getPromoComplianceSkuData!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public ArrayList<StoreWisePerformaceGetterSetter> getStoreWisePerformance(String store_id) {
+        ArrayList<StoreWisePerformaceGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select PERIOD, ROUND(avg(MSL_AVAILABILITY),1) as MSL_AVAILABILITY,ROUND(avg(sos),1) as SOS ," +
+                    " ROUND(avg(t2p),1) as T2P,ROUND(avg(pROMO),1) as PROMO,ROUND(SUM(oss),1) AS OSS " +
+                    "from STORE_PERFORMANCE " +
+                    "where  STORE_ID='" + store_id + "' " +
+                    "GROUP BY PERIOD " +
+                    "ORDER BY ORDERID ", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    StoreWisePerformaceGetterSetter cd = new StoreWisePerformaceGetterSetter();
+
+/*                    cd.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
+                    cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY_ID")));*/
+                    cd.setPeriod(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PERIOD")));
+                    cd.setMsl_availability(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MSL_AVAILABILITY")));
+                    cd.setSos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SOS")));
+                    cd.setT2p(dbcursor.getString(dbcursor.getColumnIndexOrThrow("T2P")));
+                    cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
+                    cd.setOss(dbcursor.getString(dbcursor.getColumnIndexOrThrow("OSS")));
+                    //                   cd.setOrder_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("ORDERID")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "getPromoComplianceSkuData!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
     //Gagan end new code 1
 
          public void InsertStockDialog(AdditionalDialogGetterSetter data) {
@@ -2265,6 +2377,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     sb.setSku(cursordata.getString(cursordata
                             .getColumnIndexOrThrow("sku_name")));
+                    sb.setBtn_toogle(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("toggle_value")));
+
 
                     productData.add(sb);
                     cursordata.moveToNext();
@@ -2279,6 +2394,19 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return productData;
 
+    }
+    public void updateStoreStatus(String storeid, String visitdate,
+                                            String status) {
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put(CommonString.KEY_CHECKOUT_STATUS, status);
+
+            db.update("JOURNEY_PLAN", values, CommonString.KEY_STORE_ID + "='" + storeid + "' AND " + CommonString.KEY_VISIT_DATE + "='" + visitdate + "'", null);
+        } catch (Exception e) {
+
+
+        }
     }
 
     public void InsertT2PData(ArrayList<T2PGetterSetter> data, String store_id, String category_id) {

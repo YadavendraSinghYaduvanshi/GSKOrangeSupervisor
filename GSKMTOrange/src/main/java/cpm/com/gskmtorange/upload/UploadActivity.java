@@ -31,6 +31,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
+import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
+import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
@@ -70,6 +72,9 @@ public class UploadActivity extends AppCompatActivity {
     ArrayList<Stock_FacingGetterSetter> stock_facingHeaderList, stock_facingChildList;
     ArrayList<Promo_Compliance_DataGetterSetter> promotionSkuList, additionalPromotionList;
     ArrayList<T2PGetterSetter> t2PGetterSetters;
+    ArrayList<AddittionalGetterSetter>  additionalVisibilityList;
+    ArrayList<AdditionalDialogGetterSetter> additionalVisibilitySkuList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -440,7 +445,116 @@ public class UploadActivity extends AppCompatActivity {
                         data.name = "Additional Promotion Data Uploading";
                         publishProgress(data);
 
-                        //T2p Upload Data
+
+                    ////ashish open
+
+                        //Additional Visibility  Data
+                        String additional_visibility_data_xml = "";
+                        String additional_visibility_dialog_xml = "";
+                        onXML = "";
+                        String onXMLdIALOG = "";
+                        additionalVisibilityList = db.getAdditionalStock(coverageList.get(i).getStoreId());
+
+                        if (additionalVisibilityList.size() > 0) {
+                            for (int J = 0; J < additionalVisibilityList.size(); J++) {
+
+                                    String KeyID = additionalVisibilityList.get(J).getKey_id();
+
+                                    additionalVisibilitySkuList = db.getDialogStock(KeyID);
+
+                                    for (int k = 0; k < additionalVisibilitySkuList.size(); k++) {
+
+
+                                    onXMLdIALOG = "[VISIBILITY_DAILOG]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]"
+                                            + userId
+                                            + "[/USER_ID]"
+                                            + "[KEY_ID]"
+                                            + additionalVisibilitySkuList.get(k).getKEY_ID()
+                                            + "[/KEY_ID]"
+                                           /* + "[DIALOG_BRAND_ID]"
+                                            + additionalVisibilitySkuList.get(k).getBrand_id()
+                                            + "[/DIALOG_BRAND_ID]"*/
+                                            + "[SKU_ID]"
+                                            + additionalVisibilitySkuList.get(k).getSku_id()
+                                            + "[/SKU_ID]"
+                                            + "[QUANTITY]"
+                                            + additionalVisibilitySkuList.get(k).getQuantity()
+                                            + "[/QUANTITY]"
+                                            + "[/VISIBILITY_DAILOG]";
+
+                                        additional_visibility_dialog_xml = additional_visibility_dialog_xml + onXMLdIALOG;
+
+                                    }
+
+                                    onXML = "[ADDITIONAL_VISIBILITY_DATA]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]"
+                                            + userId
+                                            + "[/USER_ID]"
+                                            + "[KEY_ID]"
+                                            + additionalVisibilityList.get(J).getKey_id()
+                                            + "[/KEY_ID]"
+                                            + "[ADDITIONAL_DISPLAY]"
+                                            + additionalVisibilityList.get(J).getBtn_toogle()
+                                            + "[/ADDITIONAL_DISPLAY]"
+                                            + "[BRAND_ID]"
+                                            + additionalVisibilityList.get(J).getBrand_id()
+                                            + "[/BRAND_ID]"
+                                            + "[IMAGE_URL]"
+                                            + additionalVisibilityList.get(J).getImage()
+                                            + "[/IMAGE_URL]"
+                                            + "[DISPLAY_ID]"
+                                            + additionalVisibilityList.get(J).getSku_id()
+                                            + "[/DISPLAY_ID]"
+                                            + "[SKU_LIST]"
+                                            + additional_visibility_dialog_xml
+                                            + "[/SKU_LIST]"
+                                            + "[/ADDITIONAL_VISIBILITY_DATA]";
+
+                                additional_visibility_data_xml = additional_visibility_data_xml + onXML;
+
+                            }
+
+                            final String sos_xml = "[DATA]" + additional_visibility_data_xml + "[/DATA]";
+
+                            request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                            request.addProperty("XMLDATA", sos_xml);
+                            request.addProperty("KEYS", "ADDITIONAL_VISIBILITY_DATA");
+                            request.addProperty("USERNAME", userId);
+                            request.addProperty("MID", mid);
+
+                            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                            envelope.dotNet = true;
+                            envelope.setOutputSoapObject(request);
+
+                            androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                            androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                            result = (Object) envelope.getResponse();
+
+                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                            }
+
+                            if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
+                                return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                            }
+
+                            if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                            }
+                        }
+
+                   
+                        data.value = 35;
+                        data.name = "Additional Visibility Data";
+                        publishProgress(data);
+
+                        /////ashish close
+
+  //T2p Upload Data
 
                         String t2p_data_xml = "";
                         onXML = "";
@@ -566,10 +680,10 @@ public class UploadActivity extends AppCompatActivity {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
                             }
                         }
+                          
                         data.value = 40;
                         data.name = "T2P Data Uploading";
                         publishProgress(data);
-
 
                         //Image Upload
 

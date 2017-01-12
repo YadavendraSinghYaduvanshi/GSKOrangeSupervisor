@@ -39,6 +39,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
@@ -68,6 +69,7 @@ public class DownloadActivity extends AppCompatActivity {
     NonWorkingReasonGetterSetter nonWorkingReasonGetterSetter;
     MappingPromotionGetterSetter mappingPromotionGetterSetter;
     MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter mapping_additional_promotion_masterGetterSetter;
+    STORE_PERFORMANCE_MasterGetterSetter store_performance_masterGetterSetter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -584,6 +586,43 @@ public class DownloadActivity extends AppCompatActivity {
                 }
                 publishProgress(data);
 
+
+                //STORE_PERFORMANCE
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "STORE_PERFORMANCE");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = (Object) envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    store_performance_masterGetterSetter = XMLHandlers.STORE_PERFORMANCEXMLHandler(xpp, eventType);
+
+                    if (store_performance_masterGetterSetter.getSTORE_ID().size() > 0) {
+                        String table_store_performace = store_performance_masterGetterSetter.getTable_STORE_PERFORMANCE();
+                        if (table_store_performace != null) {
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setStorePerformance(table_store_performace);
+                        }
+                    } else {
+                        //return "STORE_PERFORMANCE";
+                    }
+                    data.value = 100;
+                    data.name = "STORE_PERFORMANCE Data Download";
+                }
+                publishProgress(data);
+
+
                 //Gagan end code
 
 
@@ -604,6 +643,8 @@ public class DownloadActivity extends AppCompatActivity {
                 db.insertNonWorkingData(nonWorkingReasonGetterSetter);
 
                 db.insertNonWorkingData(nonWorkingReasonGetterSetter);
+
+                db.InsertSTORE_PERFORMANCE(store_performance_masterGetterSetter);
 
             } catch (MalformedURLException e) {
                 /*final AlertMessage message = new AlertMessage(

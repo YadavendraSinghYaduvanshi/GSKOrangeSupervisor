@@ -114,7 +114,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
 
 
-        store_id = "1";
+        store_id = "2";
         date = preferences.getString(CommonString.KEY_DATE, null);
         intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
 
@@ -255,6 +255,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                                     btntoggle.setChecked(true);
 
+                                    btnimage.setBackgroundResource(R.mipmap.camera);
                                     togglevalue = "1";
                                     brandlayout.setVisibility(View.VISIBLE);
                                     diaplylayout.setVisibility(View.VISIBLE);
@@ -611,10 +612,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                 if (_pathforcheck != null && !_pathforcheck.equals("")) {
                     if (new File(str + _pathforcheck).exists()) {
-                        // Bitmap bmp = BitmapFactory.decodeFile(str + _pathforcheck);
-                        // img_cam.setImageBitmap(bmp);
-                        // img_clicked.setVisibility(View.GONE);
-                        // img_cam.setVisibility(View.VISIBLE);
+
+                        btnimage.setBackgroundResource(R.mipmap.camera_done);
+
                         img_str = _pathforcheck;
                         _pathforcheck = "";
                     }
