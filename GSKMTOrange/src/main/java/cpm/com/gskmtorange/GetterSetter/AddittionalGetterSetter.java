@@ -76,5 +76,14 @@ public class AddittionalGetterSetter {
 
     String btn_toogle;
 
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    String categoryId;
 
 }

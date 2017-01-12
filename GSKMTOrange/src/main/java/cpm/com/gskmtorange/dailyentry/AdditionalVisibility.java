@@ -22,6 +22,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,18 +91,18 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     ArrayList<SkuGetterSetter> empty_list = new ArrayList<>();
     String _pathforcheck, _path, str, msg;
     private SharedPreferences preferences;
-    String store_id, date, intime, img_str, togglevalue = "1";
+    String store_id, date, intime, img_str, togglevalue = "1",CATEGORY_ID;
     ImageView img_cam, img_clicked;
     Button btn_add, btn_close;
     EditText Edt_txt;
     MyAdaptorStock adapterData;
     ListView listviewlay;
-    String errormsg;
+    String errormsg,categoryName,categoryId;
     MyAdaptorAdditionalStock adapteradditional;
     AddittionalGetterSetter adGt;
     LinearLayout brandlayout, diaplylayout, cameralayout;
     //RelativeLayout skulayout;
-
+    CardView cardvew;
     ////String brand_id,SKU_ID;
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -118,7 +119,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
         updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
-        store_id = "2";
+        categoryName = getIntent().getStringExtra("categoryName");
+        categoryId = getIntent().getStringExtra("categoryId");
+
+        //store_id = "2";
         date = preferences.getString(CommonString.KEY_DATE, null);
         intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
 
@@ -126,6 +130,8 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         db.open();
         spinner_brand_list = (Spinner) findViewById(R.id.spinner_Brand1);
         spinner_sku_list = (Spinner) findViewById(R.id.spinner_SkuMaster);
+        cardvew = (CardView) findViewById(R.id.cardviewid);
+
 
         btntoggle = (ToggleButton) findViewById(R.id.btntoggle);
         btnimage = (ImageView) findViewById(R.id.btn_image);
@@ -199,21 +205,62 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             }
         });
 
-        listdata = db.getAdditionalStock(store_id);
+        listdata = db.getAdditionalStock(store_id,categoryId);
+
 
         for (int k = 0; k < listdata.size(); k++) {
-            String KeyID = listdata.get(k).getKey_id();
 
-            uploadlist = db.getDialogStock(KeyID);
+           String tooglevalue= listdata.get(k).getBtn_toogle();
+
+            if(tooglevalue.equalsIgnoreCase("0"))
+            {
+
+                btnaddlayout.setVisibility(View.INVISIBLE);
+                cardvew.setVisibility(View.INVISIBLE);
+                listviewlay.setVisibility(View.INVISIBLE);
+                btntoggle.setChecked(false);
+                brandlayout.setVisibility(View.INVISIBLE);
+                diaplylayout.setVisibility(View.INVISIBLE);
+                cameralayout.setVisibility(View.INVISIBLE);
+                btnsku.setVisibility(View.INVISIBLE);
+            }
+
+
+
+           /* String KeyID = listdata.get(k).getKey_id();
+
+            uploadlist = db.getDialogStock(KeyID);*/
 
         }
+
 
 
         if (listdata.size() > 0) {
+
+            for (int i = 0; i < listdata.size(); i++) {
+                if (listdata.get(i).getBtn_toogle().equalsIgnoreCase("0")) {
+                    listviewlay.setVisibility(View.INVISIBLE);
+                    cardvew.setVisibility(View.INVISIBLE);
+                    btnaddlayout.setVisibility(View.INVISIBLE);
+                } else {
+                    adapteradditional = new MyAdaptorAdditionalStock(AdditionalVisibility.this, listdata);
+                    listviewlay.setAdapter(adapteradditional);
+                    listviewlay.invalidateViews();
+                    btnaddlayout.setVisibility(View.VISIBLE);
+                    cardvew.setVisibility(View.VISIBLE);
+                    listviewlay.setVisibility(View.VISIBLE);
+                }
+            }
+
+        }
+
+
+
+           /* if (listdata.size() > 0) {
             adapteradditional = new MyAdaptorAdditionalStock(AdditionalVisibility.this, listdata);
             listviewlay.setAdapter(adapteradditional);
             listviewlay.invalidateViews();
-        }
+        }*/
 
         btnaddlayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,6 +274,8 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 adGt.setSku_id(sku_list_id);
                 adGt.setStore_id(store_id);
                 adGt.setBtn_toogle(togglevalue);
+                adGt.setCategoryId(categoryId);
+
 
                 if (validateData(adGt, defdata)) {
 
@@ -243,7 +292,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
-                                    db.InsertAdditionalData(adGt, defdata);
+                                    db.InsertAdditionalData(adGt, defdata,categoryId);
 
                                     spinner_brand_list.setSelection(0);
 
@@ -257,21 +306,42 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                                     defdata.clear();
 
-                                    btntoggle.setChecked(true);
+                                   // btntoggle.setChecked(true);
 
                                     btnimage.setBackgroundResource(R.mipmap.camera);
-                                    togglevalue = "1";
-                                    brandlayout.setVisibility(View.VISIBLE);
-                                    diaplylayout.setVisibility(View.VISIBLE);
-                                    cameralayout.setVisibility(View.VISIBLE);
-                                    btnsku.setVisibility(View.VISIBLE);
+                                   // togglevalue = "1";
 
-                                    listdata = db.getAdditionalStock(store_id);
+
+                                    listdata = db.getAdditionalStock(store_id,categoryId);
 
                                     if (listdata.size() > 0) {
-                                        adapteradditional = new MyAdaptorAdditionalStock(AdditionalVisibility.this, listdata);
-                                        listviewlay.setAdapter(adapteradditional);
-                                        listviewlay.invalidateViews();
+
+                                        for(int i=0;i<listdata.size();i++)
+                                        {
+                                            if(listdata.get(i).getBtn_toogle().equalsIgnoreCase("0"))
+                                            {
+                                                listviewlay.setVisibility(View.INVISIBLE);
+                                                cardvew.setVisibility(View.INVISIBLE);
+                                                btnaddlayout.setVisibility(View.INVISIBLE);
+                                            }
+                                            else
+                                            {
+                                                adapteradditional = new MyAdaptorAdditionalStock(AdditionalVisibility.this, listdata);
+                                                listviewlay.setAdapter(adapteradditional);
+                                                listviewlay.invalidateViews();
+                                                btnaddlayout.setVisibility(View.VISIBLE);
+                                                cardvew.setVisibility(View.VISIBLE);
+                                                listviewlay.setVisibility(View.VISIBLE);
+
+
+                                            }
+                                        }
+
+
+
+
+
+
                                     } else {
 
                                     }
@@ -311,9 +381,17 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                     cameralayout.setVisibility(View.VISIBLE);
                     btnsku.setVisibility(View.VISIBLE);
 
-                } else {
-                    togglevalue = "0";
+                    btnaddlayout.setVisibility(View.VISIBLE);
+                    cardvew.setVisibility(View.VISIBLE);
+                    listviewlay.setVisibility(View.VISIBLE);
 
+
+                } else {
+
+                    db.deleteStockEntryall(store_id,categoryId);
+
+                    togglevalue = "0";
+                    defdata.clear();
                     brandlayout.setVisibility(View.INVISIBLE);
                     diaplylayout.setVisibility(View.INVISIBLE);
                     cameralayout.setVisibility(View.INVISIBLE);
@@ -1041,16 +1119,36 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
-
                                     db.deleteStockEntry(listdata.get(position1).getKey_id());
 
                                     adapteradditional.notifyDataSetChanged();
 
-                                    listdata = db.getAdditionalStock(store_id);
+                                    listdata = db.getAdditionalStock(store_id,categoryId);
 
-                                    adapteradditional = new MyAdaptorAdditionalStock(AdditionalVisibility.this, listdata);
+                                   /* adapteradditional = new MyAdaptorAdditionalStock(AdditionalVisibility.this, listdata);
                                     listviewlay.setAdapter(adapteradditional);
-                                    listviewlay.invalidateViews();
+                                    listviewlay.invalidateViews();*/
+
+                                    if (listdata.size() > 0) {
+
+                                        for (int i = 0; i < listdata.size(); i++) {
+                                            if (listdata.get(i).getBtn_toogle().equalsIgnoreCase("0")) {
+                                                listviewlay.setVisibility(View.INVISIBLE);
+                                                cardvew.setVisibility(View.INVISIBLE);
+                                                btnaddlayout.setVisibility(View.INVISIBLE);
+                                            } else {
+                                                adapteradditional = new MyAdaptorAdditionalStock(AdditionalVisibility.this, listdata);
+                                                listviewlay.setAdapter(adapteradditional);
+                                                listviewlay.invalidateViews();
+                                                btnaddlayout.setVisibility(View.VISIBLE);
+                                                cardvew.setVisibility(View.VISIBLE);
+                                                listviewlay.setVisibility(View.VISIBLE);
+                                            }
+                                        }
+                                    }
+
+
+
 
 
                                 }

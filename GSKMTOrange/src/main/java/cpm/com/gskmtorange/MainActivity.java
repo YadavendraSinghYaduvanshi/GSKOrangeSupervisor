@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity
                         Snackbar.make(webView, R.string.no_data_for_upload, Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
 
+
                     } else {
                         //if (isStoreCheckedIn()&& isValid()) {
 

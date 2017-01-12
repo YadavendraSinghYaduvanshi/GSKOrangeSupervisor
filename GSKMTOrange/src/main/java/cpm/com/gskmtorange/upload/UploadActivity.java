@@ -534,7 +534,7 @@ public class UploadActivity extends AppCompatActivity {
                         String additional_visibility_dialog_xml = "";
                         onXML = "";
                         String onXMLdIALOG = "";
-                        additionalVisibilityList = db.getAdditionalStock(coverageList.get(i).getStoreId());
+                        additionalVisibilityList = db.getAdditionalStockUpload(coverageList.get(i).getStoreId());
 
                         if (additionalVisibilityList.size() > 0) {
                             for (int J = 0; J < additionalVisibilityList.size(); J++) {
@@ -543,8 +543,10 @@ public class UploadActivity extends AppCompatActivity {
 
                                     additionalVisibilitySkuList = db.getDialogStock(KeyID);
 
-                                    for (int k = 0; k < additionalVisibilitySkuList.size(); k++) {
+                                if(additionalVisibilitySkuList.size()>0)
+                                {
 
+                                 for (int k = 0; k < additionalVisibilitySkuList.size(); k++) {
 
                                     onXMLdIALOG = "[VISIBILITY_DAILOG]"
                                             + "[MID]" + mid + "[/MID]"
@@ -552,7 +554,7 @@ public class UploadActivity extends AppCompatActivity {
                                             + userId
                                             + "[/USER_ID]"
                                             + "[KEY_ID]"
-                                            + additionalVisibilitySkuList.get(k).getKEY_ID()
+                                            + additionalVisibilitySkuList.get(k).getCOMMON_ID()
                                             + "[/KEY_ID]"
                                            /* + "[DIALOG_BRAND_ID]"
                                             + additionalVisibilitySkuList.get(k).getBrand_id()
@@ -567,7 +569,7 @@ public class UploadActivity extends AppCompatActivity {
 
                                         additional_visibility_dialog_xml = additional_visibility_dialog_xml + onXMLdIALOG;
 
-                                    }
+                                    }}
 
                                     onXML = "[ADDITIONAL_VISIBILITY_DATA]"
                                             + "[MID]" + mid + "[/MID]"
@@ -577,6 +579,9 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[KEY_ID]"
                                             + additionalVisibilityList.get(J).getKey_id()
                                             + "[/KEY_ID]"
+                                            + "[CATEGORY_ID]"
+                                            + additionalVisibilityList.get(J).getCategoryId()
+                                            + "[/CATEGORY_ID]"
                                             + "[ADDITIONAL_DISPLAY]"
                                             + additionalVisibilityList.get(J).getBtn_toogle()
                                             + "[/ADDITIONAL_DISPLAY]"
@@ -824,6 +829,36 @@ public class UploadActivity extends AppCompatActivity {
                                 }
                             }
                         }
+//// ashish visibility image start
+
+                        if (additionalVisibilityList.size() > 0) {
+                            for (int i1 = 0; i1 < additionalVisibilityList.size(); i1++) {
+
+                                if (additionalVisibilityList.get(i1).getImage() != null && !additionalVisibilityList.get(i1).getImage().equals("")) {
+                                    if (new File(CommonString.FILE_PATH + additionalVisibilityList.get(i1).getImage()).exists()) {
+
+                                        try {
+                                            result = UploadImage(additionalVisibilityList.get(i1).getImage(), "AdditionalVisibilityImages");
+
+                                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                return "AdditionalVisibilityImages";
+                                            }
+
+                                            runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    message.setText("AdditionalVisibilityImages Uploaded");
+                                                }
+                                            });
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+               //// ashish close image
+
 
 
                         for(int m=0;m<t2PGetterSetters.size();m++){
