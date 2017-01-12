@@ -72,7 +72,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
     boolean checkflag = true;
 
     private SharedPreferences preferences;
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +98,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
             keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
             class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
             storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+            camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
 
             categoryName = getIntent().getStringExtra("categoryName");
             categoryId = getIntent().getStringExtra("categoryId");
@@ -315,61 +316,74 @@ public class Stock_FacingActivity extends AppCompatActivity {
             txt_stockFaceupHeader.setTypeface(null, Typeface.BOLD);
             txt_stockFaceupHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
-            img_camera1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //String date = new Date().toLocaleString().toString();
-                    //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
-
-                    _pathforcheck = "Stock_Cam1_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
-                    child_position = groupPosition;
-                    path = str + _pathforcheck;
-
-                    startCameraActivity1(groupPosition);
-                }
-            });
-
-            if (!img1.equalsIgnoreCase("")) {
-                if (groupPosition == child_position) {
-                    headerTitle.setImage1(img1);
-                    img1 = "";
-                }
+            if (headerTitle.getCompany_id().equals("1")) {
+                txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            } else {
+                txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.black));
             }
 
-            if (headerTitle.getImage1().equals("")) {
+            //Camera allow enable
+            if (camera_allow.equalsIgnoreCase("1")) {
+
+                img_camera1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //String date = new Date().toLocaleString().toString();
+                        //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+
+                        _pathforcheck = "Stock_Cam1_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                        child_position = groupPosition;
+                        path = str + _pathforcheck;
+
+                        startCameraActivity1(groupPosition);
+                    }
+                });
+
+                if (!img1.equalsIgnoreCase("")) {
+                    if (groupPosition == child_position) {
+                        headerTitle.setImage1(img1);
+                        img1 = "";
+                    }
+                }
+
+                if (headerTitle.getImage1().equals("")) {
+                    img_camera1.setBackgroundResource(R.mipmap.camera);
+                } else {
+                    img_camera1.setBackgroundResource(R.mipmap.camera_done);
+                }
+
+
+                img_camera2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //String date = new Date().toLocaleString().toString();
+                        //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+
+                        _pathforcheck = "Stock_Cam2_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                        child_position = groupPosition;
+                        path = str + _pathforcheck;
+
+                        startCameraActivity2(groupPosition);
+                    }
+                });
+
+                if (!img2.equalsIgnoreCase("")) {
+                    if (groupPosition == child_position) {
+                        headerTitle.setImage2(img2);
+                        img2 = "";
+                    }
+                }
+
+                if (headerTitle.getImage2().equals("")) {
+                    img_camera2.setBackgroundResource(R.mipmap.camera);
+                } else {
+                    img_camera2.setBackgroundResource(R.mipmap.camera_done);
+                }
+            } else {
+                //Camera allow disable
                 img_camera1.setBackgroundResource(R.mipmap.camera);
-            } else {
-                img_camera1.setBackgroundResource(R.mipmap.camera_done);
-            }
-
-
-            img_camera2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //String date = new Date().toLocaleString().toString();
-                    //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
-
-                    _pathforcheck = "Stock_Cam2_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
-                    child_position = groupPosition;
-                    path = str + _pathforcheck;
-
-                    startCameraActivity2(groupPosition);
-                }
-            });
-
-            if (!img2.equalsIgnoreCase("")) {
-                if (groupPosition == child_position) {
-                    headerTitle.setImage2(img2);
-                    img2 = "";
-                }
-            }
-
-            if (headerTitle.getImage2().equals("")) {
                 img_camera2.setBackgroundResource(R.mipmap.camera);
-            } else {
-                img_camera2.setBackgroundResource(R.mipmap.camera_done);
             }
-
 
             if (!checkflag) {
                 if (checkHeaderArray.contains(groupPosition)) {
@@ -571,7 +585,43 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 String stock = listDataChild.get(listDataHeader.get(i)).get(j).getStock();
                 String faceup = listDataChild.get(listDataHeader.get(i)).get(j).getFacing();
 
-                if (!imagePath.equals("") || !imagePath1.equals("")) {
+                //Camera allow enable
+                if (camera_allow.equalsIgnoreCase("1")) {
+
+                    if (!imagePath.equals("") || !imagePath1.equals("")) {
+                        if (!stock.equals("0")) {
+                            if (stock.equals("") || faceup.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = "Please fill all the data";
+                                break;
+                            }
+                        } else {
+                            if (stock.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = "Please fill all the data";
+                                break;
+                            }
+                        }
+                    } else {
+                        if (!checkHeaderArray.contains(i)) {
+                            checkHeaderArray.add(i);
+                        }
+
+                        flag = false;
+                        Error_Message = "Please click either 1 image";
+                        break;
+                    }
+
+                } else {
+                    //Camera allow disable
                     if (!stock.equals("0")) {
                         if (stock.equals("") || faceup.equals("")) {
                             if (!checkHeaderArray.contains(i)) {
@@ -593,14 +643,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                             break;
                         }
                     }
-                } else {
-                    if (!checkHeaderArray.contains(i)) {
-                        checkHeaderArray.add(i);
-                    }
 
-                    flag = false;
-                    Error_Message = "Please click either 1 image";
-                    break;
                 }
             }
 

@@ -235,6 +235,9 @@ public class CommonString {
             + "Category_Id"
             + " VARCHAR,"
 
+            + "COMPANY_ID"
+            + " VARCHAR,"
+
             + "SUB_CATEGORY_ID"
             + " VARCHAR,"
 
