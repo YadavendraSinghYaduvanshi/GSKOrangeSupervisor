@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +35,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GeoTag.GeoTagActivity;
@@ -72,6 +75,9 @@ public class StoreListActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         date = preferences.getString(CommonString.KEY_DATE, null);
         visit_status = preferences.getString(CommonString.KEY_STOREVISITED_STATUS, "");
         db = new GSKOrangeDB(StoreListActivity.this);
@@ -90,8 +96,6 @@ public class StoreListActivity extends AppCompatActivity {
                 startActivity(in);
 
                 finish();
-
-
             }
         });
 
@@ -101,6 +105,8 @@ public class StoreListActivity extends AppCompatActivity {
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         storelist = db.getStoreData(date);
         coverage=db.getCoverageData(date);
@@ -455,6 +461,34 @@ public class StoreListActivity extends AppCompatActivity {
 
         return result_flag;
     }
+
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+}
 
     public void UpdateStore(String storeid) {
 
