@@ -11,11 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.GeotaggingBeans;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
-
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
+import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
+
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
@@ -76,13 +78,20 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(TableBean.getDisplayMaster());
         db.execSQL(TableBean.getMappingStock());
         db.execSQL(TableBean.getMappingT2p());
+        db.execSQL(TableBean.getNonWorkingReason());
+        db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
+        db.execSQL(CommonString.CREATE_TABLE_COVERAGE_DATA);
+        db.execSQL(TableBean.getDisplayChecklistMaster());
+        db.execSQL(TableBean.getMappingDisplayChecklist());
         db.execSQL(TableBean.getMappingAdditionalPromotion());
         db.execSQL(TableBean.getMappingPromotion());
 
         db.execSQL(CommonString.CREATE_TABLE_INSERT_MSL_AVAILABILITY);
-
+        db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_HEADER);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_CHILD);
+        db.execSQL(CommonString.CREATE_TABLE_STOCK_DIALOG);
+        db.execSQL(CommonString.CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_PROMO_SKU);
 
@@ -97,6 +106,10 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(TableBean.getMappingDisplayChecklist());
 
         db.execSQL(TableBean.getNonWorkingReason());
+
+        db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_COMPLIANCE);
+        db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_GAPS);
+        db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_SKU);
     }
 
     @Override
@@ -104,7 +117,10 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TableBean.getJourneyPlan());
     }
 
-    public void deleteTableWithStoreID(String storeid, String process_id) {
+    public void deleteTableWithStoreID(String storeid) {
+
+        db.delete( CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+
     }
 
     public void deleteAllTables() {
@@ -1462,9 +1478,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
     public void InsertAdditionalPromoData(Promo_Compliance_DataGetterSetter data, String category_id) {
+        ContentValues values = new ContentValues();
         try {
-            ContentValues values = new ContentValues();
-
             values.put("STORE_ID", Integer.parseInt(data.getStore_id()));
             values.put("CATEGORY_ID", Integer.parseInt(category_id));
             values.put("SKU_ID", Integer.parseInt(data.getSku_id()));
@@ -1493,7 +1508,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
                     Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
-
                     cd.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
                     cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY_ID")));
                     cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
@@ -1503,7 +1517,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setIn_stock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IN_STOCK_VALUE")));
                     cd.setPromo_announcer(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ANNOUNCER_VALUE")));
                     cd.setRunning_pos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("RUNNING_POS_VALUE")));
-
                     list.add(cd);
                     dbcursor.moveToNext();
                 }
@@ -1517,11 +1530,11 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
 
+
     public void InsertPromoSkuData(ArrayList<Promo_Compliance_DataGetterSetter> promoSkuListData, String category_id) {
         ContentValues values = new ContentValues();
         try {
             db.beginTransaction();
-
             for (int i = 0; i < promoSkuListData.size(); i++) {
                 Promo_Compliance_DataGetterSetter data = promoSkuListData.get(i);
 
@@ -1581,7 +1594,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     //Gagan End Method
 
-    //Non Working data
+//Non Working data
 
     public void insertNonWorkingData(NonWorkingReasonGetterSetter data) {
         db.delete("NON_WORKING_REASON", null, null);
@@ -1664,8 +1677,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
 
         try {
+
             dbcursor = db.rawQuery("SELECT * from JOURNEY_PLAN  " +
-                    "where VISIT_DATE ='" + date + "' AND STORE_ID='" + store_id + "'", null);
+                    "where VISIT_DATE ='" + date + "' AND STORE_ID'="+ store_id +"'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -2096,5 +2110,460 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
     //Gagan end new code 1
+
+         public void InsertStockDialog(AdditionalDialogGetterSetter data) {
+        ContentValues values = new ContentValues();
+
+        try {
+
+
+            values.put(CommonString.KEY_STORE_ID, data.getStore_id());
+            values.put(CommonString.KEY_BRAND, data.getBrand());
+            values.put(CommonString.KEY_BRAND_ID, data.getBrand_id());
+
+           // values.put(CommonString.KEY_DISPLAY_ID, data.getDisplay_id());
+
+            values.put(CommonString.KEY_QUANTITY, data.getQuantity());
+            values.put(CommonString.KEY_SKU_ID, data.getSku_id());
+            values.put(CommonString.KEY_SKUNAME, data.getSku_name());
+           // values.put(CommonString.UNIQUE_KEY_ID, data.getUnique_id());
+
+           // values.put(CommonString.KEY_CATEGORY_ID, data.getCategory_id());
+
+           // values.put(CommonString.KEY_PROCESS_ID, data.getProcess_id());
+
+
+            db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG, null, values);
+
+
+        } catch (Exception ex) {
+            Log.d("Database Exception ", ex.getMessage());
+        }
+
+    }
+
+    public ArrayList<AdditionalDialogGetterSetter> getDialogStock(String keyid) {
+        Cursor cursordata = null;
+        ArrayList<AdditionalDialogGetterSetter> productData = new ArrayList<AdditionalDialogGetterSetter>();
+
+        try {
+
+            cursordata = db.rawQuery("SELECT * FROM STOCK_DIALOG WHERE COMMON_ID = '"+keyid + "'", null);
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    AdditionalDialogGetterSetter sb = new AdditionalDialogGetterSetter();
+
+                    sb.setKEY_ID(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow(CommonString.KEY_ID)));
+
+                    sb.setBrand_id(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow(CommonString.KEY_BRAND_ID)));
+
+                    sb.setBrand(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow(CommonString.KEY_BRAND)));
+
+
+                    sb.setQuantity(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow(CommonString.KEY_QUANTITY)));
+
+                    sb.setSku_id(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow(CommonString.KEY_SKU_ID)));
+
+                   sb.setSku_name(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow(CommonString.KEY_SKUNAME)));
+
+
+                    productData.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+        return productData;
+
+    }
+
+    public void deletedialogStockEntry(String id) {
+        try {
+            db.delete(CommonString.TABLE_INSERT_STOCK_DIALOG, "Id" + "='" + id + "'", null);
+        } catch (Exception e) {
+            System.out.println("" + e);
+        }
+
+    }
+
+    public void deleteStockEntry(String id) {
+        try {
+            db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL, "KEY_ID" + "='" + id + "'", null);
+        } catch (Exception e) {
+            System.out.println("" + e);
+        }
+
+    }
+
+
+
+
+    public ArrayList<BrandMasterGetterSetter> getBrandMasterData(String store_id) {
+        Cursor cursordata = null;
+        ArrayList<BrandMasterGetterSetter> Data = new ArrayList<BrandMasterGetterSetter>();
+
+        try {
+
+            cursordata = db.rawQuery("SELECT * FROM BRAND_MASTER ", null);
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    BrandMasterGetterSetter sb = new BrandMasterGetterSetter();
+
+                    sb.setBRAND_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("BRAND_ID")));
+
+                    sb.setBRAND(cursordata.getString(cursordata.getColumnIndexOrThrow("BRAND")));
+
+                    sb.setSUB_CATEGORY_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
+
+
+
+                    sb.setCOMPANY_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("COMPANY_ID")));
+
+                    sb.setBRAND_SEQUENCE(cursordata.getString(cursordata.getColumnIndexOrThrow("BRAND_SEQUENCE")));
+
+                    Data.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+        return Data;
+
+    }
+
+
+
+    public ArrayList<SkuMasterGetterSetter> getSKUMasterData(String store_id) {
+        Cursor cursordata = null;
+        ArrayList<SkuMasterGetterSetter> Data = new ArrayList<SkuMasterGetterSetter>();
+
+        try {
+
+            cursordata = db.rawQuery("SELECT * FROM SKU_MASTER ", null);
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    SkuMasterGetterSetter sb = new SkuMasterGetterSetter();
+
+                    sb.setSKU_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("SKU_ID")));
+
+                    sb.setSKU(cursordata.getString(cursordata.getColumnIndexOrThrow("SKU")));
+
+                    sb.setBRAND_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("BRAND_ID")));
+
+
+
+                    sb.setMRP(cursordata.getString(cursordata.getColumnIndexOrThrow("MRP")));
+
+                    sb.setSKU_SEQUENCE(cursordata.getString(cursordata.getColumnIndexOrThrow("SKU_SEQUENCE")));
+
+                    Data.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+        return Data;
+
+    }
+
+    public void InsertAdditionalData(AddittionalGetterSetter data,ArrayList<AdditionalDialogGetterSetter> dialog) {
+        ContentValues values = new ContentValues();
+        ContentValues values1 = new ContentValues();
+        try {
+
+
+            values.put("Store_Id", data.getStore_id());
+            values.put("brand_name", data.getBrand());
+            values.put("brand_id", data.getBrand_id());
+            values.put("image_url", data.getImage());
+            values.put("sku_id", data.getSku_id());
+            values.put("sku_name", data.getSku());
+            values.put("toggle_value", data.getBtn_toogle());
+
+           long key_id = db.insert(CommonString.TABLE_INSERT_STOCK_ADDITIONAL, null, values);
+
+            for(int i=0;i<dialog.size();i++)
+            {
+                values1.put(CommonString.KEY_Common_ID, key_id);
+                values1.put(CommonString.KEY_STORE_ID, dialog.get(i).getStore_id());
+                values1.put(CommonString.KEY_BRAND, dialog.get(i).getBrand());
+                values1.put(CommonString.KEY_BRAND_ID, dialog.get(i).getBrand_id());
+                values1.put(CommonString.KEY_QUANTITY, dialog.get(i).getQuantity());
+                values1.put(CommonString.KEY_SKU_ID, dialog.get(i).getSku_id());
+                values1.put(CommonString.KEY_SKUNAME, dialog.get(i).getSku_name());
+
+
+                db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG, null, values1);
+
+
+
+
+
+            }
+
+
+
+
+
+
+        } catch (Exception ex) {
+            Log.d("Database Exception ", ex.getMessage());
+        }
+
+    }
+
+
+    public ArrayList<AddittionalGetterSetter> getAdditionalStock(String store_id) {
+        Cursor cursordata = null;
+        ArrayList<AddittionalGetterSetter> productData = new ArrayList<AddittionalGetterSetter>();
+
+        try {
+
+            cursordata = db.rawQuery("SELECT * FROM Stock_Additional_visibility WHERE Store_Id = '"+store_id + "'", null);
+
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    AddittionalGetterSetter sb = new AddittionalGetterSetter();
+
+
+                    sb.setKey_id(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("KEY_ID")));
+
+
+                    sb.setStore_id(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("Store_Id")));
+
+                    sb.setBrand_id(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("brand_id")));
+
+                    sb.setBrand(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("brand_name")));
+
+
+                    sb.setImage(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("image_url")));
+
+                    sb.setSku_id(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("sku_id")));
+
+                    sb.setSku(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("sku_name")));
+                    sb.setBtn_toogle(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("toggle_value")));
+
+
+                    productData.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+        return productData;
+
+    }
+    public void updateStoreStatus(String storeid, String visitdate,
+                                            String status) {
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put(CommonString.KEY_CHECKOUT_STATUS, status);
+
+            db.update("JOURNEY_PLAN", values, CommonString.KEY_STORE_ID + "='" + storeid + "' AND " + CommonString.KEY_VISIT_DATE + "='" + visitdate + "'", null);
+        } catch (Exception e) {
+
+
+        }
+    }
+
+    public void InsertT2PData(ArrayList<T2PGetterSetter> data, String store_id, String category_id) {
+        db.delete(CommonString.TABLE_INSERT_T2P_COMPLIANCE, CommonString.KEY_STORE_ID + "='" + store_id + "' AND " + CommonString.KEY_CATEGORY_ID + "='" + category_id + "'", null);
+
+        long l = 0;
+
+        ContentValues values = new ContentValues();
+        ContentValues values1 = new ContentValues();
+        ContentValues values2 = new ContentValues();
+        try {
+            for (int i = 0; i < data.size(); i++) {
+
+                values.put(CommonString.KEY_STORE_ID, store_id);
+                values.put(CommonString.KEY_CATEGORY_ID, category_id);
+                values.put(CommonString.KEY_DISPLAY_ID, data.get(i).getDisplay_id());
+                values.put(CommonString.KEY_BRAND_ID, data.get(i).getBrand_id());
+                values.put(CommonString.KEY_BRAND, data.get(i).getBrand());
+                values.put(CommonString.KEY_DISPLAY, data.get(i).getDisplay());
+                values.put(CommonString.KEY_IMAGE, data.get(i).getImage());
+                values.put(CommonString.KEY_REMARK, data.get(i).getRemark());
+                values.put(CommonString.KEY_PRESENT, data.get(i).isPresent());
+
+                l = db.insert(CommonString.TABLE_INSERT_T2P_COMPLIANCE, null, values);
+
+                ArrayList<GapsChecklistGetterSetter> gaps = data.get(i).getGapsChecklist();
+
+                for (int j = 0; j < gaps.size(); j++) {
+
+                    values1.put(CommonString.KEY_COMMON_ID, l);
+                    values1.put(CommonString.KEY_CHECKLIST_ID, gaps.get(j).getChecklist_id());
+                    values1.put(CommonString.KEY_DISPLAY_ID, gaps.get(j).getDisplay_id());
+                    values1.put(CommonString.KEY_CHECKLIST, gaps.get(j).getChecklist());
+                    values1.put(CommonString.KEY_PRESENT, gaps.get(j).isPresent());
+
+                    db.insert(CommonString.TABLE_INSERT_T2P_GAPS, null, values1);
+
+                }
+
+                ArrayList<SkuGetterSetter> sku = data.get(i).getSkulist();
+
+                for (int k = 0; k < sku.size(); k++) {
+
+                    values2.put(CommonString.KEY_COMMON_ID, l);
+                    values2.put(CommonString.KEY_SKU_ID, sku.get(k).getSKU_ID());
+                    values2.put(CommonString.KEY_BRAND_ID, sku.get(k).getBRAND_ID());
+                    values2.put(CommonString.KEY_STOCK, sku.get(k).getSTOCK());
+                    values2.put(CommonString.KEY_BRAND, sku.get(k).getBRAND());
+                    values2.put(CommonString.KEY_SKU, sku.get(k).getSKU());
+
+                    db.insert(CommonString.TABLE_INSERT_T2P_SKU, null, values2);
+
+                }
+
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " in T2P_COMPLIANCE " + ex.toString());
+        }
+    }
+
+    // get T2P Compliance data
+    public ArrayList<T2PGetterSetter> getT2pComplianceData(String store_id, String common_id) {
+
+        ArrayList<T2PGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
+                    CommonString.KEY_STORE_ID + "='" + store_id + "' AND " +
+                    CommonString.KEY_CATEGORY_ID + "='" + common_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    T2PGetterSetter tp = new T2PGetterSetter();
+
+                    tp.setKey_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_ID)));
+                    tp.setDisplay_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_DISPLAY_ID)));
+                    tp.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND_ID)));
+                    tp.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND)));
+                    tp.setDisplay(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_DISPLAY)));
+                    tp.setImage(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE)));
+                    tp.setRemark(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_REMARK)));
+                    tp.setPresent((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PRESENT)).equalsIgnoreCase("1")));
+
+                    list.add(tp);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            return list;
+        }
+        return list;
+    }
+
+    // get Gaps T2P data
+    public ArrayList<GapsChecklistGetterSetter> getGapsData(String common_id) {
+
+        ArrayList<GapsChecklistGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_GAPS + " where " +
+                    CommonString.KEY_COMMON_ID + "='" + common_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    GapsChecklistGetterSetter gp = new GapsChecklistGetterSetter();
+
+                    gp.setDisplay_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_DISPLAY_ID)));
+                    gp.setChecklist_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CHECKLIST_ID)));
+                    gp.setChecklist(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CHECKLIST)));
+                    gp.setPresent((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PRESENT)).equalsIgnoreCase("1")));
+
+                    list.add(gp);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            return list;
+        }
+        return list;
+    }
+
+    // get T2P SKU data
+    public ArrayList<SkuGetterSetter> getT2PSKUData(String common_id) {
+
+        ArrayList<SkuGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_SKU + " where " +
+                    CommonString.KEY_COMMON_ID + "='" + common_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    SkuGetterSetter gp = new SkuGetterSetter();
+
+                    gp.setSKU_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_SKU_ID)));
+                    gp.setBRAND_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND_ID)));
+                    gp.setSTOCK(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_STOCK)));
+                    gp.setBRAND(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND)));
+                    gp.setSKU(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_SKU)));
+
+                    list.add(gp);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            return list;
+        }
+        return list;
+    }
 
 }

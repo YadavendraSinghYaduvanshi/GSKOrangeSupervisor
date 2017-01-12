@@ -175,6 +175,11 @@ public class XMLHandlers {
                         jcpGetterSetter.setGEO_TAG(xpp.nextText());
                     }
 
+                    if (xpp.getName().equals("CHANNEL_ID")) {
+                        jcpGetterSetter.setCHANNEL_ID(xpp.nextText());
+                    }
+
+
                 }
                 xpp.next();
             }

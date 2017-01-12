@@ -130,24 +130,24 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/closed"/>
+                        android:text="@string/cancel"/>
 
                 </LinearLayout>
 
 
             </RelativeLayout>
 
-            <android.support.v7.widget.RecyclerView
+           <!-- <android.support.v7.widget.RecyclerView
                 android:background="@color/grey_background"
                 android:id="@+id/rec_sku"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>-->
 
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
-   <!-- <android.support.v7.widget.CardView
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -156,25 +156,25 @@
         card_view:cardCornerRadius="20dp"
 
         >
-    <LinearLayout
-        android:id="@+id/list_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="95"
-        android:visibility="gone"
-        >
-
-        <ListView
-            android:id="@+id/lv"
+        <LinearLayout
+            android:id="@+id/list_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:cacheColorHint="#00000000"
+            android:layout_weight="95"
+            android:visibility="gone"
+            >
 
-            android:choiceMode="singleChoice"
-            android:divider="#ff9933"
-            android:dividerHeight="2dp"
-            android:fastScrollEnabled="true"
-            android:smoothScrollbar="true"></ListView>
-    </LinearLayout>
-    </android.support.v7.widget.CardView>-->
+            <ListView
+                android:id="@+id/lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="#00000000"
+
+                android:choiceMode="singleChoice"
+                android:divider="#ff9933"
+                android:dividerHeight="2dp"
+                android:fastScrollEnabled="true"
+                android:smoothScrollbar="true"></ListView>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 </LinearLayout>
