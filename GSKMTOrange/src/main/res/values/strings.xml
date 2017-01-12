@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">GSKMTOrange</string>
+    <string name="app_name">GSK MT Orange</string>
+    <string name="main_menu_activity_name">GSK Orange Stores</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -9,9 +10,9 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">E Mail</string>
-    <string name="prompt_userid">User Id</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Login</string>
+    <string name="prompt_userid">Username/Kullanıcı Adı</string>
+    <string name="prompt_password">Password/Şifre</string>
+    <string name="action_sign_in">Login/Giriş Yap</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -34,9 +35,6 @@
     <string name="select">Select</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-
 
     <string name="select_language">Please select language</string>
     <string name="title_activity_select_language">SelectLanguageActivity</string>
@@ -83,6 +81,7 @@
     <string name="stock_facing_stock">Stock</string>
     <string name="stock_facing_faceup">Facing</string>
     <string name="stock_facing_sos_target">SOS Target</string>
+    <string name="stock_facing_sos">SOS</string>
 
     <!--Gagan end code-->
 
@@ -99,8 +98,13 @@
 
     <string name="title_store_list_checkout_current">Please checkout from current store</string>
     <string name="title_store_list_checkout_Already_filled">Data already filled</string>
+
     <string name="title_store_list_download_data">Please Download Data First</string>
+
     <string name="enter_the_values">Enter the values</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string name="title_activity_upload">Upload Data</string>
     <string name="no_data_for_upload">No Data For Upload</string>
@@ -118,6 +122,18 @@
     <string name="promo_compliance_runningPOS">Running on POS</string>
     <string name="promo_compliance_add">Add</string>
 
+    <string name="category_performance_period">Period</string>
+    <string name="category_performance_msl_availability">MSL Availability</string>
+    <string name="category_performance_sos">SOS</string>
+    <string name="category_performance_t2p">T2P</string>
+    <string name="category_performance_promo">Promo</string>
+    <string name="category_performance_oss">OSS</string>
+
+    <string name="category_performance_ltm">LTM</string>
+    <string name="category_performance_mtd">MTD</string>
+    <string name="category_performance_lsv">LSV</string>
+
+    <string name="title_activity_store_wise_performance">Store wise Performance</string>
     <!--Gagan end new code 1-->
 
 
@@ -125,6 +141,25 @@
     <string name="Display">Display</string>
     <string name="Photo">Photo</string>
     <string name="title_activity_Additional_visibility">Additional Visibility</string>
-    <string name="title_activity_Non_Work">Non-Work Reason</string>
+    <string name="title_activity_Non_Work">Non Working Reason</string>
+    <string name="closed">Close</string>
+
+    <string name="click_image">Please click image</string>
+    <string name="fill_sku_data">Please fill SKU data</string>
+    <string name="fill_gaps_data">Please fill GAP data</string>
+    <string name="data_will_be_lost">Want to proceed usaved data will be deleted</string>
+
+    <string name="download_data">Downloading Data</string>
+    <string name="store_visited">Store Visited</string>
+    <string name="store_image">Click Store Front Image</string>
+
+    <string name="title_activity_store_image">Store Front Image</string>
+    <string name="reason">Reason</string>
+    <string name="select_reason">Select Reason</string>
+    <string name="daily_activity_menu">Daily Data Menu</string>
+
+    <!--Gagan start new code 2-->
+    <string name="stock_facing_planogram_dialog_title">Planogram</string>
+    <!--Gagan end new code 2-->
 
 </resources>

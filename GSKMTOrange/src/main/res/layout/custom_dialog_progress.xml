@@ -28,7 +28,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="15dp"
                 android:paddingLeft="5dp"
-                android:text="Downloading Data"
+                android:text="@string/download_data"
                 android:textSize="@dimen/text_size_normal"
                 android:paddingBottom="20dp"
                 android:textColor="@color/white"

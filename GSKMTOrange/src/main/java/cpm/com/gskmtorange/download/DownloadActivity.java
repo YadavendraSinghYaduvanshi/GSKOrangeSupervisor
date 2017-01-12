@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
@@ -35,10 +38,12 @@ import cpm.com.gskmtorange.xmlGetterSetter.DisplayMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
@@ -46,15 +51,10 @@ import cpm.com.gskmtorange.xmlHandlers.XMLHandlers;
 
 public class DownloadActivity extends AppCompatActivity {
 
-    private Dialog dialog;
-    private ProgressBar pb;
-    private TextView percentage, message;
     Data data;
     int eventType;
     GSKOrangeDB db;
-    private SharedPreferences preferences = null;
     String userId, culture_id;
-
     JourneyPlanGetterSetter jcpgettersetter;
     SkuMasterGetterSetter skumastergettersetter;
     BrandMasterGetterSetter brandMasterGetterSetter;
@@ -68,6 +68,12 @@ public class DownloadActivity extends AppCompatActivity {
     NonWorkingReasonGetterSetter nonWorkingReasonGetterSetter;
     MappingPromotionGetterSetter mappingPromotionGetterSetter;
     MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter mapping_additional_promotion_masterGetterSetter;
+    STORE_PERFORMANCE_MasterGetterSetter store_performance_masterGetterSetter;
+    MAPPING_PLANOGRAM_MasterGetterSetter mapping_planogram_masterGetterSetter;
+    private Dialog dialog;
+    private ProgressBar pb;
+    private TextView percentage, message;
+    private SharedPreferences preferences = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +83,30 @@ public class DownloadActivity extends AppCompatActivity {
         db = new GSKOrangeDB(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
         culture_id = preferences.getString(CommonString.KEY_CULTURE_ID, "");
         new UploadTask(DownloadActivity.this).execute();
+    }
+
+    public void showAlert(String str) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(str).setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                       /* Intent i = new Intent(activity, StorelistActivity.class);
+                        activity.startActivity(i);
+                        activity.finish();*/
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     class Data {
@@ -116,7 +143,7 @@ public class DownloadActivity extends AppCompatActivity {
                 data = new Data();
 
                 data.value = 10;
-                data.name = "JCP Data Downloading";
+                data.name = "JCP "+getResources().getString(R.string.download_data);
                 publishProgress(data);
 
                 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -135,7 +162,7 @@ public class DownloadActivity extends AppCompatActivity {
                 HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                Object result = (Object) envelope.getResponse();
+                Object result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     //InputStream stream = new ByteArrayInputStream(result.toString().getBytes("UTF-8"));
@@ -157,7 +184,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 10;
-                    data.name = "JCP Data Downloading";
+                    data.name = "JCP "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -175,7 +202,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -193,7 +220,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 20;
-                    data.name = "SKU_MASTER Data Download";
+                    data.name = "SKU_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -211,7 +238,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -229,7 +256,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 30;
-                    data.name = "BRAND_MASTER Data Download";
+                    data.name = "BRAND_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -247,7 +274,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -264,7 +291,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "SUB_CATEGORY_MASTER";
                     }
                     data.value = 40;
-                    data.name = "SUB_CATEGORY_MASTER Data Download";
+                    data.name = "SUB_CATEGORY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -282,7 +309,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -299,7 +326,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "CATEGORY_MASTER";
                     }
                     data.value = 50;
-                    data.name = "CATEGORY_MASTER Data Download";
+                    data.name = "CATEGORY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -317,7 +344,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -334,7 +361,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "DISPLAY_MASTER";
                     }
                     data.value = 60;
-                    data.name = "DISPLAY_MASTER Data Download";
+                    data.name = "DISPLAY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -352,7 +379,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -369,7 +396,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "MAPPING_STOCK";
                     }
                     data.value = 80;
-                    data.name = "MAPPING_STOCK Data Download";
+                    data.name = "MAPPING_STOCK "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -387,7 +414,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -404,7 +431,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_T2P";
                     }
                     data.value = 100;
-                    data.name = "MAPPING_T2P Data Download";
+                    data.name = "MAPPING_T2P "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -421,7 +448,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -438,7 +465,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "DISPLAY_CHECKLIST_MASTER";
                     }
                     data.value = 100;
-                    data.name = "DISPLAY_CHECKLIST_MASTER Data Download";
+                    data.name = "DISPLAY_CHECKLIST_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -455,7 +482,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -472,7 +499,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_DISPLAY_CHECKLIST";
                     }
                     data.value = 100;
-                    data.name = "MAPPING_DISPLAY_CHECKLIST Data Download";
+                    data.name = "MAPPING_DISPLAY_CHECKLIST "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -490,7 +517,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -507,7 +534,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "NON_WORKING_REASON";
                     }
                     data.value = 100;
-                    data.name = "NON_WORKING_REASON Data Download";
+                    data.name = "NON_WORKING_REASON "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -525,7 +552,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -542,7 +569,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_PROMOTION";
                     }*/
                     data.value = 100;
-                    data.name = "MAPPING_PROMOTION Data Download";
+                    data.name = "MAPPING_PROMOTION "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -562,7 +589,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -580,9 +607,82 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_ADDITIONAL_PROMOTION";
                     }*/
                     data.value = 100;
-                    data.name = "MAPPING_ADDITIONAL_PROMOTION Data Download";
+                    data.name = "MAPPING_ADDITIONAL_PROMOTION "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
+
+
+                //STORE_PERFORMANCE
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "STORE_PERFORMANCE");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    store_performance_masterGetterSetter = XMLHandlers.STORE_PERFORMANCEXMLHandler(xpp, eventType);
+
+                    if (store_performance_masterGetterSetter.getSTORE_ID().size() > 0) {
+                        String table_store_performace = store_performance_masterGetterSetter.getTable_STORE_PERFORMANCE();
+                        if (table_store_performace != null) {
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setStorePerformance(table_store_performace);
+                        }
+                    } else {
+                        //return "STORE_PERFORMANCE";
+                    }
+                    data.value = 100;
+                    data.name = "STORE_PERFORMANCE Data Download";
+                }
+                publishProgress(data);
+
+
+                //MAPPING_PLANOGRAM
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_PLANOGRAM");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mapping_planogram_masterGetterSetter = XMLHandlers.MAPPING_PLANOGRAM_XMLHandler(xpp, eventType);
+
+                    if (mapping_planogram_masterGetterSetter.getKEYACCOUNT_ID().size() > 0) {
+                        String table_mapping_planogram = mapping_planogram_masterGetterSetter.getTable_MAPPING_PLANOGRAM();
+                        if (table_mapping_planogram != null) {
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setMappingPlanogram(table_mapping_planogram);
+                        }
+                    } else {
+                        //return "MAPPING_PLANOGRAM";
+                    }
+                    data.value = 100;
+                    data.name = "MAPPING_PLANOGRAM Data Download";
+                }
+                publishProgress(data);
+
 
                 //Gagan end code
 
@@ -604,6 +704,9 @@ public class DownloadActivity extends AppCompatActivity {
                 db.insertNonWorkingData(nonWorkingReasonGetterSetter);
 
                 db.insertNonWorkingData(nonWorkingReasonGetterSetter);
+
+                db.InsertSTORE_PERFORMANCE(store_performance_masterGetterSetter);
+                db.InsertMAPPING_PLANOGRAM(mapping_planogram_masterGetterSetter);
 
             } catch (MalformedURLException e) {
                 /*final AlertMessage message = new AlertMessage(
@@ -681,4 +784,39 @@ public class DownloadActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+    }
+
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
+
 }

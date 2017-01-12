@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -33,6 +35,7 @@ import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
@@ -68,7 +71,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         date = preferences.getString(CommonString.KEY_DATE, null);
         imageView = (ImageView) findViewById(R.id.img_main);
 
@@ -120,6 +127,13 @@ public class MainActivity extends AppCompatActivity
         navigationView.addHeaderView(headerView);
 
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     @Override
@@ -266,9 +280,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_setting) {
 
-            startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
+            //startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
 
-        } else if (id == R.id.nav_export) {
+        } /*else if (id == R.id.nav_export) {
 
             AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
             builder1.setMessage("Are you sure you want to take the backup of your data")
@@ -277,12 +291,12 @@ public class MainActivity extends AppCompatActivity
                         @SuppressWarnings("resource")
                         public void onClick(DialogInterface dialog, int id) {
                             try {
-                                /*File file = new File(Environment
+                                *//*File file = new File(Environment
                                         .getExternalStorageDirectory(),
                                         "capital_backup");
                                 if (!file.isDirectory()) {
                                     file.mkdir();
-                                }*/
+                                }*//*
 
                                 File sd = Environment.getExternalStorageDirectory();
                                 File data = Environment.getDataDirectory();
@@ -325,7 +339,7 @@ public class MainActivity extends AppCompatActivity
                     });
             AlertDialog alert1 = builder1.create();
             alert1.show();
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -407,6 +421,33 @@ public class MainActivity extends AppCompatActivity
             error_msg = getResources().getString(R.string.no_data_for_upload);
 
         return flag;
+    }
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
     }
 
 }

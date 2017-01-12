@@ -48,6 +48,7 @@
                     android:layout_height="wrap_content"
                     android:textOn="Yes"
                     android:textOff="No"
+                    android:background="@drawable/toggle_selector_background"
                     android:layout_centerInParent="true"/>
 
             </RelativeLayout>

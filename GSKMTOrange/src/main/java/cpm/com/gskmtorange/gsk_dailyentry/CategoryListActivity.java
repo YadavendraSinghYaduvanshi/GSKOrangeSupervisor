@@ -3,6 +3,8 @@ package cpm.com.gskmtorange.gsk_dailyentry;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
@@ -37,9 +40,8 @@ public class CategoryListActivity extends AppCompatActivity {
     CategoryListAdapter adapter;
 
     GSKOrangeDB db;
-
-    private SharedPreferences preferences;
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class CategoryListActivity extends AppCompatActivity {
         db.open();
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
         date = preferences.getString(CommonString.KEY_DATE, null);
@@ -83,6 +88,8 @@ public class CategoryListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         categoryList = new ArrayList<>();
 
@@ -93,10 +100,36 @@ public class CategoryListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapter.MyViewHolder> {
-        private LayoutInflater inflator;
         List<CategoryGetterSetter> list = Collections.emptyList();
         Context context;
+        private LayoutInflater inflator;
 
         public CategoryListAdapter(CategoryListActivity context, List<CategoryGetterSetter> list) {
             inflator = LayoutInflater.from(context);
@@ -123,19 +156,19 @@ public class CategoryListActivity extends AppCompatActivity {
                         && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
                         && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
 
-                    holder.categoryIcon.setImageResource(R.drawable.ohc_done);
+                    holder.categoryIcon.setImageResource(R.mipmap.oralcare_tick);
                 } else {
-                    holder.categoryIcon.setImageResource(R.drawable.ohc);
+                    holder.categoryIcon.setImageResource(R.mipmap.oral_care);
                 }
             } else if (categoryData.getCategory().equalsIgnoreCase("Wellness")) {
                 if (db.checkMsl_AvailabilityData(store_id, categoryData.getCategory_id())
                         && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
                         && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
 
-                    holder.categoryIcon.setImageResource(R.drawable.pdr_done);
+                    holder.categoryIcon.setImageResource(R.mipmap.wellness_tick);
                 } else {
 
-                    holder.categoryIcon.setImageResource(R.drawable.pdr);
+                    holder.categoryIcon.setImageResource(R.mipmap.wellness);
                 }
             } else if (categoryData.getCategory().equalsIgnoreCase("Nutritionals")) {
 
@@ -143,9 +176,9 @@ public class CategoryListActivity extends AppCompatActivity {
                         && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
                         && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
 
-                    holder.categoryIcon.setImageResource(R.drawable.hfd_done);
+                    holder.categoryIcon.setImageResource(R.mipmap.nutritionals_tick);
                 } else {
-                    holder.categoryIcon.setImageResource(R.drawable.hfd);
+                    holder.categoryIcon.setImageResource(R.mipmap.nutritionals);
                 }
             }
 
@@ -205,4 +238,34 @@ public class CategoryListActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
+
 }

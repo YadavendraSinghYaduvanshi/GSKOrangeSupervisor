@@ -3,6 +3,8 @@ package cpm.com.gskmtorange.upload;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -38,38 +41,38 @@ import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
 import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
 
 public class UploadActivity extends AppCompatActivity {
 
-    private Dialog dialog;
-    private ProgressBar pb;
-    private TextView percentage, message;
     GSKOrangeDB db;
     ArrayList<CoverageBean> coverageList;
-
-    private FailureGetterSetter failureGetterSetter = null;
-    private SharedPreferences preferences;
     String date, userId, app_version;
-
     StoreBean storeData;
     String datacheck = "";
     String[] words;
     String validity;
     int mid;
-    private int factor, k = 0;
     String errormsg = "", Path;
-
     Data data;
-
     ArrayList<MSL_AvailabilityGetterSetter> msl_availabilityList;
     ArrayList<Stock_FacingGetterSetter> stock_facingHeaderList, stock_facingChildList;
     ArrayList<Promo_Compliance_DataGetterSetter> promotionSkuList, additionalPromotionList;
+    ArrayList<T2PGetterSetter> t2PGetterSetters;
     ArrayList<AddittionalGetterSetter>  additionalVisibilityList;
     ArrayList<AdditionalDialogGetterSetter> additionalVisibilitySkuList;
+    private Dialog dialog;
+    private ProgressBar pb;
+    private TextView percentage, message;
+    private FailureGetterSetter failureGetterSetter = null;
+    private SharedPreferences preferences;
+    private int factor, k = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,9 @@ public class UploadActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         date = preferences.getString(CommonString.KEY_DATE, null);
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
         app_version = preferences.getString(CommonString.KEY_VERSION, null);
@@ -90,6 +96,85 @@ public class UploadActivity extends AppCompatActivity {
 
         //start upload
         new UploadTask(this).execute();
+    }
+
+    public String UploadImage(String path, String folder_name) throws Exception {
+        errormsg = "";
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(Path + path, o);
+
+        // The new size we want to scale to
+        final int REQUIRED_SIZE = 1639;
+
+        // Find the correct scale value. It should be the power of 2.
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+
+        while (true) {
+            if (width_tmp < REQUIRED_SIZE && height_tmp < REQUIRED_SIZE)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        // Decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        Bitmap bitmap = BitmapFactory.decodeFile(Path + path, o2);
+
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bao);
+        byte[] ba = bao.toByteArray();
+        String ba1 = Base64.encodeBytes(ba);
+
+        SoapObject request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_IMAGE);
+
+        String[] split = path.split("/");
+        String path1 = split[split.length - 1];
+
+        request.addProperty("img", ba1);
+        request.addProperty("name", path1);
+        request.addProperty("FolderName", folder_name);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(request);
+
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
+        androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_IMAGE, envelope);
+
+        Object result = envelope.getResponse();
+
+        if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+            if (result.toString().equalsIgnoreCase(CommonString.KEY_FALSE)) {
+                return CommonString.KEY_FALSE;
+            }
+
+            SAXParserFactory saxPF = SAXParserFactory.newInstance();
+            SAXParser saxP = saxPF.newSAXParser();
+            XMLReader xmlR = saxP.getXMLReader();
+
+            // for failure
+            FailureXMLHandler failureXMLHandler = new FailureXMLHandler();
+            xmlR.setContentHandler(failureXMLHandler);
+
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(result.toString()));
+            xmlR.parse(is);
+
+            failureGetterSetter = failureXMLHandler.getFailureGetterSetter();
+
+            if (failureGetterSetter.getStatus().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                errormsg = failureGetterSetter.getErrorMsg();
+                return CommonString.KEY_FAILURE;
+            }
+        } else {
+            new File(Path + path).delete();
+        }
+
+        return result.toString();
     }
 
     class Data {
@@ -180,7 +265,7 @@ public class UploadActivity extends AppCompatActivity {
                         HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
                         androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_STORE_COVERAGE, envelope);
 
-                        Object result = (Object) envelope.getResponse();
+                        Object result = envelope.getResponse();
 
                         datacheck = result.toString();
                         words = datacheck.split("\\;");
@@ -212,6 +297,7 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[CATEGORY_ID]" + Integer.parseInt(msl_availabilityList.get(j).getCategory_id()) + "[/CATEGORY_ID]"
                                             + "[BRAND_ID]" + Integer.parseInt(msl_availabilityList.get(j).getBrand_id()) + "[/BRAND_ID]"
                                             + "[SKU_ID]" + Integer.parseInt(msl_availabilityList.get(j).getSku_id()) + "[/SKU_ID]"
+                                            + "[MBQ]" + Integer.parseInt(msl_availabilityList.get(j).getMbq()) + "[/MBQ]"
                                             //+ "[SKU]" + msl_availabilityList.get(j).getSku() + "[/SKU]"
                                             + "[TOGGLE_VALUE]" + Integer.parseInt(msl_availabilityList.get(j).getToggleValue()) + "[/TOGGLE_VALUE]"
                                             + "[/MSL_AVAILABILITY_DATA]";
@@ -235,7 +321,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -304,7 +390,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -363,7 +449,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -422,7 +508,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -439,6 +525,7 @@ public class UploadActivity extends AppCompatActivity {
                         data.value = 35;
                         data.name = "Additional Promotion Data Uploading";
                         publishProgress(data);
+
 
                     ////ashish open
 
@@ -531,7 +618,7 @@ public class UploadActivity extends AppCompatActivity {
                             androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
 
-                            result = (Object) envelope.getResponse();
+                            result = envelope.getResponse();
 
                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
@@ -545,17 +632,154 @@ public class UploadActivity extends AppCompatActivity {
                                 return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
                             }
                         }
+
+
                         data.value = 35;
                         data.name = "Additional Visibility Data";
                         publishProgress(data);
 
-
-
                         /////ashish close
 
+  //T2p Upload Data
 
+                        String t2p_data_xml = "";
+                        onXML = "";
+                        t2PGetterSetters = db.getT2pComplianceData(coverageList.get(i).getStoreId(), null);
 
+                        if (t2PGetterSetters.size() > 0) {
+                            for (int i1 = 0; i1 < t2PGetterSetters.size(); i1++) {
 
+                                ArrayList<GapsChecklistGetterSetter> gapsList = db.getGapsData(t2PGetterSetters.get(i).getKey_id());
+                                ArrayList<SkuGetterSetter> skuList = db.getT2PSKUData(t2PGetterSetters.get(i).getKey_id());
+
+                                String gaps_xml = "";
+                                String gaps_child;
+
+                                for (int l = 0; l < gapsList.size(); l++) {
+
+                                    String present = "";
+                                    if (gapsList.get(l).isPresent()) {
+                                        present = "1";
+                                    } else {
+                                        present = "0";
+                                    }
+
+                                    gaps_child = "[GAPS]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
+                                            + "[CHECK_LIST_ID]"
+                                            + gapsList.get(l).getChecklist_id()
+                                            + "[/CHECK_LIST_ID]"
+                                            + "[DISPLAY_ID]"
+                                            + gapsList.get(l).getDisplay_id()
+                                            + "[/DISPLAY_ID]"
+                                            + "[PRESENT]"
+                                            + present
+                                            + "[/PRESENT]"
+                                            + "[COMMON_ID]"
+                                            + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
+                                            + "[/COMMON_ID]"
+                                            + "[/GAPS]";
+                                    gaps_xml = gaps_xml + gaps_child;
+                                }
+
+                                String sku_xml = "";
+                                String sku_child;
+
+                                for (int k = 0; k < skuList.size(); k++) {
+
+                                    sku_child = "[SKU]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
+                                            + "[SKU_ID]"
+                                            + skuList.get(k).getSKU_ID()
+                                            + "[/SKU_ID]"
+                                            + "[BRAND_ID]"
+                                            + skuList.get(k).getBRAND_ID()
+                                            + "[/BRAND_ID]"
+                                            + "[STOCK]"
+                                            + skuList.get(k).getSTOCK()
+                                            + "[/STOCK]"
+                                            + "[COMMON_ID]"
+                                            + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
+                                            + "[/COMMON_ID]"
+                                            + "[/SKU]";
+                                    sku_xml = sku_xml + sku_child;
+                                }
+
+                                String present = "";
+                                if (t2PGetterSetters.get(i1).isPresent()) {
+                                    present = "1";
+                                } else {
+                                    present = "0";
+                                }
+
+                                onXML = "[T2P_DATA]"
+                                        + "[MID]" + mid + "[/MID]"
+                                        + "[USER_ID]" + userId + "[/USER_ID]"
+                                        + "[CATEGORY_ID]"
+                                        + Integer.parseInt(t2PGetterSetters.get(i1).getCategory_id())
+                                        + "[/CATEGORY_ID]"
+                                        + "[BRAND_ID]"
+                                        + Integer.parseInt(t2PGetterSetters.get(i1).getBrand_id())
+                                        + "[/BRAND_ID]"
+                                        + "[DISPLAY_ID]"
+                                        + Integer.parseInt(t2PGetterSetters.get(i1).getDisplay_id())
+                                        + "[/DISPLAY_ID]"
+                                        + "[COMMON_ID]"
+                                        + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
+                                        + "[/COMMON_ID]"
+                                        + "[IMAGE]"
+                                        + t2PGetterSetters.get(i1).getImage()
+                                        + "[/IMAGE]"
+                                        + "[PRESENT]"
+                                        + present
+                                        + "[/PRESENT]"
+                                        + "[GAPS_DATA]"
+                                        + gaps_xml
+                                        + "[/GAPS_DATA]"
+                                        + "[SKU_DATA]"
+                                        + sku_xml
+                                        + "[/SKU_DATA]"
+                                        + "[/T2P_DATA]";
+
+                                t2p_data_xml = t2p_data_xml + onXML;
+
+                            }
+
+                            final String t2p_final_xml = "[DATA]" + t2p_data_xml + "[/DATA]";
+
+                            request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                            request.addProperty("XMLDATA", t2p_final_xml);
+                            request.addProperty("KEYS", "T2P_DATA");
+                            request.addProperty("USERNAME", userId);
+                            request.addProperty("MID", mid);
+
+                            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                            envelope.dotNet = true;
+                            envelope.setOutputSoapObject(request);
+
+                            androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                            androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                            result = envelope.getResponse();
+
+                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                            }
+
+                            if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
+                                return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                            }
+
+                            if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                            }
+                        }
+
+                        data.value = 40;
+                        data.name = "T2P Data Uploading";
+                        publishProgress(data);
 
                         //Image Upload
 
@@ -637,6 +861,31 @@ public class UploadActivity extends AppCompatActivity {
 
 
 
+                        for(int m=0;m<t2PGetterSetters.size();m++){
+
+                            if (t2PGetterSetters.get(m).getImage() != null && !t2PGetterSetters.get(m).getImage().equals("")) {
+                                if (new File(CommonString.FILE_PATH + t2PGetterSetters.get(m).getImage()).exists()) {
+
+                                    try {
+                                        result = UploadImage(t2PGetterSetters.get(m).getImage(), "T2PImages");
+                                        if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                            return "T2PImages";
+                                        }
+
+                                        runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                message.setText("T2P Images Uploaded");
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                        }
+
+
                         // SET COVERAGE STATUS
                         String final_xml = "";
                         onXML = "";
@@ -661,7 +910,7 @@ public class UploadActivity extends AppCompatActivity {
                         androidHttpTransport = new HttpTransportSE(CommonString.URL);
                         androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_COVERAGE_STATUS, envelope);
 
-                        result = (Object) envelope.getResponse();
+                        result = envelope.getResponse();
 
                         if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                             return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
@@ -783,4 +1032,39 @@ public class UploadActivity extends AppCompatActivity {
 
         return result.toString();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+    }
+
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
+
 }
