@@ -21,6 +21,7 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
@@ -91,23 +92,7 @@ public class DownloadActivity extends AppCompatActivity {
         new UploadTask(DownloadActivity.this).execute();
     }
 
-    public void showAlert(String str) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
-        builder.setTitle("Parinaam");
-        builder.setMessage(str).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                       /* Intent i = new Intent(activity, StorelistActivity.class);
-                        activity.startActivity(i);
-                        activity.finish();*/
-
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 
     class Data {
         int value;
@@ -730,20 +715,8 @@ public class DownloadActivity extends AppCompatActivity {
                         showAlert(CommonString.MESSAGE_SOCKETEXCEPTION);
                     }
                 });
-            } catch (Exception e) {
-             /*   final AlertMessage message = new AlertMessage(
-                        CompleteDownloadActivity.this,
-                        AlertMessage.MESSAGE_EXCEPTION, "download", e);*/
-
-               /* e.getMessage();
+            } catch (XmlPullParserException e) {
                 e.printStackTrace();
-                e.getCause();*/
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showAlert(CommonString.MESSAGE_EXCEPTION);
-                    }
-                });
             }
             return "";
         }

@@ -104,16 +104,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(CategoryWisePerformanceActivity.this, DailyDataMenuActivity.class);
-                    intent.putExtra("categoryName", categoryName);
-                    intent.putExtra("categoryId", categoryId);
-                    startActivity(intent);
-                }
-            });
+          
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }

@@ -653,7 +653,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         alert.show();
     }
 
-    public class T2PAdapter extends RecyclerView.Adapter<T2PAdapter.ViewHolder> {
+/*    public class T2PAdapter extends RecyclerView.Adapter<T2PAdapter.ViewHolder> {
 
         private ArrayList<T2PGetterSetter> list;
 
@@ -677,9 +677,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
             //holder.tv_display.setTypeface(FontManager.getTypeface(getApplicationContext(),FontManager.FONTAWESOME));
 
-           /* Typeface iconFont = FontManager.getTypeface(getApplicationContext(), FontManager.FONTAWESOME);
+           *//* Typeface iconFont = FontManager.getTypeface(getApplicationContext(), FontManager.FONTAWESOME);
             FontManager.markAsIconContainer(findViewById(R.id.icons_container), iconFont);
-*/
+*//*
             holder.btn_gaps.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -786,7 +786,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
             }
 
         }
-    }
+    }*/
 
     public class GapsAdapter extends RecyclerView.Adapter<GapsAdapter.ViewHolder> {
 
