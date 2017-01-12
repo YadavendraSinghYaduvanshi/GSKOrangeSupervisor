@@ -285,6 +285,7 @@ public class StoreListActivity extends AppCompatActivity {
                         editor.putString(CommonString.KEY_KEYACCOUNT_ID, current.getKEYACCOUNT_ID());
                         editor.putString(CommonString.KEY_STORETYPE_ID, current.getSTORETYPE_ID());
                         editor.putString(CommonString.KEY_UPLOAD_STATUS, current.getUPLOAD_STATUS());
+
                         editor.commit();
 
                         // showMyDialog(store_id, current.getSTORE_NAME(), "Yes", current.getVISIT_DATE(), current.getCHECKOUT_STATUS());

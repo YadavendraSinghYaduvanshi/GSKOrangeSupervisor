@@ -5,6 +5,26 @@ public class AdditionalDialogGetterSetter {
 	image3, BEFORE_QTY, camera1, camera2, camera3, AFTER_QTY, store_id, stock_count, question_id, question, answer, type, 
 	KEY_ID, unique_id,image_url, sku_id,quantity, process_id, sku_name, stock_flag;
 
+	public String getCOMMON_ID() {
+		return COMMON_ID;
+	}
+
+	public void setCOMMON_ID(String COMMON_ID) {
+		this.COMMON_ID = COMMON_ID;
+	}
+
+	String COMMON_ID;
+
+	public String getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	String categoryId;
+
 	public String getStock_flag() {
 		return stock_flag;
 	}

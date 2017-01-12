@@ -293,7 +293,7 @@ public class CommonString {
             + KEY_BRAND_ID + " VARCHAR," + KEY_BRAND + " VARCHAR,"
             + KEY_DISPLAY_ID +" VARCHAR,"
             + KEY_SKU_ID + " VARCHAR," + KEY_QUANTITY + " VARCHAR," + KEY_Common_ID + " VARCHAR,"
-            + KEY_CATEGORY_ID + " VARCHAR,"
+            + "categoryId" + " VARCHAR,"
             + KEY_SKUNAME + " VARCHAR,"
             + KEY_PROCESS_ID + " VARCHAR)";
 
@@ -327,7 +327,7 @@ public class CommonString {
             + "toggle_value"
             + " VARCHAR,"
 
-            + "IMAGE2"
+            + "categoryId"
             + " VARCHAR"
 
             + ")";

@@ -26,6 +26,7 @@ import java.util.List;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.dailyentry.AdditionalVisibility;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.DailyDataMenuGetterSetter;
 
@@ -125,7 +126,12 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             data = new DailyDataMenuGetterSetter();
             //data.setCategory_name("Additional Visibility");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_visibility));
-            data.setCategory_img(R.mipmap.additional_visibility);
+            if (db.additionalVisibilitydata(store_id, categoryId)) {
+                data.setCategory_img(R.mipmap.additional_visibility_done);
+            } else {
+                data.setCategory_img(R.mipmap.additional_visibility);
+            }
+
             categoryList.add(data);
 
             data = new DailyDataMenuGetterSetter();
@@ -210,6 +216,17 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
                     }
+
+                    else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.title_activity_Additional_visibility)))) {
+                        Intent intent = new Intent(DailyDataMenuActivity.this, AdditionalVisibility.class);
+                        intent.putExtra("categoryName", dailyData.getCategory_name());
+                        intent.putExtra("categoryId", categoryId);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+
+                    }
+
+
                 }
             });
         }
