@@ -55,17 +55,7 @@
     <string name="select_reason">Bir sebep seçiniz</string>
     <string name="daily_activity_menu">Günlük Veri Menüsü</string>
 
-    <string name="daily_data_menu_msl_availability">Bulunurluk</string>
-    <string name="daily_data_menu_stock_facing">Raf Payı</string>
-    <string name="daily_data_menu_t2p">Kalıcı Teşhir</string>
-    <string name="daily_data_menu_additional_visibility">Ek Teşhir</string>
-    <string name="daily_data_menu_promo_compliance">Promosyon</string>
-    <string name="daily_data_menu_competition_tracking">Rakip Bilgisi</string>
-    <string name="daily_data_menu_additional_promotions">Competition Promo</string>
     <string name="closed">kapalı</string>
-
-    <string name="title_activity_promo_compliance">Promosyon</string>
-
 
     <!--Gagan Start Code -->
     <string name="title_activity_category_list">Kategoriler</string>
