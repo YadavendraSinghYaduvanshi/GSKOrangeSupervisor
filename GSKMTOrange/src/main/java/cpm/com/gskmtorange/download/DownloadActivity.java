@@ -35,6 +35,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.DisplayMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
@@ -47,15 +48,10 @@ import cpm.com.gskmtorange.xmlHandlers.XMLHandlers;
 
 public class DownloadActivity extends AppCompatActivity {
 
-    private Dialog dialog;
-    private ProgressBar pb;
-    private TextView percentage, message;
     Data data;
     int eventType;
     GSKOrangeDB db;
-    private SharedPreferences preferences = null;
     String userId, culture_id;
-
     JourneyPlanGetterSetter jcpgettersetter;
     SkuMasterGetterSetter skumastergettersetter;
     BrandMasterGetterSetter brandMasterGetterSetter;
@@ -70,6 +66,11 @@ public class DownloadActivity extends AppCompatActivity {
     MappingPromotionGetterSetter mappingPromotionGetterSetter;
     MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter mapping_additional_promotion_masterGetterSetter;
     STORE_PERFORMANCE_MasterGetterSetter store_performance_masterGetterSetter;
+    MAPPING_PLANOGRAM_MasterGetterSetter mapping_planogram_masterGetterSetter;
+    private Dialog dialog;
+    private ProgressBar pb;
+    private TextView percentage, message;
+    private SharedPreferences preferences = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,24 @@ public class DownloadActivity extends AppCompatActivity {
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
         culture_id = preferences.getString(CommonString.KEY_CULTURE_ID, "");
         new UploadTask(DownloadActivity.this).execute();
+    }
+
+    public void showAlert(String str) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(str).setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                       /* Intent i = new Intent(activity, StorelistActivity.class);
+                        activity.startActivity(i);
+                        activity.finish();*/
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     class Data {
@@ -137,7 +156,7 @@ public class DownloadActivity extends AppCompatActivity {
                 HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                Object result = (Object) envelope.getResponse();
+                Object result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     //InputStream stream = new ByteArrayInputStream(result.toString().getBytes("UTF-8"));
@@ -177,7 +196,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -213,7 +232,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -249,7 +268,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -284,7 +303,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -319,7 +338,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -354,7 +373,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -389,7 +408,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -423,7 +442,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -457,7 +476,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -492,7 +511,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -527,7 +546,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -564,7 +583,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -600,7 +619,7 @@ public class DownloadActivity extends AppCompatActivity {
                 androidHttpTransport = new HttpTransportSE(CommonString.URL);
                 androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
 
-                result = (Object) envelope.getResponse();
+                result = envelope.getResponse();
 
                 if (result.toString() != null) {
                     xpp.setInput(new StringReader(result.toString()));
@@ -619,6 +638,42 @@ public class DownloadActivity extends AppCompatActivity {
                     }
                     data.value = 100;
                     data.name = "STORE_PERFORMANCE Data Download";
+                }
+                publishProgress(data);
+
+
+                //MAPPING_PLANOGRAM
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_PLANOGRAM");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mapping_planogram_masterGetterSetter = XMLHandlers.MAPPING_PLANOGRAM_XMLHandler(xpp, eventType);
+
+                    if (mapping_planogram_masterGetterSetter.getKEYACCOUNT_ID().size() > 0) {
+                        String table_mapping_planogram = mapping_planogram_masterGetterSetter.getTable_MAPPING_PLANOGRAM();
+                        if (table_mapping_planogram != null) {
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setMappingPlanogram(table_mapping_planogram);
+                        }
+                    } else {
+                        //return "MAPPING_PLANOGRAM";
+                    }
+                    data.value = 100;
+                    data.name = "MAPPING_PLANOGRAM Data Download";
                 }
                 publishProgress(data);
 
@@ -645,6 +700,7 @@ public class DownloadActivity extends AppCompatActivity {
                 db.insertNonWorkingData(nonWorkingReasonGetterSetter);
 
                 db.InsertSTORE_PERFORMANCE(store_performance_masterGetterSetter);
+                db.InsertMAPPING_PLANOGRAM(mapping_planogram_masterGetterSetter);
 
             } catch (MalformedURLException e) {
                 /*final AlertMessage message = new AlertMessage(
@@ -703,23 +759,5 @@ public class DownloadActivity extends AppCompatActivity {
             finish();
         }
 
-    }
-
-    public void showAlert(String str) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
-        builder.setTitle("Parinaam");
-        builder.setMessage(str).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                       /* Intent i = new Intent(activity, StorelistActivity.class);
-                        activity.startActivity(i);
-                        activity.finish();*/
-
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 }

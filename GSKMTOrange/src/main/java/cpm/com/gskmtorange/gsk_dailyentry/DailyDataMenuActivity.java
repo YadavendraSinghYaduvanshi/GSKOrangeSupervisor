@@ -37,9 +37,8 @@ public class DailyDataMenuActivity extends AppCompatActivity {
 
     GSKOrangeDB db;
     String categoryName = "", categoryId;
-
-    private SharedPreferences preferences;
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,9 +109,9 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             //data.setCategory_name("Stock & Facing");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_stock_facing));
             if (db.checkStockAndFacingData(store_id, categoryId)) {
-                data.setCategory_img(R.mipmap.stock_and_facing_done);
+                data.setCategory_img(R.mipmap.stock_facing_done);
             } else {
-                data.setCategory_img(R.mipmap.stock_and_facing);
+                data.setCategory_img(R.mipmap.stock_facing);
             }
             categoryList.add(data);
 
@@ -159,10 +158,36 @@ public class DailyDataMenuActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public class DailyDataMenuAdapter extends RecyclerView.Adapter<DailyDataMenuAdapter.MyViewHolder> {
-        private LayoutInflater inflator;
         List<DailyDataMenuGetterSetter> list = Collections.emptyList();
         Context context;
+        private LayoutInflater inflator;
 
         public DailyDataMenuAdapter(Context context, List<DailyDataMenuGetterSetter> list) {
             inflator = LayoutInflater.from(context);
@@ -231,32 +256,6 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                 lay_menu = (LinearLayout) itemView.findViewById(R.id.lay_menu);
             }
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            finish();
-        }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
 

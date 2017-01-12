@@ -71,6 +71,7 @@
     <string name="stock_facing_stock">X</string>
     <string name="stock_facing_faceup">Önyüz</string>
     <string name="stock_facing_sos_target">Raf Payı Hedefi</string>
+    <string name="stock_facing_sos">Raf Payi</string>
 
     <string name="title_activity_promo_compliance">Promosyon</string>
 
@@ -95,6 +96,9 @@
     <string name="category_performance_lsv">Son Ziyaret</string>
 
     <string name="title_activity_store_wise_performance">Mağaza Performansı</string>
-
     <!--Gagan End Code -->
+
+    <!--Gagan start new code 2-->
+    <string name="stock_facing_planogram_dialog_title">Planogram</string>
+    <!--Gagan end new code 2-->
 </resources>

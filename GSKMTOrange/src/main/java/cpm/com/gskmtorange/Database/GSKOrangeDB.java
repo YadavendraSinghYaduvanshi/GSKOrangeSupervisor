@@ -18,6 +18,7 @@ import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
 
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
@@ -50,8 +51,8 @@ import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
 public class GSKOrangeDB extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "GSK_ORANGE";
     public static final int DATABASE_VERSION = 13;
-    private SQLiteDatabase db;
     TableBean tableBean;
+    private SQLiteDatabase db;
 
     public GSKOrangeDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -110,6 +111,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_COMPLIANCE);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_GAPS);
         db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_SKU);
+
+        db.execSQL(TableBean.getMappingPlanogram());
     }
 
     @Override
@@ -1669,7 +1672,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
             dbcursor = db.rawQuery("SELECT * from JOURNEY_PLAN  " +
-                    "where VISIT_DATE ='" + date + "' AND STORE_ID'=" + store_id + "'", null);
+                    "where VISIT_DATE ='" + date + "' AND STORE_ID='" + store_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -2552,5 +2555,28 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return list;
     }
+
+    //Gagan start new code 2
+
+    public void InsertMAPPING_PLANOGRAM(MAPPING_PLANOGRAM_MasterGetterSetter data) {
+        db.delete("MAPPING_PLANOGRAM", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getKEYACCOUNT_ID().size(); i++) {
+
+                values.put("KEYACCOUNT_ID", data.getKEYACCOUNT_ID().get(i));
+                values.put("STORETYPE_ID", data.getSTORETYPE_ID().get(i));
+                values.put("CLASS_ID", data.getCLASS_ID().get(i));
+                values.put("PLANOGRAM_IMAGE", data.getPLANOGRAM_IMAGE().get(i));
+                values.put("IMAGE_PATH", data.getIMAGE_PATH().get(i));
+
+                db.insert("MAPPING_PLANOGRAM", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " MAPPING_PLANOGRAM " + ex.toString());
+        }
+    }
+    //Gagan end new code 2
 
 }

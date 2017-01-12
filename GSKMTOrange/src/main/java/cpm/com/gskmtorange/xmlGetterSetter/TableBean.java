@@ -22,6 +22,7 @@ public class TableBean {
     //Gagan start code
     public static String MAPPING_ADDITIONAL_PROMOTION;
     public static String STORE_PERFORMANCE;
+    public static String MAPPING_PLANOGRAM;
 
     //Gagan end code
 
@@ -137,6 +138,14 @@ public class TableBean {
 
     public static void setStorePerformance(String storePerformance) {
         STORE_PERFORMANCE = storePerformance;
+    }
+
+    public static String getMappingPlanogram() {
+        return MAPPING_PLANOGRAM;
+    }
+
+    public static void setMappingPlanogram(String mappingPlanogram) {
+        MAPPING_PLANOGRAM = mappingPlanogram;
     }
 
     //Gagan end code

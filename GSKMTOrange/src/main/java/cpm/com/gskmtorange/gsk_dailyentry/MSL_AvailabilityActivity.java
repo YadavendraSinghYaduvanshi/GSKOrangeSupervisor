@@ -54,9 +54,8 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
     GSKOrangeDB db;
 
     String categoryName, categoryId, storeId;
-
-    private SharedPreferences preferences;
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,6 +247,25 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
         private Context _context;
         private List<MSL_AvailabilityGetterSetter> _listDataHeader;
@@ -362,8 +380,8 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 holder.txt_mbq = (TextView) convertView.findViewById(R.id.txt_mbq);
                 holder.toggle_available = (ToggleButton) convertView.findViewById(R.id.toggle_available);
 
-                holder.toggle_available.setTextOff("No");
-                holder.toggle_available.setTextOn("Yes");
+                /*holder.toggle_available.setTextOff("No");
+                holder.toggle_available.setTextOn("Yes");*/
 
                 convertView.setTag(holder);
             } else {
@@ -417,24 +435,5 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         TextView txt_skuName, txt_mbq;
         ToggleButton toggle_available;
         LinearLayout lin_category;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            finish();
-        }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

@@ -37,9 +37,8 @@ public class CategoryListActivity extends AppCompatActivity {
     CategoryListAdapter adapter;
 
     GSKOrangeDB db;
-
-    private SharedPreferences preferences;
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +92,36 @@ public class CategoryListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapter.MyViewHolder> {
-        private LayoutInflater inflator;
         List<CategoryGetterSetter> list = Collections.emptyList();
         Context context;
+        private LayoutInflater inflator;
 
         public CategoryListAdapter(CategoryListActivity context, List<CategoryGetterSetter> list) {
             inflator = LayoutInflater.from(context);
@@ -123,19 +148,19 @@ public class CategoryListActivity extends AppCompatActivity {
                         && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
                         && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
 
-                    holder.categoryIcon.setImageResource(R.drawable.ohc_done);
+                    holder.categoryIcon.setImageResource(R.mipmap.oralcare_tick);
                 } else {
-                    holder.categoryIcon.setImageResource(R.drawable.ohc);
+                    holder.categoryIcon.setImageResource(R.mipmap.oral_care);
                 }
             } else if (categoryData.getCategory().equalsIgnoreCase("Wellness")) {
                 if (db.checkMsl_AvailabilityData(store_id, categoryData.getCategory_id())
                         && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
                         && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
 
-                    holder.categoryIcon.setImageResource(R.drawable.pdr_done);
+                    holder.categoryIcon.setImageResource(R.mipmap.wellness_tick);
                 } else {
 
-                    holder.categoryIcon.setImageResource(R.drawable.pdr);
+                    holder.categoryIcon.setImageResource(R.mipmap.wellness);
                 }
             } else if (categoryData.getCategory().equalsIgnoreCase("Nutritionals")) {
 
@@ -143,9 +168,9 @@ public class CategoryListActivity extends AppCompatActivity {
                         && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
                         && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
 
-                    holder.categoryIcon.setImageResource(R.drawable.hfd_done);
+                    holder.categoryIcon.setImageResource(R.mipmap.nutritionals_tick);
                 } else {
-                    holder.categoryIcon.setImageResource(R.drawable.hfd);
+                    holder.categoryIcon.setImageResource(R.mipmap.nutritionals);
                 }
             }
 
@@ -178,31 +203,5 @@ public class CategoryListActivity extends AppCompatActivity {
                 lay_menu = (LinearLayout) itemView.findViewById(R.id.lay_menu);
             }
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            finish();
-        }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

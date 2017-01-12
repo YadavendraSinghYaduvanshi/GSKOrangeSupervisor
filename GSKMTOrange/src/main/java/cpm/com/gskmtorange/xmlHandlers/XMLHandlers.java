@@ -14,6 +14,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.LoginGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
@@ -659,6 +660,42 @@ public class XMLHandlers {
                     }
                     if (xpp.getName().equals("ORDERID")) {
                         st.setORDERID(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return st;
+    }
+
+    public static MAPPING_PLANOGRAM_MasterGetterSetter MAPPING_PLANOGRAM_XMLHandler(XmlPullParser xpp, int eventType) {
+        MAPPING_PLANOGRAM_MasterGetterSetter st = new MAPPING_PLANOGRAM_MasterGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+
+                    if (xpp.getName().equals("META_DATA")) {
+                        st.setTable_MAPPING_PLANOGRAM(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("KEYACCOUNT_ID")) {
+                        st.setKEYACCOUNT_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("STORETYPE_ID")) {
+                        st.setSTORETYPE_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CLASS_ID")) {
+                        st.setCLASS_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("PLANOGRAM_IMAGE")) {
+                        st.setPLANOGRAM_IMAGE(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("IMAGE_PATH")) {
+                        st.setIMAGE_PATH(xpp.nextText());
                     }
                 }
                 xpp.next();

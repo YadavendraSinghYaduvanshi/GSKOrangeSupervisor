@@ -80,6 +80,7 @@
     <string name="stock_facing_stock">Stock</string>
     <string name="stock_facing_faceup">Facing</string>
     <string name="stock_facing_sos_target">SOS Target</string>
+    <string name="stock_facing_sos">SOS</string>
 
     <!--Gagan end code-->
 
@@ -147,5 +148,8 @@
     <string name="fill_gaps_data">Please fill GAP data</string>
     <string name="data_will_be_lost">Want to proceed usaved data will be deleted</string>
 
+    <!--Gagan start new code 2-->
+    <string name="stock_facing_planogram_dialog_title">Planogram</string>
+    <!--Gagan end new code 2-->
 
 </resources>
