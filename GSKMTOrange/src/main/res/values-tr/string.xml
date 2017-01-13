@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="prompt_email">E-posta</string>
-    <string name="prompt_password">Şifre (isteğe bağlı)</string>
-    <string name="action_sign_in">Giriş yapın veya kayıt olun</string>
     <string name="action_sign_in_short">oturum aç</string>
     <string name="error_invalid_email">Bu e-posta adresi geçersiz</string>
     <string name="error_invalid_password">Bu şifre çok kısa</string>
@@ -26,6 +24,7 @@
     <string name="title_geo_tag_activity_upload_data">Store Uploaded</string>
     <string name="title_geo_tag_activity_geo_data">Store Geo Data Uploaded</string>
     <string name="title_geo_tag_activity_geo_already_done">Store Already Geotagged</string>
+    <string name="main_menu_activity_name">GSK Turuncu Mağaza</string>
 
     <string name="save">Sakla</string>
 
@@ -38,7 +37,7 @@
     <string name="present">Teşhir var mı?</string>
     <string name="add">Ekle</string>
 
-    <string name="select">Seç</string>
+    <string name="select">Seçiniz</string>
 
     <string name="title_activity_t2_pcompliance">Kalıcı Teşhir</string>
 
@@ -46,6 +45,17 @@
     <string name="no">Hayır</string>
 
     <string name="title_activity_upload">Veri Paylaş</string>
+    <string name="download_data">Veri Indir</string>
+    <string name="store_visited">Mağaza ziyaret edildi mi?</string>
+    <string name="store_image">Mağaza girişinin fotoğrafını çekiniz</string>
+
+    <string name="title_activity_store_image">Mağaza Girişi Fotoğrafı</string>
+    <string name="title_activity_Non_Work">Çalışmama Sebebi</string>
+    <string name="reason">Sebep</string>
+    <string name="select_reason">Bir sebep seçiniz</string>
+    <string name="daily_activity_menu">Günlük Veri Menüsü</string>
+
+    <string name="closed">kapalı</string>
 
     <!--Gagan Start Code -->
     <string name="title_activity_category_list">Kategoriler</string>
@@ -63,12 +73,12 @@
     <string name="daily_data_menu_additional_promotions">Promosyon</string>
 
     <string name="msl_availability_sku">Ürün Adı</string>
-    <string name="msl_availability_mbq">X</string>
+    <string name="msl_availability_mbq">MBQ</string>
     <string name="msl_availability_availability">Bulunurluk</string>
 
     <string name="stock_facing_reference_image">Örnek Fotoğraf</string>
     <string name="stock_facing_sku_name">Ürün Adı</string>
-    <string name="stock_facing_stock">X</string>
+    <string name="stock_facing_stock">Stock</string>
     <string name="stock_facing_faceup">Önyüz</string>
     <string name="stock_facing_sos_target">Raf Payı Hedefi</string>
     <string name="stock_facing_sos">Raf Payi</string>
@@ -101,4 +111,12 @@
     <!--Gagan start new code 2-->
     <string name="stock_facing_planogram_dialog_title">Planogram</string>
     <!--Gagan end new code 2-->
+
+    <string name="stock">Stock</string>
+    <string name="AdditionalDisplay">Ek Teşhir</string>
+    <string name="Display">Teşhir Türü</string>
+    <string name="Photo">Fotoğraf</string>
+    <string name="title_activity_Additional_visibility">Ek Teşhir</string>
+
 </resources>
+

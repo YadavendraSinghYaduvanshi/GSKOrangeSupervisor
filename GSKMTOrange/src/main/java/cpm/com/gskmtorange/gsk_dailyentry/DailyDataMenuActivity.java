@@ -3,6 +3,7 @@ package cpm.com.gskmtorange.gsk_dailyentry;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -22,10 +23,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.dailyentry.AdditionalVisibility;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.DailyDataMenuGetterSetter;
 
@@ -56,6 +59,9 @@ public class DailyDataMenuActivity extends AppCompatActivity {
 
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -92,6 +98,8 @@ public class DailyDataMenuActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         try {
             categoryList = new ArrayList<>();
 
@@ -124,7 +132,12 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             data = new DailyDataMenuGetterSetter();
             //data.setCategory_name("Additional Visibility");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_visibility));
-            data.setCategory_img(R.mipmap.additional_visibility);
+            if (db.additionalVisibilitydata(store_id, categoryId)) {
+                data.setCategory_img(R.mipmap.additional_visibility_done);
+            } else {
+                data.setCategory_img(R.mipmap.additional_visibility);
+            }
+
             categoryList.add(data);
 
             data = new DailyDataMenuGetterSetter();
@@ -235,6 +248,17 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
                     }
+
+                    else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.title_activity_Additional_visibility)))) {
+                        Intent intent = new Intent(DailyDataMenuActivity.this, AdditionalVisibility.class);
+                        intent.putExtra("categoryName", dailyData.getCategory_name());
+                        intent.putExtra("categoryId", categoryId);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+
+                    }
+
+
                 }
             });
         }
@@ -257,5 +281,33 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             }
         }
     }
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
+
 }
 

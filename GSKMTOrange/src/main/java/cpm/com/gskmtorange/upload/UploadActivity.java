@@ -3,6 +3,8 @@ package cpm.com.gskmtorange.upload;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -79,6 +82,9 @@ public class UploadActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         date = preferences.getString(CommonString.KEY_DATE, null);
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
         app_version = preferences.getString(CommonString.KEY_VERSION, null);
@@ -528,7 +534,7 @@ public class UploadActivity extends AppCompatActivity {
                         String additional_visibility_dialog_xml = "";
                         onXML = "";
                         String onXMLdIALOG = "";
-                        additionalVisibilityList = db.getAdditionalStock(coverageList.get(i).getStoreId());
+                        additionalVisibilityList = db.getAdditionalStockUpload(coverageList.get(i).getStoreId());
 
                         if (additionalVisibilityList.size() > 0) {
                             for (int J = 0; J < additionalVisibilityList.size(); J++) {
@@ -537,8 +543,10 @@ public class UploadActivity extends AppCompatActivity {
 
                                     additionalVisibilitySkuList = db.getDialogStock(KeyID);
 
-                                    for (int k = 0; k < additionalVisibilitySkuList.size(); k++) {
+                                if(additionalVisibilitySkuList.size()>0)
+                                {
 
+                                 for (int k = 0; k < additionalVisibilitySkuList.size(); k++) {
 
                                     onXMLdIALOG = "[VISIBILITY_DAILOG]"
                                             + "[MID]" + mid + "[/MID]"
@@ -546,7 +554,7 @@ public class UploadActivity extends AppCompatActivity {
                                             + userId
                                             + "[/USER_ID]"
                                             + "[KEY_ID]"
-                                            + additionalVisibilitySkuList.get(k).getKEY_ID()
+                                            + additionalVisibilitySkuList.get(k).getCOMMON_ID()
                                             + "[/KEY_ID]"
                                            /* + "[DIALOG_BRAND_ID]"
                                             + additionalVisibilitySkuList.get(k).getBrand_id()
@@ -561,7 +569,7 @@ public class UploadActivity extends AppCompatActivity {
 
                                         additional_visibility_dialog_xml = additional_visibility_dialog_xml + onXMLdIALOG;
 
-                                    }
+                                    }}
 
                                     onXML = "[ADDITIONAL_VISIBILITY_DATA]"
                                             + "[MID]" + mid + "[/MID]"
@@ -571,6 +579,9 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[KEY_ID]"
                                             + additionalVisibilityList.get(J).getKey_id()
                                             + "[/KEY_ID]"
+                                            + "[CATEGORY_ID]"
+                                            + additionalVisibilityList.get(J).getCategoryId()
+                                            + "[/CATEGORY_ID]"
                                             + "[ADDITIONAL_DISPLAY]"
                                             + additionalVisibilityList.get(J).getBtn_toogle()
                                             + "[/ADDITIONAL_DISPLAY]"
@@ -654,6 +665,8 @@ public class UploadActivity extends AppCompatActivity {
                                     }
 
                                     gaps_child = "[GAPS]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
                                             + "[CHECK_LIST_ID]"
                                             + gapsList.get(l).getChecklist_id()
                                             + "[/CHECK_LIST_ID]"
@@ -663,6 +676,9 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[PRESENT]"
                                             + present
                                             + "[/PRESENT]"
+                                            + "[COMMON_ID]"
+                                            + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
+                                            + "[/COMMON_ID]"
                                             + "[/GAPS]";
                                     gaps_xml = gaps_xml + gaps_child;
                                 }
@@ -673,6 +689,8 @@ public class UploadActivity extends AppCompatActivity {
                                 for (int k = 0; k < skuList.size(); k++) {
 
                                     sku_child = "[SKU]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
                                             + "[SKU_ID]"
                                             + skuList.get(k).getSKU_ID()
                                             + "[/SKU_ID]"
@@ -682,6 +700,9 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[STOCK]"
                                             + skuList.get(k).getSTOCK()
                                             + "[/STOCK]"
+                                            + "[COMMON_ID]"
+                                            + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
+                                            + "[/COMMON_ID]"
                                             + "[/SKU]";
                                     sku_xml = sku_xml + sku_child;
                                 }
@@ -808,6 +829,61 @@ public class UploadActivity extends AppCompatActivity {
                                 }
                             }
                         }
+//// ashish visibility image start
+
+                        if (additionalVisibilityList.size() > 0) {
+                            for (int i1 = 0; i1 < additionalVisibilityList.size(); i1++) {
+
+                                if (additionalVisibilityList.get(i1).getImage() != null && !additionalVisibilityList.get(i1).getImage().equals("")) {
+                                    if (new File(CommonString.FILE_PATH + additionalVisibilityList.get(i1).getImage()).exists()) {
+
+                                        try {
+                                            result = UploadImage(additionalVisibilityList.get(i1).getImage(), "AdditionalVisibilityImages");
+
+                                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                return "AdditionalVisibilityImages";
+                                            }
+
+                                            runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    message.setText("AdditionalVisibilityImages Uploaded");
+                                                }
+                                            });
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+               //// ashish close image
+
+
+
+                        for(int m=0;m<t2PGetterSetters.size();m++){
+
+                            if (t2PGetterSetters.get(m).getImage() != null && !t2PGetterSetters.get(m).getImage().equals("")) {
+                                if (new File(CommonString.FILE_PATH + t2PGetterSetters.get(m).getImage()).exists()) {
+
+                                    try {
+                                        result = UploadImage(t2PGetterSetters.get(m).getImage(), "T2PImages");
+                                        if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                            return "T2PImages";
+                                        }
+
+                                        runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                message.setText("T2P Images Uploaded");
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                        }
 
 
                         // SET COVERAGE STATUS
@@ -877,4 +953,40 @@ public class UploadActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+    }
+
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
+
 }

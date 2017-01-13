@@ -3,6 +3,7 @@ package cpm.com.gskmtorange.gsk_dailyentry;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
@@ -35,16 +37,46 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
 
     ArrayList<CategoryWisePerformaceGetterSetter> categoryWisePerformanceList;
     CategoryWisePerformaceAdapter adapter;
-
-    GSKOrangeDB db;
     private SharedPreferences preferences;
+    GSKOrangeDB db;
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_category_wise_performance);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        //txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
+
+        categoryName = getIntent().getStringExtra("categoryName");
+        categoryId = getIntent().getStringExtra("categoryId");
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
+        //txt_categoryName.setText(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
+        toolbar.setTitle(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CategoryWisePerformanceActivity.this, DailyDataMenuActivity.class);
+                intent.putExtra("categoryName", categoryName);
+                intent.putExtra("categoryId", categoryId);
+                startActivity(intent);
+            }
+        });
+
         try {
-            setContentView(R.layout.activity_category_wise_performance);
 
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -52,9 +84,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
             db = new GSKOrangeDB(this);
             db.open();
 
-            //preference data
-            preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
+               store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
             username = preferences.getString(CommonString.KEY_USERNAME, null);
@@ -73,24 +103,88 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(CategoryWisePerformanceActivity.this, DailyDataMenuActivity.class);
-                    intent.putExtra("categoryName", categoryName);
-                    intent.putExtra("categoryId", categoryId);
-                    startActivity(intent);
-                }
-            });
+
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+      
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
+        categoryWisePerformanceList = new ArrayList<>();
+        CategoryWisePerformaceGetterSetter data = new CategoryWisePerformaceGetterSetter();
+
+        data.setPeriod("Period");
+        data.setSos("SOS");
+        data.setT2p("T2P");
+        data.setPromo("Promo");
+        data.setMsl_availability("MSL Availability");
+        data.setOss("OSS");
+        categoryWisePerformanceList.add(data);
+
+        data = new CategoryWisePerformaceGetterSetter();
+        data.setPeriod("LTM");
+        data.setSos("75");
+        data.setT2p("0");
+        data.setPromo("0");
+        data.setMsl_availability("25");
+        data.setOss("55");
+        categoryWisePerformanceList.add(data);
+
+        data = new CategoryWisePerformaceGetterSetter();
+        data.setPeriod("MTM");
+        data.setSos("75");
+        data.setT2p("0");
+        data.setPromo("0");
+        data.setMsl_availability("25");
+        data.setOss("55");
+        categoryWisePerformanceList.add(data);
+
+        data = new CategoryWisePerformaceGetterSetter();
+        data.setPeriod("RTM");
+        data.setSos("75");
+        data.setT2p("0");
+        data.setPromo("0");
+        data.setMsl_availability("25");
+        data.setOss("55");
+        categoryWisePerformanceList.add(data);
+
+        data = new CategoryWisePerformaceGetterSetter();
+        data.setPeriod("LTM");
+        data.setSos("75");
+        data.setT2p("0");
+        data.setPromo("0");
+        data.setMsl_availability("25");
+        data.setOss("55");
+        categoryWisePerformanceList.add(data);
+
+        data = new CategoryWisePerformaceGetterSetter();
+        data.setPeriod("MTM");
+        data.setSos("75");
+        data.setT2p("0");
+        data.setPromo("0");
+        data.setMsl_availability("25");
+        data.setOss("55");
+        categoryWisePerformanceList.add(data);
+
+        data = new CategoryWisePerformaceGetterSetter();
+        data.setPeriod("RTM");
+        data.setSos("75");
+        data.setT2p("0");
+        data.setPromo("0");
+        data.setMsl_availability("25");
+        data.setOss("55");
+        categoryWisePerformanceList.add(data);
+
+        adapter = new CategoryWisePerformaceAdapter(CategoryWisePerformanceActivity.this, categoryWisePerformanceList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
         try {
             categoryWisePerformanceList = db.getCategoryWisePerformance(store_id, categoryId);
 
@@ -100,6 +194,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public class CategoryWisePerformaceAdapter extends RecyclerView.Adapter<CategoryWisePerformaceAdapter.MyViewHolder> {
@@ -178,5 +273,32 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
     }
 }

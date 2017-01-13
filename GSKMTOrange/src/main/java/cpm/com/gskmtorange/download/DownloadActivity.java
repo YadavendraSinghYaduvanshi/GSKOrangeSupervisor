@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.File;
@@ -31,7 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
-
+import java.util.Locale;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
@@ -87,28 +90,15 @@ public class DownloadActivity extends AppCompatActivity {
         db = new GSKOrangeDB(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
         culture_id = preferences.getString(CommonString.KEY_CULTURE_ID, "");
         new UploadTask(DownloadActivity.this).execute();
     }
 
-    public void showAlert(String str) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
-        builder.setTitle("Parinaam");
-        builder.setMessage(str).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                       /* Intent i = new Intent(activity, StorelistActivity.class);
-                        activity.startActivity(i);
-                        activity.finish();*/
-
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 
     class Data {
         int value;
@@ -144,7 +134,7 @@ public class DownloadActivity extends AppCompatActivity {
                 data = new Data();
 
                 data.value = 10;
-                data.name = "JCP Data Downloading";
+                data.name = "JCP "+getResources().getString(R.string.download_data);
                 publishProgress(data);
 
                 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -185,7 +175,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 10;
-                    data.name = "JCP Data Downloading";
+                    data.name = "JCP "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -221,7 +211,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 20;
-                    data.name = "SKU_MASTER Data Download";
+                    data.name = "SKU_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -257,7 +247,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 30;
-                    data.name = "BRAND_MASTER Data Download";
+                    data.name = "BRAND_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -292,7 +282,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "SUB_CATEGORY_MASTER";
                     }
                     data.value = 40;
-                    data.name = "SUB_CATEGORY_MASTER Data Download";
+                    data.name = "SUB_CATEGORY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -327,7 +317,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "CATEGORY_MASTER";
                     }
                     data.value = 50;
-                    data.name = "CATEGORY_MASTER Data Download";
+                    data.name = "CATEGORY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -362,7 +352,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "DISPLAY_MASTER";
                     }
                     data.value = 60;
-                    data.name = "DISPLAY_MASTER Data Download";
+                    data.name = "DISPLAY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -397,7 +387,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "MAPPING_STOCK";
                     }
                     data.value = 80;
-                    data.name = "MAPPING_STOCK Data Download";
+                    data.name = "MAPPING_STOCK "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -432,7 +422,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_T2P";
                     }
                     data.value = 100;
-                    data.name = "MAPPING_T2P Data Download";
+                    data.name = "MAPPING_T2P "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -466,7 +456,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "DISPLAY_CHECKLIST_MASTER";
                     }
                     data.value = 100;
-                    data.name = "DISPLAY_CHECKLIST_MASTER Data Download";
+                    data.name = "DISPLAY_CHECKLIST_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -500,7 +490,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_DISPLAY_CHECKLIST";
                     }
                     data.value = 100;
-                    data.name = "MAPPING_DISPLAY_CHECKLIST Data Download";
+                    data.name = "MAPPING_DISPLAY_CHECKLIST "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -535,7 +525,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "NON_WORKING_REASON";
                     }
                     data.value = 100;
-                    data.name = "NON_WORKING_REASON Data Download";
+                    data.name = "NON_WORKING_REASON "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -570,7 +560,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_PROMOTION";
                     }*/
                     data.value = 100;
-                    data.name = "MAPPING_PROMOTION Data Download";
+                    data.name = "MAPPING_PROMOTION "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -608,7 +598,7 @@ public class DownloadActivity extends AppCompatActivity {
                         //return "MAPPING_ADDITIONAL_PROMOTION";
                     }*/
                     data.value = 100;
-                    data.name = "MAPPING_ADDITIONAL_PROMOTION Data Download";
+                    data.name = "MAPPING_ADDITIONAL_PROMOTION "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -787,20 +777,8 @@ public class DownloadActivity extends AppCompatActivity {
                         showAlert(CommonString.MESSAGE_SOCKETEXCEPTION);
                     }
                 });
-            } catch (Exception e) {
-             /*   final AlertMessage message = new AlertMessage(
-                        CompleteDownloadActivity.this,
-                        AlertMessage.MESSAGE_EXCEPTION, "download", e);*/
-
-               /* e.getMessage();
+            } catch (XmlPullParserException e) {
                 e.printStackTrace();
-                e.getCause();*/
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showAlert(CommonString.MESSAGE_EXCEPTION);
-                    }
-                });
             }
             return "";
         }
@@ -823,4 +801,57 @@ public class DownloadActivity extends AppCompatActivity {
         }
 
     }
+
+    public void showAlert(String str) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(str).setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                       /* Intent i = new Intent(activity, StorelistActivity.class);
+                        activity.startActivity(i);
+                        activity.finish();*/
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+    }
+
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
+
 }
