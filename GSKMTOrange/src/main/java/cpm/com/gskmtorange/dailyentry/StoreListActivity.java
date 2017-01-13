@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -225,7 +227,7 @@ public class StoreListActivity extends AppCompatActivity {
                                     viewHolder.imageview.setVisibility(View.VISIBLE);
                                     //  viewHolder.imageview.setBackgroundResource(R.mipmap.checkin);
                                     viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-                                    viewHolder.Cardbtn.setBackgroundColor(getResources().getColor(R.color.green));
+                                    viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.green));
 
 
                                 }
@@ -238,7 +240,7 @@ public class StoreListActivity extends AppCompatActivity {
                 }
             } else {
 
-                viewHolder.Cardbtn.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
                 viewHolder.imageview.setVisibility(View.INVISIBLE);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
             }
@@ -320,13 +322,55 @@ public class StoreListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            StoreListActivity.this);
+                    builder.setMessage(R.string.wantcheckout)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.ok,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(
+                                                DialogInterface dialog, int id) {
+                                            if (CheckNetAvailability()) {
+
+
+                                                /*Intent i = new Intent(StoreListActivity.this, CheckOutStoreActivity.class);
+                                                startActivity(i);*/
+                                            } else {
+
+                                                Snackbar.make(recyclerView, R.string.nonetwork, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+
+                                            }
+
+                                        }
+                                    })
+                            .setNegativeButton(R.string.cancel,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(
+                                                DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
 
                 }
             });
 
-
         }
+        public boolean CheckNetAvailability() {
 
+            boolean connected = false;
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+                    .getState() == NetworkInfo.State.CONNECTED
+                    || connectivityManager.getNetworkInfo(
+                    ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                // we are connected to a network
+                connected = true;
+            }
+            return connected;
+        }
         @Override
         public int getItemCount() {
             return data.size();

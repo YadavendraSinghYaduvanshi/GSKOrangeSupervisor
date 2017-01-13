@@ -77,7 +77,6 @@
                 android:layout_alignBottom="@+id/storelistviewxml_storeico"
                 android:layout_alignParentRight="true"
 
-                android:background="@mipmap/tick_c"
                 android:visibility="gone"
                  />
 

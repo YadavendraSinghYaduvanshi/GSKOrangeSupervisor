@@ -161,5 +161,8 @@
     <string name="failure">failure</string>
     <string name="uploadimge">Uploading Geotag Images</string>
     <string name="success">success</string>
+    <string name="wantcheckout">Are you sure you want to Checkout</string>
+    <string name="nonetwork"> No Network</string>
+
 
 </resources>
