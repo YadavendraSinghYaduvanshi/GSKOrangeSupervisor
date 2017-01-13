@@ -114,8 +114,7 @@
 
     <string name="enter_the_values">Enter the values</string>
 
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+
 
     <string name="title_activity_upload">Upload Data</string>
     <string name="no_data_for_upload">No Data For Upload</string>
@@ -167,7 +166,7 @@
     <string name="title_activity_enter_quantity">Please enter Quantity</string>
     <string name="title_activity_save_data">Do you want to save the data</string>
 
-    <string name="ok">OK</string>
+
     <string name="clickimage">Please click the image</string>
     <string name="gps">GPS IS DISABLED...</string>
     <string name="gpsebale">Click ok to enable GPS.</string>
