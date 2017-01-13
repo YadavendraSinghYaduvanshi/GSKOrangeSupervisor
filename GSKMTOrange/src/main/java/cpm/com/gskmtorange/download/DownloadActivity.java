@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
@@ -21,9 +22,15 @@ import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DecimalFormat;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
@@ -677,6 +684,62 @@ public class DownloadActivity extends AppCompatActivity {
                 }
                 publishProgress(data);
 
+
+                //MAPPING_PLANOGRAM Image save into folder
+                if (mapping_planogram_masterGetterSetter != null) {
+
+                    for (int i = 0; i < mapping_planogram_masterGetterSetter.getIMAGE_PATH().size(); i++) {
+                        //publishing image download
+                        data.value = data.value + 1;
+                        if (data.value < 100) {
+                            publishProgress(data);
+                        }
+
+                        String image_name = mapping_planogram_masterGetterSetter.getPLANOGRAM_IMAGE().get(i);
+                        String path = mapping_planogram_masterGetterSetter.getIMAGE_PATH().get(i);
+
+                        if (!image_name.equalsIgnoreCase("NA") && !image_name.equalsIgnoreCase("")) {
+                            URL url = new URL(path + "/" + image_name);
+                            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                            c.setRequestMethod("GET");
+                            c.getResponseCode();
+                            c.connect();
+
+                            if (c.getResponseCode() == 200) {
+                                int length = c.getContentLength();
+
+                                String size = new DecimalFormat("##.##").format((double) length / 1024) + " KB";
+
+                                //String PATH = Environment.getExternalStorageDirectory() + "/Download/GT_GSK_Images/";
+                                String PATH = CommonString.FILE_PATH;
+                                File file = new File(PATH);
+                                if (!file.isDirectory()) {
+                                    file.mkdir();
+                                }
+
+                                //  Environment.getExternalStorageDirectory() + "/GT_GSK_Images/" + _pathforcheck1;
+                                if (!new File(PATH + image_name).exists() && !size.equalsIgnoreCase("0 KB")) {
+                                    File outputFile = new File(file, image_name);
+                                    FileOutputStream fos = new FileOutputStream(outputFile);
+                                    InputStream is1 = c.getInputStream();
+
+                                    int bytes = 0;
+                                    byte[] buffer = new byte[1024];
+                                    int len1 = 0;
+
+                                    while ((len1 = is1.read(buffer)) != -1) {
+                                        bytes = (bytes + len1);
+                                        // data.value = (int) ((double) (((double)
+                                        // bytes) / length) * 100);
+                                        fos.write(buffer, 0, len1);
+                                    }
+                                    fos.close();
+                                    is1.close();
+                                }
+                            }
+                        }
+                    }
+                }
 
                 //Gagan end code
 

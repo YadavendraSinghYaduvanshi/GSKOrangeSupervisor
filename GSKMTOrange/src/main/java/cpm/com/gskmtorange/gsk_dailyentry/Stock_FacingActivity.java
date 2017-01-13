@@ -58,6 +58,7 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 
@@ -543,7 +544,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
             ImageView img_planogram = (ImageView) dialog.findViewById(R.id.img_planogram);
 
-            String planogram_image = "";
+            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mp = db.getMappingPlanogramData("");
+
+            String planogram_image = mp.get(0).getPLANOGRAM_IMAGE();
             if (new File(str + planogram_image).exists()) {
                 Bitmap bmp = BitmapFactory.decodeFile(str + planogram_image);
                 img_planogram.setImageBitmap(bmp);
@@ -572,6 +575,29 @@ public class Stock_FacingActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(Stock_FacingActivity.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
     }
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
