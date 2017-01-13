@@ -400,8 +400,6 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
                 holder.lin_category = (LinearLayout) convertView.findViewById(R.id.lin_category);
 
-                holder.txt_skuName.setTextColor(getResources().getColor(R.color.colorPrimary));
-
                 holder.txt_skuName = (TextView) convertView.findViewById(R.id.txt_skuName);
                 holder.txt_mbq = (TextView) convertView.findViewById(R.id.txt_mbq);
                 holder.toggle_available = (ToggleButton) convertView.findViewById(R.id.toggle_available);
@@ -414,6 +412,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
+            holder.txt_skuName.setTextColor(getResources().getColor(R.color.colorPrimary));
             holder.txt_skuName.setText(childData.getSku());
             holder.txt_mbq.setText(childData.getMbq());
 
