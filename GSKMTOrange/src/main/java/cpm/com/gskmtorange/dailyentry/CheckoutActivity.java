@@ -50,6 +50,8 @@ public class CheckoutActivity extends AppCompatActivity {
 
     CoverageBean coverageBean;
 
+    String lat,lon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,9 +68,17 @@ public class CheckoutActivity extends AppCompatActivity {
 
         updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
-        String store_id = getIntent().getStringExtra(CommonString.KEY_STORE_ID);
+        store_id = getIntent().getStringExtra(CommonString.KEY_STORE_ID);
 
         coverageBean = db.getCoverageSpecificData(visit_date,store_id);
+        lat = coverageBean.getLatitude();
+        lon = coverageBean.getLongitude();
+        if (lat==null || lat.equals("")){
+            lat = "0.0";
+        }
+        if (lon==null || lon.equals("")){
+            lon = "0.0";
+        }
        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,15 +133,15 @@ public class CheckoutActivity extends AppCompatActivity {
                         + "[/USER_ID]" + "[STORE_ID]"
                         + store_id
                         + "[/STORE_ID][LATITUDE]"
-                        + coverageBean.getLatitude()
+                        + lat
                         + "[/LATITUDE][LOGITUDE]"
-                        + coverageBean.getLongitude()
+                        + lon
                         + "[/LOGITUDE][CHECKOUT_DATE]"
                         + visit_date
                         + "[/CHECKOUT_DATE][CHECK_OUTTIME]"
                         + getCurrentTime()
                         + "[/CHECK_OUTTIME][CHECK_INTIME]"
-                        + store_intime
+                        + coverageBean.getInTime()
                         + "[/CHECK_INTIME][CREATED_BY]"
                         + username
                         + "[/CREATED_BY][/STORE_CHECK_OUT_STATUS]";
@@ -160,6 +170,27 @@ public class CheckoutActivity extends AppCompatActivity {
                         envelope);
                 Object result = (Object) envelope.getResponse();
 
+                //temporary------------
+                db.updateCheckoutOuttime(store_id, getCurrentTime());
+
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString(CommonString.KEY_STORE_ID, "");
+                editor.putString(CommonString.KEY_STORE_NAME, "");
+                editor.putString(CommonString.KEY_VISIT_DATE, "");
+                editor.putString(CommonString.KEY_CAMERA_ALLOW, "");
+                editor.putString(CommonString.KEY_CHECKOUT_STATUS, "");
+                editor.putString(CommonString.KEY_CLASS_ID, "");
+                editor.putString(CommonString.KEY_EMP_ID, "");
+                editor.putString(CommonString.KEY_GEO_TAG, "");
+                editor.putString(CommonString.KEY_KEYACCOUNT_ID, "");
+                editor.putString(CommonString.KEY_STORETYPE_ID, "");
+                editor.putString(CommonString.KEY_UPLOAD_STATUS, "");
+
+                editor.commit();
+
+                db.updateCheckoutStatus(store_id, CommonString.KEY_C);
+
+
                 if (!result.toString().equalsIgnoreCase(
                         CommonString.KEY_SUCCESS)) {
                     return "Upload_Store_ChecOut_Status";
@@ -185,7 +216,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
                     db.updateCheckoutOuttime(store_id, getCurrentTime());
 
-                    SharedPreferences.Editor editor = preferences.edit();
+                     editor = preferences.edit();
                     editor.putString(CommonString.KEY_STORE_ID, "");
                     editor.putString(CommonString.KEY_STORE_NAME, "");
                     editor.putString(CommonString.KEY_VISIT_DATE, "");
@@ -203,6 +234,9 @@ public class CheckoutActivity extends AppCompatActivity {
                     db.updateCheckoutStatus(store_id, CommonString.KEY_C);
 
                 } else {
+
+
+
                     if (result.toString().equalsIgnoreCase(
                             CommonString.KEY_FALSE)) {
                         return "Upload_Store_ChecOut_Status";
