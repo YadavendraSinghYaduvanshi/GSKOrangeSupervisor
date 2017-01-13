@@ -72,6 +72,7 @@ public class StoreListActivity extends AppCompatActivity {
     private Dialog dialog;
     boolean result_flag = false, leaveflag = false;
     FloatingActionButton fab;
+    String storeid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,7 +186,7 @@ public class StoreListActivity extends AppCompatActivity {
             final StoreBean current = data.get(position);
 
 
-            String storeid = current.getSTORE_ID();
+             storeid = current.getSTORE_ID();
             //viewHolder.txt.setText(current.txt);
 
             viewHolder.txt.setText(current.getSTORE_NAME());
@@ -343,6 +344,9 @@ public class StoreListActivity extends AppCompatActivity {
 
 
                                                 /*Intent i = new Intent(StoreListActivity.this, CheckOutStoreActivity.class);
+
+                                                 intent.putExtra("storeId",store_id );
+
                                                 startActivity(i);*/
                                             } else {
 
