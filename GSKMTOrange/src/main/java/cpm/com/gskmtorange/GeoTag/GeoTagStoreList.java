@@ -80,11 +80,6 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
         db = new GSKOrangeDB(GeoTagStoreList.this);
         db.open();
 
-
-
-
-
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +88,6 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
                 startActivity(in);
 
                 finish();
-
 
             }
         });
@@ -115,9 +109,7 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
             fab.setVisibility(View.VISIBLE);
 
         }
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -261,10 +253,8 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
                 imageview=(ImageView) itemView.findViewById(R.id.imageView1);
 
             }
-        }
-
+       }
     }
-
 
     public List<StoreBean> getdata() {
         List<StoreBean> data = new ArrayList<>();
@@ -273,23 +263,16 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
 
         StoreBean storelistdata=new StoreBean();
 
-
         for(int i=0;i<storelist.size();i++)
         {
-
             storelistdata.setSTORE_NAME(storelist.get(0).getSTORE_NAME());
 
             data.add(storelistdata);
 
-
         }
-
-
 
       return data;
     }
-
-
 
     @Override
     public void onClick(View arg0) {
@@ -330,4 +313,5 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
 
         return true;
     }
+
 }

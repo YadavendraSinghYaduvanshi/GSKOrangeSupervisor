@@ -36,6 +36,17 @@
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
 
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="brandname">Brand Name</string>
+    <string name="skuname">SKU Name</string>
+    <string name="quantity">Quantity</string>
+    <string name="delete">Delete</string>
+    <string name="StoreVisited"> Store Visited</string>
+    <string name="GSKMT">GSK MT ORANGE STORE</string>
+    <string name="address">C 126, Okhla II,</string>
+    <string name="storefront">Click Store Front Image</string>
+
     <string name="select_language">Please select language</string>
     <string name="title_activity_select_language">Select Language</string>
 
@@ -103,9 +114,6 @@
 
     <string name="enter_the_values">Enter the values</string>
 
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-
     <string name="title_activity_upload">Upload Data</string>
     <string name="no_data_for_upload">No Data For Upload</string>
     <string name="first_checkout_store">First checkout of store</string>
@@ -141,6 +149,34 @@
     <string name="Display">Display</string>
     <string name="Photo">Photo</string>
     <string name="title_activity_Additional_visibility">Additional Visibility</string>
+
+    <string name="title_activity_Want_save"> Do You Want To Save</string>
+    <string name="title_activity_Want_add"> Please Add Data</string>
+    <string name="title_activity_Want_to_add">Do You Want To Add</string>
+    <string name="title_activity_Want_to_delete"> Do You Want To Delete Data</string>
+    <string name="store"> store</string>
+    <string name="title_activity_Want_to_delete1"> Do You Want To Delete</string>
+    <string name="title_activity_click_delete">Click Yes To Delete!</string>
+    <string name="title_activity_select_dropdown">Please Select dropdown</string>
+    <string name="title_activity_take_image">Please Take a image</string>
+
+    <string name="title_activity_fill_sku">Please fill sku data</string>
+    <string name="title_activity_enter_quantity">Please enter Quantity</string>
+    <string name="title_activity_save_data">Do you want to save the data</string>
+
+    <string name="clickimage">Please click the image</string>
+    <string name="gps">GPS IS DISABLED...</string>
+    <string name="gpsebale">Click ok to enable GPS.</string>
+    <string name="takeimage"> Please Take Image Before Save</string>
+    <string name="notsuppoted">This device is not supported.</string>
+    <string name="uploaddata">Uploading Data</string>
+    <string name="geotagdata">Uploading Geotag Data...</string>
+    <string name="failure">failure</string>
+    <string name="uploadimge">Uploading Geotag Images</string>
+    <string name="success">success</string>
+    <string name="wantcheckout">Are you sure you want to Checkout</string>
+    <string name="nonetwork"> No Network</string>
+
     <string name="title_activity_Non_Work">Non Working Reason</string>
     <string name="closed">Close</string>
 
@@ -161,6 +197,15 @@
     <!--Gagan start new code 2-->
     <string name="stock_facing_planogram_dialog_title">Planogram</string>
     <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="ok">OK</string>
+    <string name="check_save_message">Are you sure you want to save</string>
+    <string name="save_message">Data has been saved</string>
+    <string name="update_message">Data has been updated</string>
+    <string name="empty_field">Fill the value </string>
+    <string name="fill_data">Please fill all the data</string>
+    <string name="dialog_title">Parinaam</string>
+
     <!--Gagan end new code 2-->
 
     <string name="select_language_item">Select language</string>

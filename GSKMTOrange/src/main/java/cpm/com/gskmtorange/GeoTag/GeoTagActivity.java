@@ -3,6 +3,7 @@ package cpm.com.gskmtorange.GeoTag;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -117,6 +118,8 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
     private static final String TAG = GeoTagActivity.class.getSimpleName();
     String defaultCameraPackage = "";
     File file;
+    String gallery_package = "";
+    Uri outputFileUri;
     private int factor, k;
     ArrayList<GeotaggingBeans> geotaglist = new ArrayList<GeotaggingBeans>();
     private TextView percentage, message;
@@ -188,13 +191,13 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                     GeoTagActivity.this);
 
             // Setting Dialog Title
-            alertDialog.setTitle("GPS IS DISABLED...");
+            alertDialog.setTitle(getResources().getString(R.string.gps));
 
             // Setting Dialog Message
-            alertDialog.setMessage("Click ok to enable GPS.");
+            alertDialog.setMessage(getResources().getString(R.string.gpsebale));
 
             // Setting Positive "Yes" Button
-            alertDialog.setPositiveButton("YES",
+            alertDialog.setPositiveButton(getResources().getString(R.string.yes),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -205,7 +208,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                     });
 
             // Setting Negative "NO" Button
-            alertDialog.setNegativeButton("NO",
+            alertDialog.setNegativeButton(getResources().getString(R.string.no),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // Write your code here to invoke NO event
@@ -234,7 +237,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
                 } else {
-                    Snackbar.make(view, "Please Take Image Before Save", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    Snackbar.make(view, getResources().getString(R.string.takeimage), Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
 
                 }
@@ -257,7 +260,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                     }
                 }
 
-                _pathforcheck = storeid + "Store" + "Image" + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck = storeid + getResources().getString(R.string.store) + getResources().getString(R.string.image) + getCurrentTime().replace(":", "") + ".jpg";
 
                 _path = CommonString.FILE_PATH + _pathforcheck;
 
@@ -279,8 +282,8 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Toast.makeText(getApplicationContext(),
-                        "This device is not supported.", Toast.LENGTH_LONG)
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.notsuppoted)
+                        , Toast.LENGTH_LONG)
                         .show();
                 finish();
             }
@@ -433,58 +436,69 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     protected void startCameraActivity() {
-       /* Log.i("MakeMachine", "startCameraActivity()");
-        file = new File(_path);
-        Uri outputFileUri = Uri.fromFile(file);
+        try {
+            /*Log.i("MakeMachine", "startCameraActivity()");
+            File file = new File(_path);
+            Uri outputFileUri = Uri.fromFile(file);
 
+            Intent intent = new Intent(
+                    MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, 0);*/
 
+            Log.i("MakeMachine", "startCameraActivity()");
+            File file = new File(_path);
+            outputFileUri = Uri.fromFile(file);
 
-        takePictureIntent.setPackage(defaultCameraPackage);
+            String defaultCameraPackage = "";
+            final PackageManager packageManager = getPackageManager();
+            List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+            for (int n = 0; n < list.size(); n++) {
+                if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                    Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    Log.e("TAG", "package name  : " + list.get(n).packageName);
 
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-
-        startActivityForResult(takePictureIntent, 1);*/
-
-        Log.i("MakeMachine", "startCameraActivity()");
-        File file = new File(_path);
-        Uri outputFileUri = Uri.fromFile(file);
-
-        String defaultCameraPackage="";
-        final PackageManager packageManager = getPackageManager();
-        List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
-        for (int n=0;n<list.size();n++) {
-            if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-                Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
-                Log.e("TAG", "package name  : " + list.get(n).packageName);
-
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
-                        defaultCameraPackage = list.get(n).packageName;
-                        break;
-                    }
-                } else {
+                    //temp value in case camera is gallery app above jellybean
                     if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
-                        defaultCameraPackage = list.get(n).packageName;
-                        break;
+                        gallery_package = list.get(n).packageName;
+                    }
+
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
                     }
                 }
             }
 
+            //com.android.gallery3d
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(defaultCameraPackage);
+            startActivityForResult(intent, 0);
         }
+        catch (ActivityNotFoundException e) {
+            e.printStackTrace();
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(gallery_package);
+            startActivityForResult(intent, 0);
 
-
-        takePictureIntent.setPackage(defaultCameraPackage);
-
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-
-        startActivityForResult(takePictureIntent, 1);
-
-
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -548,7 +562,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
             dialog = new Dialog(context);
             dialog.setContentView(R.layout.custom);
-            dialog.setTitle("Uploading Data");
+            dialog.setTitle(getResources().getString(R.string.uploaddata));
             dialog.setCancelable(false);
             dialog.show();
             pb = (ProgressBar) dialog.findViewById(R.id.progressBar1);
@@ -584,7 +598,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                                 k = k + factor;
                                 pb.setProgress(k);
                                 percentage.setText(k + "%");
-                                message.setText("Uploading Geotag Data...");
+                                message.setText(getResources().getString(R.string.geotagdata));
                             }
                         });
 
@@ -716,7 +730,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 AlertMessage message = new AlertMessage(
                         GeoTagActivity.this, AlertMessage.MESSAGE_DATA_NOT
-                        + result, "failure", null);
+                        + result, getResources().getString(R.string.failure), null);
                 message.showMessage();
 
 
@@ -746,7 +760,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
             dialog = new Dialog(context);
             dialog.setContentView(R.layout.custom);
-            dialog.setTitle("Uploading Geotag Images");
+            dialog.setTitle(getResources().getString(R.string.uploadimge));
             dialog.setCancelable(false);
             dialog.show();
             pb = (ProgressBar) dialog.findViewById(R.id.progressBar1);
@@ -783,7 +797,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                                 k = k + factor;
                                 pb.setProgress(k);
                                 percentage.setText(k + "%");
-                                message.setText("Uploading Geotag Images...");
+                                message.setText(getResources().getString(R.string.uploadimge));
                             }
                         });
 
@@ -886,7 +900,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 AlertMessage message = new AlertMessage(
                         GeoTagActivity.this, AlertMessage.MESSAGE_ERROR
-                        + result, "success", null);
+                        + result, getResources().getString(R.string.success), null);
                 message.showMessage();
 
 
@@ -896,7 +910,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 AlertMessage message = new AlertMessage(
                         GeoTagActivity.this, AlertMessage.MESSAGE_DATA_NOT
-                        + result, "failure", null);
+                        + result, getResources().getString(R.string.failure), null);
                 message.showMessage();
 
 

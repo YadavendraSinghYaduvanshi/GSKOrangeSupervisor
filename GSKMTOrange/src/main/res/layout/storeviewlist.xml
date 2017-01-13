@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/storelistviewxml_storeico"
                 android:layout_toRightOf="@+id/storelistviewxml_storeico"
-                android:text="GSK MT ORANGE STORE"
+                android:text="@string/GSKMT"
                 android:textColor="#1F3A6C"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -55,19 +55,20 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/storelistviewxml_storename"
                 android:layout_below="@+id/storelistviewxml_storename"
-                android:text="C 126, Okhla II, "
+                android:text="@string/address"
                 android:textColor="#666666"
                 android:textSize="10sp"
                 android:textStyle="normal" />
 
             <Button
                 android:id="@+id/chkout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:focusable="false"
-                android:visibility="invisible" />
+                android:background="@mipmap/checkout"
+                 />
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -76,7 +77,6 @@
                 android:layout_alignBottom="@+id/storelistviewxml_storeico"
                 android:layout_alignParentRight="true"
 
-                android:background="@mipmap/tick_c"
                 android:visibility="gone"
                  />
 
