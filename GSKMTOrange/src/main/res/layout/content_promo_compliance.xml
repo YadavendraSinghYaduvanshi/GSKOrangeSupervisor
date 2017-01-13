@@ -160,9 +160,9 @@
                                         android:id="@+id/toggle_add_InStock"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:background="@drawable/toggle_selector_background"
                                         android:textOff="@string/no"
-                                        android:textOn="@string/yes"
-                                        android:background="@drawable/toggle_selector_background"/>
+                                        android:textOn="@string/yes"/>
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -199,9 +199,9 @@
                                         android:id="@+id/toggle_add_promoAnnouncer"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:background="@drawable/toggle_selector_background"
                                         android:textOff="@string/no"
-                                        android:textOn="@string/yes"
-                                        android:background="@drawable/toggle_selector_background" />
+                                        android:textOn="@string/yes" />
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -238,9 +238,9 @@
                                         android:id="@+id/toggle_add_runningPos"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:background="@drawable/toggle_selector_background"
                                         android:textOff="@string/no"
-                                        android:textOn="@string/yes"
-                                        android:background="@drawable/toggle_selector_background" />
+                                        android:textOn="@string/yes" />
                                 </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
@@ -258,7 +258,7 @@
                                 android:id="@+id/btn_add"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="right"
+                                android:layout_gravity="center"
                                 android:background="@color/colorPrimaryDark"
                                 android:text="@string/promo_compliance_add"
                                 android:textColor="@color/white" />

@@ -120,4 +120,45 @@
 
     <string name="select_language_item">Dil Seçimi</string>
 
+    <string name="title_activity_Want_save"> Do You Want To Save</string>
+    <string name="title_activity_Want_add"> Please Add Data</string>
+    <string name="title_activity_Want_to_add">Do You Want To Add</string>
+    <string name="title_activity_Want_to_delete"> Do You Want To Delete Data</string>
+    <string name="store"> store</string>
+    <string name="title_activity_Want_to_delete1"> Do You Want To Delete</string>
+    <string name="title_activity_click_delete">Click Yes To Delete!</string>
+    <string name="title_activity_select_dropdown">Please Select dropdown</string>
+    <string name="title_activity_take_image">Please Take a image</string>
+
+    <string name="title_activity_fill_sku">Please fill sku data</string>
+    <string name="title_activity_enter_quantity">Please enter Quantity</string>
+    <string name="title_activity_save_data">Do you want to save the data</string>
+
+
+    <string name="clickimage">Please click the image</string>
+    <string name="gps">GPS IS DISABLED...</string>
+    <string name="gpsebale">Click ok to enable GPS.</string>
+    <string name="takeimage"> Please Take Image Before Save</string>
+    <string name="notsuppoted">This device is not supported.</string>
+    <string name="uploaddata">Uploading Data</string>
+    <string name="geotagdata">Uploading Geotag Data...</string>
+    <string name="failure">failure</string>
+    <string name="uploadimge">Uploading Geotag Images</string>
+    <string name="success">success</string>
+    <string name="wantcheckout">Are you sure you want to Checkout</string>
+    <string name="nonetwork"> No Network</string>
+
+    <string name="click_image">Please click image</string>
+
+
+
+
+
+
+
+
+
+
 </resources>
+
+
