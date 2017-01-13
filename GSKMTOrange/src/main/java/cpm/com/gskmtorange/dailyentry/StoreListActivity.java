@@ -6,13 +6,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import android.content.res.Configuration;
 import android.content.res.Resources;
+
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -66,6 +72,7 @@ public class StoreListActivity extends AppCompatActivity {
     private Dialog dialog;
     boolean result_flag = false, leaveflag = false;
     FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +116,8 @@ public class StoreListActivity extends AppCompatActivity {
         updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         storelist = db.getStoreData(date);
-        coverage=db.getCoverageData(date);
+        coverage = db.getCoverageData(date);
+
 
         if (storelist.size() > 0) {
             //list.setAdapter(new MyAdaptor());
@@ -133,8 +141,6 @@ public class StoreListActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-
-               
 
         if (id == android.R.id.home) {
 
@@ -190,35 +196,29 @@ public class StoreListActivity extends AppCompatActivity {
                 viewHolder.imageview.setVisibility(View.INVISIBLE);
             } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_U)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
-                viewHolder.imageview.setBackgroundResource(R.mipmap.tick_u);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.tick);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
             } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_D)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
-                viewHolder.imageview.setBackgroundResource(R.mipmap.tick_d);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
             } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_C)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
-                viewHolder.imageview.setBackgroundResource(R.mipmap.tick_c);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
             } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_P)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
-                viewHolder.imageview.setBackgroundResource(R.mipmap.tick_p);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
             } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_L)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
-                viewHolder.imageview.setBackgroundResource(R.mipmap.tickl);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-            }
-            else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+            } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
-                viewHolder.imageview.setBackgroundResource(R.mipmap.leave_tick);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-            }
-
-
-
-
-            else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
+            } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
 
 
                 if (coverage.size() > 0) {
@@ -234,8 +234,10 @@ public class StoreListActivity extends AppCompatActivity {
 
                                 if (storeid.equals(coverage.get(i).getStoreId())) {
                                     viewHolder.imageview.setVisibility(View.VISIBLE);
-                                    viewHolder.imageview.setBackgroundResource(R.mipmap.checkin);
+                                    //  viewHolder.imageview.setBackgroundResource(R.mipmap.checkin);
                                     viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                                    viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.green));
+
 
                                 }
                                 break;
@@ -246,6 +248,8 @@ public class StoreListActivity extends AppCompatActivity {
                     }
                 }
             } else {
+
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
                 viewHolder.imageview.setVisibility(View.INVISIBLE);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
             }
@@ -271,12 +275,9 @@ public class StoreListActivity extends AppCompatActivity {
                         Snackbar.make(v, R.string.title_store_list_activity_store_again_uploaded, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_L)) {
                         Snackbar.make(v, R.string.title_store_list_activity_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-                    else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+                    } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
                         Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-
-                    else {
+                    } else {
 
                         // PUT IN PREFERENCES
                         editor = preferences.edit();
@@ -324,8 +325,61 @@ public class StoreListActivity extends AppCompatActivity {
                     }
                 }
             });
-        }
 
+
+            viewHolder.chkbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            StoreListActivity.this);
+                    builder.setMessage(R.string.wantcheckout)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.ok,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(
+                                                DialogInterface dialog, int id) {
+                                            if (CheckNetAvailability()) {
+
+
+                                                /*Intent i = new Intent(StoreListActivity.this, CheckOutStoreActivity.class);
+                                                startActivity(i);*/
+                                            } else {
+
+                                                Snackbar.make(recyclerView, R.string.nonetwork, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+
+                                            }
+
+                                        }
+                                    })
+                            .setNegativeButton(R.string.cancel,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(
+                                                DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+
+                }
+            });
+
+        }
+        public boolean CheckNetAvailability() {
+
+            boolean connected = false;
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+                    .getState() == NetworkInfo.State.CONNECTED
+                    || connectivityManager.getNetworkInfo(
+                    ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                // we are connected to a network
+                connected = true;
+            }
+            return connected;
+        }
         @Override
         public int getItemCount() {
             return data.size();
@@ -338,6 +392,7 @@ public class StoreListActivity extends AppCompatActivity {
             RelativeLayout relativelayout;
             ImageView imageview;
             Button chkbtn;
+            CardView Cardbtn;
 
             public MyViewHolder(View itemView) {
                 super(itemView);
@@ -348,6 +403,8 @@ public class StoreListActivity extends AppCompatActivity {
                 imageview = (ImageView) itemView.findViewById(R.id.imageView2);
 
                 chkbtn = (Button) itemView.findViewById(R.id.chkout);
+                Cardbtn = (CardView) itemView.findViewById(R.id.card_view);
+
 
             }
         }
@@ -368,25 +425,22 @@ public class StoreListActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // find which radio button is selected
                 if (checkedId == R.id.yes) {
-                   boolean flag=true;
-                    if(coverage.size()>0) {
+                    boolean flag = true;
+                    if (coverage.size() > 0) {
                         for (int i = 0; i < coverage.size(); i++) {
                             if (store_id.equals(coverage.get(i).getStoreId())) {
-                                flag=false;
+                                flag = false;
                                 break;
                             }
                         }
                     }
-                    if(flag==true)
-                    {
+                    if (flag == true) {
                         Intent in = new Intent(StoreListActivity.this, StoreimageActivity.class);
                         startActivity(in);
                         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
                         dialog.cancel();
-                    }
-                    else
-                    {
-                        Intent in=new Intent(StoreListActivity.this,CategoryListActivity.class);
+                    } else {
+                        Intent in = new Intent(StoreListActivity.this, CategoryListActivity.class);
                         startActivity(in);
                         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
                         dialog.cancel();
@@ -400,7 +454,7 @@ public class StoreListActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(StoreListActivity.this);
                         builder.setMessage(CommonString.DATA_DELETE_ALERT_MESSAGE)
                                 .setCancelable(false)
-                                .setPositiveButton("Yes",
+                                .setPositiveButton(getResources().getString(R.string.yes),
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog,
                                                                 int id) {
@@ -409,13 +463,12 @@ public class StoreListActivity extends AppCompatActivity {
                                                 UpdateStore(store_id);
 
 
-
-                                                Intent in  = new Intent(StoreListActivity.this, NonWorkingReason.class);
+                                                Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
                                                 startActivity(in);
 
                                             }
                                         })
-                                .setNegativeButton("No",
+                                .setNegativeButton(getResources().getString(R.string.no),
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog,
                                                                 int id) {
@@ -430,7 +483,7 @@ public class StoreListActivity extends AppCompatActivity {
                     } else {
 
 
-                        Intent in  = new Intent(StoreListActivity.this, NonWorkingReason.class);
+                        Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
                         startActivity(in);
                     }
 
@@ -500,3 +553,6 @@ public class StoreListActivity extends AppCompatActivity {
 
     }
 }
+
+
+
