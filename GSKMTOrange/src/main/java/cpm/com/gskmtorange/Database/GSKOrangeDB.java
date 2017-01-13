@@ -538,7 +538,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             values1.put(CommonString.KEY_COVERAGE_STATUS, status);
 
             db.update(CommonString.KEY_JOURNEY_PLAN, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
-            db.update(CommonString.TABLE_COVERAGE_DATA, values1, CommonString.KEY_STORE_ID + "='" + id + "'", null);
+            //db.update(CommonString.TABLE_COVERAGE_DATA, values1, CommonString.KEY_STORE_ID + "='" + id + "'", null);
 
         } catch (Exception ex) {
 
@@ -2925,15 +2925,16 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
     //update out time
-    public void updateCheckoutOuttime(String id, String out_time) {
+    public void updateCheckoutOuttime(String id, String out_time, String status) {
 
         ContentValues values = new ContentValues();
 
         try {
 
             values.put(CommonString.KEY_OUT_TIME, out_time);
+            values.put(CommonString.KEY_COVERAGE_STATUS, status);
 
-            db.update(CommonString.KEY_JOURNEY_PLAN, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
+            db.update(CommonString.TABLE_COVERAGE_DATA, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
 
         } catch (Exception ex) {
 
