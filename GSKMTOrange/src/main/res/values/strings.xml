@@ -164,7 +164,7 @@
     <string name="title_activity_enter_quantity">Please enter Quantity</string>
     <string name="title_activity_save_data">Do you want to save the data</string>
 
-    <string name="ok">OK</string>
+ 
     <string name="clickimage">Please click the image</string>
     <string name="gps">GPS IS DISABLED...</string>
     <string name="gpsebale">Click ok to enable GPS.</string>
