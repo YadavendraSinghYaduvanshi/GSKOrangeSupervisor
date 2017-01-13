@@ -264,12 +264,12 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_exit) {
 
 
-            Intent startDownload = 	new Intent(this,AdditionalVisibility.class);
+          /*  Intent startDownload = 	new Intent(this,AdditionalVisibility.class);
             startActivity(startDownload);
 
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-
-
+*/
+            finish();
 
         } else if (id == R.id.nav_services) {
 

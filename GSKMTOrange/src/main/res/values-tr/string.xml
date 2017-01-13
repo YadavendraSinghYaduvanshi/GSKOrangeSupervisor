@@ -73,12 +73,12 @@
     <string name="daily_data_menu_additional_promotions">Promosyon</string>
 
     <string name="msl_availability_sku">Ürün Adı</string>
-    <string name="msl_availability_mbq">X</string>
+    <string name="msl_availability_mbq">MBQ</string>
     <string name="msl_availability_availability">Bulunurluk</string>
 
     <string name="stock_facing_reference_image">Örnek Fotoğraf</string>
     <string name="stock_facing_sku_name">Ürün Adı</string>
-    <string name="stock_facing_stock">X</string>
+    <string name="stock_facing_stock">Stock</string>
     <string name="stock_facing_faceup">Önyüz</string>
     <string name="stock_facing_sos_target">Raf Payı Hedefi</string>
     <string name="stock_facing_sos">Raf Payi</string>
@@ -111,4 +111,12 @@
     <!--Gagan start new code 2-->
     <string name="stock_facing_planogram_dialog_title">Planogram</string>
     <!--Gagan end new code 2-->
+
+    <string name="stock">Stock</string>
+    <string name="AdditionalDisplay">Ek Teşhir</string>
+    <string name="Display">Teşhir Türü</string>
+    <string name="Photo">Fotoğraf</string>
+    <string name="title_activity_Additional_visibility">Ek Teşhir</string>
+
 </resources>
+
