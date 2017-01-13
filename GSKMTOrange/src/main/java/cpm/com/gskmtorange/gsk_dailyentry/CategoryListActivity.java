@@ -95,9 +95,49 @@ public class CategoryListActivity extends AppCompatActivity {
 
         categoryList = db.getCategoryListData(keyAccount_id, storeType_id, class_id);
 
-        adapter = new CategoryListAdapter(CategoryListActivity.this, categoryList);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+        if(categoryList.size()>0){
+
+            for(int i=0;i<categoryList.size();i++){
+
+                boolean flag_filled = false;
+                String category_id = categoryList.get(i).getCategory_id();
+                if (db.checkMsl_AvailabilityData(store_id, category_id)
+                        && db.checkStockAndFacingData(store_id, category_id)
+                        && db.checkPromoComplianceData(store_id, category_id)
+                        && db.isFilledT2P(store_id, category_id)
+                        && db.additionalVisibilitydata(store_id, category_id)) {
+
+                    flag_filled =true;
+
+                }
+
+                if(flag_filled){
+                    if (category_id.equals("1")){
+                        categoryList.get(i).setCategory_img(R.mipmap.nutritionals_tick);
+                    }
+                    else if (category_id.equals("2")){
+                        categoryList.get(i).setCategory_img(R.mipmap.oralcare_tick);
+                    }else  if (category_id.equals("3")){
+                        categoryList.get(i).setCategory_img(R.mipmap.wellness_tick);
+                    }
+                }
+                else {
+                    if (category_id.equals("1")){
+                        categoryList.get(i).setCategory_img(R.mipmap.nutritionals);
+                    }
+                    else if (category_id.equals("2")){
+                        categoryList.get(i).setCategory_img(R.mipmap.oral_care);
+                    }else  if (category_id.equals("3")){
+                        categoryList.get(i).setCategory_img(R.mipmap.wellness);
+                    }
+                }
+            }
+
+            adapter = new CategoryListAdapter(CategoryListActivity.this, categoryList);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+        }
+
     }
 
     @Override
@@ -149,39 +189,8 @@ public class CategoryListActivity extends AppCompatActivity {
             final CategoryGetterSetter categoryData = list.get(position);
 
             holder.categoryName.setText(categoryData.getCategory());
-            //holder.categoryIcon.setImageResource(R.drawable.category);
 
-            if (categoryData.getCategory().equalsIgnoreCase("Oral Health")) {
-                if (db.checkMsl_AvailabilityData(store_id, categoryData.getCategory_id())
-                        && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
-                        && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
-
-                    holder.categoryIcon.setImageResource(R.mipmap.oralcare_tick);
-                } else {
-                    holder.categoryIcon.setImageResource(R.mipmap.oral_care);
-                }
-            } else if (categoryData.getCategory().equalsIgnoreCase("Wellness")) {
-                if (db.checkMsl_AvailabilityData(store_id, categoryData.getCategory_id())
-                        && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
-                        && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
-
-                    holder.categoryIcon.setImageResource(R.mipmap.wellness_tick);
-                } else {
-
-                    holder.categoryIcon.setImageResource(R.mipmap.wellness);
-                }
-            } else if (categoryData.getCategory().equalsIgnoreCase("Nutritionals")) {
-
-                if (db.checkMsl_AvailabilityData(store_id, categoryData.getCategory_id())
-                        && db.checkStockAndFacingData(store_id, categoryData.getCategory_id())
-                        && db.checkPromoComplianceData(store_id, categoryData.getCategory_id())) {
-
-                    holder.categoryIcon.setImageResource(R.mipmap.nutritionals_tick);
-                } else {
-                    holder.categoryIcon.setImageResource(R.mipmap.nutritionals);
-                }
-            }
-
+            holder.categoryIcon.setImageResource(categoryData.getCategory_img());
 
             holder.lay_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
