@@ -45,9 +45,35 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
     GSKOrangeDB db;
     String categoryName, categoryId;
-
-    private SharedPreferences preferences;
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    private SharedPreferences preferences;
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +101,10 @@ public class PromoComplianceActivity extends AppCompatActivity {
             db = new GSKOrangeDB(this);
             db.open();
 
-            //preference data
-            preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
             updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
+            //preference data
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -265,6 +290,13 @@ public class PromoComplianceActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     private void prepareList() {
@@ -418,7 +450,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -430,7 +462,23 @@ public class PromoComplianceActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            finish();
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(PromoComplianceActivity.this);
+            builder.setTitle(getResources().getString(R.string.dialog_title));
+            builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            android.app.AlertDialog alert = builder.create();
+            alert.show();
+            //finish();
         }
 
         //noinspection SimplifiableIfStatement
@@ -442,35 +490,24 @@ public class PromoComplianceActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
-    }
+    public void onBackPressed() {
+        //super.onBackPressed();
 
-    private static boolean updateResources(Context context, String language) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(PromoComplianceActivity.this);
+        builder.setTitle(getResources().getString(R.string.dialog_title));
+        builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-        String lang ;
-
-        if(language.equalsIgnoreCase("English")){
-            lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
-            lang = "AR";
-        }
-        else {
-            lang = "TR";
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
     }
 }

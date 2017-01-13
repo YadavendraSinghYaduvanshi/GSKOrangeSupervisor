@@ -73,11 +73,10 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             db = new GSKOrangeDB(this);
             db.open();
 
-            //preference data
-            preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
             updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
+            //preference data
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -106,18 +105,18 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
                     //if (validateData(listDataHeader, listDataChild)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MSL_AvailabilityActivity.this);
-                    builder.setMessage("Are you sure you want to save")
+                    builder.setMessage(getResources().getString(R.string.check_save_message))
                             .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     db.open();
 
                                     if (db.checkMsl_AvailabilityData(store_id, categoryId)) {
                                         db.updateMSL_Availability(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
-                                        Snackbar.make(view, "Data has been updated", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        Snackbar.make(view, getResources().getString(R.string.update_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                     } else {
                                         db.InsertMSL_Availability(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
-                                        Snackbar.make(view, "Data has been saved", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        Snackbar.make(view, getResources().getString(R.string.save_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                     }
 
                                     //Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
@@ -125,7 +124,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                                     overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                                 }
                             })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                 }
@@ -221,6 +220,13 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     private void prepareList() {
@@ -260,7 +266,23 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            finish();
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MSL_AvailabilityActivity.this);
+            builder.setTitle(getResources().getString(R.string.dialog_title));
+            builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            android.app.AlertDialog alert = builder.create();
+            alert.show();
+            //finish();
         }
 
         //noinspection SimplifiableIfStatement
@@ -269,6 +291,28 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MSL_AvailabilityActivity.this);
+        builder.setTitle(getResources().getString(R.string.dialog_title));
+        builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
     }
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -312,6 +356,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             ImageView img_camera = (ImageView) convertView.findViewById(R.id.img_camera);
 
             txt_categoryHeader.setTypeface(null, Typeface.BOLD);
+            txt_categoryHeader.setTextColor(getResources().getColor(R.color.colorPrimary));
             txt_categoryHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
             /*img_camera.setOnClickListener(new View.OnClickListener() {
@@ -393,6 +438,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
+            holder.txt_skuName.setTextColor(getResources().getColor(R.color.colorPrimary));
             holder.txt_skuName.setText(childData.getSku());
             holder.txt_mbq.setText(childData.getMbq());
 
@@ -442,12 +488,6 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         LinearLayout lin_category;
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
-    }
 
     private static boolean updateResources(Context context, String language) {
 
