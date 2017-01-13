@@ -212,18 +212,18 @@ public class MainActivity extends AppCompatActivity
 
 
                     } else {
-                        //if (isStoreCheckedIn()&& isValid()) {
+                        if (isStoreCheckedIn()&& isValid()) {
 
                         Intent i = new Intent(getBaseContext(), UploadActivity.class);
                         startActivity(i);
 
                         //finish();
 
-                        /*} else {
+                       } else {
 
                             Snackbar.make(webView, error_msg, Snackbar.LENGTH_SHORT)
                                     .setAction("Action", null).show();
-                        }*/
+                        }
 
                     }
 
@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity
             /*Intent startDownload = 	new Intent(this,T2PComplianceActivity.class);
             startActivity(startDownload);
 */
-            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+            //overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
         } else if (id == R.id.nav_setting) {
 
