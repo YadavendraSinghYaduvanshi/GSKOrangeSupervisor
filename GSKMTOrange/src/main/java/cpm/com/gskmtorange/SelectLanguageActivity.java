@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -50,6 +52,8 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
         login_data = (LoginGetterSetter) getIntent().getSerializableExtra(CommonString.KEY_LOGIN_DATA);
         language = login_data.getCULTURE_NAME();
         culture_id = login_data.getCULTURE_ID();
+
+        setDataFromSharedPreferences(login_data);
 
         if (language.size() > 1) {
 
@@ -143,5 +147,16 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 
         return true;
+    }
+
+    private void setDataFromSharedPreferences(LoginGetterSetter lgs) {
+        Gson gson = new Gson();
+        String jsonCurProduct = gson.toJson(lgs);
+
+        //SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(CommonString.KEY_LOOGIN_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString(CommonString.KEY_LOOGIN_PREF, jsonCurProduct);
+        editor.commit();
     }
 }

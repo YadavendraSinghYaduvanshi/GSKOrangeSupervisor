@@ -50,8 +50,10 @@ public class CommonString {
     public static final String KEY_COVERAGE_REMARK = "REMARK";
     public static final String KEY_IMAGE = "IMAGE";
     public static final String KEY_IMAGE_URL = "IMAGE_URL";
-        public static final String KEY_ID = "Id";
+    public static final String KEY_ID = "Id";
     public static final String KEY_MERCHANDISER_ID = "MERCHANDISER_ID";
+
+    public static final String KEY_LOOGIN_PREF ="LOGIN_PREF";
 
     //KEYS RELATED TO T2P COMPLIANCE
 

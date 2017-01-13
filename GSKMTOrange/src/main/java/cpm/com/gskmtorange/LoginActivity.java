@@ -39,7 +39,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -695,5 +694,7 @@ public class LoginActivity extends AppCompatActivity {
 
         return true;
     }
+
+
 }
 

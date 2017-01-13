@@ -6,7 +6,9 @@ package cpm.com.gskmtorange.xmlGetterSetter;
 
 public class CategoryGetterSetter {
 
-    String category_id, category, category_img;
+    String category_id, category;
+
+    int category_img;
 
     public String getCategory_id() {
         return category_id;
@@ -24,11 +26,12 @@ public class CategoryGetterSetter {
         this.category = category;
     }
 
-    public String getCategory_img() {
+
+    public int getCategory_img() {
         return category_img;
     }
 
-    public void setCategory_img(String category_img) {
+    public void setCategory_img(int category_img) {
         this.category_img = category_img;
     }
 }
