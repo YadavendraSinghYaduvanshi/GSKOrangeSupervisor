@@ -99,12 +99,11 @@ public class PromoComplianceActivity extends AppCompatActivity {
             btn_add = (Button) findViewById(R.id.btn_add);
 
             db = new GSKOrangeDB(this);
-            db.open();
-
-            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+            db.open();            
 
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
