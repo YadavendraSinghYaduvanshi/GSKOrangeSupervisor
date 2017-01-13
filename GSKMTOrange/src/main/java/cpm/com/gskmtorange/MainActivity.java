@@ -392,7 +392,7 @@ public class MainActivity extends AppCompatActivity
     public boolean isStoreCheckedIn() {
 
         boolean result_flag = true;
-        for (int i = 0; i < coverageList.size(); i++) {
+        /*for (int i = 0; i < coverageList.size(); i++) {
 
             String status = coverageList.get(i).getStatus();
             if (status.equals(CommonString.KEY_INVALID) || status.equals(CommonString.KEY_VALID)) {
@@ -400,7 +400,7 @@ public class MainActivity extends AppCompatActivity
                 error_msg = getResources().getString(R.string.title_store_list_checkout_current);
                 break;
             }
-        }
+        }*/
 
         return result_flag;
     }
@@ -411,9 +411,10 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < coverageList.size(); i++) {
 
             storestatus = db.getSpecificStoreData(date, coverageList.get(i).getStoreId()).getUPLOAD_STATUS();
+            String coverage_status =  db.getSpecificStoreData(date, coverageList.get(i).getStoreId()).getCHECKOUT_STATUS();
 
             if (!storestatus.equalsIgnoreCase(CommonString.KEY_U)) {
-                if ((storestatus.equalsIgnoreCase(
+                if ((coverage_status.equalsIgnoreCase(
                         CommonString.KEY_C)
                         || storestatus.equalsIgnoreCase(CommonString.KEY_P) ||
                         storestatus.equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE))) {

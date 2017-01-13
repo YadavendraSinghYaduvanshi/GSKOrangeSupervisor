@@ -310,6 +310,7 @@ public class StoreListActivity extends AppCompatActivity {
                                             if (!store_id.equals(coverage.get(i).getStoreId())) {
                                                 Snackbar.make(v, R.string.title_store_list_checkout_current, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                                                 enteryflag = false;
+
                                             }
                                             break;
                                         }
@@ -343,11 +344,11 @@ public class StoreListActivity extends AppCompatActivity {
                                             if (CheckNetAvailability()) {
 
 
-                                                /*Intent i = new Intent(StoreListActivity.this, CheckOutStoreActivity.class);
+                                                Intent i = new Intent(StoreListActivity.this, CheckoutActivity.class);
 
-                                                 intent.putExtra("storeId",store_id );
+                                                 i.putExtra(CommonString.KEY_STORE_ID,current.getSTORE_ID() );
 
-                                                startActivity(i);*/
+                                                startActivity(i);
                                             } else {
 
                                                 Snackbar.make(recyclerView, R.string.nonetwork, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
