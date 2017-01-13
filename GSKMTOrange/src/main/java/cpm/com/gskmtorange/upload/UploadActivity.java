@@ -454,7 +454,7 @@ public class UploadActivity extends AppCompatActivity {
 
                                     String KeyID = additionalVisibilityList.get(J).getKey_id();
 
-                                    additionalVisibilitySkuList = db.getDialogStock(KeyID);
+                                    additionalVisibilitySkuList = db.getDialogStockUpload(KeyID);
 
                                 if(additionalVisibilitySkuList.size()>0)
                                 {
@@ -469,9 +469,9 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[KEY_ID]"
                                             + additionalVisibilitySkuList.get(k).getCOMMON_ID()
                                             + "[/KEY_ID]"
-                                           /* + "[DIALOG_BRAND_ID]"
-                                            + additionalVisibilitySkuList.get(k).getBrand_id()
-                                            + "[/DIALOG_BRAND_ID]"*/
+                                            + "[CATEGORY_ID]"
+                                            + additionalVisibilitySkuList.get(k).getCategoryId()
+                                            + "[/CATEGORY_ID]"
                                             + "[SKU_ID]"
                                             + additionalVisibilitySkuList.get(k).getSku_id()
                                             + "[/SKU_ID]"
@@ -513,6 +513,10 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[/ADDITIONAL_VISIBILITY_DATA]";
 
                                 additional_visibility_data_xml = additional_visibility_data_xml + onXML;
+                                KeyID="";
+                                additionalVisibilitySkuList.clear();
+
+                                additional_visibility_dialog_xml="";
 
                             }
 

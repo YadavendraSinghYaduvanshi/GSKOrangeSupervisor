@@ -150,8 +150,8 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.img_cam_selfie:
 
-                _pathforcheck = store_id + "Store"
-                        + "Image" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck = store_id + getResources().getString(R.string.store)
+                        + getResources().getString(R.string.image) + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
                 _path = CommonString.FILE_PATH + _pathforcheck;
 
@@ -166,9 +166,9 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                 if (img_str != null) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(StoreimageActivity.this);
-                    builder.setMessage("Do you want to save the data ")
+                    builder.setMessage(getResources().getString(R.string.title_activity_save_data))
                             .setCancelable(false)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
                                     alert.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
@@ -203,7 +203,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                                     finish();
                                 }
                             })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                 }
@@ -213,7 +213,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                     alert.show();
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please click the image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.clickimage), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

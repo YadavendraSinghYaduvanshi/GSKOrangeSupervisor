@@ -418,4 +418,53 @@ public class CommonString {
             + KEY_IMAGE + " VARCHAR)";
 
 
+
+    public static final String TABLE_INSERT_STOCK_ADDITIONAL_MAIN = "Stock_Additional_visibility_Main";
+
+    public static final String CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY_MAIN = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_STOCK_ADDITIONAL_MAIN
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "Store_Id"
+            + " VARCHAR,"
+
+            + "brand_name"
+            + " VARCHAR,"
+
+            + "brand_id"
+            + " VARCHAR,"
+
+            + "image_url"
+            + " VARCHAR,"
+
+            + "sku_id"
+            + " VARCHAR,"
+
+            + "sku_name"
+            + " VARCHAR,"
+
+            + "toggle_value"
+            + " VARCHAR,"
+
+            + "categoryId"
+            + " VARCHAR"
+
+            + ")";
+
+    public static final String TABLE_INSERT_STOCK_DIALOG_MAIN = "STOCK_DIALOG_MAIN";
+    public static final String CREATE_TABLE_STOCK_DIALOG_MAIN = "CREATE TABLE "
+            + TABLE_INSERT_STOCK_DIALOG_MAIN + " (" + KEY_ID
+            + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " VARCHAR,"
+            + KEY_BRAND_ID + " VARCHAR," + KEY_BRAND + " VARCHAR,"
+            + KEY_DISPLAY_ID +" VARCHAR,"
+            + KEY_SKU_ID + " VARCHAR," + KEY_QUANTITY + " VARCHAR," + KEY_Common_ID + " VARCHAR,"
+            + "categoryId" + " VARCHAR,"
+            + KEY_SKUNAME + " VARCHAR,"
+            + KEY_PROCESS_ID + " VARCHAR)";
+
+
+
+
 }

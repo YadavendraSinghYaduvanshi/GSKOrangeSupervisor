@@ -105,6 +105,10 @@ public class StoreListActivity extends AppCompatActivity {
         storelist = db.getStoreData(date);
         coverage=db.getCoverageData(date);
 
+
+
+
+
         if (storelist.size() > 0) {
             //list.setAdapter(new MyAdaptor());
             adapter = new StoreListActivity.ValueAdapter(getApplicationContext(), storelist);
@@ -394,7 +398,7 @@ public class StoreListActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(StoreListActivity.this);
                         builder.setMessage(CommonString.DATA_DELETE_ALERT_MESSAGE)
                                 .setCancelable(false)
-                                .setPositiveButton("Yes",
+                                .setPositiveButton(getResources().getString(R.string.yes),
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog,
                                                                 int id) {
@@ -409,7 +413,7 @@ public class StoreListActivity extends AppCompatActivity {
 
                                             }
                                         })
-                                .setNegativeButton("No",
+                                .setNegativeButton(getResources().getString(R.string.no),
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog,
                                                                 int id) {
@@ -466,3 +470,6 @@ public class StoreListActivity extends AppCompatActivity {
 
     }
 }
+
+
+

@@ -9,9 +9,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Store Visited"
+        android:text="@string/StoreVisited"
         android:textColor="@color/black"
-        android:textSize="25sp" />
+        android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:id="@+id/yes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Yes"
+            android:text="@string/yes"
             android:textColor="#000000" 
              android:background="@color/colorPrimary"/>
 
@@ -42,7 +42,7 @@
             android:id="@+id/no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No"
+            android:text="@string/no"
             android:textColor="#000000" 
             android:background="@color/colorPrimary"/>
     </RadioGroup>
