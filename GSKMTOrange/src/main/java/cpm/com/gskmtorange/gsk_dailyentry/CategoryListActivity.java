@@ -136,6 +136,8 @@ public class CategoryListActivity extends AppCompatActivity {
             adapter = new CategoryListAdapter(CategoryListActivity.this, categoryList);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+
+            updateStatus();
         }
 
     }
@@ -249,5 +251,31 @@ public class CategoryListActivity extends AppCompatActivity {
 
         return true;
     }
+
+    public void updateStatus() {
+        //Update Checkout Status
+        boolean flag_filled = false;
+
+        for (int i = 0; i < categoryList.size(); i++) {
+            String category_id = categoryList.get(i).getCategory_id();
+
+            if (db.checkMsl_AvailabilityData(store_id, category_id)
+                    && db.checkStockAndFacingData(store_id, category_id)
+                    && db.checkPromoComplianceData(store_id, category_id)
+                    && db.isFilledT2P(store_id, category_id)
+                    && db.additionalVisibilitydata(store_id, category_id)) {
+
+                flag_filled = true;
+            } else {
+                flag_filled = false;
+                break;
+            }
+        }
+
+        if (flag_filled) {
+            db.updateCheckoutStatus(store_id, CommonString.KEY_VALID);
+        }
+    }
+
 
 }
