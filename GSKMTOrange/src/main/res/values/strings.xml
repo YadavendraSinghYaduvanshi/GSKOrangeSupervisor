@@ -150,6 +150,16 @@
 
     <!--Gagan start new code 2-->
     <string name="stock_facing_planogram_dialog_title">Planogram</string>
+
+    <string name="ok">OK</string>
+    <string name="check_save_message">Are you sure you want to save</string>
+    <string name="save_message">Data has been saved</string>
+    <string name="update_message">Data has been updated</string>
+    <string name="empty_field">Fill the value </string>
+    <string name="fill_data">Please fill all the data</string>
+    <string name="dialog_title">Parinaam</string>
+
+
     <!--Gagan end new code 2-->
 
 </resources>
