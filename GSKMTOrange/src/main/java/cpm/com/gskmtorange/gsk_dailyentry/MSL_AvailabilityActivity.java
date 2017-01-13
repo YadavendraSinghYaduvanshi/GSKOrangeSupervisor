@@ -330,6 +330,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             ImageView img_camera = (ImageView) convertView.findViewById(R.id.img_camera);
 
             txt_categoryHeader.setTypeface(null, Typeface.BOLD);
+            txt_categoryHeader.setTextColor(getResources().getColor(R.color.colorPrimary));
             txt_categoryHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
             /*img_camera.setOnClickListener(new View.OnClickListener() {
@@ -398,6 +399,8 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                 holder = new ViewHolder();
                 holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
                 holder.lin_category = (LinearLayout) convertView.findViewById(R.id.lin_category);
+
+                holder.txt_skuName.setTextColor(getResources().getColor(R.color.colorPrimary));
 
                 holder.txt_skuName = (TextView) convertView.findViewById(R.id.txt_skuName);
                 holder.txt_mbq = (TextView) convertView.findViewById(R.id.txt_mbq);
