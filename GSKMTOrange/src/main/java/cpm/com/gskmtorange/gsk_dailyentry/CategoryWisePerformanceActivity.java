@@ -37,54 +37,28 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
 
     ArrayList<CategoryWisePerformaceGetterSetter> categoryWisePerformanceList;
     CategoryWisePerformaceAdapter adapter;
-    private SharedPreferences preferences;
+
     GSKOrangeDB db;
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_category_wise_performance);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        //txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
-
-        categoryName = getIntent().getStringExtra("categoryName");
-        categoryId = getIntent().getStringExtra("categoryId");
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
-
-        //txt_categoryName.setText(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
-        toolbar.setTitle(getResources().getString(R.string.title_activity_category_wise_performance) + " " + categoryName);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CategoryWisePerformanceActivity.this, DailyDataMenuActivity.class);
-                intent.putExtra("categoryName", categoryName);
-                intent.putExtra("categoryId", categoryId);
-                startActivity(intent);
-            }
-        });
-
         try {
+            setContentView(R.layout.activity_category_wise_performance);
 
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
+            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
             db = new GSKOrangeDB(this);
             db.open();
 
-               store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
+            //preference data
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
             username = preferences.getString(CommonString.KEY_USERNAME, null);
@@ -103,7 +77,16 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(CategoryWisePerformanceActivity.this, DailyDataMenuActivity.class);
+                    intent.putExtra("categoryName", categoryName);
+                    intent.putExtra("categoryId", categoryId);
+                    startActivity(intent);
+                }
+            });
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
@@ -113,79 +96,8 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-      
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
-
-        categoryWisePerformanceList = new ArrayList<>();
-        CategoryWisePerformaceGetterSetter data = new CategoryWisePerformaceGetterSetter();
-
-        data.setPeriod("Period");
-        data.setSos("SOS");
-        data.setT2p("T2P");
-        data.setPromo("Promo");
-        data.setMsl_availability("MSL Availability");
-        data.setOss("OSS");
-        categoryWisePerformanceList.add(data);
-
-        data = new CategoryWisePerformaceGetterSetter();
-        data.setPeriod("LTM");
-        data.setSos("75");
-        data.setT2p("0");
-        data.setPromo("0");
-        data.setMsl_availability("25");
-        data.setOss("55");
-        categoryWisePerformanceList.add(data);
-
-        data = new CategoryWisePerformaceGetterSetter();
-        data.setPeriod("MTM");
-        data.setSos("75");
-        data.setT2p("0");
-        data.setPromo("0");
-        data.setMsl_availability("25");
-        data.setOss("55");
-        categoryWisePerformanceList.add(data);
-
-        data = new CategoryWisePerformaceGetterSetter();
-        data.setPeriod("RTM");
-        data.setSos("75");
-        data.setT2p("0");
-        data.setPromo("0");
-        data.setMsl_availability("25");
-        data.setOss("55");
-        categoryWisePerformanceList.add(data);
-
-        data = new CategoryWisePerformaceGetterSetter();
-        data.setPeriod("LTM");
-        data.setSos("75");
-        data.setT2p("0");
-        data.setPromo("0");
-        data.setMsl_availability("25");
-        data.setOss("55");
-        categoryWisePerformanceList.add(data);
-
-        data = new CategoryWisePerformaceGetterSetter();
-        data.setPeriod("MTM");
-        data.setSos("75");
-        data.setT2p("0");
-        data.setPromo("0");
-        data.setMsl_availability("25");
-        data.setOss("55");
-        categoryWisePerformanceList.add(data);
-
-        data = new CategoryWisePerformaceGetterSetter();
-        data.setPeriod("RTM");
-        data.setSos("75");
-        data.setT2p("0");
-        data.setPromo("0");
-        data.setMsl_availability("25");
-        data.setOss("55");
-        categoryWisePerformanceList.add(data);
-
-        adapter = new CategoryWisePerformaceAdapter(CategoryWisePerformanceActivity.this, categoryWisePerformanceList);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
         try {
+            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
             categoryWisePerformanceList = db.getCategoryWisePerformance(store_id, categoryId);
 
             adapter = new CategoryWisePerformaceAdapter(CategoryWisePerformanceActivity.this, categoryWisePerformanceList);
@@ -194,13 +106,31 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public class CategoryWisePerformaceAdapter extends RecyclerView.Adapter<CategoryWisePerformaceAdapter.MyViewHolder> {
         Context context;
-        private LayoutInflater inflator;
         List<CategoryWisePerformaceGetterSetter> list = Collections.emptyList();
+        private LayoutInflater inflator;
 
         public CategoryWisePerformaceAdapter(Context context, List<CategoryWisePerformaceGetterSetter> list) {
             inflator = LayoutInflater.from(context);
@@ -256,25 +186,6 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            finish();
-        }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private static boolean updateResources(Context context, String language) {
 
         String lang ;
@@ -301,4 +212,5 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
 
         return true;
     }
+
 }
