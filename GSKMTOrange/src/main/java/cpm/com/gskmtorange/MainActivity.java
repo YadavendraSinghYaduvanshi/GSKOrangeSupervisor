@@ -392,7 +392,7 @@ public class MainActivity extends AppCompatActivity
     public boolean isStoreCheckedIn() {
 
         boolean result_flag = true;
-        /*for (int i = 0; i < coverageList.size(); i++) {
+        for (int i = 0; i < coverageList.size(); i++) {
 
             String status = coverageList.get(i).getStatus();
             if (status.equals(CommonString.KEY_INVALID) || status.equals(CommonString.KEY_VALID)) {
@@ -400,7 +400,7 @@ public class MainActivity extends AppCompatActivity
                 error_msg = getResources().getString(R.string.title_store_list_checkout_current);
                 break;
             }
-        }*/
+        }
 
         return result_flag;
     }

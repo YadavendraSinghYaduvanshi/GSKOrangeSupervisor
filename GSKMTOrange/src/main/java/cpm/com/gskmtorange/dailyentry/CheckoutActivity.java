@@ -170,27 +170,6 @@ public class CheckoutActivity extends AppCompatActivity {
                         envelope);
                 Object result = (Object) envelope.getResponse();
 
-                //temporary------------
-                db.updateCheckoutOuttime(store_id, getCurrentTime());
-
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(CommonString.KEY_STORE_ID, "");
-                editor.putString(CommonString.KEY_STORE_NAME, "");
-                editor.putString(CommonString.KEY_VISIT_DATE, "");
-                editor.putString(CommonString.KEY_CAMERA_ALLOW, "");
-                editor.putString(CommonString.KEY_CHECKOUT_STATUS, "");
-                editor.putString(CommonString.KEY_CLASS_ID, "");
-                editor.putString(CommonString.KEY_EMP_ID, "");
-                editor.putString(CommonString.KEY_GEO_TAG, "");
-                editor.putString(CommonString.KEY_KEYACCOUNT_ID, "");
-                editor.putString(CommonString.KEY_STORETYPE_ID, "");
-                editor.putString(CommonString.KEY_UPLOAD_STATUS, "");
-
-                editor.commit();
-
-                db.updateCheckoutStatus(store_id, CommonString.KEY_C);
-
-
                 if (!result.toString().equalsIgnoreCase(
                         CommonString.KEY_SUCCESS)) {
                     return "Upload_Store_ChecOut_Status";
@@ -214,9 +193,9 @@ public class CheckoutActivity extends AppCompatActivity {
                 if (result.toString()
                         .equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
 
-                    db.updateCheckoutOuttime(store_id, getCurrentTime());
+                    db.updateCheckoutOuttime(store_id, getCurrentTime(),CommonString.KEY_C);
 
-                     editor = preferences.edit();
+                    SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(CommonString.KEY_STORE_ID, "");
                     editor.putString(CommonString.KEY_STORE_NAME, "");
                     editor.putString(CommonString.KEY_VISIT_DATE, "");
