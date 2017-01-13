@@ -18,6 +18,7 @@ import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
 
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.constant.CommonString;
@@ -2561,11 +2562,10 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
         try {
 
-            if(category_id == null){
+            if (category_id == null) {
                 dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
                         CommonString.KEY_STORE_ID + "='" + store_id + "'", null);
-            }
-            else{
+            } else {
                 dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
                         CommonString.KEY_STORE_ID + "='" + store_id + "' AND " +
                         CommonString.KEY_CATEGORY_ID + "='" + category_id + "'", null);
@@ -2683,6 +2683,36 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             Log.d("Exception ", " MAPPING_PLANOGRAM " + ex.toString());
         }
     }
+
+    public ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> getMappingPlanogramData(String category_id) {
+        ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_PLANOGRAM", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    MAPPING_PLANOGRAM_DataGetterSetter mp = new MAPPING_PLANOGRAM_DataGetterSetter();
+
+                    mp.setKEYACCOUNT_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("KEYACCOUNT_ID")));
+                    mp.setSTORETYPE_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORETYPE_ID")));
+                    mp.setCLASS_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CLASS_ID")));
+                    mp.setPLANOGRAM_IMAGE(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PLANOGRAM_IMAGE")));
+                    mp.setIMAGE_PATH(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE_PATH")));
+
+                    list.add(mp);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            return list;
+        }
+        return list;
+    }
+
     //Gagan end new code 2
 
 }

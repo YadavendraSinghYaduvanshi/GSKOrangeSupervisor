@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_planogram"
-        android:icon="@mipmap/star"
+        android:icon="@mipmap/ref_images_white"
         android:orderInCategory="100"
         android:title="planogram"
         app:showAsAction="always" />
