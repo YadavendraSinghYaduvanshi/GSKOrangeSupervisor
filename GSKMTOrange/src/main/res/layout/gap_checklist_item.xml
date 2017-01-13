@@ -46,8 +46,9 @@
                     android:id="@+id/btn_is_present"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textOn="Yes"
-                    android:textOff="No"
+                    android:textOn="@string/yes"
+                    android:textOff="@string/no"
+                    android:background="@drawable/toggle_selector_background"
                     android:layout_centerInParent="true"/>
 
             </RelativeLayout>

@@ -39,7 +39,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -114,6 +113,19 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+
+        TextView tv_version = (TextView) findViewById(R.id.tv_version_code);
+
+        try {
+            app_ver =String.valueOf(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+
+            // login_version.setText("Parinaam Version " + app_ver);
+        } catch (PackageManager.NameNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        tv_version.setText("Version/Versiyon - " + app_ver);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
@@ -682,5 +694,7 @@ public class LoginActivity extends AppCompatActivity {
 
         return true;
     }
+
+
 }
 

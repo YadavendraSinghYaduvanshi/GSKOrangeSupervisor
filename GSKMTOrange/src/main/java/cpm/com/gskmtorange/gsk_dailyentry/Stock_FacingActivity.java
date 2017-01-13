@@ -1,14 +1,21 @@
 package cpm.com.gskmtorange.gsk_dailyentry;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,14 +27,20 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -44,35 +57,62 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 
 public class Stock_FacingActivity extends AppCompatActivity {
+    static int child_position = -1;
     ExpandableListView expandableListView;
     TextView txt_stockFacingName;
-
     ArrayList<Stock_FacingGetterSetter> headerDataList;
     ArrayList<Stock_FacingGetterSetter> childDataList;
     List<Stock_FacingGetterSetter> hashMapListHeaderData;
     HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> hashMapListChildData;
     List<Integer> checkHeaderArray = new ArrayList<>();
-
     ExpandableListAdapter adapter;
     GSKOrangeDB db;
-
     String categoryName, categoryId, Error_Message = "";
-
     String path = "", str = "", _pathforcheck = "", img1 = "", img2 = "";
-    static int child_position = -1;
     boolean isDialogOpen = true;
     boolean checkflag = true;
-
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
+    Uri outputFileUri = null;
+    String gallery_package = "";
     private SharedPreferences preferences;
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +128,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
             expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
             //txt_stockFacingName = (TextView) findViewById(R.id.txt_stockFacingName);
 
+            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
@@ -98,6 +140,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
             keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
             class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
             storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+            camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
 
             categoryName = getIntent().getStringExtra("categoryName");
             categoryId = getIntent().getStringExtra("categoryId");
@@ -121,18 +164,18 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
                     if (validateData(hashMapListHeaderData, hashMapListChildData)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                        builder.setMessage("Are you sure you want to save")
+                        builder.setMessage(getResources().getString(R.string.check_save_message))
                                 .setCancelable(false)
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         db.open();
 
                                         if (db.checkStockAndFacingData(store_id, categoryId)) {
                                             db.updateStockAndFacing(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
-                                            Snackbar.make(view, "Data has been updated", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                            Snackbar.make(view, getResources().getString(R.string.update_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                         } else {
                                             db.InsertStock_Facing(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
-                                            Snackbar.make(view, "Data has been saved", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                            Snackbar.make(view, getResources().getString(R.string.save_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                             //Toast.makeText(getApplicationContext(), "Data has been saved", Toast.LENGTH_LONG).show();
                                         }
 
@@ -140,7 +183,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                                     }
                                 })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
@@ -149,9 +192,10 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         alert.show();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                        builder.setMessage("Fill the value or fill 0 ")
+                        //builder.setMessage(getResources().getString(R.string.empty_field))
+                        builder.setMessage(Error_Message)
                                 .setCancelable(false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.dismiss();
                                     }
@@ -207,6 +251,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                         getCurrentFocus().clearFocus();
                     }
+
+                    fab.setVisibility(View.INVISIBLE);
                 }
             });
 
@@ -220,6 +266,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                         getCurrentFocus().clearFocus();
                     }
+
+                    fab.setVisibility(View.INVISIBLE);
                 }
             });
 
@@ -234,6 +282,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
+
     }
 
     private void prepareList() {
@@ -269,295 +318,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
         }
     }
 
-    public class ExpandableListAdapter extends BaseExpandableListAdapter {
-        private Context _context;
-        private List<Stock_FacingGetterSetter> _listDataHeader;
-        private HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> _listDataChild;
-
-        public ExpandableListAdapter(Context context, List<Stock_FacingGetterSetter> listDataHeader,
-                                     HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listChildData) {
-            this._context = context;
-            this._listDataHeader = listDataHeader;
-            this._listDataChild = listChildData;
-        }
-
-        @Override
-        public Object getGroup(int groupPosition) {
-            return this._listDataHeader.get(groupPosition);
-        }
-
-        @Override
-        public int getGroupCount() {
-            return this._listDataHeader.size();
-        }
-
-        @Override
-        public long getGroupId(int groupPosition) {
-            return groupPosition;
-        }
-
-        @Override
-        public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-            final Stock_FacingGetterSetter headerTitle = (Stock_FacingGetterSetter) getGroup(groupPosition);
-
-            if (convertView == null) {
-                LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(R.layout.item_stock_facing_header, null, false);
-            }
-
-            TextView txt_stockFaceupHeader = (TextView) convertView.findViewById(R.id.txt_stockFaceupHeader);
-            LinearLayout lin_stockFaceupHeader = (LinearLayout) convertView.findViewById(R.id.lin_stockFaceupHeader);
-            ImageView img_reference = (ImageView) convertView.findViewById(R.id.img_reference);
-            ImageView img_camera1 = (ImageView) convertView.findViewById(R.id.img_camera1);
-            ImageView img_camera2 = (ImageView) convertView.findViewById(R.id.img_camera2);
-            ImageView img_edit = (ImageView) convertView.findViewById(R.id.img_edit);
-
-            txt_stockFaceupHeader.setTypeface(null, Typeface.BOLD);
-            txt_stockFaceupHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
-
-            img_camera1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //String date = new Date().toLocaleString().toString();
-                    //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
-
-                    _pathforcheck = "Stock_Cam1_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
-                    child_position = groupPosition;
-                    path = str + _pathforcheck;
-
-                    startCameraActivity1(groupPosition);
-                }
-            });
-
-            if (!img1.equalsIgnoreCase("")) {
-                if (groupPosition == child_position) {
-                    headerTitle.setImage1(img1);
-                    img1 = "";
-                }
-            }
-
-            if (headerTitle.getImage1().equals("")) {
-                img_camera1.setBackgroundResource(R.mipmap.camera);
-            } else {
-                img_camera1.setBackgroundResource(R.mipmap.camera_done);
-            }
-
-
-            img_camera2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //String date = new Date().toLocaleString().toString();
-                    //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
-
-                    _pathforcheck = "Stock_Cam2_" + store_id + "_" + headerTitle.getBrand_id() + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
-                    child_position = groupPosition;
-                    path = str + _pathforcheck;
-
-                    startCameraActivity2(groupPosition);
-                }
-            });
-
-            if (!img2.equalsIgnoreCase("")) {
-                if (groupPosition == child_position) {
-                    headerTitle.setImage2(img2);
-                    img2 = "";
-                }
-            }
-
-            if (headerTitle.getImage2().equals("")) {
-                img_camera2.setBackgroundResource(R.mipmap.camera);
-            } else {
-                img_camera2.setBackgroundResource(R.mipmap.camera_done);
-            }
-
-
-            if (!checkflag) {
-                if (checkHeaderArray.contains(groupPosition)) {
-                    txt_stockFaceupHeader.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                } else {
-                    txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.black));
-                }
-            }
-
-            return convertView;
-        }
-
-        @Override
-        public Object getChild(int groupPosition, int childPosititon) {
-            return this._listDataChild.get(this._listDataHeader.get(groupPosition)).get(childPosititon);
-        }
-
-        @Override
-        public int getChildrenCount(int groupPosition) {
-            return this._listDataChild.get(this._listDataHeader.get(groupPosition)).size();
-        }
-
-        @Override
-        public long getChildId(int groupPosition, int childPosition) {
-            return childPosition;
-        }
-
-        @Override
-        public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
-                                 View convertView, ViewGroup parent) {
-            final Stock_FacingGetterSetter childData = (Stock_FacingGetterSetter) getChild(groupPosition, childPosition);
-            ViewHolder holder = null;
-
-            if (convertView == null) {
-                LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(R.layout.item_stock_facing_child, null, false);
-
-                holder = new ViewHolder();
-                holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
-                holder.lin_category = (LinearLayout) convertView.findViewById(R.id.lin_category);
-
-                holder.txt_skuName = (TextView) convertView.findViewById(R.id.txt_skuName);
-                holder.ed_stock = (EditText) convertView.findViewById(R.id.ed_stock);
-                holder.ed_facing = (EditText) convertView.findViewById(R.id.ed_facing);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            holder.txt_skuName.setText(childData.getSku());
-
-            if (childData.getCompany_id().equals("1")) {
-                holder.txt_skuName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-            } else {
-                holder.txt_skuName.setTextColor(getResources().getColor(R.color.black));
-            }
-
-
-            if (childData.getStock().equals("0")) {
-                holder.ed_facing.setEnabled(false);
-            } else {
-                holder.ed_facing.setEnabled(true);
-            }
-
-            final ViewHolder finalHolder = holder;
-            holder.ed_stock.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-
-                    final EditText caption = (EditText) v;
-                    String edStock = caption.getText().toString();
-
-                    if (!edStock.equals("")) {
-                        String stock = edStock.replaceFirst("^0+(?!$)", "");
-                        childData.setStock(stock);
-
-                        if (edStock.equals("0")) {
-                            childData.setFacing("0");
-
-                            finalHolder.ed_facing.setEnabled(false);
-                        } else {
-                            childData.setFacing(childData.getFacing());
-                            finalHolder.ed_facing.setEnabled(true);
-                        }
-                    } else {
-                        childData.setStock("");
-                        finalHolder.ed_facing.setEnabled(true);
-                    }
-                }
-            });
-
-            holder.ed_stock.setText(childData.getStock());
-
-            holder.ed_facing.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    final EditText caption = (EditText) v;
-                    final String edFaceup = caption.getText().toString().replaceFirst("^0+(?!$)", "");
-
-                    if (!childData.getStock().equals("")) {
-                        if (!edFaceup.equals("")) {
-                            if (Integer.parseInt(edFaceup) <= Integer.parseInt(childData.getStock())) {
-                                childData.setFacing(edFaceup);
-                            } else {
-                                if (isDialogOpen) {
-                                    isDialogOpen = !isDialogOpen;
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                                    builder.setMessage("Faceup can not be greater than stock value")
-                                            .setCancelable(false)
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.dismiss();
-                                                    isDialogOpen = !isDialogOpen;
-                                                }
-                                            });
-                                    AlertDialog alert = builder.create();
-                                    alert.show();
-                                }
-                            }
-                        } else {
-                            childData.setFacing("");
-                        }
-                    } else {
-                        if (isDialogOpen) {
-                            isDialogOpen = !isDialogOpen;
-                            AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                            builder.setMessage("First fill the stock value")
-                                    .setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.dismiss();
-                                            isDialogOpen = !isDialogOpen;
-                                        }
-                                    });
-                            AlertDialog alert = builder.create();
-                            alert.show();
-                        }
-                    }
-                }
-            });
-
-            holder.ed_facing.setText(childData.getFacing());
-
-            if (!checkflag) {
-                boolean tempflag = false;
-
-                if (holder.ed_stock.getText().toString().equals("")) {
-                    holder.ed_stock.setBackgroundColor(getResources().getColor(R.color.white));
-                    holder.ed_stock.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                    holder.ed_stock.setHint("Empty");
-                    tempflag = true;
-                }
-
-                if (holder.ed_facing.getText().toString().equals("")) {
-                    holder.ed_facing.setBackgroundColor(getResources().getColor(R.color.white));
-                    holder.ed_facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                    holder.ed_facing.setHint("Empty");
-                    tempflag = true;
-                }
-
-                if (tempflag) {
-                    holder.cardView.setCardBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                } else {
-                    holder.cardView.setCardBackgroundColor(getResources().getColor(R.color.white));
-                }
-            }
-
-            return convertView;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return false;
-        }
-
-        @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
-        }
-    }
-
-    public class ViewHolder {
-        EditText ed_stock, ed_facing;
-        CardView cardView;
-        TextView txt_skuName;
-        LinearLayout lin_category;
-    }
-
     boolean validateData(List<Stock_FacingGetterSetter> listDataHeader,
                          HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listDataChild) {
         boolean flag = true;
@@ -571,36 +331,77 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 String stock = listDataChild.get(listDataHeader.get(i)).get(j).getStock();
                 String faceup = listDataChild.get(listDataHeader.get(i)).get(j).getFacing();
 
-                if (!imagePath.equals("") || !imagePath1.equals("")) {
-                    if (!stock.equals("0")) {
-                        if (stock.equals("") || faceup.equals("")) {
+                //Company_id
+                if (listDataChild.get(listDataHeader.get(i)).get(j).getCompany_id().equals("1")) {
+                    //Camera allow enable
+                    if (camera_allow.equalsIgnoreCase("1")) {
+
+                        if (!imagePath.equals("") || !imagePath1.equals("")) {
+                            if (!stock.equals("0")) {
+                                if (stock.equals("") || faceup.equals("")) {
+                                    if (!checkHeaderArray.contains(i)) {
+                                        checkHeaderArray.add(i);
+                                    }
+
+                                    flag = false;
+                                    Error_Message = getResources().getString(R.string.fill_data);
+                                    break;
+                                }
+                            } else {
+                                if (stock.equals("")) {
+                                    if (!checkHeaderArray.contains(i)) {
+                                        checkHeaderArray.add(i);
+                                    }
+
+                                    flag = false;
+                                    Error_Message = getResources().getString(R.string.fill_data);
+                                    break;
+                                }
+                            }
+                        } else {
                             if (!checkHeaderArray.contains(i)) {
                                 checkHeaderArray.add(i);
                             }
 
                             flag = false;
-                            Error_Message = "Please fill all the data";
+                            Error_Message = getResources().getString(R.string.click_image);
                             break;
                         }
-                    } else {
-                        if (stock.equals("")) {
-                            if (!checkHeaderArray.contains(i)) {
-                                checkHeaderArray.add(i);
-                            }
 
-                            flag = false;
-                            Error_Message = "Please fill all the data";
-                            break;
+                    } else {
+                        //Camera allow disable
+                        if (!stock.equals("0")) {
+                            if (stock.equals("") || faceup.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = "Please fill all the data";
+                                break;
+                            }
+                        } else {
+                            if (stock.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = "Please fill all the data";
+                                break;
+                            }
                         }
                     }
                 } else {
-                    if (!checkHeaderArray.contains(i)) {
-                        checkHeaderArray.add(i);
-                    }
+                    if (faceup.equals("")) {
+                        if (!checkHeaderArray.contains(i)) {
+                            checkHeaderArray.add(i);
+                        }
 
-                    flag = false;
-                    Error_Message = "Please click either 1 image";
-                    break;
+                        flag = false;
+                        Error_Message = "Please fill all the data";
+                        break;
+                    }
                 }
             }
 
@@ -618,16 +419,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
     }
 
     private void startCameraActivity1(int position) {
-        try {
-            /*Log.e("Stock and Facing ", "startCameraActivity()");
-            File file = new File(path);
-            Uri outputFileUri = Uri.fromFile(file);
-
-            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            startActivityForResult(intent, position);*/
-
-            Log.i("Stock & Facing ", "startCameraActivity()");
+        /*try {
+            Log.e("Stock & Facing ", "startCameraActivity()");
             File file = new File(path);
             Uri outputFileUri = Uri.fromFile(file);
 
@@ -636,8 +429,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
             List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
             for (int n = 0; n < list.size(); n++) {
                 if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-                    /*Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
-                    Log.e("TAG", "package name  : " + list.get(n).packageName);*/
+                    *//*Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    Log.e("TAG", "package name  : " + list.get(n).packageName);*//*
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
@@ -661,19 +454,56 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }*/
+
+        try {
+            Log.e("MakeMachine", "startCameraActivity()");
+            File file = new File(path);
+            outputFileUri = Uri.fromFile(file);
+
+            String defaultCameraPackage = "";
+            final PackageManager packageManager = getPackageManager();
+            List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+            for (int n = 0; n < list.size(); n++) {
+                if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                    //Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    //Log.e("TAG", "package name  : " + list.get(n).packageName);
+
+                    //temp value in case camera is gallery app above jellybean
+                    if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                        gallery_package = list.get(n).packageName;
+                    }
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(defaultCameraPackage);
+            startActivityForResult(intent, 1);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(gallery_package);
+            startActivityForResult(intent, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void startCameraActivity2(int position) {
-        try {
-            /*Log.e("Stock and Facing ", "startCameraActivity()");
-            File file = new File(path);
-            Uri outputFileUri = Uri.fromFile(file);
-
-            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            startActivityForResult(intent, position);*/
-
+        /*try {
             Log.i("Stock & Facing ", "startCameraActivity()");
             File file = new File(path);
             Uri outputFileUri = Uri.fromFile(file);
@@ -683,8 +513,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
             List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
             for (int n = 0; n < list.size(); n++) {
                 if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-                    /*Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
-                    Log.e("TAG", "package name  : " + list.get(n).packageName);*/
+                    *//*Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    Log.e("TAG", "package name  : " + list.get(n).packageName);*//*
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
@@ -704,7 +534,51 @@ public class Stock_FacingActivity extends AppCompatActivity {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             intent.setPackage(defaultCameraPackage);
             startActivityForResult(intent, 2);
-            //startActivityForResult(intent, position);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+
+        try {
+            Log.e("MakeMachine", "startCameraActivity()");
+            File file = new File(path);
+            outputFileUri = Uri.fromFile(file);
+
+            String defaultCameraPackage = "";
+            final PackageManager packageManager = getPackageManager();
+            List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+            for (int n = 0; n < list.size(); n++) {
+                if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                    //Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    //Log.e("TAG", "package name  : " + list.get(n).packageName);
+
+                    //temp value in case camera is gallery app above jellybean
+                    if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                        gallery_package = list.get(n).packageName;
+                    }
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(defaultCameraPackage);
+            startActivityForResult(intent, 2);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(gallery_package);
+            startActivityForResult(intent, 2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -770,6 +644,12 @@ public class Stock_FacingActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.planogram, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -777,14 +657,486 @@ public class Stock_FacingActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            finish();
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(Stock_FacingActivity.this);
+            builder.setTitle(getResources().getString(R.string.dialog_title));
+            builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            android.app.AlertDialog alert = builder.create();
+            alert.show();
+            //finish();
         }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        //Planogram Dialog
+        if (id == R.id.action_planogram) {
+            //final Dialog dialog = new Dialog(Stock_FacingActivity.this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+            final Dialog dialog = new Dialog(Stock_FacingActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.setContentView(R.layout.planogram_dialog_layout);
+            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+            ImageView img_planogram = (ImageView) dialog.findViewById(R.id.img_planogram);
+
+            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mp = db.getMappingPlanogramData("");
+
+            String planogram_image = mp.get(0).getPLANOGRAM_IMAGE();
+            if (new File(str + planogram_image).exists()) {
+                Bitmap bmp = BitmapFactory.decodeFile(str + planogram_image);
+                img_planogram.setImageBitmap(bmp);
+            } else {
+                img_planogram.setBackgroundResource(R.drawable.sad_cloud);
+            }
+
+            /*if (new File(str + "Stock_Cam1_3_9_01122017_162052.jpg").exists()) {
+                Bitmap bmp = BitmapFactory.decodeFile(str + "Stock_Cam1_3_9_01122017_162052.jpg");
+                img_planogram.setImageBitmap(bmp);
+            } else {
+                img_planogram.setBackgroundResource(R.drawable.sad_cloud);
+            }*/
+
+
+            ImageView cancel = (ImageView) dialog.findViewById(R.id.img_cancel);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(Stock_FacingActivity.this);
+        builder.setTitle(getResources().getString(R.string.dialog_title));
+        builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        finish();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+    }
+
+    public class ExpandableListAdapter extends BaseExpandableListAdapter {
+        private Context _context;
+        private List<Stock_FacingGetterSetter> _listDataHeader;
+        private HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> _listDataChild;
+
+        public ExpandableListAdapter(Context context, List<Stock_FacingGetterSetter> listDataHeader,
+                                     HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listChildData) {
+            this._context = context;
+            this._listDataHeader = listDataHeader;
+            this._listDataChild = listChildData;
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return this._listDataHeader.get(groupPosition);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return this._listDataHeader.size();
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            final Stock_FacingGetterSetter headerTitle = (Stock_FacingGetterSetter) getGroup(groupPosition);
+
+            if (convertView == null) {
+                LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = infalInflater.inflate(R.layout.item_stock_facing_header, null, false);
+            }
+
+            TextView txt_stockFaceupHeader = (TextView) convertView.findViewById(R.id.txt_stockFaceupHeader);
+            TextView txt_sosHeader = (TextView) convertView.findViewById(R.id.txt_sosHeader);
+            LinearLayout lin_stockFaceupHeader = (LinearLayout) convertView.findViewById(R.id.lin_stockFaceupHeader);
+            ImageView img_camera1 = (ImageView) convertView.findViewById(R.id.img_camera1);
+            ImageView img_camera2 = (ImageView) convertView.findViewById(R.id.img_camera2);
+            //ImageView img_reference = (ImageView) convertView.findViewById(R.id.img_reference);
+            //ImageView img_edit = (ImageView) convertView.findViewById(R.id.img_edit);
+
+            txt_stockFaceupHeader.setTypeface(null, Typeface.BOLD);
+            txt_stockFaceupHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
+
+            if (headerTitle.getCompany_id().equals("1")) {
+                txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+                txt_sosHeader.setVisibility(View.VISIBLE);
+                img_camera1.setVisibility(View.VISIBLE);
+                img_camera2.setVisibility(View.VISIBLE);
+            } else {
+                txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.black));
+
+                txt_sosHeader.setVisibility(View.GONE);
+                img_camera1.setVisibility(View.GONE);
+                img_camera2.setVisibility(View.GONE);
+            }
+
+            //Camera allow enable
+            if (camera_allow.equalsIgnoreCase("1")) {
+
+                img_camera1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //String date = new Date().toLocaleString().toString();
+                        //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+
+                        _pathforcheck = "Stock_Cam1_" + store_id + "_" + headerTitle.getBrand_id()
+                                + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                        child_position = groupPosition;
+                        path = str + _pathforcheck;
+
+                        startCameraActivity1(groupPosition);
+                    }
+                });
+
+                if (!img1.equalsIgnoreCase("")) {
+                    if (groupPosition == child_position) {
+                        headerTitle.setImage1(img1);
+                        img1 = "";
+                    }
+                }
+
+                if (headerTitle.getImage1().equals("")) {
+                    img_camera1.setBackgroundResource(R.mipmap.camera_orange);
+                } else {
+                    img_camera1.setBackgroundResource(R.mipmap.camera_green);
+                }
+
+
+                img_camera2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //String date = new Date().toLocaleString().toString();
+                        //String tempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
+
+                        _pathforcheck = "Stock_Cam2_" + store_id + "_" + headerTitle.getBrand_id()
+                                + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                        child_position = groupPosition;
+                        path = str + _pathforcheck;
+
+                        startCameraActivity2(groupPosition);
+                    }
+                });
+
+                if (!img2.equalsIgnoreCase("")) {
+                    if (groupPosition == child_position) {
+                        headerTitle.setImage2(img2);
+                        img2 = "";
+                    }
+                }
+
+                if (headerTitle.getImage2().equals("")) {
+                    img_camera2.setBackgroundResource(R.mipmap.camera_orange);
+                } else {
+                    img_camera2.setBackgroundResource(R.mipmap.camera_green);
+                }
+            } else {
+                //Camera allow disable
+                img_camera1.setBackgroundResource(R.mipmap.camera_grey);
+                img_camera2.setBackgroundResource(R.mipmap.camera_grey);
+            }
+
+            if (headerTitle.getCompany_id().equals("1")) {
+                if (!checkflag) {
+                    if (checkHeaderArray.contains(groupPosition)) {
+                        txt_stockFaceupHeader.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    } else {
+                        txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                        /*if (headerTitle.getCompany_id().equals("1")) {
+                        } else {
+                            txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.black));
+                        }*/
+                    }
+                }
+            } else {
+                if (!checkflag) {
+                    if (checkHeaderArray.contains(groupPosition)) {
+                        txt_stockFaceupHeader.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    } else {
+                        /*if (headerTitle.getCompany_id().equals("1")) {
+                            txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                        } else {*/
+                        txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.black));
+                        //}
+                    }
+                }
+            }
+
+            return convertView;
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosititon) {
+            return this._listDataChild.get(this._listDataHeader.get(groupPosition)).get(childPosititon);
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            return this._listDataChild.get(this._listDataHeader.get(groupPosition)).size();
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
+                                 View convertView, ViewGroup parent) {
+            final Stock_FacingGetterSetter childData = (Stock_FacingGetterSetter) getChild(groupPosition, childPosition);
+            ViewHolder holder = null;
+
+            if (convertView == null) {
+                LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = infalInflater.inflate(R.layout.item_stock_facing_child, null, false);
+
+                holder = new ViewHolder();
+                holder.cardView = (CardView) convertView.findViewById(R.id.card_view);
+                holder.lin_category = (LinearLayout) convertView.findViewById(R.id.lin_category);
+
+                holder.txt_skuName = (TextView) convertView.findViewById(R.id.txt_skuName);
+                holder.ed_stock = (EditText) convertView.findViewById(R.id.ed_stock);
+                holder.ed_facing = (EditText) convertView.findViewById(R.id.ed_facing);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.txt_skuName.setText(childData.getSku());
+
+            if (childData.getCompany_id().equals("1")) {
+                holder.txt_skuName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                holder.ed_stock.setVisibility(View.VISIBLE);
+            } else {
+                holder.txt_skuName.setTextColor(getResources().getColor(R.color.black));
+                holder.ed_stock.setVisibility(View.GONE);
+            }
+
+
+            if (childData.getStock().equals("0")) {
+                holder.ed_facing.setEnabled(false);
+            } else {
+                holder.ed_facing.setEnabled(true);
+            }
+
+            final ViewHolder finalHolder = holder;
+            holder.ed_stock.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+
+                    final EditText caption = (EditText) v;
+                    String edStock = caption.getText().toString();
+
+                    if (!edStock.equals("")) {
+                        String stock = edStock.replaceFirst("^0+(?!$)", "");
+                        childData.setStock(stock);
+
+                        if (edStock.equals("0")) {
+                            childData.setFacing("0");
+
+                            finalHolder.ed_facing.setEnabled(false);
+                        } else {
+                            childData.setFacing(childData.getFacing());
+                            finalHolder.ed_facing.setEnabled(true);
+                        }
+                    } else {
+                        childData.setStock("");
+                        finalHolder.ed_facing.setEnabled(true);
+                    }
+                }
+            });
+
+            /*holder.ed_stock.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    //final EditText caption = (EditText) v;
+                    String edStock = s.toString();
+
+                    if (!edStock.equals("")) {
+                        String stock = edStock.replaceFirst("^0+(?!$)", "");
+                        childData.setStock(stock);
+
+                        if (edStock.equals("0")) {
+                            childData.setFacing("0");
+
+                            finalHolder.ed_facing.setEnabled(false);
+                        } else {
+                            childData.setFacing(childData.getFacing());
+                            finalHolder.ed_facing.setEnabled(true);
+                        }
+                    } else {
+                        childData.setStock("");
+                        finalHolder.ed_facing.setEnabled(true);
+                    }
+
+                    expandableListView.invalidateViews();
+                }
+            });*/
+
+            holder.ed_stock.setText(childData.getStock());
+
+            holder.ed_facing.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    final EditText caption = (EditText) v;
+                    final String edFaceup = caption.getText().toString().replaceFirst("^0+(?!$)", "");
+
+                    if (childData.getCompany_id().equals("1")) {
+                        if (!childData.getStock().equals("")) {
+                            if (!edFaceup.equals("")) {
+                                if (Integer.parseInt(edFaceup) <= Integer.parseInt(childData.getStock())) {
+                                    childData.setFacing(edFaceup);
+                                } else {
+                                    if (isDialogOpen) {
+                                        isDialogOpen = !isDialogOpen;
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
+                                        builder.setMessage("Faceup can not be greater than stock value")
+                                                .setCancelable(false)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.dismiss();
+                                                        isDialogOpen = !isDialogOpen;
+                                                    }
+                                                });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    }
+                                }
+                            } else {
+                                childData.setFacing("");
+                            }
+                        } else {
+                            if (isDialogOpen) {
+                                isDialogOpen = !isDialogOpen;
+                                AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
+                                builder.setMessage("First fill the stock value")
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.dismiss();
+                                                isDialogOpen = !isDialogOpen;
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+                            }
+                        }
+                    } else {
+                        childData.setFacing(edFaceup);
+                        childData.setStock("0");
+                    }
+                }
+            });
+
+            holder.ed_facing.setText(childData.getFacing());
+
+            if (!checkflag) {
+                boolean tempflag = false;
+
+                if (childData.getCompany_id().equals("1")) {
+                    if (holder.ed_stock.getText().toString().equals("")) {
+                        holder.ed_stock.setBackgroundColor(getResources().getColor(R.color.white));
+                        holder.ed_stock.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                        holder.ed_stock.setHint("Empty");
+                        tempflag = true;
+                    }
+
+                    if (holder.ed_facing.getText().toString().equals("")) {
+                        holder.ed_facing.setBackgroundColor(getResources().getColor(R.color.white));
+                        holder.ed_facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                        holder.ed_facing.setHint("Empty");
+                        tempflag = true;
+                    }
+
+                    if (tempflag) {
+                        holder.cardView.setCardBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                    } else {
+                        holder.cardView.setCardBackgroundColor(getResources().getColor(R.color.white));
+                    }
+                } else {
+                    if (holder.ed_facing.getText().toString().equals("")) {
+                        holder.ed_facing.setBackgroundColor(getResources().getColor(R.color.white));
+                        holder.ed_facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                        holder.ed_facing.setHint("Empty");
+                        tempflag = true;
+                    }
+
+                    if (tempflag) {
+                        holder.cardView.setCardBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                    } else {
+                        holder.cardView.setCardBackgroundColor(getResources().getColor(R.color.white));
+                    }
+                }
+            }
+
+            return convertView;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
+    }
+
+    public class ViewHolder {
+        EditText ed_stock, ed_facing;
+        CardView cardView;
+        TextView txt_skuName;
+        LinearLayout lin_category;
     }
 }

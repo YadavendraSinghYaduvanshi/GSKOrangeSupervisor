@@ -50,9 +50,21 @@ public class CommonString {
     public static final String KEY_COVERAGE_REMARK = "REMARK";
     public static final String KEY_IMAGE = "IMAGE";
     public static final String KEY_IMAGE_URL = "IMAGE_URL";
-        public static final String KEY_ID = "Id";
+    public static final String KEY_ID = "Id";
     public static final String KEY_MERCHANDISER_ID = "MERCHANDISER_ID";
 
+    public static final String KEY_LOOGIN_PREF ="LOGIN_PREF";
+
+    //KEYS RELATED TO T2P COMPLIANCE
+
+    public static final String KEY_DISPLAY = "DISPLAY";
+    public static final String KEY_REMARK = "REMARK";
+    public static final String KEY_PRESENT = "PRESENT";
+    public static final String KEY_COMMON_ID = "COMMON_ID";
+    public static final String KEY_CHECKLIST_ID = "CHECKLIST_ID";
+    public static final String KEY_CHECKLIST = "CHECKLIST";
+    public static final String KEY_SKU = "SKU";
+    public static final String KEY_STOCK = "STOCK";
     public static final String KEY_BRAND = "BRAND";
     public static final String KEY_BRAND_ID = "BRAND_ID";
     public static final String KEY_DISPLAY_ID = "DISPLAY_ID";
@@ -225,6 +237,9 @@ public class CommonString {
             + "Category_Id"
             + " VARCHAR,"
 
+            + "COMPANY_ID"
+            + " VARCHAR,"
+
             + "SUB_CATEGORY_ID"
             + " VARCHAR,"
 
@@ -332,6 +347,7 @@ public class CommonString {
 
             + ")";
 
+
     public static final String TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE = "Additional_Promo_Compliance_Data";
 
     public static final String CREATE_TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE = "CREATE TABLE IF NOT EXISTS "
@@ -343,14 +359,11 @@ public class CommonString {
             + "STORE_ID"
             + " INTEGER,"
 
-            + "CATEGORY_ID"
-            + " INTEGER,"
-
-            + "SKU_ID"
+            /*+ "SKU_ID"
             + " INTEGER,"
 
             + "SKU"
-            + " VARCHAR,"
+            + " VARCHAR,"*/
 
             + "PROMO_ID"
             + " INTEGER,"
@@ -418,7 +431,6 @@ public class CommonString {
             + KEY_IMAGE + " VARCHAR)";
 
 
-
     public static final String TABLE_INSERT_STOCK_ADDITIONAL_MAIN = "Stock_Additional_visibility_Main";
 
     public static final String CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY_MAIN = "CREATE TABLE IF NOT EXISTS "
@@ -464,7 +476,53 @@ public class CommonString {
             + KEY_SKUNAME + " VARCHAR,"
             + KEY_PROCESS_ID + " VARCHAR)";
 
+    //Tables related to T2p Compliance
+
+    public static final String TABLE_INSERT_T2P_COMPLIANCE = "T2P_COMPLIANCE";
+
+    public static final String CREATE_TABLE_INSERT_T2P_COMPLIANCE = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_T2P_COMPLIANCE
+            + "("
+            + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            + KEY_STORE_ID + " INTEGER,"
+            + KEY_CATEGORY_ID + " INTEGER,"
+            + KEY_BRAND_ID + " INTEGER,"
+            + KEY_DISPLAY_ID + " INTEGER,"
+            + KEY_BRAND + " VARCHAR,"
+            + KEY_DISPLAY + " VARCHAR,"
+            + KEY_IMAGE + " VARCHAR,"
+            + KEY_REMARK + " VARCHAR,"
+            + KEY_PRESENT + " VARCHAR"
+
+            + ")";
 
 
+    public static final String TABLE_INSERT_T2P_GAPS = "T2P_GAPS";
+
+    public static final String CREATE_TABLE_INSERT_T2P_GAPS = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_T2P_GAPS
+            + "("
+            + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            + KEY_COMMON_ID + " INTEGER,"
+            + KEY_CHECKLIST_ID + " INTEGER,"
+            + KEY_DISPLAY_ID + " INTEGER,"
+            + KEY_CHECKLIST + " VARCHAR,"
+             + KEY_PRESENT + " VARCHAR"
+            + ")";
+
+
+    public static final String TABLE_INSERT_T2P_SKU = "T2P_SKU";
+
+    public static final String CREATE_TABLE_INSERT_T2P_SKU = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_T2P_SKU
+            + "("
+            + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            + KEY_COMMON_ID + " INTEGER,"
+            + KEY_SKU_ID + " INTEGER,"
+            + KEY_BRAND_ID + " INTEGER,"
+            + KEY_STOCK + " INTEGER,"
+            + KEY_BRAND+ " VARCHAR,"
+            + KEY_SKU + " VARCHAR"
+            + ")";
 
 }

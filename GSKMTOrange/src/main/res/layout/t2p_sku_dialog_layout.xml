@@ -130,7 +130,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/cancel"/>
+                        android:text="@string/closed"/>
 
                 </LinearLayout>
 
@@ -147,34 +147,34 @@
 
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
-        card_view:cardBackgroundColor="@color/colorOrange"
-        card_view:cardCornerRadius="20dp"
+    <!-- <android.support.v7.widget.CardView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="10dp"
+         android:padding="10dp"
+         card_view:cardBackgroundColor="@color/colorOrange"
+         card_view:cardCornerRadius="20dp"
 
-        >
-    <LinearLayout
-        android:id="@+id/list_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="95"
-        android:visibility="gone"
-        >
+         >
+     <LinearLayout
+         android:id="@+id/list_layout"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_weight="95"
+         android:visibility="gone"
+         >
 
-        <ListView
-            android:id="@+id/lv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:cacheColorHint="#00000000"
+         <ListView
+             android:id="@+id/lv"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:cacheColorHint="#00000000"
 
-            android:choiceMode="singleChoice"
-            android:divider="#ff9933"
-            android:dividerHeight="2dp"
-            android:fastScrollEnabled="true"
-            android:smoothScrollbar="true"></ListView>
-    </LinearLayout>
-    </android.support.v7.widget.CardView>
+             android:choiceMode="singleChoice"
+             android:divider="#ff9933"
+             android:dividerHeight="2dp"
+             android:fastScrollEnabled="true"
+             android:smoothScrollbar="true"></ListView>
+     </LinearLayout>
+     </android.support.v7.widget.CardView>-->
 </LinearLayout>

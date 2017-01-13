@@ -1,11 +1,14 @@
 package cpm.com.gskmtorange.dailyentry;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
@@ -90,6 +94,9 @@ public class NonWorkingReason extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         _UserId = preferences.getString(CommonString.KEY_USERNAME, "");
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
         store_id = preferences.getString(CommonString.KEY_STORE_ID, "");
@@ -108,7 +115,7 @@ public class NonWorkingReason extends AppCompatActivity implements
         reason_adapter = new ArrayAdapter<CharSequence>(this,
                 android.R.layout.simple_spinner_item);
 
-        reason_adapter.add("Select Reason");
+        reason_adapter.add(getResources().getString(R.string.select_reason));
 
         for (int i = 0; i < reasondata.size(); i++) {
             reason_adapter.add(reasondata.get(i).getREASON().get(0));
@@ -462,5 +469,38 @@ public class NonWorkingReason extends AppCompatActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+    }
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
     }
 }
