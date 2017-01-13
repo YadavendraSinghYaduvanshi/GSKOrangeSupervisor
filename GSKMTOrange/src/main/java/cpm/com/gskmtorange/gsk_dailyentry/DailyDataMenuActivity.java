@@ -123,11 +123,18 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             }
             categoryList.add(data);
 
+            //T2p
             data = new DailyDataMenuGetterSetter();
-            //data.setCategory_name("T2P Compliance");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_t2p));
-            data.setCategory_img(R.mipmap.t2p_compliance);
+
+            if (db.isFilledT2P(store_id, categoryId)) {
+                data.setCategory_img(R.mipmap.t2p_compliance_done);
+            } else {
+                data.setCategory_img(R.mipmap.t2p_compliance);
+            }
+
             categoryList.add(data);
+            //T2p added
 
             data = new DailyDataMenuGetterSetter();
             //data.setCategory_name("Additional Visibility");

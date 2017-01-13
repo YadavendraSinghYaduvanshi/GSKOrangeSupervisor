@@ -838,7 +838,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY_ID")));
                     cd.setCategory(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY")));
-                    cd.setCategory_img("category");
+                    cd.setCategory_img(-1);
 
                     list.add(cd);
                     dbcursor.moveToNext();
@@ -2685,4 +2685,39 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
     //Gagan end new code 2
 
+    //T2P is filled
+    public boolean isFilledT2P(String store_id, String category_id) {
+        Log.d("T2P ", "T2P data--------------->Start<------------");
+        ArrayList<T2PGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
+                    CommonString.KEY_STORE_ID + "='" + store_id + "' AND " +
+                    CommonString.KEY_CATEGORY_ID + "='" + category_id + "'", null);
+
+            if (dbcursor != null) {
+                if (dbcursor.moveToFirst()) {
+                    do {
+                        T2PGetterSetter tp = new T2PGetterSetter();
+
+                        tp.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND_ID)));
+                        list.add(tp);
+                    } while (dbcursor.moveToNext());
+                }
+                dbcursor.close();
+
+                if (list.size() > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "when fetching Records!!!!" + e.toString());
+            return false;
+        }
+
+        return false;
+    }
 }

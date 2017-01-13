@@ -43,6 +43,7 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.AdditionalVisibility;
+import cpm.com.gskmtorange.dailyentry.SettingsActivity;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
 import cpm.com.gskmtorange.download.DownloadActivity;
@@ -279,6 +280,11 @@ public class MainActivity extends AppCompatActivity
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
         } else if (id == R.id.nav_setting) {
+
+             Intent startDownload = new Intent(this,SettingsActivity.class);
+            startActivity(startDownload);
+
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
             //startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
 
