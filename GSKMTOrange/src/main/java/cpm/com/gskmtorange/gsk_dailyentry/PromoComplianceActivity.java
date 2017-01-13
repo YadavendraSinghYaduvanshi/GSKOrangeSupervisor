@@ -48,6 +48,33 @@ public class PromoComplianceActivity extends AppCompatActivity {
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
     private SharedPreferences preferences;
 
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,11 +101,10 @@ public class PromoComplianceActivity extends AppCompatActivity {
             db = new GSKOrangeDB(this);
             db.open();
 
-            //preference data
-            preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
             updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
+            //preference data
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -264,6 +290,13 @@ public class PromoComplianceActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     private void prepareList() {
@@ -476,37 +509,5 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 });
         android.app.AlertDialog alert = builder.create();
         alert.show();
-}
-  
-    protected void onResume() {
-        super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
-    }
-
-    private static boolean updateResources(Context context, String language) {
-
-        String lang ;
-
-        if(language.equalsIgnoreCase("English")){
-            lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
-            lang = "AR";
-        }
-        else {
-            lang = "TR";
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
     }
 }
