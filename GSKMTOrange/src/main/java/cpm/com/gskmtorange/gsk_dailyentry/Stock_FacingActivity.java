@@ -87,6 +87,33 @@ public class Stock_FacingActivity extends AppCompatActivity {
     String gallery_package = "";
     private SharedPreferences preferences;
 
+    private static boolean updateResources(Context context, String language) {
+
+        String lang ;
+
+        if(language.equalsIgnoreCase("English")){
+            lang = "EN";
+        }
+        else if(language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        }
+        else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,11 +128,10 @@ public class Stock_FacingActivity extends AppCompatActivity {
             expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
             //txt_stockFacingName = (TextView) findViewById(R.id.txt_stockFacingName);
 
-            //preference data
-            preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
             updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
+            //preference data
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -256,6 +282,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
+
     }
 
     private void prepareList() {
@@ -717,6 +744,12 @@ public class Stock_FacingActivity extends AppCompatActivity {
         alert.show();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+    }
+
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
         private Context _context;
         private List<Stock_FacingGetterSetter> _listDataHeader;
@@ -1106,39 +1139,4 @@ public class Stock_FacingActivity extends AppCompatActivity {
         TextView txt_skuName;
         LinearLayout lin_category;
     }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
-    }
-
-    private static boolean updateResources(Context context, String language) {
-
-        String lang ;
-
-        if(language.equalsIgnoreCase("English")){
-            lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
-            lang = "AR";
-        }
-        else {
-            lang = "TR";
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
-
 }
