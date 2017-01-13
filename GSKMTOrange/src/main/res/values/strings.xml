@@ -114,9 +114,6 @@
 
     <string name="enter_the_values">Enter the values</string>
 
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-
     <string name="title_activity_upload">Upload Data</string>
     <string name="no_data_for_upload">No Data For Upload</string>
     <string name="first_checkout_store">First checkout of store</string>
