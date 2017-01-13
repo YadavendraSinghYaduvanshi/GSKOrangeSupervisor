@@ -148,6 +148,10 @@
         <activity
             android:name=".dailyentry.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".dailyentry.CheckoutActivity"
+            android:label="@string/title_activity_checkout"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

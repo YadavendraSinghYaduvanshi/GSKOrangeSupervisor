@@ -527,12 +527,15 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     public void updateCheckoutStatus(String id, String status) {
 
         ContentValues values = new ContentValues();
+        ContentValues values1 = new ContentValues();
 
         try {
 
             values.put("CHECKOUT_STATUS", status);
+            values1.put(CommonString.KEY_COVERAGE_STATUS, status);
 
             db.update(CommonString.KEY_JOURNEY_PLAN, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
+            db.update(CommonString.TABLE_COVERAGE_DATA, values1, CommonString.KEY_STORE_ID + "='" + id + "'", null);
 
         } catch (Exception ex) {
 
@@ -2719,5 +2722,85 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
 
         return false;
+    }
+
+    public CoverageBean getCoverageSpecificData(String visitdate, String store_id) {
+
+        CoverageBean sb = new CoverageBean();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT  * from " + CommonString.TABLE_COVERAGE_DATA + " where "
+                            + CommonString.KEY_VISIT_DATE + "='" + visitdate + "' AND " + CommonString.KEY_STORE_ID +" ='" + store_id +"'",
+                    null);
+
+
+            if (dbcursor != null) {
+
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                   // CoverageBean sb = new CoverageBean();
+
+                    sb.setStoreId(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_STORE_ID)));
+                    sb.setUserId((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_USER_ID))));
+                    sb.setInTime(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_IN_TIME)))));
+                    sb.setOutTime(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_OUT_TIME)))));
+                    sb.setVisitDate((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_VISIT_DATE))))));
+                    sb.setLatitude(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_LATITUDE)))));
+                    sb.setLongitude(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_LONGITUDE)))));
+                    sb.setStatus((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_COVERAGE_STATUS))))));
+                    sb.setImage((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE))))));
+                    sb.setReason((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_REASON))))));
+                    sb.setReasonid((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_REASON_ID))))));
+                    sb.setMID(Integer.parseInt(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_ID))))));
+                    if (dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_COVERAGE_REMARK)) == null) {
+                        sb.setRemark("");
+                    } else {
+                        sb.setRemark((((dbcursor.getString(dbcursor
+                                .getColumnIndexOrThrow(CommonString.KEY_COVERAGE_REMARK))))));
+                    }
+
+                    //list.add(sb);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return sb;
+            }
+        } catch (Exception e) {
+            Log.d("Exception get JCP!", e.toString());
+            return sb;
+        }
+        return sb;
+    }
+
+    //update out time
+    public void updateCheckoutOuttime(String id, String out_time) {
+
+        ContentValues values = new ContentValues();
+
+        try {
+
+            values.put(CommonString.KEY_OUT_TIME, out_time);
+
+            db.update(CommonString.KEY_JOURNEY_PLAN, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
+
+        } catch (Exception ex) {
+
+        }
+
     }
 }
