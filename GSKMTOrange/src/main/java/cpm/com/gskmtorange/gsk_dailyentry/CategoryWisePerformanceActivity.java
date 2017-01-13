@@ -51,13 +51,13 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
             db = new GSKOrangeDB(this);
             db.open();
 
             //preference data
-            preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);            
+            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
