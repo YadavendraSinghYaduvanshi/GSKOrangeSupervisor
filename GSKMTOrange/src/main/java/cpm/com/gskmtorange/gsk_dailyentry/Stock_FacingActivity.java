@@ -956,6 +956,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
             } else {
                 holder.ed_facing.setEnabled(true);
             }
+            
 
             final ViewHolder finalHolder = holder;
             holder.ed_stock.setOnFocusChangeListener(new View.OnFocusChangeListener() {
