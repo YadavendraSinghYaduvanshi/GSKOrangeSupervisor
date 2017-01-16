@@ -300,7 +300,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     hashMapListHeaderData.add(headerDataList.get(i));
 
                     //Child Data
-                    childDataList = db.getStockAndFacingSKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id());
+                    childDataList = db.getStockAndFacingSKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id(), store_id);
                     if (!(childDataList.size() > 0)) {
                         childDataList = db.getStockAndFacingSKUData(categoryId, headerDataList.get(i).getBrand_id());
                     }

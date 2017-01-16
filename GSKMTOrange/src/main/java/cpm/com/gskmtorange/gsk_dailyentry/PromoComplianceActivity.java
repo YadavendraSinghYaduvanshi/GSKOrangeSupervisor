@@ -50,15 +50,13 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("UAE")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 
@@ -99,11 +97,11 @@ public class PromoComplianceActivity extends AppCompatActivity {
             btn_add = (Button) findViewById(R.id.btn_add);
 
             db = new GSKOrangeDB(this);
-            db.open();            
+            db.open();
 
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+            updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -218,31 +216,34 @@ public class PromoComplianceActivity extends AppCompatActivity {
             btn_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PromoComplianceActivity.this);
-                    builder.setMessage("Are you sure you want to add")
-                            .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+                    if (!cd.getSp_promo().equals("0")) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PromoComplianceActivity.this);
+                        builder.setMessage("Are you sure you want to add")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        db.InsertAdditionalPromoData(cd, categoryId);
+                                        AdditionalPromoListView();
 
-                                    db.InsertAdditionalPromoData(cd, categoryId);
-                                    AdditionalPromoListView();
+                                        sp_promo.setSelection(0);
+                                        toggle_add_InStock.setChecked(true);
+                                        toggle_add_promoAnnouncer.setChecked(true);
+                                        toggle_add_runningPos.setChecked(true);
 
-                                    sp_promo.setSelection(0);
-                                    toggle_add_InStock.setChecked(true);
-                                    toggle_add_promoAnnouncer.setChecked(true);
-                                    toggle_add_runningPos.setChecked(true);
-
-                                    Snackbar.make(v, "promo is add", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                                    //Toast.makeText(getApplicationContext(), "promo is add", Toast.LENGTH_LONG).show();
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                                        Snackbar.make(v, "promo is add", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        //Toast.makeText(getApplicationContext(), "promo is add", Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    } else {
+                        Snackbar.make(v, "Select the promo value", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    }
                 }
             });
 
@@ -295,7 +296,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     private void prepareList() {
