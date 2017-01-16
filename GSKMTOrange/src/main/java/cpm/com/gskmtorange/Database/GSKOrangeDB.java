@@ -1198,13 +1198,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<Stock_FacingGetterSetter> getStockAndFacingHeader_AfterSaveData(String category_id) {
+    public ArrayList<Stock_FacingGetterSetter> getStockAndFacingHeader_AfterSaveData(String category_id, String store_id) {
         ArrayList<Stock_FacingGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
 
         try {
             dbcursor = db.rawQuery("Select * from Stock_Facing_Header_Data " +
-                    "where category_id='" + category_id + "'", null);
+                    "where category_id='" + category_id + "' AND Store_Id='" + store_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -2216,15 +2216,16 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
 
     }
-    public void deleteStockEntryall(String storeid,String categoryid) {
+
+    public void deleteStockEntryall(String storeid, String categoryid) {
         try {
 
-            db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL, "Store_Id" + "='" + storeid +"'AND categoryId" + "='" + categoryid + "'", null);
-            db.delete(CommonString.TABLE_INSERT_STOCK_DIALOG, "Store_Id" + "='" + storeid +"'AND categoryId" + "='" + categoryid + "'", null);
+            db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
+            db.delete(CommonString.TABLE_INSERT_STOCK_DIALOG, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
 
-            db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_MAIN, "Store_Id" + "='" + storeid +"'AND categoryId" + "='" + categoryid + "'", null);
+            db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_MAIN, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
 
-            db.delete(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, "Store_Id" + "='" + storeid +"'AND categoryId" + "='" + categoryid + "'", null);
+            db.delete(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
 
         } catch (Exception e) {
             System.out.println("" + e);
@@ -2314,7 +2315,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-    public void InsertAdditionalData(AddittionalGetterSetter data,ArrayList<AdditionalDialogGetterSetter> dialog,String categoryId) {
+    public void InsertAdditionalData(AddittionalGetterSetter data, ArrayList<AdditionalDialogGetterSetter> dialog, String categoryId) {
 
         ContentValues values = new ContentValues();
         ContentValues values1 = new ContentValues();
@@ -2352,13 +2353,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<AddittionalGetterSetter> getAdditionalStock(String store_id,String categoryId) {
+    public ArrayList<AddittionalGetterSetter> getAdditionalStock(String store_id, String categoryId) {
         Cursor cursordata = null;
         ArrayList<AddittionalGetterSetter> productData = new ArrayList<AddittionalGetterSetter>();
 
         try {
 
-           // cursordata = db.rawQuery("SELECT * FROM Stock_Additional_visibility WHERE Store_Id = '"+store_id + "'categoryId = '"+categoryId + "'", null);
+            // cursordata = db.rawQuery("SELECT * FROM Stock_Additional_visibility WHERE Store_Id = '"+store_id + "'categoryId = '"+categoryId + "'", null);
             cursordata = db.rawQuery("Select * from Stock_Additional_visibility " + "where categoryId='" + categoryId + "' and Store_Id='" + store_id + "'", null);
 
             if (cursordata != null) {
@@ -2520,7 +2521,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-             cursordata = db.rawQuery("SELECT * FROM Stock_Additional_visibility_Main WHERE Store_Id = '"+store_id +"'", null);
+            cursordata = db.rawQuery("SELECT * FROM Stock_Additional_visibility_Main WHERE Store_Id = '" + store_id + "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
@@ -2570,37 +2571,34 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     }
 
-    public void InsertMainListAdditionalData(AddittionalGetterSetter Mainlist,ArrayList<AdditionalDialogGetterSetter> skulist,String categoryId) {
+    public void InsertMainListAdditionalData(AddittionalGetterSetter Mainlist, ArrayList<AdditionalDialogGetterSetter> skulist, String categoryId) {
         ContentValues values = new ContentValues();
         ContentValues values1 = new ContentValues();
         try {
 
-                values.put("Store_Id", Mainlist.getStore_id());
-                values.put("categoryId", categoryId);
-                values.put("brand_name", Mainlist.getBrand());
-                values.put("brand_id", Mainlist.getBrand_id());
-                values.put("image_url", Mainlist.getImage());
-                values.put("sku_id", Mainlist.getSku_id());
-                values.put("sku_name", Mainlist.getSku());
-                values.put("toggle_value", Mainlist.getBtn_toogle());
+            values.put("Store_Id", Mainlist.getStore_id());
+            values.put("categoryId", categoryId);
+            values.put("brand_name", Mainlist.getBrand());
+            values.put("brand_id", Mainlist.getBrand_id());
+            values.put("image_url", Mainlist.getImage());
+            values.put("sku_id", Mainlist.getSku_id());
+            values.put("sku_name", Mainlist.getSku());
+            values.put("toggle_value", Mainlist.getBtn_toogle());
 
-                long key_id = db.insert(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_MAIN, null, values);
+            long key_id = db.insert(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_MAIN, null, values);
 
-                for(int j=0;j<skulist.size();j++)
-                {
-                    values1.put(CommonString.KEY_Common_ID, key_id);
-                    values1.put(CommonString.KEY_STORE_ID, skulist.get(j).getStore_id());
-                    values1.put("categoryId", categoryId);
-                    values1.put(CommonString.KEY_BRAND, skulist.get(j).getBrand());
-                    values1.put(CommonString.KEY_BRAND_ID, skulist.get(j).getBrand_id());
-                    values1.put(CommonString.KEY_QUANTITY, skulist.get(j).getQuantity());
-                    values1.put(CommonString.KEY_SKU_ID, skulist.get(j).getSku_id());
-                    values1.put(CommonString.KEY_SKUNAME, skulist.get(j).getSku_name());
+            for (int j = 0; j < skulist.size(); j++) {
+                values1.put(CommonString.KEY_Common_ID, key_id);
+                values1.put(CommonString.KEY_STORE_ID, skulist.get(j).getStore_id());
+                values1.put("categoryId", categoryId);
+                values1.put(CommonString.KEY_BRAND, skulist.get(j).getBrand());
+                values1.put(CommonString.KEY_BRAND_ID, skulist.get(j).getBrand_id());
+                values1.put(CommonString.KEY_QUANTITY, skulist.get(j).getQuantity());
+                values1.put(CommonString.KEY_SKU_ID, skulist.get(j).getSku_id());
+                values1.put(CommonString.KEY_SKUNAME, skulist.get(j).getSku_name());
 
-                    db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, null, values1);
-                }
-
-
+                db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, null, values1);
+            }
 
 
         } catch (Exception ex) {
@@ -2615,7 +2613,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            cursordata = db.rawQuery("SELECT * FROM STOCK_DIALOG_MAIN WHERE COMMON_ID = '"+keyid + "'", null);
+            cursordata = db.rawQuery("SELECT * FROM STOCK_DIALOG_MAIN WHERE COMMON_ID = '" + keyid + "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
@@ -2664,7 +2662,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-  
     // get T2P Compliance data
     public ArrayList<T2PGetterSetter> getT2pComplianceData(String store_id, String category_id) {
 
@@ -2869,7 +2866,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
             dbcursor = db.rawQuery("SELECT  * from " + CommonString.TABLE_COVERAGE_DATA + " where "
-                            + CommonString.KEY_VISIT_DATE + "='" + visitdate + "' AND " + CommonString.KEY_STORE_ID +" ='" + store_id +"'",
+                            + CommonString.KEY_VISIT_DATE + "='" + visitdate + "' AND " + CommonString.KEY_STORE_ID + " ='" + store_id + "'",
                     null);
 
 
@@ -2877,7 +2874,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
-                   // CoverageBean sb = new CoverageBean();
+                    // CoverageBean sb = new CoverageBean();
 
                     sb.setStoreId(dbcursor.getString(dbcursor
                             .getColumnIndexOrThrow(CommonString.KEY_STORE_ID)));

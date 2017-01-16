@@ -289,7 +289,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
             hashMapListChildData = new HashMap<>();
 
             //Header Data
-            headerDataList = db.getStockAndFacingHeader_AfterSaveData(categoryId);
+            headerDataList = db.getStockAndFacingHeader_AfterSaveData(categoryId, store_id);
             if (!(headerDataList.size() > 0)) {
                 headerDataList = db.getStockAndFacingHeaderData(categoryId);
             }
@@ -949,7 +949,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 holder.txt_skuName.setTextColor(getResources().getColor(R.color.black));
                 holder.ed_stock.setVisibility(View.GONE);
             }
-
 
             if (childData.getStock().equals("0")) {
                 holder.ed_facing.setEnabled(false);

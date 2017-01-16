@@ -83,6 +83,7 @@ public class CommonString {
     public static final String KEY_D = "D";
     public static final String KEY_U = "U";
     public static final String KEY_C = "C";
+    public static final String KEY_Y = "Y";
     public static final String KEY_L = "Leave";
     public static final String KEY_N = "NOT_VISITED";
     public static final String KEY_INVALID = "INVALID";

@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         date = preferences.getString(CommonString.KEY_DATE, null);
         imageView = (ImageView) findViewById(R.id.img_main);
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     @Override
@@ -206,24 +206,19 @@ public class MainActivity extends AppCompatActivity
                 } else {
 
                     if (coverageList.size() == 0) {
+                        Snackbar.make(webView, R.string.no_data_for_upload, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
 
-                        Snackbar.make(webView, R.string.no_data_for_upload, Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
                         Intent i = new Intent(getBaseContext(), UploadActivity.class);
                         startActivity(i);
-
                     } else {
-                        if (isStoreCheckedIn()&& isValid()) {
+                        if (isStoreCheckedIn() && isValid()) {
 
-                        Intent i = new Intent(getBaseContext(), UploadActivity.class);
-                        startActivity(i);
+                            Intent i = new Intent(getBaseContext(), UploadActivity.class);
+                            startActivity(i);
 
-                        //finish();
-
-                       } else {
-
-                            Snackbar.make(webView, error_msg, Snackbar.LENGTH_SHORT)
-                                    .setAction("Action", null).show();
+                            //finish();
+                        } else {
+                            Snackbar.make(webView, error_msg, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                         }
 
                     }
@@ -282,7 +277,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_setting) {
 
-             Intent startDownload = new Intent(this,SettingsActivity.class);
+            Intent startDownload = new Intent(this, SettingsActivity.class);
             startActivity(startDownload);
 
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
@@ -411,12 +406,10 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < coverageList.size(); i++) {
 
             storestatus = db.getSpecificStoreData(date, coverageList.get(i).getStoreId()).getUPLOAD_STATUS();
-            String coverage_status =  db.getSpecificStoreData(date, coverageList.get(i).getStoreId()).getCHECKOUT_STATUS();
+            String coverage_status = db.getSpecificStoreData(date, coverageList.get(i).getStoreId()).getCHECKOUT_STATUS();
 
             if (!storestatus.equalsIgnoreCase(CommonString.KEY_U)) {
-                if ((coverage_status.equalsIgnoreCase(
-                        CommonString.KEY_C)
-                        || storestatus.equalsIgnoreCase(CommonString.KEY_P) ||
+                if ((coverage_status.equalsIgnoreCase(CommonString.KEY_Y) || storestatus.equalsIgnoreCase(CommonString.KEY_P) ||
                         storestatus.equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE))) {
                     flag = true;
                     break;
@@ -433,15 +426,13 @@ public class MainActivity extends AppCompatActivity
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("UAE")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 

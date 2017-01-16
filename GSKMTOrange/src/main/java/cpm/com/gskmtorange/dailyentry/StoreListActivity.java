@@ -203,7 +203,7 @@ public class StoreListActivity extends AppCompatActivity {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-            } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_C)) {
+            } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_Y)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
@@ -267,7 +267,7 @@ public class StoreListActivity extends AppCompatActivity {
                     } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_D)) {
 
                         Snackbar.make(v, R.string.title_store_list_activity_store_data_uploaded, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_C)) {
+                    } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_Y)) {
 
                         Snackbar.make(v, R.string.title_store_list_activity_store_already_checkout, Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
