@@ -72,11 +72,11 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
             db = new GSKOrangeDB(this);
             db.open();
-           
+
 
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+            updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -226,7 +226,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     private void prepareList() {
@@ -242,7 +242,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                     hashMapListHeaderData.add(headerDataList.get(i));
 
                     //childDataList = new ArrayList<>();
-                    childDataList = db.getMSL_AvailabilitySKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id());
+                    childDataList = db.getMSL_AvailabilitySKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id(), store_id);
                     if (!(childDataList.size() > 0)) {
                         childDataList = db.getMSL_AvailabilitySKUData(categoryId, headerDataList.get(i).getBrand_id());
                     }
@@ -491,15 +491,13 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("UAE")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 

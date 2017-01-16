@@ -974,13 +974,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<MSL_AvailabilityGetterSetter> getMSL_AvailabilitySKU_AfterSaveData(String category_id, String brand_id) {
+    public ArrayList<MSL_AvailabilityGetterSetter> getMSL_AvailabilitySKU_AfterSaveData(String category_id, String brand_id, String store_id) {
         ArrayList<MSL_AvailabilityGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
 
         try {
             dbcursor = db.rawQuery("Select * from Msl_Availability_Data " +
-                    "where category_id='" + category_id + "' and Brand_Id='" + brand_id + "'", null);
+                    "where category_id='" + category_id + "' and Brand_Id='" + brand_id + "' AND Store_Id='" + store_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -1232,13 +1232,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Stock_FacingGetterSetter> getStockAndFacingSKU_AfterSaveData(String category_id, String brand_id) {
+    public ArrayList<Stock_FacingGetterSetter> getStockAndFacingSKU_AfterSaveData(String category_id, String brand_id, String store_id) {
         ArrayList<Stock_FacingGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
 
         try {
             dbcursor = db.rawQuery("Select * from Stock_Facing_Child_Data " +
-                    "where category_id='" + category_id + "' and Brand_Id='" + brand_id + "'", null);
+                    "where category_id='" + category_id + "' and Brand_Id='" + brand_id + "' AND Store_Id='" + store_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
