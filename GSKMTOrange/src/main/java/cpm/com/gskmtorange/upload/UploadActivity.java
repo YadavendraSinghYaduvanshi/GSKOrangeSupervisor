@@ -231,7 +231,8 @@ public class UploadActivity extends AppCompatActivity {
                     storeData = db.getSpecificStoreData(date, coverageList.get(i).getStoreId());
                     if (storeData.getSTORE_ID() != null) {
 
-                        if (storeData.getCHECKOUT_STATUS().equals(CommonString.KEY_C) || storeData.getCHECKOUT_STATUS().equals(CommonString.KEY_L) ||
+                        if (storeData.getCHECKOUT_STATUS().equals(CommonString.KEY_Y) ||
+                                storeData.getCHECKOUT_STATUS().equals(CommonString.KEY_L) ||
                                 !storeData.getUPLOAD_STATUS().equals(CommonString.KEY_U)) {
 
                             String camera_allow = storeData.getCAMERA_ALLOW();

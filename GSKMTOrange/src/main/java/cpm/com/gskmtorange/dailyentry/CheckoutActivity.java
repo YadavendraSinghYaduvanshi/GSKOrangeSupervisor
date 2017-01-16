@@ -193,7 +193,7 @@ public class CheckoutActivity extends AppCompatActivity {
                 if (result.toString()
                         .equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
 
-                    db.updateCheckoutOuttime(store_id, getCurrentTime(),CommonString.KEY_C);
+                    db.updateCheckoutOuttime(store_id, getCurrentTime(),CommonString.KEY_Y);
 
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(CommonString.KEY_STORE_ID, "");
@@ -210,7 +210,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
                     editor.commit();
 
-                    db.updateCheckoutStatus(store_id, CommonString.KEY_C);
+                    db.updateCheckoutStatus(store_id, CommonString.KEY_Y);
 
                 } else {
 
