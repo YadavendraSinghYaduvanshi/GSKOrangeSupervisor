@@ -89,15 +89,13 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("UAE")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 
@@ -127,11 +125,11 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
             expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
             //txt_stockFacingName = (TextView) findViewById(R.id.txt_stockFacingName);
-           
+
 
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+            updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -747,7 +745,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -971,9 +969,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         String stock = edStock.replaceFirst("^0+(?!$)", "");
                         childData.setStock(stock);
 
-                        if (edStock.equals("0")) {
+                        if (stock.equals("0")) {
                             childData.setFacing("0");
-
+                            finalHolder.ed_facing.setText("0");
                             finalHolder.ed_facing.setEnabled(false);
                         } else {
                             childData.setFacing(childData.getFacing());
@@ -981,12 +979,13 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         }
                     } else {
                         childData.setStock("");
+                        childData.setFacing("");
                         finalHolder.ed_facing.setEnabled(true);
                     }
                 }
             });
 
-            /*holder.ed_stock.addTextChangedListener(new TextWatcher() {
+           /* holder.ed_stock.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -1007,8 +1006,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         childData.setStock(stock);
 
                         if (edStock.equals("0")) {
-                            childData.setFacing("0");
-
+                            if (childData.getCompany_id().equals("1")) {
+                                childData.setFacing("0");
+                            }
                             finalHolder.ed_facing.setEnabled(false);
                         } else {
                             childData.setFacing(childData.getFacing());
@@ -1016,10 +1016,10 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         }
                     } else {
                         childData.setStock("");
+                        childData.setFacing("");
                         finalHolder.ed_facing.setEnabled(true);
                     }
-
-                    expandableListView.invalidateViews();
+                    //expandableListView.invalidateViews();
                 }
             });*/
 
