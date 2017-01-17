@@ -79,7 +79,7 @@ public class SettingsActivityFragment extends Fragment {
                 public void onClick(View v) {
                     Fragment nextFrag= mItem.getFragment();
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment, nextFrag,"Settings")
+                            .add(R.id.fragment, nextFrag,"Settings")
                             .addToBackStack(null)
                             .commit();
                 }

@@ -111,6 +111,17 @@ public class SelectLanguageFragment extends Fragment implements View.OnClickList
             btn_lang_1.setText(language.get(0));
             btn_lang_2.setText(language.get(1));
 
+            String lang = preferences.getString(CommonString.KEY_LANGUAGE, "");
+
+            if(lang.equals(language.get(0))){
+                btn_lang_1.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                btn_lang_2.setBackgroundColor(getResources().getColor(R.color.grey_background));
+            }
+            else if(lang.equals(language.get(1))){
+                btn_lang_1.setBackgroundColor(getResources().getColor(R.color.grey_background));
+                btn_lang_2.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            }
+
             btn_lang_1.setOnClickListener(this);
             btn_lang_2.setOnClickListener(this);
         }
@@ -118,10 +129,10 @@ public class SelectLanguageFragment extends Fragment implements View.OnClickList
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(boolean selected_flag) {
+    public void onButtonPressed(String selected_lang, String culture_id, String notice_url) {
         if (mListener != null) {
 
-            mListener.onFragmentInteraction(selected_flag);
+            mListener.onFragmentInteraction(selected_lang,culture_id,notice_url);
         }
     }
 
@@ -150,7 +161,7 @@ public class SelectLanguageFragment extends Fragment implements View.OnClickList
             case R.id.btn_language_one:
 
                 //selected_flag = true;
-                onButtonPressed(true);
+                onButtonPressed(language.get(0),culture_id.get(0),login_data.getNOTICE_URL().get(0));
 
                 updateResources(getActivity(), language.get(0));
 
@@ -168,7 +179,7 @@ public class SelectLanguageFragment extends Fragment implements View.OnClickList
 
                 //selected_flag = true;
 
-                onButtonPressed(true);
+                onButtonPressed(language.get(1),culture_id.get(1),login_data.getNOTICE_URL().get(1));
 
                 updateResources(getActivity(), language.get(1));
 
@@ -196,7 +207,7 @@ public class SelectLanguageFragment extends Fragment implements View.OnClickList
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(boolean flag);
+        void onFragmentInteraction(String lang, String culture_id, String notice);
     }
 
     private void getDataFromSharedPreferences(){
