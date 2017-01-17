@@ -2233,6 +2233,33 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     }
 
+
+
+
+
+
+    public void deleteStockEntryMainTable(String storeid, String categoryid) {
+        try {
+
+            db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_MAIN, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
+
+            db.delete(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
+
+        } catch (Exception e) {
+            System.out.println("" + e);
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
     public ArrayList<BrandMasterGetterSetter> getBrandMasterData(String store_id) {
         Cursor cursordata = null;
         ArrayList<BrandMasterGetterSetter> Data = new ArrayList<BrandMasterGetterSetter>();

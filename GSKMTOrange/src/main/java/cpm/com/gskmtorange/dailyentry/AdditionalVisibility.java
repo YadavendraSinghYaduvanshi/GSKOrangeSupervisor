@@ -88,6 +88,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     String brand_name = "", brand_id = "", SKU_name = "", SKU_ID = "", brand_list_name = "", brand_list_id = "", sku_list_name = "", sku_list_id = "";
     public ListView listview;
     LinearLayout linearlay;
+    CardView cardlay;
     ArrayList<BrandMasterGetterSetter> brandList;
 
     ArrayList<BrandMasterGetterSetter> brand_list;
@@ -278,6 +279,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                         .setCancelable(false)
                         .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+
+                                db.deleteStockEntryMainTable(store_id,categoryId);
+
                                 for (int J = 0; J < listdata.size(); J++) {
                                     newadd = new AddittionalGetterSetter();
                                     newadd.setBrand(listdata.get(J).getBrand_id());
@@ -288,15 +292,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                                     newadd.setStore_id(listdata.get(J).getStore_id());
                                     newadd.setBtn_toogle(listdata.get(J).getBtn_toogle());
                                     newadd.setCategoryId(listdata.get(J).getCategoryId());
-
                                     String KeyID = listdata.get(J).getKey_id();
                                     additionalVisibilitySkuList = db.getDialogStock(KeyID);
 
                                     db.InsertMainListAdditionalData(newadd, additionalVisibilitySkuList,categoryId);
-
-                                    /*Intent in =new Intent(AdditionalVisibility.this, DailyDataMenuActivity.class);
-
-                                    startActivity(in);*/
 
                                     KeyID="";
                                     additionalVisibilitySkuList.clear();
@@ -884,16 +883,25 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         Edt_txt = (EditText) dialog.findViewById(R.id.et_stock);
         listview = (ListView) dialog.findViewById(R.id.lv);
         linearlay = (LinearLayout) dialog.findViewById(R.id.list_layout);
+        cardlay = (CardView) dialog.findViewById(R.id.cardId);
+
 
         //list = db.getDialogStock(store_id);
 
 
         if (defdata.size() > 0) {
             linearlay.setVisibility(View.VISIBLE);
+
+            cardlay.setVisibility(View.VISIBLE);
             adapterData = new MyAdaptorStock(AdditionalVisibility.this, defdata);
             listview.setAdapter(adapterData);
             listview.invalidateViews();
         } else {
+
+            linearlay.setVisibility(View.INVISIBLE);
+
+            cardlay.setVisibility(View.INVISIBLE);
+
 
         }
 
@@ -957,6 +965,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                     // list = db.getDialogStock(store_id);
                     linearlay.setVisibility(View.VISIBLE);
+                    cardlay.setVisibility(View.VISIBLE);
                     adapterData = new MyAdaptorStock(AdditionalVisibility.this, defdata);
                     listview.setAdapter(adapterData);
                     listview.invalidateViews();

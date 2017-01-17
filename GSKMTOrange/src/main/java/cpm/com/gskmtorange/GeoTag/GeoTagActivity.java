@@ -122,6 +122,9 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
     Uri outputFileUri;
     private int factor, k;
     ArrayList<GeotaggingBeans> geotaglist = new ArrayList<GeotaggingBeans>();
+
+    ArrayList<GeotaggingBeans> geotaglistImage = new ArrayList<GeotaggingBeans>();
+
     private TextView percentage, message;
     private FailureGetterSetter failureGetterSetter = null;
     /**
@@ -592,7 +595,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                     for (int i = 0; i < geotaglist.size(); i++) {
 
-                        runOnUiThread(new Runnable() {
+                       /* runOnUiThread(new Runnable() {
                             public void run() {
                                 // TODO Auto-generated method stub
                                 k = k + factor;
@@ -600,7 +603,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                                 percentage.setText(k + "%");
                                 message.setText(getResources().getString(R.string.geotagdata));
                             }
-                        });
+                        });*/
 
                         String onXML = "[GeoTag_DATA][STORE_ID]"
                                 + geotaglist.get(i).getStoreid()
@@ -619,7 +622,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                         geo_xml = geo_xml + onXML;
 
-                        geotemplist.add(geotaglist.get(i).getStoreid());
+                      //  geotemplist.add(geotaglist.get(i).getStoreid());
 
                     }
 
@@ -649,10 +652,10 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                             CommonString.KEY_SUCCESS)) {
                         String statusD = "D";
 
-                        for (int i = 0; i < geotemplist.size(); i++) {
-                            db.updateGeoTagData(geotemplist.get(i).toString(), statusD);
+                        for (int i = 0; i < geotaglist.size(); i++) {
+                            db.updateGeoTagData(geotaglist.get(i).storeid, statusD);
 
-                            db.updateDataStatus(geotemplist.get(i).toString(), statusD);
+                            db.updateDataStatus(geotaglist.get(i).getStoreid(), statusD);
 
                         }
 
@@ -716,13 +719,13 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 new GeoTagImageUpload(GeoTagActivity.this).execute();
 
-                Intent intent = new Intent(
+               /* Intent intent = new Intent(
                         GeoTagActivity.this,
                         GeoTagStoreList.class);
 
                 startActivity(intent);
 
-                GeoTagActivity.this.finish();
+                GeoTagActivity.this.finish();*/
 
             }
             else if(!result.equals(CommonString.KEY_SUCCESS))
@@ -777,7 +780,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                 db.open();
 
 
-                geotaglist = db.getinsertGeotaggingData("D");
+                geotaglistImage = db.getinsertGeotaggingData("D");
 
                 // Uploading Geotag
 
@@ -786,9 +789,9 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                 XMLReader xmlR = saxP.getXMLReader();
 
 
-                if (geotaglist.size() > 0) {
+                if (geotaglistImage.size() > 0) {
 
-                    for (int i = 0; i < geotaglist.size(); i++) {
+                    for (int i = 0; i < geotaglistImage.size(); i++) {
 
                         runOnUiThread(new Runnable() {
 
@@ -801,18 +804,18 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                             }
                         });
 
-                        if (geotaglist.get(i).getUrl1() != null
-                                && !geotaglist.get(i).getUrl1()
+                        if (geotaglistImage.get(i).getUrl1() != null
+                                && !geotaglistImage.get(i).getUrl1()
                                 .equalsIgnoreCase("")) {
 
                             if (new File(Environment.getExternalStorageDirectory() + "/GSK_MT_ORANGE_IMAGES/"
-                                    + geotaglist.get(i).getUrl1()).exists()) {
-                                result = UploadGeoImage(geotaglist.get(i).getUrl1(), "GeoTag");
+                                    + geotaglistImage.get(i).getUrl1()).exists()) {
+                                result = UploadGeoImage(geotaglistImage.get(i).getUrl1(), "GeotagImages");
 
 
                                 if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
 
-                                    return "GeoTag";
+                                    return "GeotagImages";
                                 }
 
 
@@ -825,24 +828,8 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                                     return CommonString.METHOD_Get_DR_STORE_IMAGES_GEO + "," + errormsg;
                                 }
 
-
-
-                               /* runOnUiThread(new Runnable() {
-
-                                    public void run() {
-                                        // TODO Auto-generated method stub
-
-                                        message.setText("Image1 Upload");
-                                    }
-                                });*/
                             }
                         }
-
-
-//						for(int i =0 ; i < geotaglist.size(); i++){
-
-//						}
-
 
                     }
 
@@ -882,16 +869,14 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                 String Statustag = "U";
                 db.open();
 
-                for (int i = 0; i < geotaglist.size(); i++) {
+                for (int i = 0; i < geotaglistImage.size(); i++) {
 
 
-                    db.updateGeoTagData(geotaglist.get(i).getStoreid(), Statustag);
+                    db.updateGeoTagData(geotaglistImage.get(i).getStoreid(), Statustag);
 
-                    db.updateDataStatus(geotaglist.get(i).getStoreid(), Statustag);
+                    db.updateDataStatus(geotaglistImage.get(i).getStoreid(), Statustag);
 
-                    // db.updateGeoTagDataInMain(geotaglist.get(i).getStoreid());
-
-                    db.deleteGeoTagData(geotaglist.get(i).getStoreid());
+                    //db.deleteGeoTagData(geotaglistImage.get(i).getStoreid());
 
 
                 }
@@ -899,7 +884,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
                 AlertMessage message = new AlertMessage(
-                        GeoTagActivity.this, AlertMessage.MESSAGE_ERROR
+                        GeoTagActivity.this, AlertMessage.MESSAGE_SUCCESS
                         + result, getResources().getString(R.string.success), null);
                 message.showMessage();
 
@@ -958,8 +943,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         byte[] ba = bao.toByteArray();
         String ba1 = Base64.encodeBytes(ba);
 
-        SoapObject request = new SoapObject(CommonString.NAMESPACE,
-                CommonString.METHOD_Get_DR_POSM_IMAGES);
+        SoapObject request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_IMAGE);
 
         request.addProperty("img", ba1);
         request.addProperty("name", path);
@@ -973,8 +957,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         HttpTransportSE androidHttpTransport = new HttpTransportSE(
                 CommonString.URL);
 
-        androidHttpTransport.call(
-                CommonString.SOAP_ACTION_Get_DR_POSM_IMAGES, envelope);
+        androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_IMAGE, envelope);
         Object result = (Object) envelope.getResponse();
 
         if (result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
