@@ -196,7 +196,7 @@
 
     <!--Gagan start new code 2-->
     <string name="stock_facing_planogram_dialog_title">Planogram</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
 
     <string name="ok">OK</string>
     <string name="check_save_message">Are you sure you want to save</string>
@@ -214,5 +214,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_checkout">CheckoutActivity</string>
     <string name="checkout_successful">Checkout Success</string>
+    <string name="title_activity_service">Service</string>
+
+    <string name="data_downloaded_successfully">Data downloaded successfully</string>
+    <string name="export_database">Export Database</string>
+    <string name="data_exported_successfully">Database Exported Successfully</string>
+
+
 
 </resources>
