@@ -296,24 +296,6 @@ public class StoreListActivity extends AppCompatActivity {
                     }
 
 
-
-                        /*{
-
-                            for (int i = 0; i < coverage.size(); i++) {
-
-                                if (coverage.get(i).getStoreId().equals(store_id)) {
-                                    if (coverage.get(i).getStatus().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
-                                        Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                                    }
-                                }
-
-                            }
-
-                        }
-                    }*/
-
-
-
                     else {
 
                         // PUT IN PREFERENCES
@@ -393,7 +375,7 @@ public class StoreListActivity extends AppCompatActivity {
 
                                         }
                                     })
-                            .setNegativeButton(R.string.cancel,
+                            .setNegativeButton(R.string.closed,
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(
                                                 DialogInterface dialog, int id) {

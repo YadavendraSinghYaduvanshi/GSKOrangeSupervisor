@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
 
                 android:layout_weight="10"
-                android:text="Brand Name"
+                android:text="@string/brandname"
                 android:textStyle="bold" />
 
             <TextView
@@ -59,7 +59,7 @@
                 android:layout_height="match_parent"
 
                 android:layout_weight="10"
-                android:text="SKU Name"
+                android:text="@string/displayname"
                 android:textStyle="bold" />
 
             <TextView
@@ -118,7 +118,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_weight="10"
                 android:background="@color/grey_background"
-                android:text="Delete" />
+                android:text="@string/delete" />
 
         </LinearLayout>
 

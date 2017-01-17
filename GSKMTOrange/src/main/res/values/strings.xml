@@ -175,7 +175,7 @@
     <string name="uploadimge">Uploading Geotag Images</string>
     <string name="success">success</string>
     <string name="wantcheckout">Are you sure you want to Checkout</string>
-    <string name="nonetwork"> No Network</string>
+    <string name="nonetwork"> No Network Connection. Please check your Internet Connection</string>
 
     <string name="title_activity_Non_Work">Non Working Reason</string>
     <string name="closed">Close</string>
@@ -214,5 +214,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_checkout">CheckoutActivity</string>
     <string name="checkout_successful">Checkout Success</string>
+    <string name="NetworkError">Network Error ,</string>
+    <string name="DataNot"> Data Not Uploaded ,</string>
+    <string name="displayname">Display Name</string>
+    <string name="adddatatoclick">Click Yes To Add Data</string>
+
 
 </resources>

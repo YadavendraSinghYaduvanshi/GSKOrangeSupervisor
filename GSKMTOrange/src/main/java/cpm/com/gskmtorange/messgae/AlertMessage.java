@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
+import cpm.com.gskmtorange.R;
 
 /**
  * Created by ashishc on 03-01-2017.
@@ -63,9 +64,9 @@ public class AlertMessage {
     public void ShowAlert1(String str) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Parinaam");
+        builder.setTitle(R.string.dialog_title);
         builder.setMessage(str).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         Intent i = new Intent(activity, GeoTagStoreList.class);
@@ -84,9 +85,9 @@ public class AlertMessage {
     public void ShowAlertSocket(String str) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Parinaam");
+        builder.setTitle(R.string.dialog_title);
         builder.setMessage(str).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         Intent i = new Intent(activity, GeoTagStoreList.class);
