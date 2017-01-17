@@ -177,15 +177,15 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
             }
             else if(current.getGEO_TAG().equalsIgnoreCase("D")){
                 viewHolder.imageview.setVisibility(View.VISIBLE);
-                viewHolder.imageview.setBackgroundResource(R.mipmap.tick_d);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
             }
             else if(current.getGEO_TAG().equalsIgnoreCase("U")){
                 viewHolder.imageview.setVisibility(View.VISIBLE);
-                viewHolder.imageview.setBackgroundResource(R.mipmap.tick_u);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.tick);
             }
             else if(current.getGEO_TAG().equalsIgnoreCase("P")){
                 viewHolder.imageview.setVisibility(View.VISIBLE);
-                viewHolder.imageview.setBackgroundResource(R.mipmap.tick_p);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
             }
             else
             {

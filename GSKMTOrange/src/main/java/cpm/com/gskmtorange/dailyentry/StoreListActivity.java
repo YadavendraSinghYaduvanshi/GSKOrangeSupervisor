@@ -216,11 +216,19 @@ public class StoreListActivity extends AppCompatActivity {
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
             } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-            } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
+            }
+            else if (checkleavestatus(storeid))
+            {
+                viewHolder.imageview.setVisibility(View.VISIBLE);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
+                viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+            }
 
+            else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
 
                 if (coverage.size() > 0) {
 
@@ -276,9 +284,37 @@ public class StoreListActivity extends AppCompatActivity {
                         Snackbar.make(v, R.string.title_store_list_activity_store_again_uploaded, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_L)) {
                         Snackbar.make(v, R.string.title_store_list_activity_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+                    }
+                    else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
                         Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    } else {
+                    }
+                     else if (checkleavestatus(store_id)) {
+
+                        Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+
+                    }
+
+
+
+                        /*{
+
+                            for (int i = 0; i < coverage.size(); i++) {
+
+                                if (coverage.get(i).getStoreId().equals(store_id)) {
+                                    if (coverage.get(i).getStatus().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+                                        Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }*/
+
+
+
+                    else {
 
                         // PUT IN PREFERENCES
                         editor = preferences.edit();
@@ -557,6 +593,34 @@ public class StoreListActivity extends AppCompatActivity {
         db.updateStoreStatus(storeid, storelist.get(0).getVISIT_DATE(), "N");
 
     }
+
+
+    public boolean checkleavestatus(String store_cd) {
+
+        if(coverage.size()>0)
+        {
+
+
+        for (int i = 0; i < coverage.size(); i++) {
+            if (store_cd.equals(coverage.get(i).getStoreId())) {
+                if (coverage.get(i).getStatus().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+                    result_flag = true;
+                    break;
+                }
+            } else {
+
+                result_flag = false;
+
+            }
+        }
+        }
+        return result_flag;
+    }
+
+
+
+
+
 }
 
 

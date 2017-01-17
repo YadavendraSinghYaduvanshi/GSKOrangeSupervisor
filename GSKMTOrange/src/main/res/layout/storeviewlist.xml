@@ -68,6 +68,7 @@
                 android:layout_alignParentTop="true"
                 android:focusable="false"
                 android:background="@mipmap/checkout"
+                android:visibility="gone"
                  />
 
             <ImageView

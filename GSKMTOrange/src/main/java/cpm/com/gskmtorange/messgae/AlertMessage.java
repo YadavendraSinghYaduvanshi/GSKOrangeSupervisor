@@ -15,6 +15,8 @@ public class AlertMessage {
 
     public static final String MESSAGE_ERROR = "Network Error , ";
 
+    public static final String MESSAGE_SUCCESS = "Uploaded Data , ";
+
     public static final String MESSAGE_DATA_NOT = "Data Not Uploaded , ";
 
     private Exception exception;
