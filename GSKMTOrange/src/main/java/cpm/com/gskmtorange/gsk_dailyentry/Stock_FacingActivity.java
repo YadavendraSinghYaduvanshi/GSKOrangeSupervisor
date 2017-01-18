@@ -92,6 +92,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
     Uri outputFileUri = null;
     String gallery_package = "";
     private SharedPreferences preferences;
+    boolean isExpand = true;
 
     private static boolean updateResources(Context context, String language) {
 
@@ -215,12 +216,14 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     int lastItem = firstVisibleItem + visibleItemCount;
 
-                    if (firstVisibleItem == 0) {
-                        fab.setVisibility(View.VISIBLE);
-                    } else if (lastItem == totalItemCount) {
-                        fab.setVisibility(View.INVISIBLE);
-                    } else {
-                        fab.setVisibility(View.VISIBLE);
+                    if (isExpand) {
+                        if (firstVisibleItem == 0) {
+                            fab.setVisibility(View.VISIBLE);
+                        } else if (lastItem == totalItemCount) {
+                            fab.setVisibility(View.INVISIBLE);
+                        } else {
+                            fab.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
@@ -256,6 +259,12 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         getCurrentFocus().clearFocus();
                     }
 
+                    if (groupPosition == 0) {
+                        isExpand = false;
+                    } else {
+                        isExpand = true;
+                    }
+
                     fab.setVisibility(View.INVISIBLE);
                 }
             });
@@ -271,6 +280,11 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         getCurrentFocus().clearFocus();
                     }
 
+                    if (groupPosition == 0) {
+                        isExpand = false;
+                    } else {
+                        isExpand = true;
+                    }
                     fab.setVisibility(View.VISIBLE);
                 }
             });
@@ -692,6 +706,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
         //Planogram Dialog
         if (id == R.id.action_planogram) {
+            expandableListView.clearFocus();
+
             //final Dialog dialog = new Dialog(Stock_FacingActivity.this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             final Dialog dialog = new Dialog(Stock_FacingActivity.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
