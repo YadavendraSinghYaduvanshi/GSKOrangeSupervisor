@@ -249,7 +249,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "BRAND_MASTER";
                     }
 
-                    data.value = 30;
+                    data.value = 25;
                     data.name = "BRAND_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -284,7 +284,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "SUB_CATEGORY_MASTER";
                     }
-                    data.value = 40;
+                    data.value = 30;
                     data.name = "SUB_CATEGORY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -319,7 +319,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "CATEGORY_MASTER";
                     }
-                    data.value = 50;
+                    data.value = 35;
                     data.name = "CATEGORY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -354,7 +354,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "DISPLAY_MASTER";
                     }
-                    data.value = 60;
+                    data.value = 40;
                     data.name = "DISPLAY_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -389,7 +389,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "MAPPING_STOCK";
                     }
-                    data.value = 80;
+                    data.value = 45;
                     data.name = "MAPPING_STOCK "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -424,7 +424,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         //return "MAPPING_T2P";
                     }
-                    data.value = 100;
+                    data.value = 50;
                     data.name = "MAPPING_T2P "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -458,7 +458,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "DISPLAY_CHECKLIST_MASTER";
                     }
-                    data.value = 100;
+                    data.value = 55;
                     data.name = "DISPLAY_CHECKLIST_MASTER "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -492,7 +492,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         //return "MAPPING_DISPLAY_CHECKLIST";
                     }
-                    data.value = 100;
+                    data.value = 60;
                     data.name = "MAPPING_DISPLAY_CHECKLIST "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -527,7 +527,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "NON_WORKING_REASON";
                     }
-                    data.value = 100;
+                    data.value = 65;
                     data.name = "NON_WORKING_REASON "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -562,7 +562,7 @@ public class DownloadActivity extends AppCompatActivity {
                     /*} else {
                         //return "MAPPING_PROMOTION";
                     }*/
-                    data.value = 100;
+                    data.value = 70;
                     data.name = "MAPPING_PROMOTION "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -600,7 +600,7 @@ public class DownloadActivity extends AppCompatActivity {
                     /*} else {
                         //return "MAPPING_ADDITIONAL_PROMOTION";
                     }*/
-                    data.value = 100;
+                    data.value = 75;
                     data.name = "MAPPING_ADDITIONAL_PROMOTION "+getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -636,7 +636,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         //return "STORE_PERFORMANCE";
                     }
-                    data.value = 100;
+                    data.value = 80;
                     data.name = "STORE_PERFORMANCE Data Download";
                 }
                 publishProgress(data);
@@ -708,7 +708,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         //return "MAPPING_PLANOGRAM";
                     }
-                    data.value = 100;
+                    data.value = 85;
                     data.name = "MAPPING_PLANOGRAM Data Download";
                 }
                 publishProgress(data);
@@ -772,6 +772,61 @@ public class DownloadActivity extends AppCompatActivity {
 
                 //Gagan end code
 
+                //Display Master Image save into folder
+                if (displayMasterGetterSetter != null) {
+
+                for (int i = 0; i < displayMasterGetterSetter.getIMAGE_URL().size(); i++) {
+                        //publishing image download
+                        data.value = data.value + 1;
+                        if (data.value < 100) {
+                            publishProgress(data);
+                        }
+
+                        String image_name = displayMasterGetterSetter.getIMAGE_URL().get(i);
+                        String img_url = displayMasterGetterSetter.getIMAGE_PATH().get(i);
+
+                        if (!img_url.equalsIgnoreCase("") && !image_name.equalsIgnoreCase("")) {
+                            URL url = new URL(img_url + image_name);
+                            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                            c.setRequestMethod("GET");
+                            c.getResponseCode();
+                            c.connect();
+
+                            if (c.getResponseCode() == 200) {
+                                int length = c.getContentLength();
+
+                                String size = new DecimalFormat("##.##").format((double) length / 1024) + " KB";
+
+                                //String PATH = Environment.getExternalStorageDirectory() + "/Download/GT_GSK_Images/";
+                                String PATH = CommonString.FILE_PATH;
+                                File file = new File(PATH);
+                                if (!file.isDirectory()) {
+                                    file.mkdir();
+                                }
+
+                                //  Environment.getExternalStorageDirectory() + "/GT_GSK_Images/" + _pathforcheck1;
+                                if (!new File(PATH + image_name).exists() && !size.equalsIgnoreCase("0 KB")) {
+                                    File outputFile = new File(file, image_name);
+                                    FileOutputStream fos = new FileOutputStream(outputFile);
+                                    InputStream is1 = c.getInputStream();
+
+                                    int bytes = 0;
+                                    byte[] buffer = new byte[1024];
+                                    int len1 = 0;
+
+                                    while ((len1 = is1.read(buffer)) != -1) {
+                                        bytes = (bytes + len1);
+                                        // data.value = (int) ((double) (((double)
+                                        // bytes) / length) * 100);
+                                        fos.write(buffer, 0, len1);
+                                    }
+                                    fos.close();
+                                    is1.close();
+                                }
+                            }
+                        }
+                    }
+                }
 
                 db.open();
                 db.InsertJCP(jcpgettersetter);
@@ -839,7 +894,9 @@ public class DownloadActivity extends AppCompatActivity {
             super.onPostExecute(s);
 
             dialog.dismiss();
-            finish();
+
+            showAlert(getString(R.string.data_downloaded_successfully));
+
         }
 
     }
@@ -855,6 +912,7 @@ public class DownloadActivity extends AppCompatActivity {
                        /* Intent i = new Intent(activity, StorelistActivity.class);
                         activity.startActivity(i);
                         activity.finish();*/
+                        finish();
 
                     }
                 });

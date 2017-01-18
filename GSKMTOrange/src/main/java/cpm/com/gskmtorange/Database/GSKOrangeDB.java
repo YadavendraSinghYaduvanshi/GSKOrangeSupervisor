@@ -51,7 +51,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
  */
 
 public class GSKOrangeDB extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "GSK_ORANGE";
+    public static final String DATABASE_NAME = "GSK_ORANGE_DB";
     public static final int DATABASE_VERSION = 13;
     TableBean tableBean;
     private SQLiteDatabase db;
@@ -130,6 +130,12 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
 
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+
     }
 
     public void deleteAllTables() {
@@ -191,7 +197,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            dbcursor = db.rawQuery("Select  BM.BRAND As BRAND, BM.BRAND_ID As BRAND_ID, DM.DISPLAY As DISPLAY, DM.DISPLAY_ID As DISPLAY_ID from BRAND_MASTER BM INNER JOIN MAPPING_T2P T ON BM.BRAND_ID = T.BRAND_ID INNER JOIN  DISPLAY_MASTER DM  ON T.DISPLAY_ID= DM.DISPLAY_ID WHERE T.STORE_ID = '" + store_id + "'", null);
+            dbcursor = db.rawQuery("Select  BM.BRAND As BRAND, BM.BRAND_ID As BRAND_ID, DM.DISPLAY As DISPLAY, DM.DISPLAY_ID As DISPLAY_ID, DM.IMAGE_URL As IMAGE_URL, DM.IMAGE_PATH As IMAGE_PATH from BRAND_MASTER BM INNER JOIN MAPPING_T2P T ON BM.BRAND_ID = T.BRAND_ID INNER JOIN  DISPLAY_MASTER DM  ON T.DISPLAY_ID= DM.DISPLAY_ID WHERE T.STORE_ID = '" + store_id + "'", null);
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
@@ -209,6 +215,12 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     t2p.setDisplay(dbcursor.getString(dbcursor
                             .getColumnIndexOrThrow("DISPLAY")));
+
+                    t2p.setRef_image_url(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("IMAGE_URL")));
+
+                    t2p.setRef_image_path(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("IMAGE_PATH")));
 
                     t2p.setImage("");
 
@@ -483,6 +495,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put("DISPLAY_ID", data.getDISPLAY_ID().get(i));
                 values.put("DISPLAY", data.getDISPLAY().get(i));
                 values.put("IMAGE_URL", data.getIMAGE_URL().get(i));
+                values.put("IMAGE_PATH", data.getIMAGE_PATH().get(i));
 
                 db.insert("DISPLAY_MASTER", null, values);
             }
@@ -2471,6 +2484,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put(CommonString.KEY_BRAND_ID, data.get(i).getBrand_id());
                 values.put(CommonString.KEY_BRAND, data.get(i).getBrand());
                 values.put(CommonString.KEY_DISPLAY, data.get(i).getDisplay());
+                values.put(CommonString.KEY_IMAGE_URL, data.get(i).getRef_image_url());
+                values.put(CommonString.KEY_IMAGE_PATH, data.get(i).getRef_image_path());
                 values.put(CommonString.KEY_IMAGE, data.get(i).getImage());
                 values.put(CommonString.KEY_REMARK, data.get(i).getRemark());
                 values.put(CommonString.KEY_PRESENT, data.get(i).isPresent());
@@ -2511,6 +2526,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             Log.d("Exception ", " in T2P_COMPLIANCE " + ex.toString());
         }
     }
+
 
     public boolean additionalVisibilitydata(String store_id, String category_id) {
         Log.d("AdditionalVisibility ", "AdditionalVisibility data--------------->Start<------------");
@@ -2710,6 +2726,47 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                         CommonString.KEY_STORE_ID + "='" + store_id + "' AND " +
                         CommonString.KEY_CATEGORY_ID + "='" + category_id + "'", null);
             }
+
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    T2PGetterSetter tp = new T2PGetterSetter();
+
+                    tp.setKey_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_ID)));
+                    tp.setDisplay_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_DISPLAY_ID)));
+                    tp.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND_ID)));
+                    tp.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND)));
+                    tp.setDisplay(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_DISPLAY)));
+                    tp.setRef_image_url(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE_URL)));
+                    tp.setRef_image_path(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE_PATH)));
+                    tp.setImage(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE)));
+                    tp.setRemark(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_REMARK)));
+                    tp.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
+                    tp.setPresent((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PRESENT)).equalsIgnoreCase("1")));
+
+                    list.add(tp);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            return list;
+        }
+        return list;
+    }
+
+    // get T2P Compliance store wise data
+    public ArrayList<T2PGetterSetter> getT2pComplianceStorewiseData(String store_id) {
+
+        ArrayList<T2PGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+        try {
+
+
+                dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
+                        CommonString.KEY_STORE_ID + "='" + store_id + "'", null);
 
 
             if (dbcursor != null) {
