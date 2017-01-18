@@ -516,7 +516,24 @@ public class T2PComplianceActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            finish();
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(T2PComplianceActivity.this);
+            builder.setTitle("Parinaam");
+            builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            finish();
+                            overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                        }
+                    })
+                    .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            android.app.AlertDialog alert = builder.create();
+            alert.show();
         }
 
         //noinspection SimplifiableIfStatement
@@ -647,6 +664,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
 
                         finish();
+                        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                     }
                 })
                 .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {

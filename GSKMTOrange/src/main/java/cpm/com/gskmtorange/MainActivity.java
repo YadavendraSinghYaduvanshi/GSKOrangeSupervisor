@@ -43,6 +43,7 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.AdditionalVisibility;
+import cpm.com.gskmtorange.dailyentry.ServiceActivity;
 import cpm.com.gskmtorange.dailyentry.SettingsActivity;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
@@ -223,16 +224,6 @@ public class MainActivity extends AppCompatActivity
 
                     }
 
-
-
-
-					/*
-                    intent = new Intent(getBaseContext(),
-							UploadOptionActivity.class);
-					startActivity(intent);
-
-					MainMenuActivity.this.finish();*/
-
                 }
 
             } else {
@@ -260,88 +251,28 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_exit) {
 
-
-          /*  Intent startDownload = 	new Intent(this,AdditionalVisibility.class);
-            startActivity(startDownload);
-
-            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-*/
             finish();
-
-        } else if (id == R.id.nav_services) {
-
-            /*Intent startDownload = 	new Intent(this,T2PComplianceActivity.class);
-            startActivity(startDownload);
-*/
-            //overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+            overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
 
         } else if (id == R.id.nav_setting) {
 
             Intent startDownload = new Intent(this, SettingsActivity.class);
             startActivity(startDownload);
 
+            finish();
+
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
             //startActivity(new Intent(MainActivity.this, CategoryListActivity.class));
 
-        } /*else if (id == R.id.nav_export) {
+        } else if (id == R.id.nav_services) {
 
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
-            builder1.setMessage("Are you sure you want to take the backup of your data")
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @SuppressWarnings("resource")
-                        public void onClick(DialogInterface dialog, int id) {
-                            try {
-                                *//*File file = new File(Environment
-                                        .getExternalStorageDirectory(),
-                                        "capital_backup");
-                                if (!file.isDirectory()) {
-                                    file.mkdir();
-                                }*//*
+            Intent startservice = new Intent(this, ServiceActivity.class);
+            startActivity(startservice);
 
-                                File sd = Environment.getExternalStorageDirectory();
-                                File data = Environment.getDataDirectory();
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
-                                if (sd.canWrite()) {
-                                    long date = System.currentTimeMillis();
-
-                                    SimpleDateFormat sdf = new SimpleDateFormat("MMM/dd/yy");
-                                    String dateString = sdf.format(date);
-
-                                    String currentDBPath = "//data//cpm.com.gskmtorange//databases//" + GSKOrangeDB.DATABASE_NAME;
-                                    String backupDBPath = "GSKMT_ORANGE_Database_backup" + dateString.replace('/', '-');
-
-                                    String path = Environment.getExternalStorageDirectory().getPath();
-
-                                    File currentDB = new File(data, currentDBPath);
-                                    File backupDB = new File(path, backupDBPath);
-
-                                    //Snackbar.make(rec_store_data, "Database Exported Successfully", Snackbar.LENGTH_SHORT).show();
-                                    Toast.makeText(MainActivity.this, "Database Exported Successfully", Toast.LENGTH_SHORT).show();
-
-                                    if (currentDB.exists()) {
-                                        @SuppressWarnings("resource")
-                                        FileChannel src = new FileInputStream(currentDB).getChannel();
-                                        FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                                        dst.transferFrom(src, 0, src.size());
-                                        src.close();
-                                        dst.close();
-                                    }
-                                }
-                            } catch (Exception e) {
-                                System.out.println(e.getMessage());
-                            }
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alert1 = builder1.create();
-            alert1.show();
-        }*/
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -1,12 +1,9 @@
 package cpm.com.gskmtorange.dailyentry;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -18,26 +15,18 @@ import android.view.View;
 
 import java.util.Locale;
 
-import cpm.com.gskmtorange.MainActivity;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
-import cpm.com.gskmtorange.fragment.SelectLanguageFragment;
-import cpm.com.gskmtorange.fragment.SettingsActivityFragment;
+import cpm.com.gskmtorange.fragment.ServiceActivityFragment;
 
-public class SettingsActivity extends AppCompatActivity implements SelectLanguageFragment.OnFragmentInteractionListener {
-
-    String selected_lang = "", culture_id, notice_url;
-
-    FloatingActionButton fab;
+public class ServiceActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
-
-    private SharedPreferences.Editor editor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_service);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -45,51 +34,20 @@ public class SettingsActivity extends AppCompatActivity implements SelectLanguag
 
         //preference data
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = preferences.edit();
 
         updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
-      /*  SettingsActivityFragment fragment = new SettingsActivityFragment();
+      /*  ServiceActivityFragment fragment = new ServiceActivityFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment,fragment).commit();*/
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (selected_lang.equals("")) {
-
-                    Snackbar.make(view, getString(R.string.select_language), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                } else {
-
-                    updateResources(getApplicationContext(),selected_lang);
-
-                    editor.putString(CommonString.KEY_LANGUAGE, selected_lang);
-                    editor.putString(CommonString.KEY_CULTURE_ID, culture_id);
-                    editor.putString(CommonString.KEY_NOTICE_BOARD_LINK, notice_url);
-                    editor.commit();
-
-                    Intent startDownload = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(startDownload);
-                    finish();
-                }
-
-
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
-    }
-
-    @Override
-    public void onFragmentInteraction(String selected_lang, String culture_id, String notice_url) {
-
-        this.selected_lang = selected_lang;
-        this.culture_id = culture_id;
-        this.notice_url = notice_url;
-
-        if (!selected_lang.equals("")) {
-            fab.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -100,10 +58,6 @@ public class SettingsActivity extends AppCompatActivity implements SelectLanguag
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-
-            Intent startDownload = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(startDownload);
-
             finish();
             overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
         }
@@ -118,12 +72,7 @@ public class SettingsActivity extends AppCompatActivity implements SelectLanguag
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
-        Intent startDownload = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(startDownload);
-
-        finish();
-
+        super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
 
@@ -158,4 +107,5 @@ public class SettingsActivity extends AppCompatActivity implements SelectLanguag
 
         return true;
     }
+
 }
