@@ -73,26 +73,28 @@
     <string name="daily_data_menu_additional_promotions">Promosyon</string>
 
     <string name="msl_availability_sku">Ürün Adı</string>
-    <string name="msl_availability_mbq">MBQ</string>
+    <string name="msl_availability_mbq">X</string>
     <string name="msl_availability_availability">Bulunurluk</string>
 
     <string name="stock_facing_reference_image">Örnek Fotoğraf</string>
     <string name="stock_facing_sku_name">Ürün Adı</string>
-    <string name="stock_facing_stock">Stock</string>
+    <string name="stock_facing_stock">Stock</string>            <!--change string-->
     <string name="stock_facing_faceup">Önyüz</string>
     <string name="stock_facing_sos_target">Raf Payı Hedefi</string>
     <string name="stock_facing_sos">Raf Payi</string>
+    <!--Gagan end code-->
 
+    <!--Gagan start new code 1-->
     <string name="title_activity_promo_compliance">Promosyon</string>
 
-    <string name="promo_compliance_additional_promo">Additional Promos</string>
-    <string name="promo_compliance_promo">Promos</string>
+    <string name="promo_compliance_additional_promo">Ek Promosyon</string>
+    <string name="promo_compliance_promo">Promosyon</string>
     <string name="promo_compliance_promos_sku">Promosyon Ürünü</string>
     <string name="promo_compliance_sku">Promosyon Ürünü</string>
     <string name="promo_compliance_inStock">Ürün Bulunuyor</string>
     <string name="promo_compliance_promoAnnouncer">Duyuru Var</string>
     <string name="promo_compliance_runningPOS">Kasa Okuyor</string>
-    <string name="promo_compliance_add">Add</string>
+    <string name="promo_compliance_add">Ekle</string>
 
     <string name="category_performance_period">Zaman</string>
     <string name="category_performance_msl_availability">Bulunurluk</string>
@@ -106,11 +108,7 @@
     <string name="category_performance_lsv">Son Ziyaret</string>
 
     <string name="title_activity_store_wise_performance">Mağaza Performansı</string>
-    <!--Gagan End Code -->
-
-    <!--Gagan start new code 2-->
-    <string name="stock_facing_planogram_dialog_title">Planogram</string>
-    <!--Gagan end new code 2-->
+    <!--Gagan end new code 1-->
 
     <string name="stock">Stock</string>
     <string name="AdditionalDisplay">Ek Teşhir</string>
@@ -163,6 +161,18 @@
     <string name="delete">Delete</string>
     <string name="adddatatoclick">Click Yes To Add Data</string>
 
+    <!--Gagan start new code 2-->
+    <string name="stock_facing_planogram_dialog_title">Örnek Fotoğraf</string>
+    <string name="title_activity_settings">Ayarlar</string>
+
+    <string name="ok">Tamam</string>
+    <string name="check_save_message">Veriyi saklamak istiyor musunuz?</string>
+    <string name="save_message">Veriler Kaydedildi</string>
+    <string name="update_message">Veriler Kaydedildi</string>
+    <string name="empty_field">Tüm alanlari doldurunuz </string>
+    <string name="fill_data">Tüm alanlari doldurunuz</string>
+    <string name="dialog_title">Parinaam</string>
+    <!--Gagan end new code 2-->
 
 
 </resources>

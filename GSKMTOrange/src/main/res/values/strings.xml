@@ -68,7 +68,6 @@
     <string name="title_activity_t2_pcompliance">T2P Compliance</string>
 
     <!--Gagan start code-->
-
     <string name="title_activity_category_list">Category List</string>
     <string name="title_activity_category_wise_performance">Categorywise Performance</string>
     <string name="title_activity_daily_main_menu">Daily Data Menu</string>
@@ -93,7 +92,6 @@
     <string name="stock_facing_faceup">Facing</string>
     <string name="stock_facing_sos_target">SOS Target</string>
     <string name="stock_facing_sos">SOS</string>
-
     <!--Gagan end code-->
 
     <string name="title_geo_tag_activity_upload_data">Store Uploaded</string>
@@ -195,7 +193,7 @@
     <string name="daily_activity_menu">Daily Data Menu</string>
 
     <!--Gagan start new code 2-->
-    <string name="stock_facing_planogram_dialog_title">Planogram</string>
+    <string name="stock_facing_planogram_dialog_title">Reference Image</string>
     <string name="title_activity_settings">Settings</string>
 
     <string name="ok">OK</string>
@@ -205,7 +203,6 @@
     <string name="empty_field">Fill the value </string>
     <string name="fill_data">Please fill all the data</string>
     <string name="dialog_title">Parinaam</string>
-
     <!--Gagan end new code 2-->
 
     <string name="select_language_item">Select language</string>

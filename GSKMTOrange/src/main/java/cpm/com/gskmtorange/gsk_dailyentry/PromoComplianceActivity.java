@@ -230,7 +230,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                                         toggle_add_promoAnnouncer.setChecked(true);
                                         toggle_add_runningPos.setChecked(true);
 
-                                        Snackbar.make(v, "promo is add", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        Snackbar.make(v, "promo is added", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                         //Toast.makeText(getApplicationContext(), "promo is add", Toast.LENGTH_LONG).show();
                                     }
                                 })
