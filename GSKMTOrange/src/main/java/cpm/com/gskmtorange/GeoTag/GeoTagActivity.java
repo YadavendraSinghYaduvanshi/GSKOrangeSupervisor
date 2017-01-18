@@ -884,7 +884,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
                 AlertMessage message = new AlertMessage(
-                        GeoTagActivity.this, AlertMessage.MESSAGE_SUCCESS
+                        GeoTagActivity.this, getResources().getString(R.string.uploadeddata)
                         + result, getResources().getString(R.string.success), null);
                 message.showMessage();
 

@@ -5,6 +5,6 @@
         android:id="@+id/action_planogram"
         android:icon="@mipmap/ref_images_white"
         android:orderInCategory="100"
-        android:title="planogram"
+        android:title="@string/stock_facing_planogram_dialog_title"
         app:showAsAction="always" />
 </menu>

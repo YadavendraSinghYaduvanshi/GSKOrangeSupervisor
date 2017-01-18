@@ -15,6 +15,7 @@ import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.GeotaggingBeans;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
+import cpm.com.gskmtorange.xmlGetterSetter.ADDITIONAL_DISPLAY_MASTERGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
 
@@ -116,6 +117,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_SKU);
 
         db.execSQL(TableBean.getMappingPlanogram());
+        db.execSQL(TableBean.getAdditionalDisplay());
+
     }
 
     @Override
@@ -2630,6 +2633,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
             long key_id = db.insert(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_MAIN, null, values);
 
+            if(skulist!=null)
+            {
+
             for (int j = 0; j < skulist.size(); j++) {
                 values1.put(CommonString.KEY_Common_ID, key_id);
                 values1.put(CommonString.KEY_STORE_ID, skulist.get(j).getStore_id());
@@ -2642,7 +2648,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                 db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, null, values1);
             }
-
+            }
 
         } catch (Exception ex) {
             Log.d("Database Exception ", ex.getMessage());
@@ -3022,5 +3028,120 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
 
     }
+
+
+
+
+    public ArrayList<AddittionalGetterSetter> getAdditionalMainStock(String store_id, String categoryId) {
+        Cursor cursordata = null;
+        ArrayList<AddittionalGetterSetter> productData = new ArrayList<AddittionalGetterSetter>();
+
+        try {
+
+            // cursordata = db.rawQuery("SELECT * FROM Stock_Additional_visibility WHERE Store_Id = '"+store_id + "'categoryId = '"+categoryId + "'", null);
+            cursordata = db.rawQuery("Select * from Stock_Additional_visibility_Main " + "where categoryId='" + categoryId + "' and Store_Id='" + store_id + "'", null);
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    AddittionalGetterSetter sb = new AddittionalGetterSetter();
+
+
+                    sb.setKey_id(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("KEY_ID")));
+
+                    sb.setStore_id(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("Store_Id")));
+
+                    sb.setCategoryId(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("categoryId")));
+
+                    sb.setBrand_id(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("brand_id")));
+
+                    sb.setBrand(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("brand_name")));
+
+
+                    sb.setImage(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("image_url")));
+
+                    sb.setSku_id(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("sku_id")));
+
+                    sb.setSku(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("sku_name")));
+                    sb.setBtn_toogle(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("toggle_value")));
+
+                    productData.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+        return productData;
+
+    }
+
+    public void InsertADDITIONAL_DISPLAY(ADDITIONAL_DISPLAY_MASTERGetterSetter data) {
+        db.delete("ADDITIONAL_DISPLAY_MASTER", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getDISPLAY_ID().size(); i++) {
+
+                values.put("DISPLAY_ID", data.getDISPLAY_ID().get(i));
+                values.put("DISPLAY", data.getDISPLAY().get(i));
+                values.put("IMAGE_PATH", data.getIMAGE_PATH().get(i));
+                values.put("IMAGE_URL", data.getIMAGE_URL().get(i));
+               db.insert("ADDITIONAL_DISPLAY_MASTER", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " ADDITIONAL_DISPLAY_MASTER " + ex.toString());
+        }
+    }
+
+    public ArrayList<ADDITIONAL_DISPLAY_MASTERGetterSetter> getADDITIONAL_DISPLAYData(String store_id) {
+        Cursor cursordata = null;
+        ArrayList<ADDITIONAL_DISPLAY_MASTERGetterSetter> Data = new ArrayList<ADDITIONAL_DISPLAY_MASTERGetterSetter>();
+
+        try {
+
+            cursordata = db.rawQuery("SELECT * FROM ADDITIONAL_DISPLAY_MASTER ", null);
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    ADDITIONAL_DISPLAY_MASTERGetterSetter sb = new ADDITIONAL_DISPLAY_MASTERGetterSetter();
+                    sb.setDISPLAY_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("DISPLAY_ID")));
+                    sb.setDISPLAY(cursordata.getString(cursordata.getColumnIndexOrThrow("DISPLAY")));
+                    sb.setIMAGE_URL(cursordata.getString(cursordata.getColumnIndexOrThrow("IMAGE_URL")));
+                    sb.setIMAGE_PATH(cursordata.getString(cursordata.getColumnIndexOrThrow("IMAGE_PATH")));
+
+                    Data.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+        return Data;
+
+    }
+
+
+
+
+
 
 }

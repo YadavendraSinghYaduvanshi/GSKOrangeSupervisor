@@ -1,6 +1,7 @@
 package cpm.com.gskmtorange.dailyentry;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,7 +70,8 @@ public class NonWorkingReason extends AppCompatActivity implements
     AlertDialog alert;
     ImageButton camera;
     RelativeLayout reason_lay, rel_cam;
-
+    String gallery_package = "";
+    Uri outputFileUri;
     boolean leave_flag = false;
 
     ArrayList<StoreBean> jcp;
@@ -179,11 +181,20 @@ public class NonWorkingReason extends AppCompatActivity implements
     }
 
     protected void startCameraActivity() {
-
         try {
-            Log.i("MakeMachine", "startCameraActivity()");
+            /*Log.i("MakeMachine", "startCameraActivity()");
             File file = new File(_path);
             Uri outputFileUri = Uri.fromFile(file);
+
+            Intent intent = new Intent(
+                    MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+
+            startActivityForResult(intent, 0);*/
+
+            Log.i("MakeMachine", "startCameraActivity()");
+            File file = new File(_path);
+            outputFileUri = Uri.fromFile(file);
 
             String defaultCameraPackage = "";
             final PackageManager packageManager = getPackageManager();
@@ -192,6 +203,11 @@ public class NonWorkingReason extends AppCompatActivity implements
                 if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
                     Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
                     Log.e("TAG", "package name  : " + list.get(n).packageName);
+
+                    //temp value in case camera is gallery app above jellybean
+                    if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                        gallery_package = list.get(n).packageName;
+                    }
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
@@ -207,17 +223,25 @@ public class NonWorkingReason extends AppCompatActivity implements
                 }
             }
 
-            Intent intent = new Intent(
-                    android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            //com.android.gallery3d
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             intent.setPackage(defaultCameraPackage);
             startActivityForResult(intent, 0);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(gallery_package);
+            startActivityForResult(intent, 0);
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
+
 
     @SuppressWarnings("deprecation")
     @Override
@@ -297,9 +321,9 @@ public class NonWorkingReason extends AppCompatActivity implements
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(
                                 NonWorkingReason.this);
-                        builder.setMessage("Do you want to save the data ")
+                        builder.setMessage( R.string.title_activity_save_data)
                                 .setCancelable(false)
-                                .setPositiveButton("OK",
+                                .setPositiveButton(R.string.ok,
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(
                                                     DialogInterface dialog,
@@ -398,7 +422,7 @@ public class NonWorkingReason extends AppCompatActivity implements
                                                 finish();
                                             }
                                         })
-                                .setNegativeButton("Cancel",
+                                .setNegativeButton(R.string.closed,
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(
                                                     DialogInterface dialog,
@@ -411,17 +435,16 @@ public class NonWorkingReason extends AppCompatActivity implements
                         alert.show();
 
                     } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Please enter required remark reason",
+                        Toast.makeText(getApplicationContext(), R.string.title_activity_select_dropdown,
                                 Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getApplicationContext(),
-                            "Please Capture Image", Toast.LENGTH_SHORT).show();
+                            R.string.title_activity_take_image, Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(getApplicationContext(),
-                        "Please Select a Reason", Toast.LENGTH_SHORT).show();
+                        R.string.title_activity_select_dropdown, Toast.LENGTH_SHORT).show();
 
             }
         }

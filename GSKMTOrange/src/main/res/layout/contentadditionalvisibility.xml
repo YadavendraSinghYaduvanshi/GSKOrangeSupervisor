@@ -154,14 +154,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+
                     android:background="@color/grey_background">
 
                     <ImageView
                         android:id="@+id/btn_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:background="@mipmap/new_camera" />
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerInParent="true"
+                        android:background="@mipmap/camera_orange" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -228,6 +229,7 @@
         android:padding="10dp"
         card_view:cardBackgroundColor="@color/colorOrange"
         card_view:cardCornerRadius="20dp"
+        android:visibility="gone"
         >
 
 

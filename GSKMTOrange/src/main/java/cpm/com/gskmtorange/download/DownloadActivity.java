@@ -38,6 +38,7 @@ import java.util.Locale;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.xmlGetterSetter.ADDITIONAL_DISPLAY_MASTERGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
@@ -76,6 +77,8 @@ public class DownloadActivity extends AppCompatActivity {
     MappingPromotionGetterSetter mappingPromotionGetterSetter;
     MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter mapping_additional_promotion_masterGetterSetter;
     STORE_PERFORMANCE_MasterGetterSetter store_performance_masterGetterSetter;
+    ADDITIONAL_DISPLAY_MASTERGetterSetter additional_display_getter_setter;
+
     MAPPING_PLANOGRAM_MasterGetterSetter mapping_planogram_masterGetterSetter;
     private Dialog dialog;
     private ProgressBar pb;
@@ -639,6 +642,42 @@ public class DownloadActivity extends AppCompatActivity {
                 publishProgress(data);
 
 
+
+                //ADDITIONAL_DISPLAY_MASTER
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "ADDITIONAL_DISPLAY_MASTER");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    additional_display_getter_setter = XMLHandlers.ADDITIONAL_DISPLAY_MASTERXMLHandler(xpp, eventType);
+
+                    if (additional_display_getter_setter.getDISPLAY_ID().size() > 0) {
+                        String table_store_display = additional_display_getter_setter.getTable_STORE_ADDITIONAL_DISPLAY();
+                        if (table_store_display != null) {
+                            resultHttp = CommonString.KEY_SUCCESS;
+                            TableBean.setAdditionalDisplay(table_store_display);
+                        }
+                    } else {
+                        //return "ADDITIONAL_DISPLAY_MASTER";
+                    }
+                    data.value = 100;
+                    data.name = "ADDITIONAL_DISPLAY_MASTER Data Download";
+                }
+                publishProgress(data);
+
                 //MAPPING_PLANOGRAM
                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
@@ -809,6 +848,9 @@ public class DownloadActivity extends AppCompatActivity {
 
                 db.InsertSTORE_PERFORMANCE(store_performance_masterGetterSetter);
                 db.InsertMAPPING_PLANOGRAM(mapping_planogram_masterGetterSetter);
+                db.InsertADDITIONAL_DISPLAY(additional_display_getter_setter);
+
+
 
             } catch (MalformedURLException e) {
                 /*final AlertMessage message = new AlertMessage(
