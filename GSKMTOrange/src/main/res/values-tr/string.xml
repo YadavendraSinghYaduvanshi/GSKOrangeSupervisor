@@ -92,7 +92,7 @@
     <string name="promo_compliance_inStock">Ürün Bulunuyor</string>
     <string name="promo_compliance_promoAnnouncer">Duyuru Var</string>
     <string name="promo_compliance_runningPOS">Kasa Okuyor</string>
-    <string name="promo_compliance_add">Add</string>
+    <string name="promo_compliance_add">Ekle</string>
 
     <string name="category_performance_period">Zaman</string>
     <string name="category_performance_msl_availability">Bulunurluk</string>
@@ -146,22 +146,23 @@
     <string name="uploadimge">Fotoğraflar paylaşılıyor</string>
     <string name="success">Başarı</string>
     <string name="wantcheckout">Mağazadan çıkmak istiyor musunuz?</string>
-    <string name="nonetwork">No Network Connection. Please check your Internet Connection</string>
+    <string name="nonetwork">Bağlantı kurulamıyor. İnternet bağlantınızı kontrol ediniz</string>
     <string name="click_image">En az bir fotoğraf çekiniz</string>
 
-    <string name="title_store_list_activity_already_store_closed">Store Already Closed</string>
-    <string name="title_store_list_activity_store_closed">Store Closed</string>
-    <string name="title_store_list_activity_store_already_done">Store Already Uploaded</string>
-    <string name="title_store_list_activity_store_data_uploaded">Store Data Uploaded</string>
-    <string name="title_store_list_activity_store_already_checkout">Store Already Checkout</string>
+    <string name="title_store_list_activity_already_store_closed">Mağaza kapalı</string>
+    <string name="title_store_list_activity_store_closed">Mağaza kapalı</string>
+    <string name="title_store_list_activity_store_already_done">Paylaşılan mağaza</string>
+    <string name="title_store_list_activity_store_data_uploaded">Paylaşılan mağaza</string>
+    <string name="title_store_list_activity_store_already_checkout">Mağaza zaten çıkılmış</string>
     <string name="title_store_list_activity_store_again_uploaded">Please Store data again Uploaded</string>
-    <string name="title_store_list_checkout_current">Please checkout from current store</string>
-    <string name="title_store_list_checkout_Already_filled">Data already filled</string>
-    <string name="NetworkError">Network Error ,</string>
-    <string name="uploadeddata"> Uploaded Data ,</string>
-    <string name="DataNot"> Data Not Uploaded ,</string>
-    <string name="delete">Delete</string>
+    <string name="title_store_list_checkout_current">Lütfen önce mağazadan çık</string>
+    <string name="title_store_list_checkout_Already_filled">Doldurulmuş veriler</string>
+    <string name="NetworkError">Bağlantı kurulamıyor ,</string>
+    <string name="uploadeddata">Veriler Paylaşılıyor ,</string>
+    <string name="DataNot">Veriler Paylaşılmadı ,</string>
+    <string name="delete">Sil</string>
     <string name="adddatatoclick">Click Yes To Add Data</string>
+    <string name="displayname">Teşhir Türü</string>
 
 
 

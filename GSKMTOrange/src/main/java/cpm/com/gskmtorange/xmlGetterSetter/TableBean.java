@@ -24,6 +24,16 @@ public class TableBean {
     public static String STORE_PERFORMANCE;
     public static String MAPPING_PLANOGRAM;
 
+    public static String getAdditionalDisplay() {
+        return ADDITIONAL_DISPLAY;
+    }
+
+    public static void setAdditionalDisplay(String additionalDisplay) {
+        ADDITIONAL_DISPLAY = additionalDisplay;
+    }
+
+    public static String ADDITIONAL_DISPLAY;
+
     //Gagan end code
 
     public static String getJourneyPlan() {
