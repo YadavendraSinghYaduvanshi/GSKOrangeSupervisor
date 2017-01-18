@@ -13,6 +13,7 @@ public class DisplayMasterGetterSetter {
     ArrayList<String> DISPLAY_ID = new ArrayList<>();
     ArrayList<String> DISPLAY = new ArrayList<>();
     ArrayList<String> IMAGE_URL = new ArrayList<>();
+    ArrayList<String> IMAGE_PATH = new ArrayList<>();
 
     public String getTable_DISPLAY_MASTER() {
         return table_DISPLAY_MASTER;
@@ -44,5 +45,13 @@ public class DisplayMasterGetterSetter {
 
     public void setIMAGE_URL(String IMAGE_URL) {
         this.IMAGE_URL.add(IMAGE_URL);
+    }
+
+    public ArrayList<String> getIMAGE_PATH() {
+        return IMAGE_PATH;
+    }
+
+    public void setIMAGE_PATH(String IMAGE_PATH) {
+        this.IMAGE_PATH.add(IMAGE_PATH);
     }
 }

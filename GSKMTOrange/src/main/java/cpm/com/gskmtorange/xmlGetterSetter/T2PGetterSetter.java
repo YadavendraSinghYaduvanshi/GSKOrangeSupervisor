@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class T2PGetterSetter {
 
-    String brand_id, display_id, brand, display, image, remark, key_id, category_id;
+    String brand_id, display_id, brand, display, image, remark, key_id, category_id, ref_image_url, ref_image_path;
     boolean isPresent;
 
     ArrayList<GapsChecklistGetterSetter> gapsChecklist = new ArrayList<>();
@@ -100,5 +100,21 @@ public class T2PGetterSetter {
 
     public void setCategory_id(String category_id) {
         this.category_id = category_id;
+    }
+
+    public String getRef_image_url() {
+        return ref_image_url;
+    }
+
+    public void setRef_image_url(String ref_image_url) {
+        this.ref_image_url = ref_image_url;
+    }
+
+    public String getRef_image_path() {
+        return ref_image_path;
+    }
+
+    public void setRef_image_path(String ref_image_path) {
+        this.ref_image_path = ref_image_path;
     }
 }

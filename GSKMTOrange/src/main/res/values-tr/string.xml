@@ -150,13 +150,8 @@
 
     <string name="click_image">Please click image</string>
 
-
-
-
-
-
-
-
+    <string name="export_database">Veritabanı Aktar</string>
+    <string name="title_activity_service">Servisler</string>
 
 
 </resources>
