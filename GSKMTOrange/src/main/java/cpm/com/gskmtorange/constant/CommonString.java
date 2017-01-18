@@ -50,6 +50,7 @@ public class CommonString {
     public static final String KEY_COVERAGE_REMARK = "REMARK";
     public static final String KEY_IMAGE = "IMAGE";
     public static final String KEY_IMAGE_URL = "IMAGE_URL";
+    public static final String KEY_IMAGE_PATH = "IMAGE_PATH";
     public static final String KEY_ID = "Id";
     public static final String KEY_MERCHANDISER_ID = "MERCHANDISER_ID";
 
@@ -493,6 +494,8 @@ public class CommonString {
             + KEY_BRAND_ID + " INTEGER,"
             + KEY_DISPLAY_ID + " INTEGER,"
             + KEY_BRAND + " VARCHAR,"
+            + KEY_IMAGE_URL + " VARCHAR,"
+            + KEY_IMAGE_PATH+ " VARCHAR,"
             + KEY_DISPLAY + " VARCHAR,"
             + KEY_IMAGE + " VARCHAR,"
             + KEY_REMARK + " VARCHAR,"

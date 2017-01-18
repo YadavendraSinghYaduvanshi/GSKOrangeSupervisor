@@ -528,17 +528,13 @@ public class StoreListActivity extends AppCompatActivity {
 
     public boolean setcheckedmenthod(String store_cd) {
 
-
+        boolean result_flag = false;
         for (int i = 0; i < coverage.size(); i++) {
             if (store_cd.equals(coverage.get(i).getStoreId())) {
                 if (coverage.get(i).getOutTime() != null) {
                     result_flag = true;
                     break;
                 }
-            } else {
-
-                result_flag = false;
-
             }
         }
 

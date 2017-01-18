@@ -102,7 +102,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         //preference data
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
@@ -174,7 +174,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
 
@@ -218,7 +218,18 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    mItem.setPresent(((ToggleButton) v).getText().toString().equalsIgnoreCase(getResources().getString(R.string.yes)));
+                    if (((ToggleButton) v).getText().toString().equalsIgnoreCase(getResources().getString(R.string.yes))) {
+                        mItem.setPresent(true);
+                    } else {
+                        mItem.setPresent(false);
+                        mItem.getGapsChecklist().clear();
+                        mItem.getSkulist().clear();
+                        if (!mItem.getImage().equals("")) {
+                            new File(str + mItem.getImage()).delete();
+                            mItem.setImage("");
+                        }
+
+                    }
 
                     t2PAdapter.notifyDataSetChanged();
                 }
@@ -239,7 +250,14 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 }
             }
 
-            if(camera_allow.equals("1")){
+            holder.btn_ref_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+
+            if (camera_allow.equals("1")) {
 
                 holder.img_cam.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -253,28 +271,49 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 });
 
                 if (mItem.getImage().equals("")) {
-                    holder.img_cam.setBackgroundResource(R.mipmap.camera_orange);
+                    if (mItem.isPresent()) {
+                        holder.img_cam.setBackgroundResource(R.mipmap.camera_orange);
+                    } else {
+                        //if not present camera disabled
+                        holder.img_cam.setBackgroundResource(R.mipmap.camera_grey);
+                    }
+
                 } else {
                     holder.img_cam.setBackgroundResource(R.mipmap.camera_green);
                 }
-            }
-            else {
+            } else {
                 holder.img_cam.setBackgroundResource(R.mipmap.camera_grey);
             }
 
 
-            holder.toggle_btn.setChecked(mItem.isPresent());
+            boolean is_enabled = mItem.isPresent();
+
+            holder.toggle_btn.setChecked(is_enabled);
+            holder.img_cam.setEnabled(is_enabled);
+            holder.btn_gaps.setEnabled(is_enabled);
+            holder.btn_sku.setEnabled(is_enabled);
+
 
             if (mItem.getGapsChecklist().size() > 0) {
                 holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.green));
             } else {
-                holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                if(mItem.isPresent()){
+                    holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                }
+                else {
+                    holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.grey_background));
+                }
             }
 
             if (mItem.getSkulist().size() > 0) {
                 holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.green));
             } else {
-                holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                if(mItem.isPresent()){
+                    holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                }
+                else {
+                    holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.grey_background));
+                }
             }
 
         }
@@ -635,19 +674,22 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         for (int i = 0; i < t2PGetterSetters.size(); i++) {
 
-            if (camera_allow.equals("1") && t2PGetterSetters.get(i).getImage().equals("")) {
-                flag = false;
-                error_msg = getResources().getString(R.string.click_image);
-                break;
-            } else if (t2PGetterSetters.get(i).getGapsChecklist().size() == 0) {
-                flag = false;
-                error_msg = getResources().getString(R.string.fill_gaps_data);
-                break;
-            } else if (t2PGetterSetters.get(i).getSkulist().size() == 0) {
-                flag = false;
-                error_msg = getResources().getString(R.string.fill_sku_data);
-                break;
+            if(t2PGetterSetters.get(i).isPresent()){
+                if (camera_allow.equals("1") && t2PGetterSetters.get(i).getImage().equals("")) {
+                    flag = false;
+                    error_msg = getResources().getString(R.string.click_image);
+                    break;
+                } else if (t2PGetterSetters.get(i).getGapsChecklist().size() == 0) {
+                    flag = false;
+                    error_msg = getResources().getString(R.string.fill_gaps_data);
+                    break;
+                } else if (t2PGetterSetters.get(i).getSkulist().size() == 0) {
+                    flag = false;
+                    error_msg = getResources().getString(R.string.fill_sku_data);
+                    break;
+                }
             }
+
         }
 
         return flag;
@@ -914,15 +956,13 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("UAE")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 

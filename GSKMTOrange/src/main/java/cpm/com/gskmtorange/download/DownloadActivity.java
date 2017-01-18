@@ -772,6 +772,61 @@ public class DownloadActivity extends AppCompatActivity {
 
                 //Gagan end code
 
+                //Display Master Image save into folder
+                if (displayMasterGetterSetter != null) {
+
+                for (int i = 0; i < displayMasterGetterSetter.getIMAGE_URL().size(); i++) {
+                        //publishing image download
+                        data.value = data.value + 1;
+                        if (data.value < 100) {
+                            publishProgress(data);
+                        }
+
+                        String image_name = displayMasterGetterSetter.getIMAGE_URL().get(i);
+                        String img_url = displayMasterGetterSetter.getIMAGE_PATH().get(i);
+
+                        if (!img_url.equalsIgnoreCase("") && !image_name.equalsIgnoreCase("")) {
+                            URL url = new URL(img_url + image_name);
+                            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                            c.setRequestMethod("GET");
+                            c.getResponseCode();
+                            c.connect();
+
+                            if (c.getResponseCode() == 200) {
+                                int length = c.getContentLength();
+
+                                String size = new DecimalFormat("##.##").format((double) length / 1024) + " KB";
+
+                                //String PATH = Environment.getExternalStorageDirectory() + "/Download/GT_GSK_Images/";
+                                String PATH = CommonString.FILE_PATH;
+                                File file = new File(PATH);
+                                if (!file.isDirectory()) {
+                                    file.mkdir();
+                                }
+
+                                //  Environment.getExternalStorageDirectory() + "/GT_GSK_Images/" + _pathforcheck1;
+                                if (!new File(PATH + image_name).exists() && !size.equalsIgnoreCase("0 KB")) {
+                                    File outputFile = new File(file, image_name);
+                                    FileOutputStream fos = new FileOutputStream(outputFile);
+                                    InputStream is1 = c.getInputStream();
+
+                                    int bytes = 0;
+                                    byte[] buffer = new byte[1024];
+                                    int len1 = 0;
+
+                                    while ((len1 = is1.read(buffer)) != -1) {
+                                        bytes = (bytes + len1);
+                                        // data.value = (int) ((double) (((double)
+                                        // bytes) / length) * 100);
+                                        fos.write(buffer, 0, len1);
+                                    }
+                                    fos.close();
+                                    is1.close();
+                                }
+                            }
+                        }
+                    }
+                }
 
                 db.open();
                 db.InsertJCP(jcpgettersetter);
