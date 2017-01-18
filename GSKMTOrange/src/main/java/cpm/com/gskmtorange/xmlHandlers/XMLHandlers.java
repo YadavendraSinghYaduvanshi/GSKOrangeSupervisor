@@ -5,6 +5,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import cpm.com.gskmtorange.xmlGetterSetter.ADDITIONAL_DISPLAY_MASTERGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
@@ -708,4 +709,49 @@ public class XMLHandlers {
         return st;
     }
     //Gagan End Code
+
+
+    public static ADDITIONAL_DISPLAY_MASTERGetterSetter ADDITIONAL_DISPLAY_MASTERXMLHandler(XmlPullParser xpp, int eventType) {
+        ADDITIONAL_DISPLAY_MASTERGetterSetter st = new ADDITIONAL_DISPLAY_MASTERGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+
+                    if (xpp.getName().equals("META_DATA")) {
+                        st.setTable_STORE_ADDITIONAL_DISPLAY(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("DISPLAY_ID")) {
+                        st.setDISPLAY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("DISPLAY")) {
+                        st.setDISPLAY(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("IMAGE_URL")) {
+                        st.setIMAGE_URL(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("IMAGE_PATH")) {
+                        st.setIMAGE_PATH(xpp.nextText());
+                    }
+
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return st;
+    }
+
+
+
+
+
+
+
+
+
+
 }
