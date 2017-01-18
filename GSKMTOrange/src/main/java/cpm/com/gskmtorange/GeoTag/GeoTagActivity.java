@@ -719,13 +719,13 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 new GeoTagImageUpload(GeoTagActivity.this).execute();
 
-               /* Intent intent = new Intent(
+                Intent intent = new Intent(
                         GeoTagActivity.this,
                         GeoTagStoreList.class);
 
                 startActivity(intent);
 
-                GeoTagActivity.this.finish();*/
+                GeoTagActivity.this.finish();
 
             }
             else if(!result.equals(CommonString.KEY_SUCCESS))
@@ -887,6 +887,14 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                         GeoTagActivity.this, getResources().getString(R.string.uploadeddata)
                         + result, getResources().getString(R.string.success), null);
                 message.showMessage();
+
+                Intent intent = new Intent(
+                        GeoTagActivity.this,
+                        GeoTagStoreList.class);
+
+                startActivity(intent);
+
+                GeoTagActivity.this.finish();
 
 
             }

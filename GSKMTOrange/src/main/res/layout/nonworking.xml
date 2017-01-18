@@ -92,7 +92,7 @@
             android:layout_above="@+id/reasontxt"
 
             android:paddingLeft="10dp"
-            android:text="Remark"
+            android:text="@string/Remark"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -120,7 +120,7 @@
             android:layout_height="40sp"
             android:layout_centerInParent="true"
             android:background="@color/colorPrimary"
-            android:text="SAVE"
+            android:text="@string/save"
             android:textColor="#ffffff"
             android:textSize="17sp" />
     </RelativeLayout>

@@ -50,7 +50,7 @@
     <string name="select_language">Please select language</string>
     <string name="title_activity_select_language">Select Language</string>
 
-    <string name="title_activity_store_list_geotag">Store List</string>
+    <string name="title_activity_store_list">Store List</string>
 
     <string name="title_activity_store_geotag">Geo Tag</string>
 
@@ -218,6 +218,8 @@
     <string name="DataNot"> Data Not Uploaded ,</string>
     <string name="displayname">Display Name</string>
     <string name="adddatatoclick">Click Yes To Add Data</string>
+    <string name="Remark">Remark</string>
+    <string name="pleaseenterRemarks">Please fill Remark</string>
 
 
 </resources>

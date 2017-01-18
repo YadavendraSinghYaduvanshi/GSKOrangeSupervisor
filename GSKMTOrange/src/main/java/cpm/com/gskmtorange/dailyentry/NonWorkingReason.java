@@ -435,7 +435,7 @@ public class NonWorkingReason extends AppCompatActivity implements
                         alert.show();
 
                     } else {
-                        Toast.makeText(getApplicationContext(), R.string.title_activity_select_dropdown,
+                        Toast.makeText(getApplicationContext(), R.string.pleaseenterRemarks,
                                 Toast.LENGTH_SHORT).show();
                     }
                 } else {
