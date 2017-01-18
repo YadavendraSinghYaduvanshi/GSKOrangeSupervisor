@@ -865,6 +865,36 @@ public class UploadActivity extends AppCompatActivity {
 
                             //// ashish close image
 
+                            ///////Start store images
+
+                            if (coverageList.size() > 0) {
+                                for (int i1 = 0; i1 < coverageList.size(); i1++) {
+
+                                    if (coverageList.get(i1).getImage() != null && !coverageList.get(i1).getImage().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + coverageList.get(i1).getImage()).exists()) {
+
+                                            try {
+                                                result = UploadImage(coverageList.get(i1).getImage(), "StoreImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "StoreImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("StoreImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            ///////close store images
 
                             for (int m = 0; m < t2PGetterSetters.size(); m++) {
 
