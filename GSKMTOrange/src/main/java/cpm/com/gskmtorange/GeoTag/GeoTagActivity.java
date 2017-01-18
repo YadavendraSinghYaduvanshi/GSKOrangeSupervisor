@@ -694,12 +694,25 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
             } catch (SocketException ex) {
                 ex.printStackTrace();
+                Intent intent = new Intent(
+                        GeoTagActivity.this,
+                        GeoTagStoreList.class);
 
+                startActivity(intent);
+
+                GeoTagActivity.this.finish();
 
             } catch (Exception ex) {
 
 
                 ex.printStackTrace();
+                Intent intent = new Intent(
+                        GeoTagActivity.this,
+                        GeoTagStoreList.class);
+
+                startActivity(intent);
+
+                GeoTagActivity.this.finish();
             }
 
 
@@ -719,7 +732,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 new GeoTagImageUpload(GeoTagActivity.this).execute();
 
-               /* Intent intent = new Intent(
+              /*  Intent intent = new Intent(
                         GeoTagActivity.this,
                         GeoTagStoreList.class);
 
@@ -843,10 +856,28 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
             catch (SocketException ex) {
 
                 ex.printStackTrace();
+
+                Intent intent = new Intent(
+                        GeoTagActivity.this,
+                        GeoTagStoreList.class);
+
+                startActivity(intent);
+
+                GeoTagActivity.this.finish();
+
             }
 
             catch (Exception ex) {
                 ex.printStackTrace();
+
+
+                Intent intent = new Intent(
+                        GeoTagActivity.this,
+                        GeoTagStoreList.class);
+
+                startActivity(intent);
+
+                GeoTagActivity.this.finish();
 
             }
 
@@ -883,22 +914,37 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
 
-                AlertMessage message = new AlertMessage(
+               /* AlertMessage message = new AlertMessage(
                         GeoTagActivity.this, getResources().getString(R.string.uploadeddata)
                         + result, getResources().getString(R.string.success), null);
-                message.showMessage();
+                message.showMessage();*/
 
+                Intent intent = new Intent(
+                        GeoTagActivity.this,
+                        GeoTagStoreList.class);
+
+                startActivity(intent);
+
+                GeoTagActivity.this.finish();
+
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.success),Toast.LENGTH_LONG).show();
 
             }
             else if(!result.equals(CommonString.KEY_SUCCESS))
             {
 
-                AlertMessage message = new AlertMessage(
+               /* AlertMessage message = new AlertMessage(
                         GeoTagActivity.this, AlertMessage.MESSAGE_DATA_NOT
                         + result, getResources().getString(R.string.failure), null);
-                message.showMessage();
+                message.showMessage();*/
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.failure),Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(
+                        GeoTagActivity.this,
+                        GeoTagStoreList.class);
 
+                startActivity(intent);
 
+                GeoTagActivity.this.finish();
             }
 
 

@@ -58,7 +58,6 @@ public class AlertMessage {
          }
 
 
-
     }
 
     public void ShowAlert1(String str) {
