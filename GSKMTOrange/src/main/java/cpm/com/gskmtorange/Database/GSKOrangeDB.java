@@ -135,15 +135,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.CREATE_TABLE_STOCK_DIALOG, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
         db.delete(CommonString.CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
 
-
-        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
-        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
-        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
-        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
-        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
-
-        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
-
         //Gagan start code
         db.delete(CommonString.TABLE_INSERT_MSL_AVAILABILITY, "Store_Id='" + storeid + "'", null);
         db.delete(CommonString.TABLE_INSERT_STOCK_FACING_HEADER, "Store_Id='" + storeid + "'", null);
@@ -151,6 +142,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE, "STORE_ID='" + storeid + "'", null);
         db.delete(CommonString.TABLE_INSERT_PROMO_SKU, "STORE_ID='" + storeid + "'", null);
         //Gagan end code
+
     }
 
     public void deleteAllTables() {

@@ -52,6 +52,7 @@ import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.download.DownloadActivity;
 import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
+import cpm.com.gskmtorange.gsk_dailyentry.StoreWisePerformanceActivity;
 
 /**
  * Created by ashishc on 29-12-2016.
@@ -469,7 +470,7 @@ public class StoreListActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
                         dialog.cancel();
                     } else {
-                        Intent in = new Intent(StoreListActivity.this, CategoryListActivity.class);
+                        Intent in = new Intent(StoreListActivity.this, StoreWisePerformanceActivity.class);
                         startActivity(in);
                         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
                         dialog.cancel();

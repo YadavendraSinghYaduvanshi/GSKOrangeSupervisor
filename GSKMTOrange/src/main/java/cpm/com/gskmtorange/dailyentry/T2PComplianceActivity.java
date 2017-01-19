@@ -7,10 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -33,6 +36,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -59,8 +65,10 @@ import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.fonts.FontManager;
 import cpm.com.gskmtorange.fonts.TextDrawable;
+import cpm.com.gskmtorange.gsk_dailyentry.Stock_FacingActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
 
@@ -116,7 +124,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         rec_t2p = (RecyclerView) findViewById(R.id.rec_t2p);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,6 +175,16 @@ public class T2PComplianceActivity extends AppCompatActivity {
             rec_t2p.setAdapter(t2PAdapter);
 
         }
+
+        rec_t2p.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                if (dy > 0)
+                    fab.hide();
+                else if (dy < 0)
+                    fab.show();
+            }
+        });
 
     }
 
@@ -253,7 +271,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
             holder.btn_ref_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    showPlanogram(mItem.getRef_image_url());
                 }
             });
 
@@ -977,5 +995,65 @@ public class T2PComplianceActivity extends AppCompatActivity {
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 
         return true;
+    }
+
+    public void showPlanogram(String planogram_image){
+
+        final Dialog dialog = new Dialog(T2PComplianceActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.planogram_dialog_layout);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.setCancelable(false);
+
+        //ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mp = db.getMappingPlanogramData("");
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        WebView webView = (WebView) dialog.findViewById(R.id.webview);
+        webView.setWebViewClient(new MyWebViewClient());
+
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+
+        //String planogram_image = mp.get(0).getPLANOGRAM_IMAGE();
+        if (new File(str + planogram_image).exists()) {
+
+            String imagePath = "file://" + CommonString.FILE_PATH + "/" + planogram_image;
+            String html = "<html><head></head><body><img src=\"" + imagePath + "\"></body></html>";
+            webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
+
+            dialog.show();
+        }
+
+        ImageView cancel = (ImageView) dialog.findViewById(R.id.img_cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            view.clearCache(true);
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
     }
 }

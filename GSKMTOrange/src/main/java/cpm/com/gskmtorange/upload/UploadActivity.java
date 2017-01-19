@@ -953,7 +953,7 @@ public class UploadActivity extends AppCompatActivity {
                             }
 
 
-                            ///////close store images
+                            //T2p Images
 
                             for (int m = 0; m < t2PGetterSetters.size(); m++) {
 
@@ -1046,7 +1046,7 @@ public class UploadActivity extends AppCompatActivity {
             if (result.equals("")) {
 
                 showAlert(getString(R.string.menu_upload_data));
-                finish();
+
             }
         }
     }
@@ -1101,4 +1101,22 @@ public class UploadActivity extends AppCompatActivity {
         return true;
     }
 
+    public void showAlert(String str) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(str).setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                       /* Intent i = new Intent(activity, StorelistActivity.class);
+                        activity.startActivity(i);
+                        activity.finish();*/
+                        finish();
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 }
