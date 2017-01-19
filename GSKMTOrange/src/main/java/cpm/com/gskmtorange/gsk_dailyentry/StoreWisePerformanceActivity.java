@@ -103,6 +103,7 @@ public class StoreWisePerformanceActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(StoreWisePerformanceActivity.this, CategoryListActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             });
         } catch (Resources.NotFoundException e) {

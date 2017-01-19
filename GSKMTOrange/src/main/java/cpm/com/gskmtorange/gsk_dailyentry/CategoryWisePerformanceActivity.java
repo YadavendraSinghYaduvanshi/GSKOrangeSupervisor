@@ -85,6 +85,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
                     intent.putExtra("categoryName", categoryName);
                     intent.putExtra("categoryId", categoryId);
                     startActivity(intent);
+                    finish();
                 }
             });
         } catch (Resources.NotFoundException e) {

@@ -1,7 +1,9 @@
 package cpm.com.gskmtorange.upload;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -40,6 +42,7 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.download.DownloadActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
@@ -894,7 +897,7 @@ public class UploadActivity extends AppCompatActivity {
                             }
 
 
-                            ///////close store images
+                            //T2p Images
 
                             for (int m = 0; m < t2PGetterSetters.size(); m++) {
 
@@ -984,7 +987,7 @@ public class UploadActivity extends AppCompatActivity {
 
             dialog.dismiss();
             if (result.equals("")) {
-                finish();
+                showAlert(getString(R.string.menu_upload_data));
             }
         }
     }
@@ -1022,4 +1025,22 @@ public class UploadActivity extends AppCompatActivity {
         return true;
     }
 
+    public void showAlert(String str) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(str).setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                       /* Intent i = new Intent(activity, StorelistActivity.class);
+                        activity.startActivity(i);
+                        activity.finish();*/
+                        finish();
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 }
