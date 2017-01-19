@@ -141,6 +141,12 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     public void deleteAllTables() {
 
+        db.delete(CommonString.TABLE_COVERAGE_DATA, null, null);
+
+        db.delete(CommonString.CREATE_TABLE_STOCK_DIALOG_MAIN, null, null);
+        db.delete(CommonString.CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY_MAIN, null, null);
+        db.delete(CommonString.CREATE_TABLE_STOCK_DIALOG, null, null);
+        db.delete(CommonString.CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA, null, null);
     }
 
     public void InsertJCP(JourneyPlanGetterSetter data) {
