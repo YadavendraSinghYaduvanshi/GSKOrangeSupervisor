@@ -1,7 +1,9 @@
 package cpm.com.gskmtorange.upload;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -40,6 +42,7 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.download.DownloadActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
@@ -262,7 +265,7 @@ public class UploadActivity extends AppCompatActivity {
                             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                             envelope.dotNet = true;
                             envelope.setOutputSoapObject(request);
-                          
+
                             HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_STORE_COVERAGE, envelope);
 
@@ -342,21 +345,23 @@ public class UploadActivity extends AppCompatActivity {
 
 
                             //Stock and Facing
-                            String stock_facing_xml = "";
+                            /*String stock_facing_xml = "";
                             onXML = "";
                             stock_facingHeaderList = db.getStockAndFacingHeaderServerUploadData(coverageList.get(i).getStoreId());
 
                             if (stock_facingHeaderList.size() > 0) {
                                 for (int i1 = 0; i1 < stock_facingHeaderList.size(); i1++) {
+                                    String stockChildXML = "";
+
                                     if (!stock_facingHeaderList.get(i1).getCategory_id().equals("0")) {
 
                                         stock_facingChildList = db.getStockAndFacingSKUServerUploadData(
                                                 stock_facingHeaderList.get(i1).getCategory_id(), stock_facingHeaderList.get(i1).getBrand_id());
 
-                                        String stockChildXML = "";
+                                        String onXML1 = "";
                                         for (int j = 0; j < stock_facingChildList.size(); j++) {
 
-                                            stockChildXML = "[STOCK_FACING_DATA]"
+                                            onXML1 = "[STOCK_FACING_DATA]"
                                                     + "[MID]" + mid + "[/MID]"
                                                     + "[USER_ID]" + userId + "[/USER_ID]"
                                                     + "[CATEGORY_ID]" + Integer.parseInt(stock_facingHeaderList.get(i1).getCategory_id()) + "[/CATEGORY_ID]"
@@ -370,10 +375,64 @@ public class UploadActivity extends AppCompatActivity {
                                                     + "[FACEUP]" + Integer.parseInt(stock_facingChildList.get(j).getFacing()) + "[/FACEUP]"
                                                     + "[/STOCK_FACING_DATA]";
 
-                                            onXML = onXML + stockChildXML;
+                                            stockChildXML = stockChildXML + onXML1;
                                         }
-                                        stock_facing_xml = stock_facing_xml + onXML;
                                     }
+                                    stock_facing_xml = stock_facing_xml + stockChildXML;
+                                }
+
+                                final String sos_xml = "[DATA]" + stock_facing_xml + "[/DATA]";
+
+                                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                                request.addProperty("XMLDATA", sos_xml);
+                                request.addProperty("KEYS", "STOCK_FACING_DATA");
+                                request.addProperty("USERNAME", userId);
+                                request.addProperty("MID", mid);
+
+                                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                                envelope.dotNet = true;
+                                envelope.setOutputSoapObject(request);
+
+                                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                                androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                                result = envelope.getResponse();
+
+                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+                            }
+                            data.value = 20;
+                            data.name = "Stock Facing Uploading";
+                            publishProgress(data);*/
+
+                            String stock_facing_xml = "";
+                            onXML = "";
+                            stock_facingHeaderList = db.getStockAndFacingHeaderServerUploadData(coverageList.get(i).getStoreId());
+
+                            if (stock_facingHeaderList.size() > 0) {
+
+                                for (int i1 = 0; i1 < stock_facingHeaderList.size(); i1++) {
+                                    onXML = "[STOCK_FACING_DATA]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
+                                            + "[BRAND_ID]" + Integer.parseInt(stock_facingHeaderList.get(i1).getBrand_id()) + "[/BRAND_ID]"
+                                            + "[IAMGE1]" + stock_facingHeaderList.get(i1).getImage1() + "[/IAMGE1]"
+                                            + "[IAMGE2]" + stock_facingHeaderList.get(i1).getImage2() + "[/IAMGE2]"
+                                            + "[SKU_ID]" + Integer.parseInt(stock_facingHeaderList.get(i1).getSku_id()) + "[/SKU_ID]"
+                                            + "[STOCK]" + Integer.parseInt(stock_facingHeaderList.get(i1).getStock()) + "[/STOCK]"
+                                            + "[FACEUP]" + Integer.parseInt(stock_facingHeaderList.get(i1).getFacing()) + "[/FACEUP]"
+                                            + "[/STOCK_FACING_DATA]";
+
+                                    stock_facing_xml = stock_facing_xml + onXML;
                                 }
 
                                 final String sos_xml = "[DATA]" + stock_facing_xml + "[/DATA]";
@@ -548,24 +607,24 @@ public class UploadActivity extends AppCompatActivity {
 
                                         for (int k = 0; k < additionalVisibilitySkuList.size(); k++) {
 
-                                    onXMLdIALOG = "[VISIBILITY_DAILOG]"
-                                            + "[MID]" + mid + "[/MID]"
-                                            + "[USER_ID]"
-                                            + userId
-                                            + "[/USER_ID]"
-                                            + "[KEY_ID]"
-                                            + additionalVisibilitySkuList.get(k).getCOMMON_ID()
-                                            + "[/KEY_ID]"
-                                            + "[CATEGORY_ID]"
-                                            + additionalVisibilitySkuList.get(k).getCategoryId()
-                                            + "[/CATEGORY_ID]"
-                                            + "[SKU_ID]"
-                                            + additionalVisibilitySkuList.get(k).getSku_id()
-                                            + "[/SKU_ID]"
-                                            + "[QUANTITY]"
-                                            + additionalVisibilitySkuList.get(k).getQuantity()
-                                            + "[/QUANTITY]"
-                                            + "[/VISIBILITY_DAILOG]";
+                                            onXMLdIALOG = "[VISIBILITY_DAILOG]"
+                                                    + "[MID]" + mid + "[/MID]"
+                                                    + "[USER_ID]"
+                                                    + userId
+                                                    + "[/USER_ID]"
+                                                    + "[KEY_ID]"
+                                                    + additionalVisibilitySkuList.get(k).getCOMMON_ID()
+                                                    + "[/KEY_ID]"
+                                                    + "[CATEGORY_ID]"
+                                                    + additionalVisibilitySkuList.get(k).getCategoryId()
+                                                    + "[/CATEGORY_ID]"
+                                                    + "[SKU_ID]"
+                                                    + additionalVisibilitySkuList.get(k).getSku_id()
+                                                    + "[/SKU_ID]"
+                                                    + "[QUANTITY]"
+                                                    + additionalVisibilitySkuList.get(k).getQuantity()
+                                                    + "[/QUANTITY]"
+                                                    + "[/VISIBILITY_DAILOG]";
 
                                             additional_visibility_dialog_xml = additional_visibility_dialog_xml + onXMLdIALOG;
 
@@ -601,11 +660,11 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[/ADDITIONAL_VISIBILITY_DATA]";
 
 
-                                additional_visibility_data_xml = additional_visibility_data_xml + onXML;
-                                KeyID="";
-                                additionalVisibilitySkuList.clear();
+                                    additional_visibility_data_xml = additional_visibility_data_xml + onXML;
+                                    KeyID = "";
+                                    additionalVisibilitySkuList.clear();
 
-                                additional_visibility_dialog_xml="";
+                                    additional_visibility_dialog_xml = "";
 
                                 }
 
@@ -983,10 +1042,30 @@ public class UploadActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             dialog.dismiss();
+            db.deleteAllTables();
             if (result.equals("")) {
+
+                showAlert(getString(R.string.menu_upload_data));
                 finish();
             }
         }
+    }
+
+    public void showAlert(String str) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(str).setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                       /* Intent i = new Intent(activity, StorelistActivity.class);
+                        activity.startActivity(i);
+                        activity.finish();*/
+                        finish();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 

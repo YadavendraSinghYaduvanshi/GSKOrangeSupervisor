@@ -136,6 +136,12 @@ public class StoreListActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -522,17 +528,13 @@ public class StoreListActivity extends AppCompatActivity {
 
     public boolean setcheckedmenthod(String store_cd) {
 
-
+        boolean result_flag = false;
         for (int i = 0; i < coverage.size(); i++) {
             if (store_cd.equals(coverage.get(i).getStoreId())) {
                 if (coverage.get(i).getOutTime() != null) {
                     result_flag = true;
                     break;
                 }
-            } else {
-
-                result_flag = false;
-
             }
         }
 

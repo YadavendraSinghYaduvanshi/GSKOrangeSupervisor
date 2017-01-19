@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 public class MAPPING_PLANOGRAM_DataGetterSetter {
-    String KEYACCOUNT_ID, STORETYPE_ID, CLASS_ID, PLANOGRAM_IMAGE, IMAGE_PATH;
+    String KEYACCOUNT_ID, STORETYPE_ID, CLASS_ID, PLANOGRAM_IMAGE, IMAGE_PATH,CATEGORY_ID;
 
     public String getKEYACCOUNT_ID() {
         return KEYACCOUNT_ID;
@@ -47,5 +47,13 @@ public class MAPPING_PLANOGRAM_DataGetterSetter {
 
     public void setIMAGE_PATH(String IMAGE_PATH) {
         this.IMAGE_PATH = IMAGE_PATH;
+    }
+
+    public String getCATEGORY_ID() {
+        return CATEGORY_ID;
+    }
+
+    public void setCATEGORY_ID(String CATEGORY_ID) {
+        this.CATEGORY_ID = CATEGORY_ID;
     }
 }

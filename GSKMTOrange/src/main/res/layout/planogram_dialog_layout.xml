@@ -36,12 +36,18 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <ImageView
+<!--                <ImageView
                     android:id="@+id/img_planogram"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:src="@drawable/sad_cloud"/>
+                    android:src="@drawable/sad_cloud" />-->
+
+                <WebView
+                    android:id="@+id/webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
             </LinearLayout>
         </LinearLayout>
 

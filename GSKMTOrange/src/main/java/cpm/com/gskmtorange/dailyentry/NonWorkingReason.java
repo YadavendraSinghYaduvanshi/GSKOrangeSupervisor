@@ -257,7 +257,7 @@ public class NonWorkingReason extends AppCompatActivity implements
                 if (_pathforcheck != null && !_pathforcheck.equals("")) {
                     if (new File(str + _pathforcheck).exists()) {
 
-                        camera.setImageDrawable(getResources().getDrawable(R.drawable.cam_deactive));
+                        camera.setImageDrawable(getResources().getDrawable(R.mipmap.camera_green));
 
 
                         image1 = _pathforcheck;

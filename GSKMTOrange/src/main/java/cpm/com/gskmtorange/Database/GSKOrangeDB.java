@@ -51,7 +51,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
  */
 
 public class GSKOrangeDB extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "GSK_ORANGE";
+    public static final String DATABASE_NAME = "GSK_ORANGE_DB";
     public static final int DATABASE_VERSION = 13;
     TableBean tableBean;
     private SQLiteDatabase db;
@@ -136,7 +136,21 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
 
 
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
 
+        db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+
+        //Gagan start code
+        db.delete(CommonString.TABLE_INSERT_MSL_AVAILABILITY, "Store_Id='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_INSERT_STOCK_FACING_HEADER, "Store_Id='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_INSERT_STOCK_FACING_CHILD, "Store_Id='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE, "STORE_ID='" + storeid + "'", null);
+        db.delete(CommonString.TABLE_INSERT_PROMO_SKU, "STORE_ID='" + storeid + "'", null);
+        //Gagan end code
     }
 
     public void deleteAllTables() {
@@ -147,6 +161,15 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY_MAIN, null, null);
         db.delete(CommonString.CREATE_TABLE_STOCK_DIALOG, null, null);
         db.delete(CommonString.CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA, null, null);
+
+        //Gagan start code
+        db.delete(CommonString.TABLE_INSERT_MSL_AVAILABILITY, null, null);
+        db.delete(CommonString.TABLE_INSERT_STOCK_FACING_HEADER, null, null);
+        db.delete(CommonString.TABLE_INSERT_STOCK_FACING_CHILD, null, null);
+        db.delete(CommonString.TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE, null, null);
+        db.delete(CommonString.TABLE_INSERT_PROMO_SKU, null, null);
+        //Gagan end code
+
     }
 
     public void InsertJCP(JourneyPlanGetterSetter data) {
@@ -204,7 +227,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            dbcursor = db.rawQuery("Select  BM.BRAND As BRAND, BM.BRAND_ID As BRAND_ID, DM.DISPLAY As DISPLAY, DM.DISPLAY_ID As DISPLAY_ID from BRAND_MASTER BM INNER JOIN MAPPING_T2P T ON BM.BRAND_ID = T.BRAND_ID INNER JOIN  DISPLAY_MASTER DM  ON T.DISPLAY_ID= DM.DISPLAY_ID WHERE T.STORE_ID = '" + store_id + "'", null);
+            dbcursor = db.rawQuery("Select  BM.BRAND As BRAND, BM.BRAND_ID As BRAND_ID, DM.DISPLAY As DISPLAY, DM.DISPLAY_ID As DISPLAY_ID, DM.IMAGE_URL As IMAGE_URL, DM.IMAGE_PATH As IMAGE_PATH from BRAND_MASTER BM INNER JOIN MAPPING_T2P T ON BM.BRAND_ID = T.BRAND_ID INNER JOIN  DISPLAY_MASTER DM  ON T.DISPLAY_ID= DM.DISPLAY_ID WHERE T.STORE_ID = '" + store_id + "'", null);
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
@@ -222,6 +245,12 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     t2p.setDisplay(dbcursor.getString(dbcursor
                             .getColumnIndexOrThrow("DISPLAY")));
+
+                    t2p.setRef_image_url(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("IMAGE_URL")));
+
+                    t2p.setRef_image_path(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("IMAGE_PATH")));
 
                     t2p.setImage("");
 
@@ -496,6 +525,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put("DISPLAY_ID", data.getDISPLAY_ID().get(i));
                 values.put("DISPLAY", data.getDISPLAY().get(i));
                 values.put("IMAGE_URL", data.getIMAGE_URL().get(i));
+                values.put("IMAGE_PATH", data.getIMAGE_PATH().get(i));
 
                 db.insert("DISPLAY_MASTER", null, values);
             }
@@ -1885,21 +1915,23 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("Select * from Stock_Facing_Header_Data " +
-                    "where Store_Id='" + store_id + "'", null);
+            dbcursor = db.rawQuery("Select H.BRAND_ID, H.IMAGE1, H.IMAGE2, C.SKU_ID, C.STOCK_VALUE, C.FACEUP_VALUE " +
+                    "from Stock_Facing_Header_Data  H " +
+                    "INNER JOIN Stock_Facing_Child_Data C " +
+                    "ON H.STORE_ID = C.STORE_ID AND H.CATEGORY_ID = C.CATEGORY_ID AND H.BRAND_ID = C.BRAND_ID " +
+                    "WHERE H.STORE_ID = '" + store_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
                     Stock_FacingGetterSetter cd = new Stock_FacingGetterSetter();
 
-                    cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Category_Id")));
-                    cd.setSub_category_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
-                    cd.setSub_category(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
                     cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
-                    cd.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND")));
                     cd.setImage1(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE1")));
                     cd.setImage2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE2")));
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setStock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STOCK_VALUE")));
+                    cd.setFacing(dbcursor.getString(dbcursor.getColumnIndexOrThrow("FACEUP_VALUE")));
 
                     list.add(cd);
                     dbcursor.moveToNext();
@@ -1914,7 +1946,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Stock_FacingGetterSetter> getStockAndFacingSKUServerUploadData(String category_id, String brand_id) {
+    /*public ArrayList<Stock_FacingGetterSetter> getStockAndFacingSKUServerUploadData(String category_id, String brand_id) {
         ArrayList<Stock_FacingGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
 
@@ -1948,7 +1980,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             return list;
         }
         return list;
-    }
+    }*/
 
     //Promo Compliance Promotion Data
     public ArrayList<Promo_Compliance_DataGetterSetter> getPromoComplianceSkuServerUploadData(String store_id) {
@@ -2250,10 +2282,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-
-
-
-
     public void deleteStockEntryMainTable(String storeid, String categoryid) {
         try {
 
@@ -2266,14 +2294,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
 
     }
-
-
-
-
-
-
-
-
 
 
     public ArrayList<BrandMasterGetterSetter> getBrandMasterData(String store_id) {
@@ -2484,6 +2504,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put(CommonString.KEY_BRAND_ID, data.get(i).getBrand_id());
                 values.put(CommonString.KEY_BRAND, data.get(i).getBrand());
                 values.put(CommonString.KEY_DISPLAY, data.get(i).getDisplay());
+                values.put(CommonString.KEY_IMAGE_URL, data.get(i).getRef_image_url());
+                values.put(CommonString.KEY_IMAGE_PATH, data.get(i).getRef_image_path());
                 values.put(CommonString.KEY_IMAGE, data.get(i).getImage());
                 values.put(CommonString.KEY_REMARK, data.get(i).getRemark());
                 values.put(CommonString.KEY_PRESENT, data.get(i).isPresent());
@@ -2524,6 +2546,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             Log.d("Exception ", " in T2P_COMPLIANCE " + ex.toString());
         }
     }
+
 
     public boolean additionalVisibilitydata(String store_id, String category_id) {
         Log.d("AdditionalVisibility ", "AdditionalVisibility data--------------->Start<------------");
@@ -2630,21 +2653,20 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
             long key_id = db.insert(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_MAIN, null, values);
 
-            if(skulist!=null)
-            {
+            if (skulist != null) {
 
-            for (int j = 0; j < skulist.size(); j++) {
-                values1.put(CommonString.KEY_Common_ID, key_id);
-                values1.put(CommonString.KEY_STORE_ID, skulist.get(j).getStore_id());
-                values1.put("categoryId", categoryId);
-                values1.put(CommonString.KEY_BRAND, skulist.get(j).getBrand());
-                values1.put(CommonString.KEY_BRAND_ID, skulist.get(j).getBrand_id());
-                values1.put(CommonString.KEY_QUANTITY, skulist.get(j).getQuantity());
-                values1.put(CommonString.KEY_SKU_ID, skulist.get(j).getSku_id());
-                values1.put(CommonString.KEY_SKUNAME, skulist.get(j).getSku_name());
+                for (int j = 0; j < skulist.size(); j++) {
+                    values1.put(CommonString.KEY_Common_ID, key_id);
+                    values1.put(CommonString.KEY_STORE_ID, skulist.get(j).getStore_id());
+                    values1.put("categoryId", categoryId);
+                    values1.put(CommonString.KEY_BRAND, skulist.get(j).getBrand());
+                    values1.put(CommonString.KEY_BRAND_ID, skulist.get(j).getBrand_id());
+                    values1.put(CommonString.KEY_QUANTITY, skulist.get(j).getQuantity());
+                    values1.put(CommonString.KEY_SKU_ID, skulist.get(j).getSku_id());
+                    values1.put(CommonString.KEY_SKUNAME, skulist.get(j).getSku_name());
 
-                db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, null, values1);
-            }
+                    db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, null, values1);
+                }
             }
 
         } catch (Exception ex) {
@@ -2723,6 +2745,47 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                         CommonString.KEY_STORE_ID + "='" + store_id + "' AND " +
                         CommonString.KEY_CATEGORY_ID + "='" + category_id + "'", null);
             }
+
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    T2PGetterSetter tp = new T2PGetterSetter();
+
+                    tp.setKey_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_ID)));
+                    tp.setDisplay_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_DISPLAY_ID)));
+                    tp.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND_ID)));
+                    tp.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND)));
+                    tp.setDisplay(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_DISPLAY)));
+                    tp.setRef_image_url(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE_URL)));
+                    tp.setRef_image_path(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE_PATH)));
+                    tp.setImage(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE)));
+                    tp.setRemark(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_REMARK)));
+                    tp.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
+                    tp.setPresent((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PRESENT)).equalsIgnoreCase("1")));
+
+                    list.add(tp);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            return list;
+        }
+        return list;
+    }
+
+    // get T2P Compliance store wise data
+    public ArrayList<T2PGetterSetter> getT2pComplianceStorewiseData(String store_id) {
+
+        ArrayList<T2PGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+        try {
+
+
+            dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
+                    CommonString.KEY_STORE_ID + "='" + store_id + "'", null);
 
 
             if (dbcursor != null) {
@@ -2827,6 +2890,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put("KEYACCOUNT_ID", data.getKEYACCOUNT_ID().get(i));
                 values.put("STORETYPE_ID", data.getSTORETYPE_ID().get(i));
                 values.put("CLASS_ID", data.getCLASS_ID().get(i));
+                values.put("CATEGORY_ID", data.getCATEGORY_ID().get(i));
                 values.put("PLANOGRAM_IMAGE", data.getPLANOGRAM_IMAGE().get(i));
                 values.put("IMAGE_PATH", data.getIMAGE_PATH().get(i));
 
@@ -2841,7 +2905,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
         try {
-            dbcursor = db.rawQuery("SELECT * FROM MAPPING_PLANOGRAM", null);
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_PLANOGRAM where CATEGORY_ID='" + category_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -2851,6 +2915,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     mp.setKEYACCOUNT_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("KEYACCOUNT_ID")));
                     mp.setSTORETYPE_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORETYPE_ID")));
                     mp.setCLASS_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CLASS_ID")));
+                    mp.setCATEGORY_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY_ID")));
                     mp.setPLANOGRAM_IMAGE(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PLANOGRAM_IMAGE")));
                     mp.setIMAGE_PATH(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE_PATH")));
 
@@ -2986,8 +3051,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-
-
     public ArrayList<AddittionalGetterSetter> getAdditionalMainStock(String store_id, String categoryId) {
         Cursor cursordata = null;
         ArrayList<AddittionalGetterSetter> productData = new ArrayList<AddittionalGetterSetter>();
@@ -3056,7 +3119,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put("DISPLAY", data.getDISPLAY().get(i));
                 values.put("IMAGE_PATH", data.getIMAGE_PATH().get(i));
                 values.put("IMAGE_URL", data.getIMAGE_URL().get(i));
-               db.insert("ADDITIONAL_DISPLAY_MASTER", null, values);
+                db.insert("ADDITIONAL_DISPLAY_MASTER", null, values);
             }
         } catch (Exception ex) {
             Log.d("Exception ", " ADDITIONAL_DISPLAY_MASTER " + ex.toString());
@@ -3095,10 +3158,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return Data;
 
     }
-
-
-
-
 
 
 }

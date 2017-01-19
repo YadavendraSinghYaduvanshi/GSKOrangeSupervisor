@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@null"
-            android:src="@drawable/cam_active" />
+            android:src="@mipmap/camera_orange" />
     </RelativeLayout>
 
     <RelativeLayout

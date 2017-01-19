@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -14,6 +15,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -38,6 +40,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
@@ -67,6 +71,8 @@ import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 
+import static android.R.attr.angle;
+
 public class Stock_FacingActivity extends AppCompatActivity {
     static int child_position = -1;
     ExpandableListView expandableListView;
@@ -86,6 +92,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
     Uri outputFileUri = null;
     String gallery_package = "";
     private SharedPreferences preferences;
+    boolean isExpand = true;
 
     private static boolean updateResources(Context context, String language) {
 
@@ -209,12 +216,14 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     int lastItem = firstVisibleItem + visibleItemCount;
 
-                    if (firstVisibleItem == 0) {
-                        fab.setVisibility(View.VISIBLE);
-                    } else if (lastItem == totalItemCount) {
-                        fab.setVisibility(View.INVISIBLE);
-                    } else {
-                        fab.setVisibility(View.VISIBLE);
+                    if (isExpand) {
+                        if (firstVisibleItem == 0) {
+                            fab.setVisibility(View.VISIBLE);
+                        } else if (lastItem == totalItemCount) {
+                            fab.setVisibility(View.INVISIBLE);
+                        } else {
+                            fab.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
@@ -250,6 +259,12 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         getCurrentFocus().clearFocus();
                     }
 
+                    if (groupPosition == 0) {
+                        isExpand = false;
+                    } else {
+                        isExpand = true;
+                    }
+
                     fab.setVisibility(View.INVISIBLE);
                 }
             });
@@ -265,7 +280,12 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         getCurrentFocus().clearFocus();
                     }
 
-                    fab.setVisibility(View.INVISIBLE);
+                    if (groupPosition == 0) {
+                        isExpand = false;
+                    } else {
+                        isExpand = true;
+                    }
+                    fab.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -334,8 +354,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     //Camera allow enable
                     if (camera_allow.equalsIgnoreCase("1")) {
 
-                        if (!imagePath.equals("") || !imagePath1.equals("")) {
-                            if (!stock.equals("0")) {
+                        //if (!imagePath.equals("") || !imagePath1.equals("")) {
+                        if (!stock.equals("0")) {
+                            if (!imagePath.equals("") || !imagePath1.equals("")) {
                                 if (stock.equals("") || faceup.equals("")) {
                                     if (!checkHeaderArray.contains(i)) {
                                         checkHeaderArray.add(i);
@@ -346,17 +367,26 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                     break;
                                 }
                             } else {
-                                if (stock.equals("")) {
-                                    if (!checkHeaderArray.contains(i)) {
-                                        checkHeaderArray.add(i);
-                                    }
-
-                                    flag = false;
-                                    Error_Message = getResources().getString(R.string.fill_data);
-                                    break;
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
                                 }
+
+                                flag = false;
+                                Error_Message = getResources().getString(R.string.click_image);
+                                break;
                             }
                         } else {
+                            if (stock.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = getResources().getString(R.string.fill_data);
+                                break;
+                            }
+                        }
+                        /*} else {
                             if (!checkHeaderArray.contains(i)) {
                                 checkHeaderArray.add(i);
                             }
@@ -364,7 +394,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                             flag = false;
                             Error_Message = getResources().getString(R.string.click_image);
                             break;
-                        }
+                        }*/
 
                     } else {
                         //Camera allow disable
@@ -660,7 +690,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
             builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
                     .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-
                             finish();
                         }
                     })
@@ -677,47 +706,86 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
         //Planogram Dialog
         if (id == R.id.action_planogram) {
+            expandableListView.clearFocus();
+
             //final Dialog dialog = new Dialog(Stock_FacingActivity.this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             final Dialog dialog = new Dialog(Stock_FacingActivity.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.setContentView(R.layout.planogram_dialog_layout);
             dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+            dialog.setCancelable(false);
 
-            ImageView img_planogram = (ImageView) dialog.findViewById(R.id.img_planogram);
+            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mappingPlanogramList = db.getMappingPlanogramData(categoryId);
 
-            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mp = db.getMappingPlanogramData("");
+            //ImageView img_planogram = (ImageView) dialog.findViewById(R.id.img_planogram);
+            WebView webView = (WebView) dialog.findViewById(R.id.webview);
+            webView.setWebViewClient(new MyWebViewClient());
 
-            String planogram_image = mp.get(0).getPLANOGRAM_IMAGE();
-            if (new File(str + planogram_image).exists()) {
-                Bitmap bmp = BitmapFactory.decodeFile(str + planogram_image);
-                img_planogram.setImageBitmap(bmp);
-            } else {
-                img_planogram.setBackgroundResource(R.drawable.sad_cloud);
+            webView.getSettings().setAllowFileAccess(true);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setBuiltInZoomControls(true);
+
+            String planogram_image = "";
+            if (mappingPlanogramList.size() > 0) {
+                planogram_image = mappingPlanogramList.get(0).getPLANOGRAM_IMAGE();
             }
+            if (!planogram_image.equals("")) {
+                if (new File(str + planogram_image).exists()) {
+                    Bitmap bmp = BitmapFactory.decodeFile(str + planogram_image);
+                    // img_planogram.setRotation(90);
+                    //img_planogram.setImageBitmap(bmp);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-            /*if (new File(str + "Stock_Cam1_3_9_01122017_162052.jpg").exists()) {
-                Bitmap bmp = BitmapFactory.decodeFile(str + "Stock_Cam1_3_9_01122017_162052.jpg");
-                img_planogram.setImageBitmap(bmp);
-            } else {
-                img_planogram.setBackgroundResource(R.drawable.sad_cloud);
+                    String imagePath = "file://" + CommonString.FILE_PATH + "/" + planogram_image;
+                    String html = "<html><head></head><body><img src=\"" + imagePath + "\"></body></html>";
+                    webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
+
+                    dialog.show();
+                } /*else {
+                //webView.loadUrl(String.valueOf(R.drawable.sad_cloud));
+
+                //img_planogram.setBackgroundResource(R.drawable.sad_cloud);
             }*/
+            }
 
 
             ImageView cancel = (ImageView) dialog.findViewById(R.id.img_cancel);
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                     dialog.dismiss();
                 }
             });
 
-            dialog.show();
+            //dialog.show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private class MyWebViewClient extends WebViewClient {
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            view.clearCache(true);
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -728,14 +796,12 @@ public class Stock_FacingActivity extends AppCompatActivity {
         builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
                 .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
                         finish();
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                     }
                 });
         android.app.AlertDialog alert = builder.create();
@@ -951,7 +1017,11 @@ public class Stock_FacingActivity extends AppCompatActivity {
             }
 
             if (childData.getStock().equals("0")) {
-                holder.ed_facing.setEnabled(false);
+                if (childData.getCompany_id().equals("1")) {
+                    holder.ed_facing.setEnabled(false);
+                } else {
+                    holder.ed_facing.setEnabled(true);
+                }
             } else {
                 holder.ed_facing.setEnabled(true);
             }
@@ -971,6 +1041,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         if (stock.equals("0")) {
                             childData.setFacing("0");
                             finalHolder.ed_facing.setText("0");
+
                             finalHolder.ed_facing.setEnabled(false);
                         } else {
                             childData.setFacing(childData.getFacing());
