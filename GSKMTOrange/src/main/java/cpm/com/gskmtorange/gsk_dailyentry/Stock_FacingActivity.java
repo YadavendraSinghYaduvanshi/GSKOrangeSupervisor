@@ -716,11 +716,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
             dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
             dialog.setCancelable(false);
 
-            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mp = db.getMappingPlanogramData("");
+            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mappingPlanogramList = db.getMappingPlanogramData(categoryId);
 
             //ImageView img_planogram = (ImageView) dialog.findViewById(R.id.img_planogram);
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
             WebView webView = (WebView) dialog.findViewById(R.id.webview);
             webView.setWebViewClient(new MyWebViewClient());
 
@@ -728,22 +726,28 @@ public class Stock_FacingActivity extends AppCompatActivity {
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setBuiltInZoomControls(true);
 
-            String planogram_image = mp.get(0).getPLANOGRAM_IMAGE();
-            if (new File(str + planogram_image).exists()) {
-                Bitmap bmp = BitmapFactory.decodeFile(str + planogram_image);
-                // img_planogram.setRotation(90);
-                //img_planogram.setImageBitmap(bmp);
+            String planogram_image = "";
+            if (mappingPlanogramList.size() > 0) {
+                planogram_image = mappingPlanogramList.get(0).getPLANOGRAM_IMAGE();
+            }
+            if (!planogram_image.equals("")) {
+                if (new File(str + planogram_image).exists()) {
+                    Bitmap bmp = BitmapFactory.decodeFile(str + planogram_image);
+                    // img_planogram.setRotation(90);
+                    //img_planogram.setImageBitmap(bmp);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-                String imagePath = "file://" + CommonString.FILE_PATH + "/" + planogram_image;
-                String html = "<html><head></head><body><img src=\"" + imagePath + "\"></body></html>";
-                webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
+                    String imagePath = "file://" + CommonString.FILE_PATH + "/" + planogram_image;
+                    String html = "<html><head></head><body><img src=\"" + imagePath + "\"></body></html>";
+                    webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
 
-                dialog.show();
-            } /*else {
+                    dialog.show();
+                } /*else {
                 //webView.loadUrl(String.valueOf(R.drawable.sad_cloud));
 
                 //img_planogram.setBackgroundResource(R.drawable.sad_cloud);
             }*/
+            }
 
 
             ImageView cancel = (ImageView) dialog.findViewById(R.id.img_cancel);

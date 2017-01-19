@@ -11,6 +11,7 @@ public class MAPPING_PLANOGRAM_MasterGetterSetter {
 
     ArrayList<String> KEYACCOUNT_ID = new ArrayList<>();
     ArrayList<String> STORETYPE_ID = new ArrayList<>();
+    ArrayList<String> CATEGORY_ID = new ArrayList<>();
     ArrayList<String> CLASS_ID = new ArrayList<>();
     ArrayList<String> PLANOGRAM_IMAGE = new ArrayList<>();
     ArrayList<String> IMAGE_PATH = new ArrayList<>();
@@ -61,5 +62,13 @@ public class MAPPING_PLANOGRAM_MasterGetterSetter {
 
     public void setIMAGE_PATH(String IMAGE_PATH) {
         this.IMAGE_PATH.add(IMAGE_PATH);
+    }
+
+    public ArrayList<String> getCATEGORY_ID() {
+        return CATEGORY_ID;
+    }
+
+    public void setCATEGORY_ID(String CATEGORY_ID) {
+        this.CATEGORY_ID.add(CATEGORY_ID);
     }
 }
