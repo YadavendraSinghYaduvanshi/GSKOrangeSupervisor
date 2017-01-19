@@ -80,7 +80,7 @@ public class NonWorkingReason extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.nonworking);
+        setContentView(R.layout.nonworkingmainlayout);
 
         reasonspinner = (Spinner) findViewById(R.id.spinner2);
         camera = (ImageButton) findViewById(R.id.imgcam);

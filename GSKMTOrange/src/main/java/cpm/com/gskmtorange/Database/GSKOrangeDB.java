@@ -129,6 +129,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     public void deleteTableWithStoreID(String storeid) {
 
         db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.CREATE_TABLE_STOCK_DIALOG_MAIN, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+
+        db.delete(CommonString.CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY_MAIN, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.CREATE_TABLE_STOCK_DIALOG, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+        db.delete(CommonString.CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+
+
 
         db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
         db.delete(CommonString.TABLE_COVERAGE_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
@@ -3115,6 +3122,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     sb.setDISPLAY(cursordata.getString(cursordata.getColumnIndexOrThrow("DISPLAY")));
                     sb.setIMAGE_URL(cursordata.getString(cursordata.getColumnIndexOrThrow("IMAGE_URL")));
                     sb.setIMAGE_PATH(cursordata.getString(cursordata.getColumnIndexOrThrow("IMAGE_PATH")));
+
 
                     Data.add(sb);
                     cursordata.moveToNext();
