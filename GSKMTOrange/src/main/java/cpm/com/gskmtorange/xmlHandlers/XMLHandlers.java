@@ -696,6 +696,9 @@ public class XMLHandlers {
                     if (xpp.getName().equals("CLASS_ID")) {
                         st.setCLASS_ID(xpp.nextText());
                     }
+                    if (xpp.getName().equals("CATEGORY_ID")) {
+                        st.setCATEGORY_ID(xpp.nextText());
+                    }
                     if (xpp.getName().equals("PLANOGRAM_IMAGE")) {
                         st.setPLANOGRAM_IMAGE(xpp.nextText());
                     }

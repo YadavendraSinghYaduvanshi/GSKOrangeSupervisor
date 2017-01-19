@@ -163,8 +163,18 @@
     <string name="uploadeddata">Veriler Paylaşılıyor ,</string>
     <string name="DataNot">Veriler Paylaşılmadı ,</string>
     <string name="delete">Sil</string>
-    <string name="adddatatoclick">Click Yes To Add Data</string>
+    <string name="adddatatoclick">Veri Eklemek İçin Evet tıklayın</string>
     <string name="displayname">Teşhir Türü</string>
+
+    <string name="storefront">Click Store Front Image</string>
+    <string name="brandname">Brand Name</string>
+    <string name="skuname">SKU Name</string>
+    <string name="quantity">Teşhir Sayısı</string>
+    <string name="title_activity_store_geotag">Coğrafi Konum</string>
+    <string name="title_activity_store_list">Store List</string>
+    <string name="Remark">Remark</string>
+    <string name="pleaseenterRemarks">Please fill Remark</string>
+
 
     <!--Gagan start new code 2-->
     <string name="stock_facing_planogram_dialog_title">Örnek Fotoğraf</string>

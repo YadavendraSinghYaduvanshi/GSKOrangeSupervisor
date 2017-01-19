@@ -92,6 +92,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
     Uri outputFileUri = null;
     String gallery_package = "";
     private SharedPreferences preferences;
+    boolean isExpand = true;
 
     private static boolean updateResources(Context context, String language) {
 
@@ -215,12 +216,14 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     int lastItem = firstVisibleItem + visibleItemCount;
 
-                    if (firstVisibleItem == 0) {
-                        fab.setVisibility(View.VISIBLE);
-                    } else if (lastItem == totalItemCount) {
-                        fab.setVisibility(View.INVISIBLE);
-                    } else {
-                        fab.setVisibility(View.VISIBLE);
+                    if (isExpand) {
+                        if (firstVisibleItem == 0) {
+                            fab.setVisibility(View.VISIBLE);
+                        } else if (lastItem == totalItemCount) {
+                            fab.setVisibility(View.INVISIBLE);
+                        } else {
+                            fab.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
@@ -256,6 +259,12 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         getCurrentFocus().clearFocus();
                     }
 
+                    if (groupPosition == 0) {
+                        isExpand = false;
+                    } else {
+                        isExpand = true;
+                    }
+
                     fab.setVisibility(View.INVISIBLE);
                 }
             });
@@ -271,6 +280,11 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         getCurrentFocus().clearFocus();
                     }
 
+                    if (groupPosition == 0) {
+                        isExpand = false;
+                    } else {
+                        isExpand = true;
+                    }
                     fab.setVisibility(View.VISIBLE);
                 }
             });
@@ -692,6 +706,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
         //Planogram Dialog
         if (id == R.id.action_planogram) {
+            expandableListView.clearFocus();
+
             //final Dialog dialog = new Dialog(Stock_FacingActivity.this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             final Dialog dialog = new Dialog(Stock_FacingActivity.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -700,11 +716,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
             dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
             dialog.setCancelable(false);
 
-            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mp = db.getMappingPlanogramData("");
+            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mappingPlanogramList = db.getMappingPlanogramData(categoryId);
 
             //ImageView img_planogram = (ImageView) dialog.findViewById(R.id.img_planogram);
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
             WebView webView = (WebView) dialog.findViewById(R.id.webview);
             webView.setWebViewClient(new MyWebViewClient());
 
@@ -712,22 +726,28 @@ public class Stock_FacingActivity extends AppCompatActivity {
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setBuiltInZoomControls(true);
 
-            String planogram_image = mp.get(0).getPLANOGRAM_IMAGE();
-            if (new File(str + planogram_image).exists()) {
-                Bitmap bmp = BitmapFactory.decodeFile(str + planogram_image);
-                // img_planogram.setRotation(90);
-                //img_planogram.setImageBitmap(bmp);
+            String planogram_image = "";
+            if (mappingPlanogramList.size() > 0) {
+                planogram_image = mappingPlanogramList.get(0).getPLANOGRAM_IMAGE();
+            }
+            if (!planogram_image.equals("")) {
+                if (new File(str + planogram_image).exists()) {
+                    Bitmap bmp = BitmapFactory.decodeFile(str + planogram_image);
+                    // img_planogram.setRotation(90);
+                    //img_planogram.setImageBitmap(bmp);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-                String imagePath = "file://" + CommonString.FILE_PATH + "/" + planogram_image;
-                String html = "<html><head></head><body><img src=\"" + imagePath + "\"></body></html>";
-                webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
+                    String imagePath = "file://" + CommonString.FILE_PATH + "/" + planogram_image;
+                    String html = "<html><head></head><body><img src=\"" + imagePath + "\"></body></html>";
+                    webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
 
-                dialog.show();
-            } /*else {
+                    dialog.show();
+                } /*else {
                 //webView.loadUrl(String.valueOf(R.drawable.sad_cloud));
 
                 //img_planogram.setBackgroundResource(R.drawable.sad_cloud);
             }*/
+            }
 
 
             ImageView cancel = (ImageView) dialog.findViewById(R.id.img_cancel);

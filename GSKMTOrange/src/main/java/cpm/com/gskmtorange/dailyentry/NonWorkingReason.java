@@ -80,7 +80,7 @@ public class NonWorkingReason extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.nonworking);
+        setContentView(R.layout.nonworkingmainlayout);
 
         reasonspinner = (Spinner) findViewById(R.id.spinner2);
         camera = (ImageButton) findViewById(R.id.imgcam);
@@ -435,7 +435,7 @@ public class NonWorkingReason extends AppCompatActivity implements
                         alert.show();
 
                     } else {
-                        Toast.makeText(getApplicationContext(), R.string.title_activity_select_dropdown,
+                        Toast.makeText(getApplicationContext(), R.string.pleaseenterRemarks,
                                 Toast.LENGTH_SHORT).show();
                     }
                 } else {
