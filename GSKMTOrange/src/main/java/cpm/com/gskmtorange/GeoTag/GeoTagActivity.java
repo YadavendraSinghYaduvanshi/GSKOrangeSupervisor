@@ -907,7 +907,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                     db.updateDataStatus(geotaglistImage.get(i).getStoreid(), Statustag);
 
-                    //db.deleteGeoTagData(geotaglistImage.get(i).getStoreid());
+                    db.deleteGeoTagData(geotaglistImage.get(i).getStoreid());
 
 
                 }
