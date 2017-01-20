@@ -522,8 +522,8 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString(CommonString.KEY_VERSION, lgs.getAPP_VERSION());
 
                         editor.putString(CommonString.KEY_PATH, lgs.getAPP_PATH());
-                        //editor.putString(CommonString.KEY_DATE, lgs.getCURRENTDATE());
-                        editor.putString(CommonString.KEY_DATE, "01/21/2017");
+                        editor.putString(CommonString.KEY_DATE, lgs.getCURRENTDATE());
+                        //editor.putString(CommonString.KEY_DATE, "01/21/2017");
 
                         editor.commit();
 
