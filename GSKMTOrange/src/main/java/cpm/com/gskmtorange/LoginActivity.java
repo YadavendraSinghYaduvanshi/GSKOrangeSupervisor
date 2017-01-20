@@ -247,7 +247,7 @@ public class LoginActivity extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -268,12 +268,14 @@ public class LoginActivity extends AppCompatActivity {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
+        } else if(isuseridValid(userid)){
+            Snackbar.make(museridView,getString(R.string.error_incorrect_username),Snackbar.LENGTH_SHORT).show();
+        }else if(isPasswordValid(password)){
+            Snackbar.make(museridView,getString(R.string.error_incorrect_password),Snackbar.LENGTH_SHORT).show();
+        }else{
+
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            //showProgress(true);
-           /* mAuthTask = new UserLoginTask(userid, password);
-            mAuthTask.execute((Void) null);*/
 
             new AuthenticateTask().execute();
 
@@ -282,12 +284,29 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isuseridValid(String userid) {
         //TODO: Replace this with your own logic
-        return userid.contains("@");
+
+        boolean flag =true;
+
+        String u_id = preferences.getString(CommonString.KEY_USERNAME, "");
+
+        if(!u_id.equals("") && !userid.equals(u_id)){
+            flag = false;
+        }
+
+        return flag;
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        boolean flag =true;
+
+        String pw = preferences.getString(CommonString.KEY_PASSWORD, "");
+
+        if(!password.equals(pw)){
+            flag = false;
+        }
+
+        return flag;
     }
 
     /**

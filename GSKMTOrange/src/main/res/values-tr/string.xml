@@ -190,8 +190,11 @@
     <!--Gagan end new code 2-->
 
     <string name="previous_data_upload">Lütfen Önceki Verileri Paylaşın</string>
+    <string name="error_incorrect_username">Bu kullanıcı adı yanlış</string>
+
     <string name="error">Hata! paylaşılıyor</string>
     <string name="data_will_be_lost">Veri kaydedilmedi. İlerlemek</string>
+
 </resources>
 
 
