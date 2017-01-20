@@ -1043,30 +1043,15 @@ public class UploadActivity extends AppCompatActivity {
 
             dialog.dismiss();
             db.deleteAllTables();
+            showAlert(getString(R.string.menu_upload_data));
             if (result.equals("")) {
 
-                showAlert(getString(R.string.menu_upload_data));
+                //showAlert(getString(R.string.menu_upload_data));
 
             }
         }
     }
 
-    public void showAlert(String str) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
-        builder.setTitle("Parinaam");
-        builder.setMessage(str).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                       /* Intent i = new Intent(activity, StorelistActivity.class);
-                        activity.startActivity(i);
-                        activity.finish();*/
-                        finish();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 
 
     @Override

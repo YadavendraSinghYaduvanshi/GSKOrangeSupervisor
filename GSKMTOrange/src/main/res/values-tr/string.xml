@@ -159,9 +159,9 @@
     <string name="title_store_list_activity_store_again_uploaded">Please Store data again Uploaded</string>
     <string name="title_store_list_checkout_current">Lütfen önce mağazadan çık</string>
     <string name="title_store_list_checkout_Already_filled">Doldurulmuş veriler</string>
-    <string name="NetworkError">Bağlantı kurulamıyor ,</string>
-    <string name="uploadeddata">Veriler Paylaşılıyor ,</string>
-    <string name="DataNot">Veriler Paylaşılmadı ,</string>
+    <string name="NetworkError">Bağlantı kurulamıyor</string>
+    <string name="uploadeddata">Veriler Paylaşılıyor</string>
+    <string name="DataNot">Veriler Paylaşılmadı</string>
     <string name="delete">Sil</string>
     <string name="adddatatoclick">Veri Eklemek İçin Evet tıklayın</string>
     <string name="displayname">Teşhir Türü</string>
