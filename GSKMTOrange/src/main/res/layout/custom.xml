@@ -35,7 +35,7 @@
         android:layout_marginTop="15dp"
         android:paddingBottom="20dp"
         android:paddingLeft="5dp"
-        android:text="Uploading Data"
+        android:text="@string/uploaddata"
         android:textSize="@dimen/text_size_small" />
 
     <ProgressBar

@@ -101,7 +101,7 @@
     <string name="title_store_list_activity_store_already_done">Store Already Uploaded</string>
     <string name="title_store_list_activity_store_data_uploaded">Store Data Uploaded</string>
     <string name="title_store_list_activity_store_already_checkout">Store Already Checkout</string>
-    <string name="title_store_list_activity_store_again_uploaded">Please Store data again Uploaded</string>
+    <string name="title_store_list_activity_store_again_uploaded">Please Upload data again</string>
     <string name="title_store_list_activity_store_closed">Store Closed</string>
     <string name="title_store_list_activity_already_store_closed">Store Already Closed</string>
 
@@ -181,7 +181,7 @@
     <string name="click_image">Please click image</string>
     <string name="fill_sku_data">Please fill SKU data</string>
     <string name="fill_gaps_data">Please fill GAP data</string>
-    <string name="data_will_be_lost">Want to proceed usaved data will be deleted</string>
+    <string name="data_will_be_lost">Want to proceed unsaved data will be deleted</string>
 
     <string name="download_data">Downloading Data</string>
     <string name="store_visited">Store Visited</string>
@@ -229,4 +229,7 @@
 
     <string name="previous_data_upload">Please Upload Previous Data First</string>
     <string name="error">Error Uploading</string>
+    <string name="DELETE_ALERT_MESSAGE">Saved data will be lost - Do you want to continue?</string>
+
+
 </resources>

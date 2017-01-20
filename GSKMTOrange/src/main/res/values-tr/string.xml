@@ -192,6 +192,9 @@
     <string name="previous_data_upload">Lütfen Önceki Verileri Paylaşın</string>
     <string name="error">Hata! paylaşılıyor</string>
     <string name="data_will_be_lost">Veri kaydedilmedi. İlerlemek</string>
+    <string name="data_downloaded_successfully">Veri başarıyla indirildi</string>
+    <string name="DELETE_ALERT_MESSAGE">Kaydedilen veriler kaybolacak - Devam etmek istiyor musunuz?</string>
+
 </resources>
 
 
