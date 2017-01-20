@@ -126,7 +126,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             db.execSQL(TableBean.getAdditionalDisplay());
         } catch (SQLException e) {
             e.printStackTrace();
-            Toast.makeText(context,"Error -" +e.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error -" + e.toString(), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -331,7 +331,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
 
-            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "' AND BR.COMPANY_ID ='1' AND SCM.CATEGORY_ID  = '"+ category_id +"' ORDER BY  SCM.SUB_CATEGORY_SEQUENCE, BR.BRAND_SEQUENCE ) As Brand", null);
+            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "' AND BR.COMPANY_ID ='1' AND SCM.CATEGORY_ID  = '" + category_id + "' ORDER BY  SCM.SUB_CATEGORY_SEQUENCE, BR.BRAND_SEQUENCE ) As Brand", null);
             if (dbcursor != null) {
 
                 dbcursor.moveToFirst();
@@ -3235,4 +3235,75 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return filled;
     }
 
+    public boolean isMappingPromotionData() {
+        boolean filled = false;
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_PROMOTION ", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                int icount = dbcursor.getInt(0);
+                dbcursor.close();
+                if (icount > 0) {
+                    filled = true;
+                } else {
+                    filled = false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " when fetching Records!!!!!!!!!!!!!!!!!!!!! " + e.toString());
+            return filled;
+        }
+        return filled;
+    }
+
+    public boolean isMappingStockData() {
+        boolean filled = false;
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_STOCK ", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                int icount = dbcursor.getInt(0);
+                dbcursor.close();
+                if (icount > 0) {
+                    filled = true;
+                } else {
+                    filled = false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " when fetching Records!!!!!!!!!!!!!!!!!!!!! " + e.toString());
+            return filled;
+        }
+        return filled;
+    }
+
+    public boolean isMappingT2PData() {
+        boolean filled = false;
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_T2P ", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                int icount = dbcursor.getInt(0);
+                dbcursor.close();
+                if (icount > 0) {
+                    filled = true;
+                } else {
+                    filled = false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " when fetching Records!!!!!!!!!!!!!!!!!!!!! " + e.toString());
+            return filled;
+        }
+        return filled;
+    }
 }
