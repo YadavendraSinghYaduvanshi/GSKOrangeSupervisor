@@ -228,5 +228,6 @@
     <string name="uploadeddata">Uploaded Data</string>
 
     <string name="previous_data_upload">Please Upload Previous Data First</string>
+    <string name="error_incorrect_username">This username is incorrect</string>
 
 </resources>
