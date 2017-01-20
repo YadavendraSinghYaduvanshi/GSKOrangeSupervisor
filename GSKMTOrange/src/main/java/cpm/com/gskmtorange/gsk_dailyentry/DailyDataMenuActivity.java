@@ -60,7 +60,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-            updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+            updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
@@ -98,7 +98,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         try {
             categoryList = new ArrayList<>();
@@ -106,20 +106,28 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             DailyDataMenuGetterSetter data = new DailyDataMenuGetterSetter();
             //data.setCategory_name("MSL Availability");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_msl_availability));
-            if (db.checkMsl_AvailabilityData(store_id, categoryId)) {
-                data.setCategory_img(R.mipmap.msl_availability_done);
+            if (db.isMappingStockData()) {
+                if (db.checkMsl_AvailabilityData(store_id, categoryId)) {
+                    data.setCategory_img(R.mipmap.msl_availability_done);
+                } else {
+                    data.setCategory_img(R.mipmap.msl_availability);
+                }
             } else {
-                data.setCategory_img(R.mipmap.msl_availability);
+                data.setCategory_img(R.mipmap.msl_availability_grey);
             }
             categoryList.add(data);
 
             data = new DailyDataMenuGetterSetter();
             //data.setCategory_name("Stock & Facing");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_stock_facing));
-            if (db.checkStockAndFacingData(store_id, categoryId)) {
-                data.setCategory_img(R.mipmap.stock_facing_done);
+            if (db.isMappingStockData()) {
+                if (db.checkStockAndFacingData(store_id, categoryId)) {
+                    data.setCategory_img(R.mipmap.stock_facing_done);
+                } else {
+                    data.setCategory_img(R.mipmap.stock_facing);
+                }
             } else {
-                data.setCategory_img(R.mipmap.stock_facing);
+                data.setCategory_img(R.mipmap.stockandfacing_grey);
             }
             categoryList.add(data);
 
@@ -127,10 +135,14 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             data = new DailyDataMenuGetterSetter();
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_t2p));
 
-            if (db.isFilledT2P(store_id, categoryId)) {
-                data.setCategory_img(R.mipmap.t2p_compliance_done);
+            if (db.isMappingT2PData()) {
+                if (db.isFilledT2P(store_id, categoryId)) {
+                    data.setCategory_img(R.mipmap.t2p_compliance_done);
+                } else {
+                    data.setCategory_img(R.mipmap.t2p_compliance);
+                }
             } else {
-                data.setCategory_img(R.mipmap.t2p_compliance);
+                data.setCategory_img(R.mipmap.t2pcompliance_grey);
             }
 
             categoryList.add(data);
@@ -150,10 +162,15 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             data = new DailyDataMenuGetterSetter();
             //data.setCategory_name("Promo Compliance");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_promo_compliance));
-            if (db.checkPromoComplianceData(store_id, categoryId)) {
-                data.setCategory_img(R.mipmap.promo_compliance_done);
+
+            if (db.isMappingPromotionData()) {
+                if (db.checkPromoComplianceData(store_id, categoryId)) {
+                    data.setCategory_img(R.mipmap.promo_compliance_done);
+                } else {
+                    data.setCategory_img(R.mipmap.promo_compliance);
+                }
             } else {
-                data.setCategory_img(R.mipmap.promo_compliance);
+                data.setCategory_img(R.mipmap.promocompliance_grey);
             }
             categoryList.add(data);
 
@@ -223,40 +240,72 @@ public class DailyDataMenuActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(DailyDataMenuAdapter.MyViewHolder holder, int position) {
+        public void onBindViewHolder(final DailyDataMenuAdapter.MyViewHolder holder, int position) {
             final DailyDataMenuGetterSetter dailyData = list.get(position);
 
             holder.categoryName.setText(dailyData.getCategory_name());
             holder.categoryIcon.setImageResource(dailyData.getCategory_img());
 
+            if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_msl_availability))) {
+                if (db.isMappingStockData()) {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                } else {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
+                }
+            } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_stock_facing))) {
+                if (db.isMappingStockData()) {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                } else {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
+                }
+            } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_promo_compliance))) {
+                if (db.isMappingPromotionData()) {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                } else {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
+                }
+            } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_t2p)))) {
+                if (db.isMappingT2PData()) {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                } else {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
+                }
+            }
+
             holder.lay_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_msl_availability))) {
-                        Intent intent = new Intent(DailyDataMenuActivity.this, MSL_AvailabilityActivity.class);
-                        intent.putExtra("categoryName", dailyData.getCategory_name());
-                        intent.putExtra("categoryId", categoryId);
-                        startActivity(intent);
+                        if (db.isMappingStockData()) {
+                            Intent intent = new Intent(DailyDataMenuActivity.this, MSL_AvailabilityActivity.class);
+                            intent.putExtra("categoryName", dailyData.getCategory_name());
+                            intent.putExtra("categoryId", categoryId);
+                            startActivity(intent);
+                        }
                     } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_stock_facing))) {
-                        Intent intent = new Intent(DailyDataMenuActivity.this, Stock_FacingActivity.class);
-                        intent.putExtra("categoryName", dailyData.getCategory_name());
-                        intent.putExtra("categoryId", categoryId);
-                        startActivity(intent);
+                        if (db.isMappingStockData()) {
+                            Intent intent = new Intent(DailyDataMenuActivity.this, Stock_FacingActivity.class);
+                            intent.putExtra("categoryName", dailyData.getCategory_name());
+                            intent.putExtra("categoryId", categoryId);
+                            startActivity(intent);
+                        }
                     } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_promo_compliance))) {
-                        Intent intent = new Intent(DailyDataMenuActivity.this, PromoComplianceActivity.class);
-                        intent.putExtra("categoryName", dailyData.getCategory_name());
-                        intent.putExtra("categoryId", categoryId);
-                        startActivity(intent);
+
+                        if (db.isMappingPromotionData()) {
+                            Intent intent = new Intent(DailyDataMenuActivity.this, PromoComplianceActivity.class);
+                            intent.putExtra("categoryName", dailyData.getCategory_name());
+                            intent.putExtra("categoryId", categoryId);
+                            startActivity(intent);
+                        }
                     } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_t2p)))) {
-                        Intent intent = new Intent(DailyDataMenuActivity.this, T2PComplianceActivity.class);
-                        intent.putExtra("categoryName", dailyData.getCategory_name());
-                        intent.putExtra("categoryId", categoryId);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-
-                    }
-
-                    else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.title_activity_Additional_visibility)))) {
+                        if (db.isMappingT2PData()) {
+                            Intent intent = new Intent(DailyDataMenuActivity.this, T2PComplianceActivity.class);
+                            intent.putExtra("categoryName", dailyData.getCategory_name());
+                            intent.putExtra("categoryId", categoryId);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                        }
+                    } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.title_activity_Additional_visibility)))) {
                         Intent intent = new Intent(DailyDataMenuActivity.this, AdditionalVisibility.class);
                         intent.putExtra("categoryName", dailyData.getCategory_name());
                         intent.putExtra("categoryId", categoryId);
@@ -291,15 +340,13 @@ public class DailyDataMenuActivity extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("UAE")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 
