@@ -2306,7 +2306,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            cursordata = db.rawQuery("SELECT  BR.BRAND_ID,  SB.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM BRAND_MASTER BR INNER JOIN SUB_CATEGORY_MASTER SB  ON BR.SUB_CATEGORY_ID =  SB.SUB_CATEGORY_ID INNER JOIN CATEGORY_MASTER CA ON  SB.CATEGORY_ID =CA.CATEGORY_ID WHERE COMPANY_ID =1 AND SB.CATEGORY_ID ='" + category_id+ "'", null);
+            cursordata = db.rawQuery("SELECT  BR.BRAND_ID,  SB.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM BRAND_MASTER BR INNER JOIN SUB_CATEGORY_MASTER SB  ON BR.SUB_CATEGORY_ID =  SB.SUB_CATEGORY_ID INNER JOIN CATEGORY_MASTER CA ON  SB.CATEGORY_ID =CA.CATEGORY_ID WHERE COMPANY_ID =1 AND SB.CATEGORY_ID ='" + category_id + "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
@@ -3305,5 +3305,60 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             return filled;
         }
         return filled;
+    }
+
+    public boolean isMappingAdditionalPromotionData() {
+        boolean filled = false;
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_ADDITIONAL_PROMOTION ", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                int icount = dbcursor.getInt(0);
+                dbcursor.close();
+                if (icount > 0) {
+                    filled = true;
+                } else {
+                    filled = false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " when fetching Records!!!!!!!!!!!!!!!!!!!!! " + e.toString());
+            return filled;
+        }
+        return filled;
+    }
+
+    public boolean checkAdditionalPromoComplianceData(String store_id, String category_id) {
+        Log.d("PromoCompliance ", "AdditionalPromoCompliance data--------------->Start<------------");
+        ArrayList<Promo_Compliance_DataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Additional_Promo_Compliance_Data " +
+                    "where CATEGORY_ID='" + category_id + "' and STORE_ID='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                if (dbcursor.moveToFirst()) {
+                    do {
+                        Promo_Compliance_DataGetterSetter sb = new Promo_Compliance_DataGetterSetter();
+
+                        sb.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                        list.add(sb);
+                    } while (dbcursor.moveToNext());
+                }
+                dbcursor.close();
+
+                return list.size() > 0;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "when fetching Records!!!!!!!!!!!!!!!!!!!!!" + e.toString());
+            return false;
+        }
+
+        Log.d("Stock_Facing ", "midday---------------------->Stop<-----------");
+        return false;
     }
 }
