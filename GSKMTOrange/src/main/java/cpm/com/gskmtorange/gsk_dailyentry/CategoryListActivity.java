@@ -55,7 +55,7 @@ public class CategoryListActivity extends AppCompatActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
@@ -88,46 +88,63 @@ public class CategoryListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         categoryList = new ArrayList<>();
 
         categoryList = db.getCategoryListData(keyAccount_id, storeType_id, class_id);
 
-        if(categoryList.size()>0){
+        if (categoryList.size() > 0) {
 
-            for(int i=0;i<categoryList.size();i++){
+            for (int i = 0; i < categoryList.size(); i++) {
 
                 boolean flag_filled = false;
                 String category_id = categoryList.get(i).getCategory_id();
-                if (db.checkMsl_AvailabilityData(store_id, category_id)
-                        && db.checkStockAndFacingData(store_id, category_id)
-                        && db.checkPromoComplianceData(store_id, category_id)
-                        && db.isFilledT2P(store_id, category_id)
-                        && db.additionalVisibilitydata(store_id, category_id)) {
 
-                    flag_filled =true;
+                if (db.additionalVisibilitydata(store_id, category_id)) {
+                    boolean flag = true;
 
+                    if (db.isMappingStockData()) {
+                        if (!db.checkMsl_AvailabilityData(store_id, category_id)
+                                && !db.checkStockAndFacingData(store_id, category_id)) {
+                            flag = false;
+                        }
+                    }
+
+                    if (flag) {
+                        if (!db.isMappingPromotionData()) {
+                            if (db.checkPromoComplianceData(store_id, category_id)) {
+                                flag = false;
+                            }
+                        }
+                    }
+
+                    if (flag) {
+                        if (!db.isMappingT2PData()) {
+                            if (db.isFilledT2P(store_id, category_id)) {
+                                flag = false;
+                            }
+                        }
+                    }
+
+                    flag_filled = flag;
                 }
 
-                if(flag_filled){
-                    if (category_id.equals("1")){
+                if (flag_filled) {
+                    if (category_id.equals("1")) {
                         categoryList.get(i).setCategory_img(R.mipmap.nutritionals_tick);
-                    }
-                    else if (category_id.equals("2")){
+                    } else if (category_id.equals("2")) {
                         categoryList.get(i).setCategory_img(R.mipmap.oralcare_tick);
-                    }else  if (category_id.equals("3")){
+                    } else if (category_id.equals("3")) {
                         categoryList.get(i).setCategory_img(R.mipmap.wellness_tick);
                     }
-                }
-                else {
-                    if (category_id.equals("1")){
+                } else {
+                    if (category_id.equals("1")) {
                         categoryList.get(i).setCategory_img(R.mipmap.nutritionals);
-                    }
-                    else if (category_id.equals("2")){
+                    } else if (category_id.equals("2")) {
                         categoryList.get(i).setCategory_img(R.mipmap.oral_care);
-                    }else  if (category_id.equals("3")){
+                    } else if (category_id.equals("3")) {
                         categoryList.get(i).setCategory_img(R.mipmap.wellness);
                     }
                 }
@@ -227,15 +244,13 @@ public class CategoryListActivity extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("UAE")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 
@@ -259,11 +274,45 @@ public class CategoryListActivity extends AppCompatActivity {
         for (int i = 0; i < categoryList.size(); i++) {
             String category_id = categoryList.get(i).getCategory_id();
 
-            if (db.checkMsl_AvailabilityData(store_id, category_id)
+          /*  if (db.checkMsl_AvailabilityData(store_id, category_id)
                     && db.checkStockAndFacingData(store_id, category_id)
                     && db.checkPromoComplianceData(store_id, category_id)
                     && db.isFilledT2P(store_id, category_id)
                     && db.additionalVisibilitydata(store_id, category_id)) {
+
+                flag_filled = true;
+            } else {
+                flag_filled = false;
+                break;
+            }*/
+
+            if (db.additionalVisibilitydata(store_id, category_id)) {
+                //boolean flag = true;
+
+                if (db.isMappingStockData()) {
+                    if (!db.checkMsl_AvailabilityData(store_id, category_id)
+                            && !db.checkStockAndFacingData(store_id, category_id)) {
+                        flag_filled = false;
+                        break;
+                    }
+                }
+
+
+                if (!db.isMappingPromotionData()) {
+                    if (db.checkPromoComplianceData(store_id, category_id)) {
+                        flag_filled = false;
+                        break;
+                    }
+                }
+
+
+                if (!db.isMappingT2PData()) {
+                    if (db.isFilledT2P(store_id, category_id)) {
+                        flag_filled = false;
+                        break;
+                    }
+
+                }
 
                 flag_filled = true;
             } else {

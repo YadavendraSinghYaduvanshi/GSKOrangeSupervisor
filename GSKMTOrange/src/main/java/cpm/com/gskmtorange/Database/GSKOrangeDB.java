@@ -3,9 +3,11 @@ package cpm.com.gskmtorange.Database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,9 +57,12 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 13;
     TableBean tableBean;
     private SQLiteDatabase db;
+    Context context;
 
     public GSKOrangeDB(Context context) {
+
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     public void open() {
@@ -71,53 +76,58 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL(TableBean.getJourneyPlan());
+        try {
+            db.execSQL(TableBean.getJourneyPlan());
 
-        //Gagan Start
-        db.execSQL(TableBean.getBrandMaster());
-        db.execSQL(TableBean.getSkuMaster());
-        db.execSQL(TableBean.getCategoryMaster());
-        db.execSQL(TableBean.getSubCategoryMaster());
-        db.execSQL(TableBean.getDisplayMaster());
-        db.execSQL(TableBean.getMappingStock());
-        db.execSQL(TableBean.getMappingT2p());
-        db.execSQL(TableBean.getNonWorkingReason());
-        db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
-        db.execSQL(CommonString.CREATE_TABLE_COVERAGE_DATA);
-        db.execSQL(TableBean.getDisplayChecklistMaster());
-        db.execSQL(TableBean.getMappingDisplayChecklist());
-        db.execSQL(TableBean.getMappingAdditionalPromotion());
-        db.execSQL(TableBean.getMappingPromotion());
+            //Gagan Start
+            db.execSQL(TableBean.getBrandMaster());
+            db.execSQL(TableBean.getSkuMaster());
+            db.execSQL(TableBean.getCategoryMaster());
+            db.execSQL(TableBean.getSubCategoryMaster());
+            db.execSQL(TableBean.getDisplayMaster());
+            db.execSQL(TableBean.getMappingStock());
+            db.execSQL(TableBean.getMappingT2p());
+            db.execSQL(TableBean.getNonWorkingReason());
+            db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
+            db.execSQL(CommonString.CREATE_TABLE_COVERAGE_DATA);
+            db.execSQL(TableBean.getDisplayChecklistMaster());
+            db.execSQL(TableBean.getMappingDisplayChecklist());
+            db.execSQL(TableBean.getMappingAdditionalPromotion());
+            db.execSQL(TableBean.getMappingPromotion());
 
-        db.execSQL(CommonString.CREATE_TABLE_INSERT_MSL_AVAILABILITY);
-        db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY);
-        db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_HEADER);
-        db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_CHILD);
-        db.execSQL(CommonString.CREATE_TABLE_STOCK_DIALOG);
-        db.execSQL(CommonString.CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA);
-        db.execSQL(CommonString.CREATE_TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE);
-        db.execSQL(CommonString.CREATE_TABLE_INSERT_PROMO_SKU);
-        db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY_MAIN);
-        db.execSQL(CommonString.CREATE_TABLE_STOCK_DIALOG_MAIN);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_MSL_AVAILABILITY);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_HEADER);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_CHILD);
+            db.execSQL(CommonString.CREATE_TABLE_STOCK_DIALOG);
+            db.execSQL(CommonString.CREATE_TABLE_STOCK_ADDITIONAL_STOCK_DATA);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_PROMO_SKU);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_ADDITIONAL_VISIBILITY_MAIN);
+            db.execSQL(CommonString.CREATE_TABLE_STOCK_DIALOG_MAIN);
 
-        db.execSQL(TableBean.getStorePerformance());
+            db.execSQL(TableBean.getStorePerformance());
 
-        //Gagan End
+            //Gagan End
 
-        db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
-        db.execSQL(CommonString.CREATE_TABLE_COVERAGE_DATA);
+            db.execSQL(CommonString.CREATE_TABLE_STORE_GEOTAGGING);
+            db.execSQL(CommonString.CREATE_TABLE_COVERAGE_DATA);
 
-        db.execSQL(TableBean.getDisplayChecklistMaster());
-        db.execSQL(TableBean.getMappingDisplayChecklist());
+            db.execSQL(TableBean.getDisplayChecklistMaster());
+            db.execSQL(TableBean.getMappingDisplayChecklist());
 
-        db.execSQL(TableBean.getNonWorkingReason());
+            db.execSQL(TableBean.getNonWorkingReason());
 
-        db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_COMPLIANCE);
-        db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_GAPS);
-        db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_SKU);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_COMPLIANCE);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_GAPS);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_T2P_SKU);
 
-        db.execSQL(TableBean.getMappingPlanogram());
-        db.execSQL(TableBean.getAdditionalDisplay());
+            db.execSQL(TableBean.getMappingPlanogram());
+            db.execSQL(TableBean.getAdditionalDisplay());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error -" + e.toString(), Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -142,6 +152,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.TABLE_INSERT_PROMO_SKU, "STORE_ID='" + storeid + "'", null);
         //Gagan end code
 
+        db.delete(CommonString.TABLE_INSERT_T2P_COMPLIANCE, "STORE_ID='" + storeid + "'", null);
     }
 
     public void deleteAllTables() {
@@ -160,6 +171,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE, null, null);
         db.delete(CommonString.TABLE_INSERT_PROMO_SKU, null, null);
         //Gagan end code
+
+        db.delete(CommonString.TABLE_INSERT_T2P_COMPLIANCE, null, null);
 
     }
 
@@ -310,7 +323,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
     //get Brand data for T2P
-    public ArrayList<BrandMasterGetterSetter> getBrandT2PData(String store_type_id, String class_id, String key_account_id) {
+    public ArrayList<BrandMasterGetterSetter> getBrandT2PData(String store_type_id, String class_id, String key_account_id, String category_id) {
 
         ArrayList<BrandMasterGetterSetter> brandList = new ArrayList<>();
         Cursor dbcursor = null;
@@ -318,7 +331,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
 
-            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "' AND BR.COMPANY_ID ='1' ORDER BY  SCM.SUB_CATEGORY_SEQUENCE, BR.BRAND_SEQUENCE) As Brand", null);
+            dbcursor = db.rawQuery("SELECT * FROM(SELECT DISTINCT BR.BRAND_ID, SCM.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM MAPPING_STOCK MS INNER JOIN SKU_MASTER SM ON MS.SKU_ID = SM.SKU_ID  INNER JOIN BRAND_MASTER BR ON SM.BRAND_ID=BR.BRAND_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BR.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID WHERE MS.KEYACCOUNT_ID ='" + key_account_id + "' AND STORETYPE_ID ='" + store_type_id + "' AND CLASS_ID = '" + class_id + "' AND BR.COMPANY_ID ='1' AND SCM.CATEGORY_ID  = '" + category_id + "' ORDER BY  SCM.SUB_CATEGORY_SEQUENCE, BR.BRAND_SEQUENCE ) As Brand", null);
             if (dbcursor != null) {
 
                 dbcursor.moveToFirst();
@@ -2287,13 +2300,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<BrandMasterGetterSetter> getBrandMasterData(String store_id) {
+    public ArrayList<BrandMasterGetterSetter> getBrandMasterData(String store_id, String category_id) {
         Cursor cursordata = null;
         ArrayList<BrandMasterGetterSetter> Data = new ArrayList<BrandMasterGetterSetter>();
 
         try {
 
-            cursordata = db.rawQuery("SELECT  BR.BRAND_ID, BR.BRAND FROM BRAND_MASTER BR   INNER JOIN SUB_CATEGORY_MASTER SB  ON BR.SUB_CATEGORY_ID =  SB.SUB_CATEGORY_ID INNER JOIN CATEGORY_MASTER CA ON  SB.CATEGORY_ID =CA.CATEGORY_ID WHERE COMPANY_ID =1", null);
+            cursordata = db.rawQuery("SELECT  BR.BRAND_ID,  SB.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM BRAND_MASTER BR INNER JOIN SUB_CATEGORY_MASTER SB  ON BR.SUB_CATEGORY_ID =  SB.SUB_CATEGORY_ID INNER JOIN CATEGORY_MASTER CA ON  SB.CATEGORY_ID =CA.CATEGORY_ID WHERE COMPANY_ID =1 AND SB.CATEGORY_ID ='" + category_id+ "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
@@ -3222,4 +3235,75 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return filled;
     }
 
+    public boolean isMappingPromotionData() {
+        boolean filled = false;
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_PROMOTION ", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                int icount = dbcursor.getInt(0);
+                dbcursor.close();
+                if (icount > 0) {
+                    filled = true;
+                } else {
+                    filled = false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " when fetching Records!!!!!!!!!!!!!!!!!!!!! " + e.toString());
+            return filled;
+        }
+        return filled;
+    }
+
+    public boolean isMappingStockData() {
+        boolean filled = false;
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_STOCK ", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                int icount = dbcursor.getInt(0);
+                dbcursor.close();
+                if (icount > 0) {
+                    filled = true;
+                } else {
+                    filled = false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " when fetching Records!!!!!!!!!!!!!!!!!!!!! " + e.toString());
+            return filled;
+        }
+        return filled;
+    }
+
+    public boolean isMappingT2PData() {
+        boolean filled = false;
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_T2P ", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                int icount = dbcursor.getInt(0);
+                dbcursor.close();
+                if (icount > 0) {
+                    filled = true;
+                } else {
+                    filled = false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " when fetching Records!!!!!!!!!!!!!!!!!!!!! " + e.toString());
+            return filled;
+        }
+        return filled;
+    }
 }

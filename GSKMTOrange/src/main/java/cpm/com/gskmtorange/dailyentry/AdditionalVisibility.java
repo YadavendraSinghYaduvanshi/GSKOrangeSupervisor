@@ -166,7 +166,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         str = CommonString.FILE_PATH;
 
         ///band List
-        brand_list = db.getBrandMasterData(store_id);
+        brand_list = db.getBrandMasterData(store_id, categoryId);
         BrandMasterGetterSetter brand = new BrandMasterGetterSetter();
         String str = getResources().getString(R.string.select);
         brand.setBRAND(str);
@@ -1008,7 +1008,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
 
     public void showSkuDialog() {
-        final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData(store_type_id, class_id, key_account_id);
+
+        final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData(store_type_id, class_id, key_account_id,categoryId);
+
         BrandMasterGetterSetter brand = new BrandMasterGetterSetter();
         brand.setBRAND(getResources().getString(R.string.select));
         brandList.add(0, brand);

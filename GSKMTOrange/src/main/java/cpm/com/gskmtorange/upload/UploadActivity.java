@@ -1053,7 +1053,9 @@ public class UploadActivity extends AppCompatActivity {
 
             if (result.contains(CommonString.KEY_SUCCESS)) {
                 db.deleteAllTables();
-                showAlert(getString(R.string.menu_upload_data));
+                showAlert(getString(R.string.menu_upload_data));           
+
+                //showAlert(getString(R.string.menu_upload_data));
 
             } else {
                 showAlert(getString(R.string.error) + result.toString());
@@ -1061,6 +1063,7 @@ public class UploadActivity extends AppCompatActivity {
 
         }
     }
+
 
     @Override
     protected void onResume() {
