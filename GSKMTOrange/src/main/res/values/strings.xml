@@ -165,7 +165,7 @@
     <string name="clickimage">Please click the image</string>
     <string name="gps">GPS IS DISABLED...</string>
     <string name="gpsebale">Click ok to enable GPS.</string>
-    <string name="takeimage"> Please Take Image Before Save</string>
+    <string name="takeimage"> Please Take Image</string>
     <string name="notsuppoted">This device is not supported.</string>
     <string name="uploaddata">Uploading Data</string>
     <string name="geotagdata">Uploading Geotag Data...</string>
