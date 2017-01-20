@@ -78,7 +78,7 @@
 
     <string name="stock_facing_reference_image">Örnek Fotoğraf</string>
     <string name="stock_facing_sku_name">Ürün Adı</string>
-    <string name="stock_facing_stock">Stock</string>            <!--change string-->
+    <string name="stock_facing_stock">Stok</string>            <!--change string-->
     <string name="stock_facing_faceup">Önyüz</string>
     <string name="stock_facing_sos_target">Raf Payı Hedefi</string>
     <string name="stock_facing_sos">Raf Payi</string>
@@ -110,7 +110,7 @@
     <string name="title_activity_store_wise_performance">Mağaza Performansı</string>
     <!--Gagan end new code 1-->
 
-    <string name="stock">Stock</string>
+    <string name="stock">Stok</string>
     <string name="AdditionalDisplay">Ek Teşhir</string>
     <string name="Display">Teşhir Türü</string>
     <string name="Photo">Fotoğraf</string>
@@ -191,6 +191,7 @@
 
     <string name="previous_data_upload">Lütfen Önceki Verileri Paylaşın</string>
     <string name="error">Hata! paylaşılıyor</string>
+    <string name="data_will_be_lost">Want to proceed usaved data will be deleted</string>
 </resources>
 
 
