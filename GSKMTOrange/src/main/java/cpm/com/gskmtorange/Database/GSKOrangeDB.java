@@ -2300,13 +2300,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<BrandMasterGetterSetter> getBrandMasterData(String store_id) {
+    public ArrayList<BrandMasterGetterSetter> getBrandMasterData(String store_id, String category_id) {
         Cursor cursordata = null;
         ArrayList<BrandMasterGetterSetter> Data = new ArrayList<BrandMasterGetterSetter>();
 
         try {
 
-            cursordata = db.rawQuery("SELECT  BR.BRAND_ID, BR.BRAND FROM BRAND_MASTER BR   INNER JOIN SUB_CATEGORY_MASTER SB  ON BR.SUB_CATEGORY_ID =  SB.SUB_CATEGORY_ID INNER JOIN CATEGORY_MASTER CA ON  SB.CATEGORY_ID =CA.CATEGORY_ID WHERE COMPANY_ID =1", null);
+            cursordata = db.rawQuery("SELECT  BR.BRAND_ID,  SB.SUB_CATEGORY||'-'||BR.BRAND AS BRAND FROM BRAND_MASTER BR INNER JOIN SUB_CATEGORY_MASTER SB  ON BR.SUB_CATEGORY_ID =  SB.SUB_CATEGORY_ID INNER JOIN CATEGORY_MASTER CA ON  SB.CATEGORY_ID =CA.CATEGORY_ID WHERE COMPANY_ID =1 AND SB.CATEGORY_ID ='" + category_id+ "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
