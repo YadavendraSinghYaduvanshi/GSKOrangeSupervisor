@@ -73,7 +73,7 @@
     <string name="daily_data_menu_additional_promotions">Promosyon</string>
 
     <string name="msl_availability_sku">Ürün Adı</string>
-    <string name="msl_availability_mbq">X</string>
+    <string name="msl_availability_mbq">MBQ</string>
     <string name="msl_availability_availability">Bulunurluk</string>
 
     <string name="stock_facing_reference_image">Örnek Fotoğraf</string>
