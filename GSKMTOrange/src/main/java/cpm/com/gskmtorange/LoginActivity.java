@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView tv_version = (TextView) findViewById(R.id.tv_version_code);
 
         try {
-            app_ver =String.valueOf(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            app_ver = String.valueOf(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
 
             // login_version.setText("Parinaam Version " + app_ver);
         } catch (PackageManager.NameNotFoundException e) {
@@ -171,10 +171,9 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
 
 
-
         // Create a Folder for Images
 
- 
+
         File file = new File(Environment.getExternalStorageDirectory(), "GSK_MT_ORANGE_IMAGES");
         if (!file.isDirectory()) {
             file.mkdir();
@@ -407,7 +406,7 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
 
-                 versionCode = getPackageManager().getPackageInfo(
+                versionCode = getPackageManager().getPackageInfo(
                         getPackageName(), 0).versionCode;
 
                 String userauth_xml = "[DATA]" + "[USER_DATA][USER_ID]"
@@ -524,6 +523,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         editor.putString(CommonString.KEY_PATH, lgs.getAPP_PATH());
                         editor.putString(CommonString.KEY_DATE, lgs.getCURRENTDATE());
+                        //editor.putString(CommonString.KEY_DATE, "01/21/2017");
 
                         editor.commit();
 
@@ -596,7 +596,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (preferences.getString(CommonString.KEY_VERSION, "").equals(
                         Integer.toString(versionCode))) {
 
-                    if(preferences.getString(CommonString.KEY_LANGUAGE, "").equals("")){
+                    if (preferences.getString(CommonString.KEY_LANGUAGE, "").equals("")) {
 
                         Intent intent = new Intent(getBaseContext(),
                                 SelectLanguageActivity.class);
@@ -605,10 +605,9 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
 
                         finish();
-                    }
-                    else{
+                    } else {
 
-                        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+                        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
                         Intent intent = new Intent(getBaseContext(),
                                 MainActivity.class);
@@ -670,15 +669,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("UAE")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 

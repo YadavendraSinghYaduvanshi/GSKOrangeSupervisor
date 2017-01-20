@@ -49,6 +49,7 @@ import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
 import cpm.com.gskmtorange.download.DownloadActivity;
 import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
+import cpm.com.gskmtorange.upload.PreviousDataUploadActivity;
 import cpm.com.gskmtorange.upload.UploadActivity;
 
 public class MainActivity extends AppCompatActivity
@@ -186,9 +187,31 @@ public class MainActivity extends AppCompatActivity
 
             // Handle the camera action
         } else if (id == R.id.nav_download) {
+            if (checkNetIsAvailable()) {
 
-            Intent in = new Intent(getApplicationContext(), DownloadActivity.class);
-            startActivity(in);
+                if (db.isCoverageDataFilled(date)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Parinaam");
+                    builder.setMessage(getResources().getString(R.string.previous_data_upload)).setCancelable(false)
+                            .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    Intent in = new Intent(getApplicationContext(), PreviousDataUploadActivity.class);
+                                    startActivity(in);
+                                    finish();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                } else {
+                    Intent in = new Intent(getApplicationContext(), DownloadActivity.class);
+                    startActivity(in);
+                }
+            } else {
+                Snackbar.make(webView, getResources().getString(R.string.nonetwork), Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+            }
 
         } else if (id == R.id.nav_upload) {
 
@@ -228,7 +251,7 @@ public class MainActivity extends AppCompatActivity
 
             } else {
 
-                Snackbar.make(webView, "No Network Available", Snackbar.LENGTH_SHORT)
+                Snackbar.make(webView, getResources().getString(R.string.nonetwork), Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
 
                 //  Toast.makeText(getApplicationContext(), "No Network Available", Toast.LENGTH_SHORT).show();
