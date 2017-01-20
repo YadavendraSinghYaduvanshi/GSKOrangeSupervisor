@@ -301,10 +301,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                 AdditionalVisibility.this);
                         // set title
-                        alertDialogBuilder.setTitle(getResources().getString(R.string.title_activity_Want_save));
+                        alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
                         // set dialog message
                         alertDialogBuilder
-                                .setMessage(getResources().getString(R.string.title_activity_save_data))
+                                .setMessage(getResources().getString(R.string.title_activity_Want_save))
                                 .setCancelable(false)
                                 .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
@@ -355,10 +355,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                             AdditionalVisibility.this);
                     // set title
-                    alertDialogBuilder.setTitle(getResources().getString(R.string.title_activity_Want_save));
+                    alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
                     // set dialog message
                     alertDialogBuilder
-                            .setMessage(getResources().getString(R.string.title_activity_save_data))
+                            .setMessage(getResources().getString(R.string.title_activity_Want_save))
                             .setCancelable(false)
                             .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
@@ -419,10 +419,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                             AdditionalVisibility.this);
                     // set title
-                    alertDialogBuilder.setTitle(getResources().getString(R.string.title_activity_Want_to_add));
+                    alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
                     // set dialog message
                     alertDialogBuilder
-                            .setMessage(getResources().getString(R.string.adddatatoclick))
+                            .setMessage(getResources().getString(R.string.title_activity_Want_to_add))
                             .setCancelable(false)
                             .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
@@ -501,10 +501,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                 AdditionalVisibility.this);
                         // set title
-                        alertDialogBuilder.setTitle(getResources().getString(R.string.title_activity_Want_to_delete));
+                        alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
                         // set dialog message
                         alertDialogBuilder
-                                .setMessage(getResources().getString(R.string.title_activity_click_delete))
+                                .setMessage(getResources().getString(R.string.data_will_be_lost))
                                 .setCancelable(false)
                                 .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
@@ -550,10 +550,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                     AdditionalVisibility.this);
                             // set title
-                            alertDialogBuilder.setTitle(getResources().getString(R.string.title_activity_Want_to_delete));
+                            alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
                             // set dialog message
                             alertDialogBuilder
-                                    .setMessage(getResources().getString(R.string.title_activity_click_delete))
+                                    .setMessage(getResources().getString(R.string.data_will_be_lost))
                                     .setCancelable(false)
                                     .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
@@ -612,11 +612,11 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                 AdditionalVisibility.this);
                         // set title
-                        alertDialogBuilder.setTitle(getResources().getString(R.string.title_activity_Want_to_delete));
+                        alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
 
                         // set dialog message
                         alertDialogBuilder
-                                .setMessage(getResources().getString(R.string.title_activity_click_delete))
+                                .setMessage(getResources().getString(R.string.data_will_be_lost))
                                 .setCancelable(false)
                                 .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
@@ -1290,11 +1290,11 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                             AdditionalVisibility.this);
 
                     // set title
-                    alertDialogBuilder.setTitle(getResources().getString(R.string.title_activity_Want_to_delete1));
+                    alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
 
                     // set dialog message
                     alertDialogBuilder
-                            .setMessage(getResources().getString(R.string.title_activity_click_delete))
+                            .setMessage(getResources().getString(R.string.data_will_be_lost))
                             .setCancelable(false)
                             .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
@@ -1420,11 +1420,11 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                             AdditionalVisibility.this);
 
                     // set title
-                    alertDialogBuilder.setTitle(getResources().getString(R.string.title_activity_Want_to_delete1));
+                    alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
 
                     // set dialog message
                     alertDialogBuilder
-                            .setMessage(getResources().getString(R.string.title_activity_click_delete))
+                            .setMessage(getResources().getString(R.string.data_will_be_lost))
                             .setCancelable(false)
                             .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {

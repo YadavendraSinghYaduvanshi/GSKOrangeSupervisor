@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -76,6 +77,7 @@ public class UploadActivity extends AppCompatActivity {
     private FailureGetterSetter failureGetterSetter = null;
     private SharedPreferences preferences;
     private int factor, k = 0;
+    Object result = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +150,7 @@ public class UploadActivity extends AppCompatActivity {
         HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
         androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_IMAGE, envelope);
 
-        Object result = envelope.getResponse();
+        result = envelope.getResponse();
 
         if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
             if (result.toString().equalsIgnoreCase(CommonString.KEY_FALSE)) {
@@ -269,7 +271,7 @@ public class UploadActivity extends AppCompatActivity {
                             HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_STORE_COVERAGE, envelope);
 
-                            Object result = envelope.getResponse();
+                            result = envelope.getResponse();
 
                             datacheck = result.toString();
                             words = datacheck.split("\\;");
@@ -1028,13 +1030,19 @@ public class UploadActivity extends AppCompatActivity {
                         }
                     }
                 }
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (XmlPullParserException e) {
                 e.printStackTrace();
+            }catch (Exception e) {
+                e.printStackTrace();
             }
 
-            return "";
+            return result.toString();
         }
 
         @Override
@@ -1042,13 +1050,17 @@ public class UploadActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             dialog.dismiss();
-            db.deleteAllTables();
-            showAlert(getString(R.string.menu_upload_data));
-            if (result.equals("")) {
+
+            if (result.contains(CommonString.KEY_SUCCESS)) {
+                db.deleteAllTables();
+                showAlert(getString(R.string.menu_upload_data));           
 
                 //showAlert(getString(R.string.menu_upload_data));
 
+            } else {
+                showAlert(getString(R.string.error) + result.toString());
             }
+
         }
     }
 

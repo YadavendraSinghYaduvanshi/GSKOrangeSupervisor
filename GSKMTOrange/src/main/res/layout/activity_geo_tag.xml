@@ -30,7 +30,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_menu_save"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorAccent"
         />
 
     <android.support.design.widget.FloatingActionButton
@@ -40,7 +40,7 @@
         android:layout_gravity="bottom|left"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_menu_camera"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorAccent"
         />
 
 </android.support.design.widget.CoordinatorLayout>
