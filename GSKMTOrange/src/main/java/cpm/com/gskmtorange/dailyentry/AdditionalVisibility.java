@@ -102,7 +102,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     ArrayList<SkuGetterSetter> empty_list = new ArrayList<>();
     String _pathforcheck, _path, str, msg;
     private SharedPreferences preferences;
-    String store_id, date, intime, img_str, togglevalue = "1", CATEGORY_ID, camera_allow;
+    String store_id, date, intime, img_str, togglevalue = "1", CATEGORY_ID, camera_allow,store_type_id,class_id,key_account_id;
     ImageView img_cam, img_clicked;
     Button btn_add, btn_close;
     EditText Edt_txt;
@@ -132,6 +132,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
         camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
+        store_type_id= preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+        class_id= preferences.getString(CommonString.KEY_CLASS_ID, "");
+        key_account_id= preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         categoryName = getIntent().getStringExtra("categoryName");
@@ -1005,7 +1008,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
 
     public void showSkuDialog() {
-        final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData("1", "1", "1", categoryId);
+
+        final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData(store_type_id, class_id, key_account_id);
+
         BrandMasterGetterSetter brand = new BrandMasterGetterSetter();
         brand.setBRAND(getResources().getString(R.string.select));
         brandList.add(0, brand);
