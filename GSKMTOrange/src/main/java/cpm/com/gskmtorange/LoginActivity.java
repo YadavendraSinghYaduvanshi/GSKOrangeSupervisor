@@ -268,17 +268,17 @@ public class LoginActivity extends AppCompatActivity {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else if (!isuseridValid(userid)) {
-            Snackbar.make(museridView, getString(R.string.error_incorrect_username), Snackbar.LENGTH_SHORT).show();
-        } else if (!isPasswordValid(password)) {
-            Snackbar.make(museridView, getString(R.string.error_incorrect_password), Snackbar.LENGTH_SHORT).show();
-        } else {
+
+        } else if(!isuseridValid(userid)){
+            Snackbar.make(museridView,getString(R.string.error_incorrect_username),Snackbar.LENGTH_SHORT).show();
+        }else if(!isPasswordValid(password)){
+            Snackbar.make(museridView,getString(R.string.error_incorrect_password),Snackbar.LENGTH_SHORT).show();
+        }else{
 
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
 
             new AuthenticateTask().execute();
-
         }
     }
 
@@ -302,7 +302,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String pw = preferences.getString(CommonString.KEY_PASSWORD, "");
 
-        if (!pw.equals("") && !password.equals(pw)) {
+        if(!pw.equals("") &&!password.equals(pw)){
             flag = false;
         }
 
