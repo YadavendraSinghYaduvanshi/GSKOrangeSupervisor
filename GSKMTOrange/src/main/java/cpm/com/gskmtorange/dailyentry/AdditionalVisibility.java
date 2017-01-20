@@ -1009,7 +1009,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
     public void showSkuDialog() {
 
-        final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData(store_type_id, class_id, key_account_id);
+        final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData(store_type_id, class_id, key_account_id,categoryId);
 
         BrandMasterGetterSetter brand = new BrandMasterGetterSetter();
         brand.setBRAND(getResources().getString(R.string.select));
@@ -1148,7 +1148,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                     brand_id = brandList.get(position).getBRAND_ID().get(0);
                     brand_name = brandList.get(position).getBRAND().get(0);
 
-                    sku_list = db.getSkuT2PData("1", "1", "1", brand_id);
+                    sku_list = db.getSkuT2PData(store_type_id, class_id, key_account_id, brand_id);
                     SkuGetterSetter select = new SkuGetterSetter();
                     select.setSKU(getResources().getString(R.string.select));
                     sku_list.add(0, select);
