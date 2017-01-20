@@ -190,7 +190,7 @@
     <!--Gagan end new code 2-->
 
     <string name="previous_data_upload">Lütfen Önceki Verileri Paylaşın</string>
-
+    <string name="error">Hata! paylaşılıyor</string>
 </resources>
 
 
