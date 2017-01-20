@@ -3151,5 +3151,76 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     }
 
+    public ArrayList<CoverageBean> getPreviousCoverageData(String visitdate) {
+        ArrayList<CoverageBean> list = new ArrayList<CoverageBean>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT  * from " + CommonString.TABLE_COVERAGE_DATA + " where "
+                    + CommonString.KEY_VISIT_DATE + "<>'" + visitdate + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+
+                while (!dbcursor.isAfterLast()) {
+                    CoverageBean sb = new CoverageBean();
+
+                    sb.setStoreId(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_STORE_ID)));
+                    sb.setUserId((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_USER_ID))));
+                    sb.setInTime(((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IN_TIME)))));
+                    sb.setOutTime(((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_OUT_TIME)))));
+                    sb.setVisitDate((((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_VISIT_DATE))))));
+                    sb.setLatitude(((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_LATITUDE)))));
+                    sb.setLongitude(((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_LONGITUDE)))));
+                    sb.setStatus((((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_COVERAGE_STATUS))))));
+                    sb.setImage((((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE))))));
+                    sb.setReason((((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_REASON))))));
+                    sb.setReasonid((((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_REASON_ID))))));
+                    sb.setMID(Integer.parseInt(((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_ID))))));
+
+                    if (dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_COVERAGE_REMARK)) == null) {
+                        sb.setRemark("");
+                    } else {
+                        sb.setRemark((((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_COVERAGE_REMARK))))));
+                    }
+
+                    list.add(sb);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " PreviousCoverageData Upload " + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    //check if table is empty
+    public boolean isCoverageDataFilled(String visit_date) {
+        boolean filled = false;
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM COVERAGE_DATA "
+                    + "where " + CommonString.KEY_VISIT_DATE + "<>'" + visit_date + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                int icount = dbcursor.getInt(0);
+                dbcursor.close();
+                if (icount > 0) {
+                    filled = true;
+                } else {
+                    filled = false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " when fetching Records!!!!!!!!!!!!!!!!!!!!! " + e.toString());
+            return filled;
+        }
+        return filled;
+    }
 
 }

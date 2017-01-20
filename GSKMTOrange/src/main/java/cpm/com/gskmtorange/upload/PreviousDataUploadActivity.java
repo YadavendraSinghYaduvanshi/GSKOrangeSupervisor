@@ -10,9 +10,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,7 +42,6 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
-import cpm.com.gskmtorange.download.DownloadActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
@@ -52,7 +51,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
 import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
 
-public class UploadActivity extends AppCompatActivity {
+public class PreviousDataUploadActivity extends AppCompatActivity {
 
     GSKOrangeDB db;
     ArrayList<CoverageBean> coverageList;
@@ -219,7 +218,7 @@ public class UploadActivity extends AppCompatActivity {
         protected String doInBackground(Void... params) {
             try {
                 data = new Data();
-                coverageList = db.getCoverageData(date);
+                coverageList = db.getPreviousCoverageData(date);
 
                 if (coverageList.size() > 0) {
                     if (coverageList.size() == 1) {
@@ -1085,7 +1084,7 @@ public class UploadActivity extends AppCompatActivity {
 
     public void showAlert(String str) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(PreviousDataUploadActivity.this);
         builder.setTitle("Parinaam");
         builder.setMessage(str).setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

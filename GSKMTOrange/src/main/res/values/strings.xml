@@ -220,9 +220,10 @@
     <string name="pleaseenterRemarks">Please fill Remark</string>
 
     <string name="title_activity_service">Service</string>
-  
+
     <string name="data_downloaded_successfully">Data downloaded successfully</string>
     <string name="export_database">Export Database</string>
     <string name="data_exported_successfully">Database Exported Successfully</string>
+    <string name="previous_data_upload">Please Upload Previous Data First</string>
 
 </resources>
