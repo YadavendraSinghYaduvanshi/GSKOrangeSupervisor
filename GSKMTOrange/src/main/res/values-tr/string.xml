@@ -166,12 +166,12 @@
     <string name="adddatatoclick">Veri Eklemek İçin Evet tıklayın</string>
     <string name="displayname">Teşhir Türü</string>
 
-    <string name="storefront">Click Store Front Image</string>
-    <string name="brandname">Brand Name</string>
-    <string name="skuname">SKU Name</string>
+    <string name="storefront">Mağaza girişinin fotoğrafını çekiniz</string>
+    <string name="brandname">Marka</string>
+    <string name="skuname">Ürünler</string>
     <string name="quantity">Teşhir Sayısı</string>
     <string name="title_activity_store_geotag">Coğrafi Konum</string>
-    <string name="title_activity_store_list">Store List</string>
+    <string name="title_activity_store_list">Mağazalar</string>
     <string name="Remark">Remark</string>
     <string name="pleaseenterRemarks">Please fill Remark</string>
 
