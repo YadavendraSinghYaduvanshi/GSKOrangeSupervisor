@@ -268,11 +268,11 @@ public class LoginActivity extends AppCompatActivity {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else if(isuseridValid(userid)){
-            Snackbar.make(museridView,getString(R.string.error_incorrect_username),Snackbar.LENGTH_SHORT).show();
-        }else if(isPasswordValid(password)){
-            Snackbar.make(museridView,getString(R.string.error_incorrect_password),Snackbar.LENGTH_SHORT).show();
-        }else{
+        } else if (!isuseridValid(userid)) {
+            Snackbar.make(museridView, getString(R.string.error_incorrect_username), Snackbar.LENGTH_SHORT).show();
+        } else if (!isPasswordValid(password)) {
+            Snackbar.make(museridView, getString(R.string.error_incorrect_password), Snackbar.LENGTH_SHORT).show();
+        } else {
 
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -285,11 +285,11 @@ public class LoginActivity extends AppCompatActivity {
     private boolean isuseridValid(String userid) {
         //TODO: Replace this with your own logic
 
-        boolean flag =true;
+        boolean flag = true;
 
         String u_id = preferences.getString(CommonString.KEY_USERNAME, "");
 
-        if(!u_id.equals("") && !userid.equals(u_id)){
+        if (!u_id.equals("") && !userid.equals(u_id)) {
             flag = false;
         }
 
@@ -298,11 +298,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        boolean flag =true;
+        boolean flag = true;
 
         String pw = preferences.getString(CommonString.KEY_PASSWORD, "");
 
-        if(!password.equals(pw)){
+        if (!pw.equals("") && !password.equals(pw)) {
             flag = false;
         }
 

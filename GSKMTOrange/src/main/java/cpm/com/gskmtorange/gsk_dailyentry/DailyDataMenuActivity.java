@@ -163,8 +163,9 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             //data.setCategory_name("Promo Compliance");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_promo_compliance));
 
-            if (db.isMappingPromotionData()) {
-                if (db.checkPromoComplianceData(store_id, categoryId)) {
+            if (db.isMappingPromotionData() || db.isMappingAdditionalPromotionData()) {
+                if (db.checkPromoComplianceData(store_id, categoryId) ||
+                        db.checkAdditionalPromoComplianceData(store_id, categoryId)) {
                     data.setCategory_img(R.mipmap.promo_compliance_done);
                 } else {
                     data.setCategory_img(R.mipmap.promo_compliance);
@@ -259,7 +260,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
                 }
             } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_promo_compliance))) {
-                if (db.isMappingPromotionData()) {
+                if (db.isMappingPromotionData() || db.isMappingAdditionalPromotionData()) {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 } else {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
@@ -291,7 +292,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                         }
                     } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_promo_compliance))) {
 
-                        if (db.isMappingPromotionData()) {
+                        if (db.isMappingPromotionData() || db.isMappingAdditionalPromotionData()) {
                             Intent intent = new Intent(DailyDataMenuActivity.this, PromoComplianceActivity.class);
                             intent.putExtra("categoryName", dailyData.getCategory_name());
                             intent.putExtra("categoryId", categoryId);
