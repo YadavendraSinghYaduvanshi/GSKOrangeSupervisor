@@ -1043,13 +1043,15 @@ public class UploadActivity extends AppCompatActivity {
 
             dialog.dismiss();
             db.deleteAllTables();
+            showAlert(getString(R.string.menu_upload_data));
             if (result.equals("")) {
 
-                showAlert(getString(R.string.menu_upload_data));
+                //showAlert(getString(R.string.menu_upload_data));
 
             }
         }
     }
+
 
     @Override
     protected void onResume() {

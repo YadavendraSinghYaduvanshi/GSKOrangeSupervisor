@@ -413,7 +413,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         final SkuGetterSetter[] sku_selected = new SkuGetterSetter[1];
         final BrandMasterGetterSetter[] brand_selected = new BrandMasterGetterSetter[1];
 
-        final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData(storeType_id, class_id, keyAccount_id);
+        final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData(storeType_id, class_id, keyAccount_id, categoryId);
         BrandMasterGetterSetter brand = new BrandMasterGetterSetter();
         brand.setBRAND("select");
         brandList.add(0, brand);

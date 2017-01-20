@@ -1008,7 +1008,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
 
     public void showSkuDialog() {
+
         final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData(store_type_id, class_id, key_account_id);
+
         BrandMasterGetterSetter brand = new BrandMasterGetterSetter();
         brand.setBRAND(getResources().getString(R.string.select));
         brandList.add(0, brand);

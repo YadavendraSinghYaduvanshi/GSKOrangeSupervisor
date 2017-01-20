@@ -35,6 +35,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Locale;
+
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
@@ -94,13 +95,12 @@ public class DownloadActivity extends AppCompatActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
         culture_id = preferences.getString(CommonString.KEY_CULTURE_ID, "");
         new UploadTask(DownloadActivity.this).execute();
     }
-
 
 
     class Data {
@@ -137,7 +137,7 @@ public class DownloadActivity extends AppCompatActivity {
                 data = new Data();
 
                 data.value = 10;
-                data.name = "JCP "+getResources().getString(R.string.download_data);
+                data.name = "JCP " + getResources().getString(R.string.download_data);
                 publishProgress(data);
 
                 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -178,7 +178,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 10;
-                    data.name = "JCP "+getResources().getString(R.string.download_data);
+                    data.name = "JCP " + getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -214,7 +214,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 20;
-                    data.name = "SKU_MASTER "+getResources().getString(R.string.download_data);
+                    data.name = "SKU_MASTER " + getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -250,7 +250,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     data.value = 25;
-                    data.name = "BRAND_MASTER "+getResources().getString(R.string.download_data);
+                    data.name = "BRAND_MASTER " + getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -285,7 +285,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "SUB_CATEGORY_MASTER";
                     }
                     data.value = 30;
-                    data.name = "SUB_CATEGORY_MASTER "+getResources().getString(R.string.download_data);
+                    data.name = "SUB_CATEGORY_MASTER " + getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -320,7 +320,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "CATEGORY_MASTER";
                     }
                     data.value = 35;
-                    data.name = "CATEGORY_MASTER "+getResources().getString(R.string.download_data);
+                    data.name = "CATEGORY_MASTER " + getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -355,10 +355,9 @@ public class DownloadActivity extends AppCompatActivity {
                         return "DISPLAY_MASTER";
                     }
                     data.value = 40;
-                    data.name = "DISPLAY_MASTER "+getResources().getString(R.string.download_data);
+                    data.name = "DISPLAY_MASTER " + getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
-
 
                 // MAPPING_STOCK
                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
@@ -380,17 +379,20 @@ public class DownloadActivity extends AppCompatActivity {
                     xpp.next();
                     eventType = xpp.getEventType();
                     mappingStockGetterSetter = XMLHandlers.mappingStockXMLHandler(xpp, eventType);
-                    if (mappingStockGetterSetter.getSKU_ID().size() > 0) {
-                        String stocktable = mappingStockGetterSetter.getTable_MAPPING_STOCK();
-                        if (stocktable != null) {
-                            resultHttp = CommonString.KEY_SUCCESS;
-                            TableBean.setMappingStock(stocktable);
-                        }
-                    } else {
-                        return "MAPPING_STOCK";
+
+                    String stocktable = mappingStockGetterSetter.getTable_MAPPING_STOCK();
+                    if (stocktable != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setMappingStock(stocktable);
                     }
-                    data.value = 45;
-                    data.name = "MAPPING_STOCK "+getResources().getString(R.string.download_data);
+
+                    if (mappingStockGetterSetter.getSKU_ID().size() > 0) {
+                        data.value = 45;
+                        data.name = "MAPPING_STOCK " + getResources().getString(R.string.download_data);
+                    } else {
+                        // return "MAPPING_STOCK";
+                    }
+
                 }
                 publishProgress(data);
 
@@ -415,17 +417,21 @@ public class DownloadActivity extends AppCompatActivity {
                     xpp.next();
                     eventType = xpp.getEventType();
                     mappingt2PGetterSetter = XMLHandlers.mappingT2pXMLHandler(xpp, eventType);
+
+                    String t2ptable = mappingt2PGetterSetter.getTable_MAPPING_T2P();
+                    if (t2ptable != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setMappingT2p(t2ptable);
+                    }
+
                     if (mappingt2PGetterSetter.getSTORE_ID().size() > 0) {
-                        String t2ptable = mappingt2PGetterSetter.getTable_MAPPING_T2P();
-                        if (t2ptable != null) {
-                            resultHttp = CommonString.KEY_SUCCESS;
-                            TableBean.setMappingT2p(t2ptable);
-                        }
+                        data.value = 50;
+                        data.name = "MAPPING_T2P " + getResources().getString(R.string.download_data);
+
                     } else {
                         //return "MAPPING_T2P";
                     }
-                    data.value = 50;
-                    data.name = "MAPPING_T2P "+getResources().getString(R.string.download_data);
+
                 }
                 publishProgress(data);
 
@@ -459,7 +465,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "DISPLAY_CHECKLIST_MASTER";
                     }
                     data.value = 55;
-                    data.name = "DISPLAY_CHECKLIST_MASTER "+getResources().getString(R.string.download_data);
+                    data.name = "DISPLAY_CHECKLIST_MASTER " + getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -483,17 +489,20 @@ public class DownloadActivity extends AppCompatActivity {
                     xpp.next();
                     eventType = xpp.getEventType();
                     mappingChecklistGetterSetter = XMLHandlers.mappingMappingDisplayChecklistXMLHandler(xpp, eventType);
+
+                    String mapping_display_checklisttable = mappingChecklistGetterSetter.getTable_MAPPING_DISPLAY_CHECKLIST();
+                    if (mapping_display_checklisttable != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setMappingDisplayChecklist(mapping_display_checklisttable);
+                    }
+
                     if (mappingChecklistGetterSetter.getCHECKLIST_ID().size() > 0) {
-                        String mapping_display_checklisttable = mappingChecklistGetterSetter.getTable_MAPPING_DISPLAY_CHECKLIST();
-                        if (mapping_display_checklisttable != null) {
-                            resultHttp = CommonString.KEY_SUCCESS;
-                            TableBean.setMappingDisplayChecklist(mapping_display_checklisttable);
-                        }
+                        data.value = 60;
+                        data.name = "MAPPING_DISPLAY_CHECKLIST " + getResources().getString(R.string.download_data);
                     } else {
                         //return "MAPPING_DISPLAY_CHECKLIST";
                     }
-                    data.value = 60;
-                    data.name = "MAPPING_DISPLAY_CHECKLIST "+getResources().getString(R.string.download_data);
+
                 }
                 publishProgress(data);
 
@@ -528,7 +537,7 @@ public class DownloadActivity extends AppCompatActivity {
                         return "NON_WORKING_REASON";
                     }
                     data.value = 65;
-                    data.name = "NON_WORKING_REASON "+getResources().getString(R.string.download_data);
+                    data.name = "NON_WORKING_REASON " + getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
 
@@ -553,17 +562,19 @@ public class DownloadActivity extends AppCompatActivity {
                     xpp.next();
                     eventType = xpp.getEventType();
                     mappingPromotionGetterSetter = XMLHandlers.mappingPromotionXMLHandler(xpp, eventType);
-                    //if (mappingPromotionGetterSetter.getSTORE_ID().size() > 0) {
+
                     String mapping_promotion_table = mappingPromotionGetterSetter.getTable_MAPPING_PROMOTION();
                     if (mapping_promotion_table != null) {
                         resultHttp = CommonString.KEY_SUCCESS;
                         TableBean.setMappingPromotion(mapping_promotion_table);
                     }
-                    /*} else {
-                        //return "MAPPING_PROMOTION";
-                    }*/
-                    data.value = 70;
-                    data.name = "MAPPING_PROMOTION "+getResources().getString(R.string.download_data);
+
+                    if (mappingPromotionGetterSetter.getSTORE_ID().size() > 0) {
+                        data.value = 70;
+                        data.name = "MAPPING_PROMOTION " + getResources().getString(R.string.download_data);
+                    }
+
+
                 }
                 publishProgress(data);
 
@@ -597,11 +608,13 @@ public class DownloadActivity extends AppCompatActivity {
                         resultHttp = CommonString.KEY_SUCCESS;
                         TableBean.setMappingAdditionalPromotion(mapping_additional_promotion_table);
                     }
-                    /*} else {
-                        //return "MAPPING_ADDITIONAL_PROMOTION";
-                    }*/
-                    data.value = 75;
-                    data.name = "MAPPING_ADDITIONAL_PROMOTION "+getResources().getString(R.string.download_data);
+
+                    if (mapping_additional_promotion_masterGetterSetter.getSTORE_ID().size() > 0) {
+                        data.value = 75;
+                        data.name = "MAPPING_ADDITIONAL_PROMOTION " + getResources().getString(R.string.download_data);
+                    }
+
+
                 }
                 publishProgress(data);
 
@@ -627,20 +640,21 @@ public class DownloadActivity extends AppCompatActivity {
                     eventType = xpp.getEventType();
                     store_performance_masterGetterSetter = XMLHandlers.STORE_PERFORMANCEXMLHandler(xpp, eventType);
 
+                    String table_store_performace = store_performance_masterGetterSetter.getTable_STORE_PERFORMANCE();
+                    if (table_store_performace != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setStorePerformance(table_store_performace);
+                    }
+
                     if (store_performance_masterGetterSetter.getSTORE_ID().size() > 0) {
-                        String table_store_performace = store_performance_masterGetterSetter.getTable_STORE_PERFORMANCE();
-                        if (table_store_performace != null) {
-                            resultHttp = CommonString.KEY_SUCCESS;
-                            TableBean.setStorePerformance(table_store_performace);
-                        }
+                        data.value = 80;
+                        data.name = "STORE_PERFORMANCE Data Download";
                     } else {
                         //return "STORE_PERFORMANCE";
                     }
-                    data.value = 80;
-                    data.name = "STORE_PERFORMANCE Data Download";
+
                 }
                 publishProgress(data);
-
 
 
                 //ADDITIONAL_DISPLAY_MASTER
@@ -699,17 +713,18 @@ public class DownloadActivity extends AppCompatActivity {
                     eventType = xpp.getEventType();
                     mapping_planogram_masterGetterSetter = XMLHandlers.MAPPING_PLANOGRAM_XMLHandler(xpp, eventType);
 
+                    String table_mapping_planogram = mapping_planogram_masterGetterSetter.getTable_MAPPING_PLANOGRAM();
+                    if (table_mapping_planogram != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setMappingPlanogram(table_mapping_planogram);
+                    }
                     if (mapping_planogram_masterGetterSetter.getKEYACCOUNT_ID().size() > 0) {
-                        String table_mapping_planogram = mapping_planogram_masterGetterSetter.getTable_MAPPING_PLANOGRAM();
-                        if (table_mapping_planogram != null) {
-                            resultHttp = CommonString.KEY_SUCCESS;
-                            TableBean.setMappingPlanogram(table_mapping_planogram);
-                        }
+                        data.value = 85;
+                        data.name = "MAPPING_PLANOGRAM Data Download";
                     } else {
                         //return "MAPPING_PLANOGRAM";
                     }
-                    data.value = 85;
-                    data.name = "MAPPING_PLANOGRAM Data Download";
+
                 }
                 publishProgress(data);
 
@@ -775,7 +790,7 @@ public class DownloadActivity extends AppCompatActivity {
                 //Display Master Image save into folder
                 if (displayMasterGetterSetter != null) {
 
-                for (int i = 0; i < displayMasterGetterSetter.getIMAGE_URL().size(); i++) {
+                    for (int i = 0; i < displayMasterGetterSetter.getIMAGE_URL().size(); i++) {
                         //publishing image download
                         data.value = data.value + 1;
                         if (data.value < 100) {
@@ -851,7 +866,6 @@ public class DownloadActivity extends AppCompatActivity {
                 db.InsertADDITIONAL_DISPLAY(additional_display_getter_setter);
 
 
-
             } catch (MalformedURLException e) {
                 /*final AlertMessage message = new AlertMessage(
                         CompleteDownloadActivity.this,
@@ -923,21 +937,19 @@ public class DownloadActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("UAE")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 
