@@ -76,6 +76,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
 
                     intent.putExtra(CommonString.KEY_LOGIN_DATA, login_data);
                     startActivity(intent);
+                    finish();
                 } else {
                     Snackbar.make(view, getString(R.string.select_language), Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
