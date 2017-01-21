@@ -48,6 +48,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
@@ -79,6 +80,7 @@ public class DownloadActivity extends AppCompatActivity {
     MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter mapping_additional_promotion_masterGetterSetter;
     STORE_PERFORMANCE_MasterGetterSetter store_performance_masterGetterSetter;
     ADDITIONAL_DISPLAY_MASTERGetterSetter additional_display_getter_setter;
+    MAPPING_SOS_TARGET_MasterGetterSetter mapping_sos_target_masterGetterSetter;
 
     MAPPING_PLANOGRAM_MasterGetterSetter mapping_planogram_masterGetterSetter;
     private Dialog dialog;
@@ -613,8 +615,6 @@ public class DownloadActivity extends AppCompatActivity {
                         data.value = 75;
                         data.name = "MAPPING_ADDITIONAL_PROMOTION " + getResources().getString(R.string.download_data);
                     }
-
-
                 }
                 publishProgress(data);
 
@@ -692,6 +692,7 @@ public class DownloadActivity extends AppCompatActivity {
                 }
                 publishProgress(data);
 
+
                 //MAPPING_PLANOGRAM
                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
@@ -724,7 +725,42 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         //return "MAPPING_PLANOGRAM";
                     }
+                }
+                publishProgress(data);
 
+
+                // MAPPING_SOS_TARGET
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_SOS_TARGET");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mapping_sos_target_masterGetterSetter = XMLHandlers.MAPPING_SOS_TARGETXMLHandler(xpp, eventType);
+
+                    //if (mapping_additional_promotion_masterGetterSetter.getSTORE_ID().size() > 0) {
+                    String table_mapping_sos_target = mapping_sos_target_masterGetterSetter.getTable_MAPPING_SOS_TARGET();
+                    if (table_mapping_sos_target != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setMappingSosTarget(table_mapping_sos_target);
+                    }
+
+                    if (mapping_sos_target_masterGetterSetter.getSTORE_ID().size() > 0) {
+                        data.value = 75;
+                        data.name = "MAPPING_SOS_TARGET " + getResources().getString(R.string.download_data);
+                    }
                 }
                 publishProgress(data);
 
@@ -864,7 +900,7 @@ public class DownloadActivity extends AppCompatActivity {
                 db.InsertSTORE_PERFORMANCE(store_performance_masterGetterSetter);
                 db.InsertMAPPING_PLANOGRAM(mapping_planogram_masterGetterSetter);
                 db.InsertADDITIONAL_DISPLAY(additional_display_getter_setter);
-
+                db.InsertMAPPING_SOS_TARGET(mapping_sos_target_masterGetterSetter);
 
             } catch (MalformedURLException e) {
                 /*final AlertMessage message = new AlertMessage(

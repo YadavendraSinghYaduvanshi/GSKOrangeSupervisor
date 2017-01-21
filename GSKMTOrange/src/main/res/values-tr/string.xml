@@ -199,11 +199,12 @@
     <string name="cancel">İptal etmek</string>
     <string name="empty">Boş</string>
 
-    <string name="check_faceup">Faceup, hisse değerinden daha büyük olamaz</string>
+    <string name="check_faceup">Raf Payı, stoktan daha az veya eşit olmalıdır</string>
     <string name="fill_stock_value">Önce stok değerini doldurun</string>
-    <string name="want_add">Eklemek istediğinizden emin misiniz</string>
-    <string name="promo_add">Promo eklendi</string>
+    <string name="want_add">Verileri eklemek istiyor musunuz?</string>
+    <string name="promo_add">Promosyon  eklendi</string>
     <string name="select_promo_value">Promosyon değerini seçin</string>
+    <string name="select_promo">Seçiniz</string>
     <!--Gagan end code 3-->
 </resources>
 
