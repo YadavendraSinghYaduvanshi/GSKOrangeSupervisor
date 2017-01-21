@@ -195,6 +195,16 @@
     <string name="error">Hata! paylaşılıyor</string>
     <string name="data_will_be_lost">Veri kaydedilmedi. İlerlemek</string>
 
+    <!--Gagan start code 3-->
+    <string name="cancel">İptal etmek</string>
+    <string name="empty">Boş</string>
+
+    <string name="check_faceup">Faceup, hisse değerinden daha büyük olamaz</string>
+    <string name="fill_stock_value">Önce stok değerini doldurun</string>
+    <string name="want_add">Eklemek istediğinizden emin misiniz</string>
+    <string name="promo_add">Promo eklendi</string>
+    <string name="select_promo_value">Promosyon değerini seçin</string>
+    <!--Gagan end code 3-->
 </resources>
 
 

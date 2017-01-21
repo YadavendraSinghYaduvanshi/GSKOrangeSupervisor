@@ -405,7 +405,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                 }
 
                                 flag = false;
-                                Error_Message = "Please fill all the data";
+                                Error_Message = getResources().getString(R.string.fill_data);
                                 break;
                             }
                         } else {
@@ -415,7 +415,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                 }
 
                                 flag = false;
-                                Error_Message = "Please fill all the data";
+                                Error_Message = getResources().getString(R.string.fill_data);
                                 break;
                             }
                         }
@@ -427,7 +427,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         }
 
                         flag = false;
-                        Error_Message = "Please fill all the data";
+                        Error_Message = getResources().getString(R.string.fill_data);
                         break;
                     }
                 }
@@ -1110,9 +1110,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                     if (isDialogOpen) {
                                         isDialogOpen = !isDialogOpen;
                                         AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                                        builder.setMessage("Faceup can not be greater than stock value")
+                                        builder.setMessage(getString(R.string.check_faceup))
                                                 .setCancelable(false)
-                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                         dialog.dismiss();
                                                         isDialogOpen = !isDialogOpen;
@@ -1129,9 +1129,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
                             if (isDialogOpen) {
                                 isDialogOpen = !isDialogOpen;
                                 AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                                builder.setMessage("First fill the stock value")
+                                builder.setMessage(getString(R.string.fill_stock_value))
                                         .setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 dialog.dismiss();
                                                 isDialogOpen = !isDialogOpen;
@@ -1157,14 +1157,14 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     if (holder.ed_stock.getText().toString().equals("")) {
                         holder.ed_stock.setBackgroundColor(getResources().getColor(R.color.white));
                         holder.ed_stock.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                        holder.ed_stock.setHint("Empty");
+                        holder.ed_stock.setHint(getString(R.string.empty));
                         tempflag = true;
                     }
 
                     if (holder.ed_facing.getText().toString().equals("")) {
                         holder.ed_facing.setBackgroundColor(getResources().getColor(R.color.white));
                         holder.ed_facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                        holder.ed_facing.setHint("Empty");
+                        holder.ed_facing.setHint(getString(R.string.empty));
                         tempflag = true;
                     }
 
@@ -1177,7 +1177,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     if (holder.ed_facing.getText().toString().equals("")) {
                         holder.ed_facing.setBackgroundColor(getResources().getColor(R.color.white));
                         holder.ed_facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                        holder.ed_facing.setHint("Empty");
+                        holder.ed_facing.setHint(getString(R.string.empty));
                         tempflag = true;
                     }
 
