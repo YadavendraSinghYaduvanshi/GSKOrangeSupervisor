@@ -6,7 +6,7 @@ package cpm.com.gskmtorange.xmlGetterSetter;
 
 public class Stock_FacingGetterSetter {
     String category_id, sub_category_id, sub_category, brand_id, brand,
-            sku_id, sku, mrp, sku_sequence, stock, facing, mbq, company_id, image1, image2;
+            sku_id, sku, mrp, sku_sequence, stock, facing, mbq, company_id, image1, image2, sos_target;
 
     public String getSub_category_id() {
         return sub_category_id;
@@ -126,5 +126,13 @@ public class Stock_FacingGetterSetter {
 
     public void setCategory_id(String category_id) {
         this.category_id = category_id;
+    }
+
+    public String getSos_target() {
+        return sos_target;
+    }
+
+    public void setSos_target(String sos_target) {
+        this.sos_target = sos_target;
     }
 }

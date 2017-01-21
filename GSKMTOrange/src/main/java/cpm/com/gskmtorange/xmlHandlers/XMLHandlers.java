@@ -16,6 +16,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.LoginGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
@@ -752,13 +753,35 @@ public class XMLHandlers {
         return st;
     }
 
+    public static MAPPING_SOS_TARGET_MasterGetterSetter MAPPING_SOS_TARGETXMLHandler(XmlPullParser xpp, int eventType) {
+        MAPPING_SOS_TARGET_MasterGetterSetter st = new MAPPING_SOS_TARGET_MasterGetterSetter();
 
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
 
-
-
-
-
-
+                    if (xpp.getName().equals("META_DATA")) {
+                        st.setTable_MAPPING_SOS_TARGET(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("STORE_ID")) {
+                        st.setSTORE_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("BRAND_ID")) {
+                        st.setBRAND_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SOS_TARGET")) {
+                        st.setSOS_TARGET(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return st;
+    }
 
 
 }

@@ -39,7 +39,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
     ToggleButton toggle_add_InStock, toggle_add_promoAnnouncer, toggle_add_runningPos;
     Button btn_add;
 
-    ArrayList<Promo_Compliance_DataGetterSetter> promoSkuListData, promoSkuListAfterData;
+    ArrayList<Promo_Compliance_DataGetterSetter> promoSkuListData;
     ArrayList<Promo_Compliance_DataGetterSetter> promoSpinnerListData;
     ArrayList<Promo_Compliance_DataGetterSetter> additionalPromoListData;
 
@@ -222,6 +222,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                                 .setCancelable(false)
                                 .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
+
                                         db.InsertAdditionalPromoData(cd, categoryId);
                                         AdditionalPromoListView();
 
@@ -251,31 +252,43 @@ public class PromoComplianceActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PromoComplianceActivity.this);
-                    builder.setMessage(getResources().getString(R.string.want_add))
-                            .setCancelable(false)
-                            .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
 
-                                    if (db.checkPromoComplianceData(store_id, categoryId)) {
-                                        db.updatePromoComplianceSKU(promoSkuListData, categoryId, store_id);
-                                        Snackbar.make(view, getResources().getString(R.string.update_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                                    } else {
-                                        db.InsertPromoSkuData(promoSkuListData, categoryId);
-                                        Snackbar.make(view, getResources().getString(R.string.save_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    boolean flag = true;
+                    if (promoSkuListData.size() <= 0) {
+                        if (additionalPromoListData.size() <= 0) {
+                            flag = false;
+                            Snackbar.make(view, getResources().getString(R.string.fill_data), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        }
+                    }
+
+                    if (flag) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PromoComplianceActivity.this);
+                        builder.setMessage(getResources().getString(R.string.want_add))
+                                .setCancelable(false)
+                                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        if (db.checkPromoComplianceData(store_id, categoryId)) {
+                                            db.updatePromoComplianceSKU(promoSkuListData, categoryId, store_id);
+                                            Snackbar.make(view, getResources().getString(R.string.update_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        } else {
+                                            db.InsertPromoSkuData(promoSkuListData, categoryId);
+                                            Snackbar.make(view, getResources().getString(R.string.save_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        }
+
+                                        finish();
+                                        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                                     }
+                                })
+                                .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
 
-                                    finish();
-                                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
-                                }
-                            })
-                            .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
                 }
             });
 

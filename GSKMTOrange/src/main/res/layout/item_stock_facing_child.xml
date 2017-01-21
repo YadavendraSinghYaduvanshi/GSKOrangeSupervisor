@@ -77,12 +77,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:hint="@string/stock_facing_stock"
                         android:inputType="number"
                         android:maxLength="7"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="#222"
                         android:textColorHint="#666" />
+                    <!--android:hint="@string/stock_facing_stock"-->
                 </LinearLayout>
 
                 <LinearLayout
@@ -106,12 +106,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:hint="@string/stock_facing_faceup"
                         android:inputType="number"
                         android:maxLength="7"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="#222"
                         android:textColorHint="#666" />
+                    <!--android:hint="@string/stock_facing_faceup"-->
                 </LinearLayout>
             </LinearLayout>
 
