@@ -863,7 +863,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
             txt_stockFaceupHeader.setTypeface(null, Typeface.BOLD);
             txt_stockFaceupHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
-
             if (headerTitle.getCompany_id().equals("1")) {
                 txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
 
