@@ -262,7 +262,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                             break;
                         }
                     } else {
-                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
