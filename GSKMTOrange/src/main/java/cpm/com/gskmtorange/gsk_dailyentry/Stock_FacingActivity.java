@@ -863,7 +863,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
             txt_stockFaceupHeader.setTypeface(null, Typeface.BOLD);
             txt_stockFaceupHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
-
             if (headerTitle.getCompany_id().equals("1")) {
                 txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
 
@@ -872,7 +871,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 } else if (headerTitle.getSos_target().equals("-")) {
                     headerTitle.setSos_target("-");
                 }
-                txt_sosHeader.setText(headerTitle.getSos_target().toString());
+                txt_sosHeader.setText(getResources().getString(R.string.stock_facing_sos) + ": \n" + headerTitle.getSos_target().toString());
 
                 txt_sosHeader.setVisibility(View.VISIBLE);
                 img_camera1.setVisibility(View.VISIBLE);
