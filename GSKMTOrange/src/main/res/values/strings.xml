@@ -228,9 +228,25 @@
     <string name="uploadeddata">Uploaded Data</string>
 
     <string name="previous_data_upload">Please Upload Previous Data First</string>
+
+    <string name="error_incorrect_username">This username is incorrect</string>
+
     <string name="error">Error Uploading</string>
+
     <string name="DELETE_ALERT_MESSAGE">Saved data will be lost - Do you want to continue?</string>
     <string name="NodataAvailable">No data available</string>
     <string name="Pleasedownaloaddata">Please download data</string>
+
+    <!--Gagan start code 3-->
+    <string name="empty">Empty</string>
+    <string name="check_faceup">Faceup can not be greater than stock value</string>
+    <string name="fill_stock_value">First fill the stock value</string>
+    <string name="want_add">Are you sure you want to add</string>
+    <string name="promo_add">promo is added</string>
+    <string name="select_promo_value">Select the promo value</string>
+    <string name="select_promo">Select</string>
+
+    <!--Gagan end code 3-->
+
 
 </resources>

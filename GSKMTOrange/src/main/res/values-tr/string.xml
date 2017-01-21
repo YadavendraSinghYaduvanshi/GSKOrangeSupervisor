@@ -190,12 +190,28 @@
     <!--Gagan end new code 2-->
 
     <string name="previous_data_upload">Lütfen Önceki Verileri Paylaşın</string>
+    <string name="error_incorrect_username">Bu kullanıcı adı yanlış</string>
+
     <string name="error">Hata! paylaşılıyor</string>
     <string name="data_will_be_lost">Veri kaydedilmedi. İlerlemek</string>
+
     <string name="data_downloaded_successfully">Veri başarıyla indirildi</string>
     <string name="DELETE_ALERT_MESSAGE">Kaydedilen veriler kaybolacak - Devam etmek istiyor musunuz?</string>
     <string name="NodataAvailable">Veri yok</string>
     <string name="Pleasedownaloaddata">Lütfen verileri indirin</string>
+
+    <!--Gagan start code 3-->
+    <string name="cancel">İptal etmek</string>
+    <string name="empty">Boş</string>
+
+    <string name="check_faceup">Raf Payı, stoktan daha az veya eşit olmalıdır</string>
+    <string name="fill_stock_value">Önce stok değerini doldurun</string>
+    <string name="want_add">Verileri eklemek istiyor musunuz?</string>
+    <string name="promo_add">Promosyon  eklendi</string>
+    <string name="select_promo_value">Promosyon değerini seçin</string>
+    <string name="select_promo">Seçiniz</string>
+    <!--Gagan end code 3-->
+
 </resources>
 
 

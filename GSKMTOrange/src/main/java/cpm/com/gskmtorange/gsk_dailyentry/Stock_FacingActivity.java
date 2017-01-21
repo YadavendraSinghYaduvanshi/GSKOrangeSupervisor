@@ -311,7 +311,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
             //Header Data
             headerDataList = db.getStockAndFacingHeader_AfterSaveData(categoryId, store_id);
             if (!(headerDataList.size() > 0)) {
-                headerDataList = db.getStockAndFacingHeaderData(categoryId);
+                headerDataList = db.getStockAndFacingHeaderData(categoryId, keyAccount_id, storeType_id, class_id);
             }
 
             if (headerDataList.size() > 0) {
@@ -322,7 +322,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     //Child Data
                     childDataList = db.getStockAndFacingSKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id(), store_id);
                     if (!(childDataList.size() > 0)) {
-                        childDataList = db.getStockAndFacingSKUData(categoryId, headerDataList.get(i).getBrand_id());
+                        childDataList = db.getStockAndFacingSKUData(categoryId, headerDataList.get(i).getBrand_id(), keyAccount_id, storeType_id, class_id);
                     }
 
                     hashMapListChildData.put(hashMapListHeaderData.get(i), childDataList);
@@ -405,7 +405,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                 }
 
                                 flag = false;
-                                Error_Message = "Please fill all the data";
+                                Error_Message = getResources().getString(R.string.fill_data);
                                 break;
                             }
                         } else {
@@ -415,7 +415,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                 }
 
                                 flag = false;
-                                Error_Message = "Please fill all the data";
+                                Error_Message = getResources().getString(R.string.fill_data);
                                 break;
                             }
                         }
@@ -427,7 +427,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         }
 
                         flag = false;
-                        Error_Message = "Please fill all the data";
+                        Error_Message = getResources().getString(R.string.fill_data);
                         break;
                     }
                 }
@@ -852,17 +852,23 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
             TextView txt_stockFaceupHeader = (TextView) convertView.findViewById(R.id.txt_stockFaceupHeader);
             TextView txt_sosHeader = (TextView) convertView.findViewById(R.id.txt_sosHeader);
-            LinearLayout lin_stockFaceupHeader = (LinearLayout) convertView.findViewById(R.id.lin_stockFaceupHeader);
             ImageView img_camera1 = (ImageView) convertView.findViewById(R.id.img_camera1);
             ImageView img_camera2 = (ImageView) convertView.findViewById(R.id.img_camera2);
-            //ImageView img_reference = (ImageView) convertView.findViewById(R.id.img_reference);
-            //ImageView img_edit = (ImageView) convertView.findViewById(R.id.img_edit);
+            LinearLayout lin_stockFaceupHeader = (LinearLayout) convertView.findViewById(R.id.lin_stockFaceupHeader);
 
             txt_stockFaceupHeader.setTypeface(null, Typeface.BOLD);
             txt_stockFaceupHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
+
             if (headerTitle.getCompany_id().equals("1")) {
                 txt_stockFaceupHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+                if (!headerTitle.getSos_target().equals("") && !headerTitle.getSos_target().equals("-")) {
+                    headerTitle.setSos_target(headerTitle.getSos_target());
+                } else if (headerTitle.getSos_target().equals("-")) {
+                    headerTitle.setSos_target("-");
+                }
+                txt_sosHeader.setText(headerTitle.getSos_target().toString());
 
                 txt_sosHeader.setVisibility(View.VISIBLE);
                 img_camera1.setVisibility(View.VISIBLE);
@@ -1110,9 +1116,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                     if (isDialogOpen) {
                                         isDialogOpen = !isDialogOpen;
                                         AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                                        builder.setMessage("Faceup can not be greater than stock value")
+                                        builder.setMessage(getString(R.string.check_faceup))
                                                 .setCancelable(false)
-                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                         dialog.dismiss();
                                                         isDialogOpen = !isDialogOpen;
@@ -1129,9 +1135,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
                             if (isDialogOpen) {
                                 isDialogOpen = !isDialogOpen;
                                 AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                                builder.setMessage("First fill the stock value")
+                                builder.setMessage(getString(R.string.fill_stock_value))
                                         .setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 dialog.dismiss();
                                                 isDialogOpen = !isDialogOpen;
@@ -1157,14 +1163,14 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     if (holder.ed_stock.getText().toString().equals("")) {
                         holder.ed_stock.setBackgroundColor(getResources().getColor(R.color.white));
                         holder.ed_stock.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                        holder.ed_stock.setHint("Empty");
+                        holder.ed_stock.setHint(getString(R.string.empty));
                         tempflag = true;
                     }
 
                     if (holder.ed_facing.getText().toString().equals("")) {
                         holder.ed_facing.setBackgroundColor(getResources().getColor(R.color.white));
                         holder.ed_facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                        holder.ed_facing.setHint("Empty");
+                        holder.ed_facing.setHint(getString(R.string.empty));
                         tempflag = true;
                     }
 
@@ -1177,7 +1183,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     if (holder.ed_facing.getText().toString().equals("")) {
                         holder.ed_facing.setBackgroundColor(getResources().getColor(R.color.white));
                         holder.ed_facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                        holder.ed_facing.setHint("Empty");
+                        holder.ed_facing.setHint(getString(R.string.empty));
                         tempflag = true;
                     }
 

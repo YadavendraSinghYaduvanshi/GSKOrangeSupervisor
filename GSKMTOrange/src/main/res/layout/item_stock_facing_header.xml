@@ -46,7 +46,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight=".6"
                     android:paddingRight="5dp"
-                    android:text="@string/stock_facing_sos"
+                    android:text="-"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#222" />
             </LinearLayout>

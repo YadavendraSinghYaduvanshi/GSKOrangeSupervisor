@@ -254,6 +254,9 @@ public class CommonString {
             + "BRAND"
             + " VARCHAR,"
 
+            + "SOS_TARGET"
+            + " VARCHAR,"
+
             + "IMAGE1"
             + " VARCHAR,"
 
