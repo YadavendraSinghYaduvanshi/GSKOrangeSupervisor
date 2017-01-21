@@ -118,9 +118,9 @@
 
     <string name="select_language_item">Dil Seçimi</string>
 
-    <string name="title_activity_Want_save">Veriyi saklamak istiyor musunuz?</string>
+    <string name="title_activity_Want_save">Kaydetmek İstediğinizden Emin misiniz?</string>
     <string name="title_activity_Want_add">Tüm alanlari doldurunuz</string>
-    <string name="title_activity_Want_to_add">Veri eklemek istiyor musun</string>
+    <string name="title_activity_Want_to_add">Eklemek İstediğinden Emin misin</string>
     <string name="title_activity_Want_to_delete"> Verileri silmek istiyor musun</string>
     <string name="store"> Mağazalar</string>
     <string name="title_activity_Want_to_delete1"> Verileri silmek istiyor musun</string>
