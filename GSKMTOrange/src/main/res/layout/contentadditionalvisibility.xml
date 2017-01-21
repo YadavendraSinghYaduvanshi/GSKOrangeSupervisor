@@ -64,6 +64,7 @@
                     android:layout_height="wrap_content"
                     android:textOn="@string/yes"
                     android:textOff="@string/no"
+                    android:background="@drawable/toggle_selector_background"
                     android:layout_weight=".5" />
 
             </LinearLayout>
