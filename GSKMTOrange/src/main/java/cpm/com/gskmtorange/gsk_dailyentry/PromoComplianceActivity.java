@@ -288,7 +288,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                         AlertDialog alert = builder.create();
                         alert.show();
                     }
-                    
+
                 }
             });
 
