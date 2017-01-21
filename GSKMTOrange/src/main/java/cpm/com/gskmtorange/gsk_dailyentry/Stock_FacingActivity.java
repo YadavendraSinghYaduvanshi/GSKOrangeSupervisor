@@ -872,7 +872,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 } else if (headerTitle.getSos_target().equals("-")) {
                     headerTitle.setSos_target("-");
                 }
-                txt_sosHeader.setText(headerTitle.getSos_target().toString());
+                txt_sosHeader.setText(getResources().getString(R.string.stock_facing_sos) + ": \n" + headerTitle.getSos_target().toString());
 
                 txt_sosHeader.setVisibility(View.VISIBLE);
                 img_camera1.setVisibility(View.VISIBLE);
