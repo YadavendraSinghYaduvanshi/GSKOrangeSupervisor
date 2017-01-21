@@ -218,9 +218,9 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 public void onClick(final View v) {
                     if (!cd.getSp_promo().equals("0")) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(PromoComplianceActivity.this);
-                        builder.setMessage("Are you sure you want to add")
+                        builder.setMessage(getResources().getString(R.string.want_add))
                                 .setCancelable(false)
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         db.InsertAdditionalPromoData(cd, categoryId);
                                         AdditionalPromoListView();
@@ -230,11 +230,11 @@ public class PromoComplianceActivity extends AppCompatActivity {
                                         toggle_add_promoAnnouncer.setChecked(true);
                                         toggle_add_runningPos.setChecked(true);
 
-                                        Snackbar.make(v, "promo is added", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        Snackbar.make(v, getResources().getString(R.string.promo_add), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                         //Toast.makeText(getApplicationContext(), "promo is add", Toast.LENGTH_LONG).show();
                                     }
                                 })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
@@ -242,7 +242,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                         AlertDialog alert = builder.create();
                         alert.show();
                     } else {
-                        Snackbar.make(v, "Select the promo value", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        Snackbar.make(v, getResources().getString(R.string.select_promo_value), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
                 }
             });
@@ -252,24 +252,24 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 @Override
                 public void onClick(final View view) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(PromoComplianceActivity.this);
-                    builder.setMessage("Are you sure you want to save")
+                    builder.setMessage(getResources().getString(R.string.want_add))
                             .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
                                     if (db.checkPromoComplianceData(store_id, categoryId)) {
                                         db.updatePromoComplianceSKU(promoSkuListData, categoryId, store_id);
-                                        Snackbar.make(view, "Data has been updated", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        Snackbar.make(view, getResources().getString(R.string.update_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                     } else {
                                         db.InsertPromoSkuData(promoSkuListData, categoryId);
-                                        Snackbar.make(view, "Data has been saved", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        Snackbar.make(view, getResources().getString(R.string.save_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                     }
 
                                     finish();
                                     overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                                 }
                             })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                 }
@@ -421,23 +421,23 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
                 //In Stock
                 if (data.getIn_stock().equals("1")) {
-                    txt_inStock.setText("Yes");
+                    txt_inStock.setText(getResources().getString(R.string.yes));
                 } else {
-                    txt_inStock.setText("No");
+                    txt_inStock.setText(getResources().getString(R.string.no));
                 }
 
                 //Promo Announcer
                 if (data.getPromo_announcer().equals("1")) {
-                    txt_promoAnnouncer.setText("Yes");
+                    txt_promoAnnouncer.setText(getResources().getString(R.string.yes));
                 } else {
-                    txt_promoAnnouncer.setText("No");
+                    txt_promoAnnouncer.setText(getResources().getString(R.string.no));
                 }
 
                 //Running on POS
                 if (data.getRunning_pos().equals("1")) {
-                    txt_runningPos.setText("Yes");
+                    txt_runningPos.setText(getResources().getString(R.string.yes));
                 } else {
-                    txt_runningPos.setText("No");
+                    txt_runningPos.setText(getResources().getString(R.string.no));
                 }
 
                 lin_addtional_promo.addView(view);
