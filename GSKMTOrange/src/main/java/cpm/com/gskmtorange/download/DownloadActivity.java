@@ -956,7 +956,7 @@ public class DownloadActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
         builder.setTitle("Parinaam");
         builder.setMessage(str).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                        /* Intent i = new Intent(activity, StorelistActivity.class);

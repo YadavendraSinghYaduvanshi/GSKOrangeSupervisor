@@ -50,6 +50,7 @@
         android:weightSum="10"
         android:visibility="gone"
 
+
         >
 
         <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -67,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="No data available"
+                android:text="@string/NodataAvailable"
                 android:textSize="25sp"
                 android:textStyle="bold" />
         </android.support.v7.widget.CardView>
@@ -107,7 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Please download data"
+                android:text="@string/Pleasedownaloaddata"
                 android:textSize="25sp"
                 android:textStyle="bold" />
         </android.support.v7.widget.CardView>

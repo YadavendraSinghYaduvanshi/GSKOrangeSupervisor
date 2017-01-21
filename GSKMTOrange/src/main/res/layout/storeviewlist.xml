@@ -34,7 +34,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="6sp"
-                android:background="@mipmap/store"
+
                 android:layout_marginTop="10dp"
                 android:paddingTop="25sp" />
 

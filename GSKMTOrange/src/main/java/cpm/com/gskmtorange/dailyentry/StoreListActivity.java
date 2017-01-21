@@ -430,7 +430,10 @@ public class StoreListActivity extends AppCompatActivity {
                 address = (TextView) itemView.findViewById(R.id.storelistviewxml_storeaddress);
 
                 relativelayout = (RelativeLayout) itemView.findViewById(R.id.storenamelistview_layout);
-                imageview = (ImageView) itemView.findViewById(R.id.imageView2);
+                //imageview = (ImageView) itemView.findViewById(R.id.imageView2);
+
+                imageview = (ImageView) itemView.findViewById(R.id.storelistviewxml_storeico);
+
 
                 chkbtn = (Button) itemView.findViewById(R.id.chkout);
                 Cardbtn = (CardView) itemView.findViewById(R.id.card_view);
@@ -482,7 +485,7 @@ public class StoreListActivity extends AppCompatActivity {
 
                     if (checkout_status.equals(CommonString.KEY_INVALID) || checkout_status.equals(CommonString.KEY_VALID)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(StoreListActivity.this);
-                        builder.setMessage(CommonString.DATA_DELETE_ALERT_MESSAGE)
+                        builder.setMessage(R.string.DELETE_ALERT_MESSAGE)
                                 .setCancelable(false)
                                 .setPositiveButton(getResources().getString(R.string.yes),
                                         new DialogInterface.OnClickListener() {

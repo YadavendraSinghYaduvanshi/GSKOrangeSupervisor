@@ -473,7 +473,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                             break;
                         }
                     } else {
-                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
@@ -565,7 +565,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
             dialog = new Dialog(context);
             dialog.setContentView(R.layout.custom);
-            dialog.setTitle(getResources().getString(R.string.uploaddata));
+            dialog.setTitle(getResources().getString(R.string.dialog_title));
             dialog.setCancelable(false);
             dialog.show();
             pb = (ProgressBar) dialog.findViewById(R.id.progressBar1);
@@ -776,7 +776,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
             dialog = new Dialog(context);
             dialog.setContentView(R.layout.custom);
-            dialog.setTitle(getResources().getString(R.string.uploadimge));
+            dialog.setTitle(getResources().getString(R.string.dialog_title));
             dialog.setCancelable(false);
             dialog.show();
             pb = (ProgressBar) dialog.findViewById(R.id.progressBar1);

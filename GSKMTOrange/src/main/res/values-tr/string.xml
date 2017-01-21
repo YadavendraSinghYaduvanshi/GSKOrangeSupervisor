@@ -118,9 +118,9 @@
 
     <string name="select_language_item">Dil Seçimi</string>
 
-    <string name="title_activity_Want_save">Veriyi saklamak istiyor musunuz?</string>
+    <string name="title_activity_Want_save">Kaydetmek İstediğinizden Emin misiniz?</string>
     <string name="title_activity_Want_add">Tüm alanlari doldurunuz</string>
-    <string name="title_activity_Want_to_add">Veri eklemek istiyor musun</string>
+    <string name="title_activity_Want_to_add">Eklemek İstediğinden Emin misin</string>
     <string name="title_activity_Want_to_delete"> Verileri silmek istiyor musun</string>
     <string name="store"> Mağazalar</string>
     <string name="title_activity_Want_to_delete1"> Verileri silmek istiyor musun</string>
@@ -195,6 +195,11 @@
     <string name="error">Hata! paylaşılıyor</string>
     <string name="data_will_be_lost">Veri kaydedilmedi. İlerlemek</string>
 
+    <string name="data_downloaded_successfully">Veri başarıyla indirildi</string>
+    <string name="DELETE_ALERT_MESSAGE">Kaydedilen veriler kaybolacak - Devam etmek istiyor musunuz?</string>
+    <string name="NodataAvailable">Veri yok</string>
+    <string name="Pleasedownaloaddata">Lütfen verileri indirin</string>
+
     <!--Gagan start code 3-->
     <string name="cancel">İptal etmek</string>
     <string name="empty">Boş</string>
@@ -206,6 +211,7 @@
     <string name="select_promo_value">Promosyon değerini seçin</string>
     <string name="select_promo">Seçiniz</string>
     <!--Gagan end code 3-->
+
 </resources>
 
 

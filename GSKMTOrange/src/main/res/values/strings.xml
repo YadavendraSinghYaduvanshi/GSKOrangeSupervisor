@@ -101,7 +101,7 @@
     <string name="title_store_list_activity_store_already_done">Store Already Uploaded</string>
     <string name="title_store_list_activity_store_data_uploaded">Store Data Uploaded</string>
     <string name="title_store_list_activity_store_already_checkout">Store Already Checkout</string>
-    <string name="title_store_list_activity_store_again_uploaded">Please Store data again Uploaded</string>
+    <string name="title_store_list_activity_store_again_uploaded">Please Upload data again</string>
     <string name="title_store_list_activity_store_closed">Store Closed</string>
     <string name="title_store_list_activity_already_store_closed">Store Already Closed</string>
 
@@ -148,9 +148,9 @@
     <string name="Photo">Photo</string>
     <string name="title_activity_Additional_visibility">Additional Visibility</string>
 
-    <string name="title_activity_Want_save"> Do You Want To Save</string>
+    <string name="title_activity_Want_save"> Are you sure You Want To Save</string>
     <string name="title_activity_Want_add"> Please Add Data</string>
-    <string name="title_activity_Want_to_add">Do You Want To Add</string>
+    <string name="title_activity_Want_to_add">Are you sure You Want To Add</string>
     <string name="title_activity_Want_to_delete"> Do You Want To Delete Data</string>
     <string name="store"> store</string>
     <string name="title_activity_Want_to_delete1"> Do You Want To Delete</string>
@@ -181,7 +181,7 @@
     <string name="click_image">Please click image</string>
     <string name="fill_sku_data">Please fill SKU data</string>
     <string name="fill_gaps_data">Please fill GAP data</string>
-    <string name="data_will_be_lost">Want to proceed usaved data will be deleted</string>
+    <string name="data_will_be_lost">Want to proceed unsaved data will be deleted</string>
 
     <string name="download_data">Downloading Data</string>
     <string name="store_visited">Store Visited</string>
@@ -233,6 +233,10 @@
 
     <string name="error">Error Uploading</string>
 
+    <string name="DELETE_ALERT_MESSAGE">Saved data will be lost - Do you want to continue?</string>
+    <string name="NodataAvailable">No data available</string>
+    <string name="Pleasedownaloaddata">Please download data</string>
+
     <!--Gagan start code 3-->
     <string name="empty">Empty</string>
     <string name="check_faceup">Faceup can not be greater than stock value</string>
@@ -243,5 +247,6 @@
     <string name="select_promo">Select</string>
 
     <!--Gagan end code 3-->
+
 
 </resources>
