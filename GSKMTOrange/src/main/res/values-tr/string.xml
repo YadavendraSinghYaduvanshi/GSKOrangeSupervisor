@@ -195,6 +195,9 @@
     <string name="error">Hata! paylaşılıyor</string>
     <string name="data_will_be_lost">Veri kaydedilmedi. İlerlemek</string>
 
+    <string name="gallery">Galeri</string>
+    <string name="camera">kamera</string>
+
 </resources>
 
 

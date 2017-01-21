@@ -201,21 +201,22 @@ public class NonWorkingReason extends AppCompatActivity implements
             List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
             for (int n = 0; n < list.size(); n++) {
                 if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-                    Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                   /* Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
                     Log.e("TAG", "package name  : " + list.get(n).packageName);
-
+*/
                     //temp value in case camera is gallery app above jellybean
-                    if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                    String packag = list.get(n).loadLabel(packageManager).toString();
+                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri")) {
                         gallery_package = list.get(n).packageName;
                     }
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
                     } else {
-                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
