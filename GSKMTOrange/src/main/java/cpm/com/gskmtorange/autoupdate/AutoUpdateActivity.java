@@ -272,6 +272,7 @@ public class AutoUpdateActivity extends AppCompatActivity {
                        /* Intent i = new Intent(activity, StorelistActivity.class);
                         activity.startActivity(i);
                         activity.finish();*/
+                        finish();
 
                     }
                 });

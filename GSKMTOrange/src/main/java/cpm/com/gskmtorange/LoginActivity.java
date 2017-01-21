@@ -108,6 +108,8 @@ public class LoginActivity extends AppCompatActivity {
 
     int eventType;
 
+    Button museridSignInButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-        Button museridSignInButton = (Button) findViewById(R.id.user_login_button);
+        museridSignInButton = (Button) findViewById(R.id.user_login_button);
         museridSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
