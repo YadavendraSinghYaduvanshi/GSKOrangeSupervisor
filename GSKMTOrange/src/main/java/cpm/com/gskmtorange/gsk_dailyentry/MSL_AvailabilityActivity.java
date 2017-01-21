@@ -235,7 +235,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
             hashMapListChildData = new HashMap<>();
 
             //Header
-            headerDataList = db.getMSL_AvailabilityHeaderData(categoryId);
+            headerDataList = db.getMSL_AvailabilityHeaderData(categoryId, keyAccount_id, storeType_id, class_id);
 
             if (headerDataList.size() > 0) {
                 for (int i = 0; i < headerDataList.size(); i++) {
@@ -244,7 +244,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                     //childDataList = new ArrayList<>();
                     childDataList = db.getMSL_AvailabilitySKU_AfterSaveData(categoryId, headerDataList.get(i).getBrand_id(), store_id);
                     if (!(childDataList.size() > 0)) {
-                        childDataList = db.getMSL_AvailabilitySKUData(categoryId, headerDataList.get(i).getBrand_id());
+                        childDataList = db.getMSL_AvailabilitySKUData(categoryId, headerDataList.get(i).getBrand_id(), keyAccount_id, storeType_id, class_id);
                     }
 
                     hashMapListChildData.put(hashMapListHeaderData.get(i), childDataList);

@@ -23,6 +23,9 @@ public class TableBean {
     public static String MAPPING_ADDITIONAL_PROMOTION;
     public static String STORE_PERFORMANCE;
     public static String MAPPING_PLANOGRAM;
+    public static String MAPPING_SOS_TARGET;
+
+
 
     public static String getAdditionalDisplay() {
         return ADDITIONAL_DISPLAY;
@@ -158,5 +161,13 @@ public class TableBean {
         MAPPING_PLANOGRAM = mappingPlanogram;
     }
 
-    //Gagan end code
+    public static String getMappingSosTarget() {
+        return MAPPING_SOS_TARGET;
+    }
+
+    public static void setMappingSosTarget(String mappingSosTarget) {
+        MAPPING_SOS_TARGET = mappingSosTarget;
+    }
+
+//Gagan end code
 }

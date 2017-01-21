@@ -263,7 +263,9 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                             break;
                         }
                     } else {
+
                         if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
+
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }

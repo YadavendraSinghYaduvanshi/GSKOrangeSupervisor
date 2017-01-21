@@ -953,7 +953,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                             break;
                         }
                     } else {
+
                         if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
+
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
