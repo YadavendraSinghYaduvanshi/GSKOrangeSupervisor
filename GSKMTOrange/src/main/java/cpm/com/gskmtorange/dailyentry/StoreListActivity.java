@@ -430,7 +430,10 @@ public class StoreListActivity extends AppCompatActivity {
                 address = (TextView) itemView.findViewById(R.id.storelistviewxml_storeaddress);
 
                 relativelayout = (RelativeLayout) itemView.findViewById(R.id.storenamelistview_layout);
-                imageview = (ImageView) itemView.findViewById(R.id.imageView2);
+                //imageview = (ImageView) itemView.findViewById(R.id.imageView2);
+
+                imageview = (ImageView) itemView.findViewById(R.id.storelistviewxml_storeico);
+
 
                 chkbtn = (Button) itemView.findViewById(R.id.chkout);
                 Cardbtn = (CardView) itemView.findViewById(R.id.card_view);

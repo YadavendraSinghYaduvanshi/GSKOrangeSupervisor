@@ -194,7 +194,8 @@
     <string name="data_will_be_lost">Veri kaydedilmedi. İlerlemek</string>
     <string name="data_downloaded_successfully">Veri başarıyla indirildi</string>
     <string name="DELETE_ALERT_MESSAGE">Kaydedilen veriler kaybolacak - Devam etmek istiyor musunuz?</string>
-
+    <string name="NodataAvailable">Veri yok</string>
+    <string name="Pleasedownaloaddata">Lütfen verileri indirin</string>
 </resources>
 
 
