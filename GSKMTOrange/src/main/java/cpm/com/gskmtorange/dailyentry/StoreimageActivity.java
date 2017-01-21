@@ -252,17 +252,20 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                     Log.e("TAG", "package name  : " + list.get(n).packageName);
 
                     //temp value in case camera is gallery app above jellybean
-                    if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Gallery")) {
+                    String packag = list.get(n).loadLabel(packageManager).toString();
+                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri")) {
                         gallery_package = list.get(n).packageName;
                     }
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
                     } else {
-                        if (list.get(n).loadLabel(packageManager).toString().equalsIgnoreCase("Camera")) {
+
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
+
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
