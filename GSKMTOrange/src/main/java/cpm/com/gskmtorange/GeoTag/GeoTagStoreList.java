@@ -27,8 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import cpm.com.gskmtorange.MainActivity;
-
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
@@ -52,6 +50,7 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
     LinearLayout parent_linear,nodata_linear;
     LinearLayout linearlay;
     FloatingActionButton fab;
+    Toolbar toolbar;
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
@@ -64,7 +63,7 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
         //parent_linear = (LinearLayout) findViewById(R.id.parent_linear);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
-       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -284,6 +283,7 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
     protected void onResume() {
         super.onResume();
         updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar.setTitle(getString(R.string.title_activity_store_geotag));
     }
 
 
