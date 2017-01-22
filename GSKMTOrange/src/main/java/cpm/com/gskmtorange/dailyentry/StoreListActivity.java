@@ -6,13 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-
 import android.content.res.Configuration;
 import android.content.res.Resources;
-
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -27,16 +24,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,14 +37,11 @@ import java.util.List;
 import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
-import cpm.com.gskmtorange.GeoTag.GeoTagActivity;
-
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.download.DownloadActivity;
-import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
 import cpm.com.gskmtorange.gsk_dailyentry.StoreWisePerformanceActivity;
 
 /**
@@ -74,12 +64,13 @@ public class StoreListActivity extends AppCompatActivity {
     boolean result_flag = false, leaveflag = false;
     FloatingActionButton fab;
     String storeid;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.storelistfablayout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -116,6 +107,7 @@ public class StoreListActivity extends AppCompatActivity {
         super.onResume();
 
         updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar.setTitle(getString(R.string.title_activity_store_list));
 
         storelist = db.getStoreData(date);
         coverage = db.getCoverageData(date);
@@ -139,6 +131,7 @@ public class StoreListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
 
