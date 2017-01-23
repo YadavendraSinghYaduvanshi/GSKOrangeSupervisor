@@ -1,5 +1,6 @@
 package cpm.com.gskmtorange.download;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -9,10 +10,12 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -87,11 +90,15 @@ public class DownloadActivity extends AppCompatActivity {
     private ProgressBar pb;
     private TextView percentage, message;
     private SharedPreferences preferences = null;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         db = new GSKOrangeDB(this);
 
@@ -973,6 +980,8 @@ public class DownloadActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        toolbar.setTitle(getString(R.string.main_menu_activity_name));
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
