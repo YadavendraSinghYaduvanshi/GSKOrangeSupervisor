@@ -48,7 +48,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".download.DownloadActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".GeoTag.GeoTagStoreList"
             android:label="@string/title_activity_store_list"
