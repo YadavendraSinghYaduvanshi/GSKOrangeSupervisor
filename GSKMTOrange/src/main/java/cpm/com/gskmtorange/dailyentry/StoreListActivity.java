@@ -65,6 +65,7 @@ public class StoreListActivity extends AppCompatActivity {
     FloatingActionButton fab;
     String storeid;
     Toolbar toolbar;
+    String language;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +77,11 @@ public class StoreListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         date = preferences.getString(CommonString.KEY_DATE, null);
         visit_status = preferences.getString(CommonString.KEY_STOREVISITED_STATUS, "");
+        language = preferences.getString(CommonString.KEY_LANGUAGE, "");
         db = new GSKOrangeDB(StoreListActivity.this);
         db.open();
 
@@ -106,7 +108,7 @@ public class StoreListActivity extends AppCompatActivity {
         // TODO Auto-generated method stub
         super.onResume();
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(getString(R.string.title_activity_store_list));
 
         storelist = db.getStoreData(date);
@@ -185,8 +187,14 @@ public class StoreListActivity extends AppCompatActivity {
 
             final StoreBean current = data.get(position);
 
+            if (language.equalsIgnoreCase("TURKISH")) {
+                viewHolder.chkbtn.setBackgroundResource(R.mipmap.checkout_turkish);
+            } else {
+                viewHolder.chkbtn.setBackgroundResource(R.mipmap.checkout);
+            }
 
-             storeid = current.getSTORE_ID();
+
+            storeid = current.getSTORE_ID();
             //viewHolder.txt.setText(current.txt);
 
             viewHolder.txt.setText(current.getSTORE_NAME());
@@ -220,15 +228,11 @@ public class StoreListActivity extends AppCompatActivity {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-            }
-            else if (checkleavestatus(storeid))
-            {
+            } else if (checkleavestatus(storeid)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-            }
-
-            else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
+            } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
 
                 if (coverage.size() > 0) {
 
@@ -284,19 +288,14 @@ public class StoreListActivity extends AppCompatActivity {
                         Snackbar.make(v, R.string.title_store_list_activity_store_again_uploaded, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_L)) {
                         Snackbar.make(v, R.string.title_store_list_activity_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-                    else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+                    } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
                         Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-                     else if (checkleavestatus(store_id)) {
+                    } else if (checkleavestatus(store_id)) {
 
                         Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
 
-                    }
-
-
-                    else {
+                    } else {
 
                         // PUT IN PREFERENCES
                         editor = preferences.edit();
@@ -364,7 +363,7 @@ public class StoreListActivity extends AppCompatActivity {
 
                                                 Intent i = new Intent(StoreListActivity.this, CheckoutActivity.class);
 
-                                                 i.putExtra(CommonString.KEY_STORE_ID,current.getSTORE_ID() );
+                                                i.putExtra(CommonString.KEY_STORE_ID, current.getSTORE_ID());
 
                                                 startActivity(i);
                                             } else {
@@ -390,6 +389,7 @@ public class StoreListActivity extends AppCompatActivity {
             });
 
         }
+
         public boolean CheckNetAvailability() {
 
             boolean connected = false;
@@ -403,6 +403,7 @@ public class StoreListActivity extends AppCompatActivity {
             }
             return connected;
         }
+
         @Override
         public int getItemCount() {
             return data.size();
@@ -541,15 +542,13 @@ public class StoreListActivity extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("UAE")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 
@@ -564,7 +563,7 @@ public class StoreListActivity extends AppCompatActivity {
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 
         return true;
-}
+    }
 
     public void UpdateStore(String storeid) {
 
@@ -578,28 +577,24 @@ public class StoreListActivity extends AppCompatActivity {
 
     public boolean checkleavestatus(String store_cd) {
 
-        if(coverage.size()>0)
-        {
+        if (coverage.size() > 0) {
 
 
-        for (int i = 0; i < coverage.size(); i++) {
-            if (store_cd.equals(coverage.get(i).getStoreId())) {
-                if (coverage.get(i).getStatus().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
-                    result_flag = true;
-                    break;
+            for (int i = 0; i < coverage.size(); i++) {
+                if (store_cd.equals(coverage.get(i).getStoreId())) {
+                    if (coverage.get(i).getStatus().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+                        result_flag = true;
+                        break;
+                    }
+                } else {
+
+                    result_flag = false;
+
                 }
-            } else {
-
-                result_flag = false;
-
             }
-        }
         }
         return result_flag;
     }
-
-
-
 
 
 }
