@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -28,13 +27,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -43,13 +36,10 @@ import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.constant.CommonString;
-import cpm.com.gskmtorange.dailyentry.AdditionalVisibility;
 import cpm.com.gskmtorange.dailyentry.ServiceActivity;
 import cpm.com.gskmtorange.dailyentry.SettingsActivity;
-import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
 import cpm.com.gskmtorange.download.DownloadActivity;
-import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
 import cpm.com.gskmtorange.upload.PreviousDataUploadActivity;
 import cpm.com.gskmtorange.upload.UploadActivity;
 
@@ -69,11 +59,13 @@ public class MainActivity extends AppCompatActivity
 
     String error_msg;
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -136,8 +128,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar.setTitle(getString(R.string.main_menu_activity_name));
+
     }
 
     @Override

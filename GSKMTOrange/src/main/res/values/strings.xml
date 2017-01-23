@@ -62,7 +62,7 @@
     <string name="menu_export">Data Export</string>
 
     <string name="menu_exit">Exit</string>
-    <string name="menu_setting">Setting</string>
+    <string name="menu_setting">Settings</string>
     <string name="menu_services">Services</string>
 
     <string name="title_activity_t2_pcompliance">T2P Compliance</string>
@@ -148,9 +148,9 @@
     <string name="Photo">Photo</string>
     <string name="title_activity_Additional_visibility">Additional Visibility</string>
 
-    <string name="title_activity_Want_save"> Are you sure You Want To Save</string>
+    <string name="title_activity_Want_save"> Are you sure you want to save</string>
     <string name="title_activity_Want_add"> Please Add Data</string>
-    <string name="title_activity_Want_to_add">Are you sure You Want To Add</string>
+    <string name="title_activity_Want_to_add">Are you sure you want to add</string>
     <string name="title_activity_Want_to_delete"> Do You Want To Delete Data</string>
     <string name="store"> store</string>
     <string name="title_activity_Want_to_delete1"> Do You Want To Delete</string>
@@ -173,7 +173,7 @@
     <string name="uploadimge">Uploading Geotag Images</string>
     <string name="success">success</string>
     <string name="wantcheckout">Are you sure you want to Checkout</string>
-    <string name="nonetwork"> No Network Connection. Please check your Internet Connection</string>
+    <string name="nonetwork"> No Network Connection. Please Check Your Internet Connection</string>
 
     <string name="title_activity_Non_Work">Non Working Reason</string>
     <string name="closed">Close</string>

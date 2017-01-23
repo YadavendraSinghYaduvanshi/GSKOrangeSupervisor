@@ -13,11 +13,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +22,6 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,9 +45,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,15 +53,10 @@ import java.util.List;
 import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
-import cpm.com.gskmtorange.LoginActivity;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
-import cpm.com.gskmtorange.fonts.FontManager;
-import cpm.com.gskmtorange.fonts.TextDrawable;
-import cpm.com.gskmtorange.gsk_dailyentry.Stock_FacingActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
 
@@ -573,17 +561,18 @@ public class T2PComplianceActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
+
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(T2PComplianceActivity.this);
             builder.setTitle("Parinaam");
             builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
 
                             finish();
                             overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                         }
                     })
-                    .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -720,14 +709,14 @@ public class T2PComplianceActivity extends AppCompatActivity {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(T2PComplianceActivity.this);
         builder.setTitle("Parinaam");
         builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         finish();
                         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                     }
                 })
-                .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

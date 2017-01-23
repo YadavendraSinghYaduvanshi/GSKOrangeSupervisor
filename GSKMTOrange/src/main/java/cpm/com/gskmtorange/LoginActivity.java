@@ -108,6 +108,8 @@ public class LoginActivity extends AppCompatActivity {
 
     int eventType;
 
+    Button museridSignInButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,9 +137,9 @@ public class LoginActivity extends AppCompatActivity {
         //populateAutoComplete();
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        museridView.setText("testmer");
+       /* museridView.setText("testmer");
         mPasswordView.setText("cpm123");
-
+*/
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -159,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-        Button museridSignInButton = (Button) findViewById(R.id.user_login_button);
+        museridSignInButton = (Button) findViewById(R.id.user_login_button);
         museridSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
