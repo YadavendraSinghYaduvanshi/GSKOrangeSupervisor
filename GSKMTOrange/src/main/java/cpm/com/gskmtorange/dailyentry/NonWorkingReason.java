@@ -53,7 +53,7 @@ public class NonWorkingReason extends AppCompatActivity implements
     ArrayList<NonWorkingReasonGetterSetter> reasondata = new ArrayList<NonWorkingReasonGetterSetter>();
     private Spinner reasonspinner;
     private GSKOrangeDB database;
-    String reasonname, reasonid, entry_allow, image, entry, reason_reamrk, intime;
+    String reasonname, reasonid, entry_allow, image, entry, reason_reamrk, intime,image_allow;
     Button save;
     private ArrayAdapter<CharSequence> reason_adapter;
     protected String _path, str;
@@ -152,7 +152,9 @@ public class NonWorkingReason extends AppCompatActivity implements
                     reasonid = reasondata.get(position - 1).getREASON_ID().get(0);
                     entry_allow = reasondata.get(position - 1).getENTRY_ALLOW().get(0);
 
-                    if (reasonname.equalsIgnoreCase("Store closed")) {
+                    image_allow = reasondata.get(position - 1).getIMAGE_ALLOW().get(0);
+
+                    if (image_allow.equalsIgnoreCase("1")) {
                         rel_cam.setVisibility(View.VISIBLE);
                         image = "true";
                     } else {
