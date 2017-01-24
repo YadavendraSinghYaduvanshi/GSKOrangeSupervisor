@@ -113,16 +113,16 @@ public class CategoryListActivity extends AppCompatActivity {
                     }
 
                     if (flag) {
-                        if (!db.isMappingPromotionData()) {
-                            if (db.checkPromoComplianceData(store_id, category_id)) {
+                        if (db.isMappingPromotionData(store_id, category_id)) {
+                            if (!db.checkPromoComplianceData(store_id, category_id)) {
                                 flag = false;
                             }
                         }
                     }
 
                     if (flag) {
-                        if (!db.isMappingT2PData()) {
-                            if (db.isFilledT2P(store_id, category_id)) {
+                        if (db.isMappingT2PData(store_id, category_id)) {
+                            if (!db.isFilledT2P(store_id, category_id)) {
                                 flag = false;
                             }
                         }
@@ -298,7 +298,7 @@ public class CategoryListActivity extends AppCompatActivity {
                 }
 
 
-                if (!db.isMappingPromotionData()) {
+                if (!db.isMappingPromotionData(store_id,category_id)) {
                     if (db.checkPromoComplianceData(store_id, category_id)) {
                         flag_filled = false;
                         break;
@@ -306,7 +306,7 @@ public class CategoryListActivity extends AppCompatActivity {
                 }
 
 
-                if (!db.isMappingT2PData()) {
+                if (!db.isMappingT2PData(store_id, category_id)) {
                     if (db.isFilledT2P(store_id, category_id)) {
                         flag_filled = false;
                         break;

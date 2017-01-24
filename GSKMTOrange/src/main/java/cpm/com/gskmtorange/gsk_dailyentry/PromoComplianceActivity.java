@@ -317,11 +317,11 @@ public class PromoComplianceActivity extends AppCompatActivity {
             //Promo SKU List
             promoSkuListData = db.getPromoComplianceSkuAfterData(store_id, categoryId);
             if (!(promoSkuListData.size() > 0)) {
-                promoSkuListData = db.getPromoComplianceSkuData(store_id);
+                promoSkuListData = db.getPromoComplianceSkuData(store_id, categoryId);
             }
 
             //Promo Spinner List
-            promoSpinnerListData = db.getPromoSpinnerData(store_id);
+            promoSpinnerListData = db.getPromoSpinnerData(store_id, categoryId);
 
             ArrayAdapter<String> sp_promo_adapter = new ArrayAdapter<>(PromoComplianceActivity.this, android.R.layout.simple_list_item_1);
             for (int i = 0; i < promoSpinnerListData.size(); i++) {
