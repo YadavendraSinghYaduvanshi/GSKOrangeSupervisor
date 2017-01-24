@@ -3319,7 +3319,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return filled;
     }
 
-    public boolean isMappingT2PData() {
+    public boolean isMappingT2PData(String store_id, String categoryId) {
         boolean filled = false;
         Cursor dbcursor = null;
 
