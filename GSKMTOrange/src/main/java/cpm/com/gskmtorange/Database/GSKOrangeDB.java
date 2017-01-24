@@ -1495,13 +1495,26 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
     //Promo Compliance
-    public ArrayList<Promo_Compliance_DataGetterSetter> getPromoComplianceSkuData(String store_id) {
+    public ArrayList<Promo_Compliance_DataGetterSetter> getPromoComplianceSkuData(String store_id, String category_id) {
         ArrayList<Promo_Compliance_DataGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("Select * from MAPPING_PROMOTION " +
-                    "where STORE_ID='" + store_id + "'", null);
+            dbcursor = db.rawQuery("Select M.* " +
+                    "from MAPPING_PROMOTION M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where    CA.CATEGORY_ID='" + category_id + "' AND M.STORE_ID = '" + store_id + "' " +
+                    "order by SB.SUB_CATEGORY,BR.BRAND", null);
+
+            /*dbcursor = db.rawQuery("Select * from MAPPING_PROMOTION " +
+                    "where STORE_ID='" + store_id + "'", null);*/
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -1530,7 +1543,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Promo_Compliance_DataGetterSetter> getPromoSpinnerData(String store_id) {
+    public ArrayList<Promo_Compliance_DataGetterSetter> getPromoSpinnerData(String store_id, String category_id) {
         ArrayList<Promo_Compliance_DataGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
 
@@ -1541,8 +1554,21 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
             list.add(promo);
 
-            dbcursor = db.rawQuery("Select * from MAPPING_ADDITIONAL_PROMOTION " +
-                    "where STORE_ID='" + store_id + "'", null);
+            dbcursor = db.rawQuery("Select M.* " +
+                    "from MAPPING_ADDITIONAL_PROMOTION M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where    CA.CATEGORY_ID='" + category_id + "' AND M.STORE_ID = '" + store_id + "' " +
+                    "order by SB.SUB_CATEGORY,BR.BRAND", null);
+
+            /*dbcursor = db.rawQuery("Select * from MAPPING_ADDITIONAL_PROMOTION " +
+                    "where STORE_ID='" + store_id + "'", null);*/
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -3271,12 +3297,25 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return filled;
     }
 
-    public boolean isMappingPromotionData() {
+    public boolean isMappingPromotionData(String store_id, String category_id) {
         boolean filled = false;
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("SELECT * FROM MAPPING_PROMOTION ", null);
+            dbcursor = db.rawQuery("Select M.* " +
+                    "from MAPPING_PROMOTION M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where CA.CATEGORY_ID='" + category_id + "' AND M.STORE_ID = '" + store_id + "' " +
+                    "order by SB.SUB_CATEGORY,BR.BRAND ", null);
+
+            //dbcursor = db.rawQuery("SELECT * FROM MAPPING_PROMOTION ", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -3319,12 +3358,15 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return filled;
     }
 
-    public boolean isMappingT2PData() {
+    public boolean isMappingT2PData(String store_id, String category_id) {
         boolean filled = false;
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("SELECT * FROM MAPPING_T2P ", null);
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_T2P M INNER JOIN BRAND_MASTER BR ON M.BRAND_ID = BR.BRAND_ID " +
+                    "INNER JOIN SUB_CATEGORY_MASTER SB ON BR.SUB_CATEGORY_ID = SB.SUB_CATEGORY_ID " +
+                    "INNER JOIN CATEGORY_MASTER CA ON SB.CATEGORY_ID = CA.CATEGORY_ID " +
+                    "WHERE M.STORE_ID = '"+ store_id +"' AND CA.CATEGORY_ID= '" + category_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -3343,12 +3385,25 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return filled;
     }
 
-    public boolean isMappingAdditionalPromotionData() {
+    public boolean isMappingAdditionalPromotionData(String store_id, String category_id) {
         boolean filled = false;
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("SELECT * FROM MAPPING_ADDITIONAL_PROMOTION ", null);
+            dbcursor = db.rawQuery("Select M.* " +
+                    "from MAPPING_ADDITIONAL_PROMOTION M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where CA.CATEGORY_ID='" + category_id + "' AND M.STORE_ID = '" + store_id + "' " +
+                    "order by SB.SUB_CATEGORY,BR.BRAND ", null);
+
+            //dbcursor = db.rawQuery("SELECT * FROM MAPPING_ADDITIONAL_PROMOTION ", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
