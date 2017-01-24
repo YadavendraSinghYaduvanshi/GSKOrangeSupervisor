@@ -1749,6 +1749,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     sb.setENTRY_ALLOW(dbcursor.getString(dbcursor.getColumnIndexOrThrow("ENTRY_ALLOW")));
 
+                    sb.setIMAGE_ALLOW(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE_ALLOW")));
+
+
                     list.add(sb);
                     dbcursor.moveToNext();
                 }
