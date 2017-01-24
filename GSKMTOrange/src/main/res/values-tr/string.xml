@@ -208,7 +208,7 @@
     <string name="cancel">İptal etmek</string>
     <string name="empty">Boş</string>
 
-    <string name="check_faceup">Raf Payı, stoktan daha az veya eşit olmalıdır</string>
+    <string name="check_faceup">Önyüz sayısı stoktan daha az veya eşit olmalıdır</string>
     <string name="fill_stock_value">Önce stok değerini doldurun</string>
     <string name="want_add">Verileri eklemek istiyor musunuz?</string>
     <string name="promo_add">Promosyon  eklendi</string>
