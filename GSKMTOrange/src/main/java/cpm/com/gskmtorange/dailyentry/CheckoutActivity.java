@@ -105,7 +105,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
             dialog = new Dialog(context);
             dialog.setContentView(R.layout.custom);
-            dialog.setTitle("Sending Checkout Data");
+            dialog.setTitle(getString(R.string.title_activity_checkout));
             dialog.setCancelable(false);
             dialog.show();
             pb = (ProgressBar) dialog.findViewById(R.id.progressBar1);

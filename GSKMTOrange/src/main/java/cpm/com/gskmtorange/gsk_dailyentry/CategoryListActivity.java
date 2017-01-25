@@ -102,27 +102,39 @@ public class CategoryListActivity extends AppCompatActivity {
                 boolean flag_filled = false;
                 String category_id = categoryList.get(i).getCategory_id();
 
+                //Additional_Visibility
                 if (db.additionalVisibilitydata(store_id, category_id)) {
                     boolean flag = true;
 
-                    if (db.isMappingStockData()) {
-                        if (!db.checkMsl_AvailabilityData(store_id, category_id)
-                                && !db.checkStockAndFacingData(store_id, category_id)) {
+                    //MSL_Availability
+                    if (db.isMappingStockDataMSL_Availability(category_id, keyAccount_id, storeType_id, class_id)) {
+                        if (!db.checkMsl_AvailabilityData(store_id, category_id)) {
                             flag = false;
                         }
                     }
 
+                    //Stock_Facing
                     if (flag) {
-                        if (!db.isMappingPromotionData()) {
-                            if (db.checkPromoComplianceData(store_id, category_id)) {
+                        if (db.isMappingStockDataStockFacing(category_id, keyAccount_id, storeType_id, class_id)) {
+                            if (!db.checkStockAndFacingData(store_id, category_id)) {
                                 flag = false;
                             }
                         }
                     }
 
+                    //Promo Compliance
                     if (flag) {
-                        if (!db.isMappingT2PData()) {
-                            if (db.isFilledT2P(store_id, category_id)) {
+                        if (db.isMappingPromotionData(store_id, category_id)) {
+                            if (!db.checkPromoComplianceData(store_id, category_id)) {
+                                flag = false;
+                            }
+                        }
+                    }
+
+                    //T2P
+                    if (flag) {
+                        if (db.isMappingT2PData(store_id, category_id)) {
+                            if (!db.isFilledT2P(store_id, category_id)) {
                                 flag = false;
                             }
                         }
@@ -289,25 +301,31 @@ public class CategoryListActivity extends AppCompatActivity {
             if (db.additionalVisibilitydata(store_id, category_id)) {
                 //boolean flag = true;
 
-                if (db.isMappingStockData()) {
-                    if (!db.checkMsl_AvailabilityData(store_id, category_id)
-                            && !db.checkStockAndFacingData(store_id, category_id)) {
+                if (db.isMappingStockDataMSL_Availability(category_id, keyAccount_id, storeType_id, class_id)) {
+                    if (!db.checkMsl_AvailabilityData(store_id, category_id)) {
+                        flag_filled = false;
+                        break;
+                    }
+                }
+
+                //Stock_Facing
+                if (db.isMappingStockDataStockFacing(category_id, keyAccount_id, storeType_id, class_id)) {
+                    if (!db.checkStockAndFacingData(store_id, category_id)) {
+                        flag_filled = false;
+                        break;
+                    }
+                }
+
+                if (db.isMappingPromotionData(store_id, category_id)) {
+                    if (!db.checkPromoComplianceData(store_id, category_id)) {
                         flag_filled = false;
                         break;
                     }
                 }
 
 
-                if (!db.isMappingPromotionData()) {
-                    if (db.checkPromoComplianceData(store_id, category_id)) {
-                        flag_filled = false;
-                        break;
-                    }
-                }
-
-
-                if (!db.isMappingT2PData()) {
-                    if (db.isFilledT2P(store_id, category_id)) {
+                if (db.isMappingT2PData(store_id, category_id)) {
+                    if (!db.isFilledT2P(store_id, category_id)) {
                         flag_filled = false;
                         break;
                     }

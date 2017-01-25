@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -79,10 +80,13 @@ public class UploadActivity extends AppCompatActivity {
     private int factor, k = 0;
     Object result = "";
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload);
+        setContentView(R.layout.activity_main);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -199,7 +203,7 @@ public class UploadActivity extends AppCompatActivity {
             super.onPreExecute();
             dialog = new Dialog(context);
             dialog.setContentView(R.layout.custom);
-            dialog.setTitle("Uploading Data");
+            dialog.setTitle(getString(R.string.uploaddata));
             dialog.setCancelable(false);
             dialog.show();
 
@@ -250,8 +254,7 @@ public class UploadActivity extends AppCompatActivity {
                                     + "[APP_VERSION]" + app_version + "[/APP_VERSION]"
                                     + "[LONGITUDE]" + coverageList.get(i).getLongitude() + "[/LONGITUDE]"
                                     + "[IN_TIME]" + coverageList.get(i).getInTime() + "[/IN_TIME]"
-                                    //+ "[OUT_TIME]" + coverageList.get(i).getOutTime() + "[/OUT_TIME]"
-                                    + "[OUT_TIME]" + "00:00" + "[/OUT_TIME]"
+                                    + "[OUT_TIME]" + coverageList.get(i).getOutTime() + "[/OUT_TIME]"
                                     + "[UPLOAD_STATUS]" + "N" + "[/UPLOAD_STATUS]"
                                     + "[USER_ID]" + userId + "[/USER_ID]"
                                     + "[IMAGE_URL]" + coverageList.get(i).getImage() + "[/IMAGE_URL]"
@@ -342,7 +345,7 @@ public class UploadActivity extends AppCompatActivity {
                                 }
                             }
                             data.value = 10;
-                            data.name = "MSL_Availability Uploading";
+                            data.name = getString(R.string.availability_data_uploading);
                             publishProgress(data);
 
 
@@ -467,7 +470,7 @@ public class UploadActivity extends AppCompatActivity {
                                 }
                             }
                             data.value = 20;
-                            data.name = "Stock Facing Uploading";
+                            data.name = getString(R.string.stock_data_uploading);
                             publishProgress(data);
 
 
@@ -526,7 +529,7 @@ public class UploadActivity extends AppCompatActivity {
                                 }
                             }
                             data.value = 30;
-                            data.name = "Promotion Data Uploading";
+                            data.name = getString(R.string.promo_data_uploading);
                             publishProgress(data);
 
 
@@ -585,7 +588,7 @@ public class UploadActivity extends AppCompatActivity {
                                 }
                             }
                             data.value = 35;
-                            data.name = "Additional Promotion Data Uploading";
+                            data.name = getString(R.string.additional_data_uploading);
                             publishProgress(data);
 
 
@@ -700,9 +703,8 @@ public class UploadActivity extends AppCompatActivity {
                                 }
                             }
 
-
                             data.value = 35;
-                            data.name = "Additional Visibility Data";
+                            data.name = getString(R.string.additional_data_uploading);
                             publishProgress(data);
 
                             /////ashish close
@@ -845,7 +847,7 @@ public class UploadActivity extends AppCompatActivity {
                             }
 
                             data.value = 40;
-                            data.name = "T2P Data Uploading";
+                            data.name = getString(R.string.t2p_data_uploading);
                             publishProgress(data);
 
                             //Image Upload
@@ -1069,6 +1071,7 @@ public class UploadActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar.setTitle(getString(R.string.title_activity_upload));
     }
 
 

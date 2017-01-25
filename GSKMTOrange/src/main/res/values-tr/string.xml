@@ -208,7 +208,7 @@
     <string name="cancel">İptal etmek</string>
     <string name="empty">Boş</string>
 
-    <string name="check_faceup">Raf Payı, stoktan daha az veya eşit olmalıdır</string>
+    <string name="check_faceup">Önyüz sayısı stoktan daha az veya eşit olmalıdır</string>
     <string name="fill_stock_value">Önce stok değerini doldurun</string>
     <string name="want_add">Verileri eklemek istiyor musunuz?</string>
     <string name="promo_add">Promosyon  eklendi</string>
@@ -216,6 +216,18 @@
     <string name="select_promo">Seçiniz</string>
     <!--Gagan end code 3-->
 
+    //text for uploading screen
+
+    <string name="coverage_data_uploading">Kapsam yükleniyor</string>
+    <string name="availability_data_uploading">Bulunurluk verisi paylaşılıyor</string>
+    <string name="stock_data_uploading">Stok verisi paylaşılıyor</string>
+    <string name="t2p_data_uploading">Kalıcı teşhir verisi paylaşılıyor</string>
+    <string name="additional_data_uploading">Ek teşhir verisi paylaşılıyor</string>
+    <string name="promo_data_uploading">Promosyon verisi paylaşılıyor</string>
+    <string name="no_data_for_upload">Yükleme İçin Veri Yok</string>
+    <string name="title_activity_checkout">Çıkış yapmak</string>
+    <string name="Areyou_sure_take_backup">Verilerinizin yedeğini almak istediğinizden emin misiniz</string>
+    <string name="data_exported_successfully">Veritabanı Başarıyla Gönderildi</string>
 
 </resources>
 

@@ -110,7 +110,7 @@ public class StoreListActivity extends AppCompatActivity {
 
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(getString(R.string.title_activity_store_list));
-
+        db.open();
         storelist = db.getStoreData(date);
         coverage = db.getCoverageData(date);
 
