@@ -150,6 +150,7 @@
             android:name=".upload.UploadActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_upload"
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" />
         <activity
             android:name=".dailyentry.SettingsActivity"
