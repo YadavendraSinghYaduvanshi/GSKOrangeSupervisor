@@ -69,12 +69,15 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
     String lat, lon;
     GoogleApiClient mGoogleApiClient;
     ArrayList<CoverageBean> coverage_list;
+    Toolbar toolbar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storeimage);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -83,10 +86,6 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         img_clicked = (ImageView) findViewById(R.id.img_cam_selfie);
 
         btn_save = (Button) findViewById(R.id.btn_save_selfie);
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
 
@@ -353,6 +352,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
     protected void onResume() {
         super.onResume();
         updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar.setTitle(R.string.title_activity_store_image);
     }
 
     protected void onStart() {
