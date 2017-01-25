@@ -84,8 +84,6 @@ public class MainActivity extends AppCompatActivity
         db = new GSKOrangeDB(MainActivity.this);
         db.open();
 
-        coverageList = db.getCoverageData(date);
-
         webView.setWebViewClient(new MyWebViewClient());
 
         webView.getSettings().setJavaScriptEnabled(true);
@@ -128,6 +126,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        db.open();
+        coverageList = db.getCoverageData(date);
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(getString(R.string.main_menu_activity_name));

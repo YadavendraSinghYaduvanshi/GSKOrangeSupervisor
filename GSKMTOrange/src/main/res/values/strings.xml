@@ -259,8 +259,10 @@
     <string name="t2p_data_uploading">T2P Data Uploading</string>
     <string name="additional_data_uploading">Additional Visibility Data Uploading</string>
     <string name="promo_data_uploading">Promo Data Uploading</string>
+
     <string name="Areyou_sure_take_backup"> Are you sure you want to take the backup of your data</string>
 
     <string name="first_geotag_the_store">First geotag the store</string>
+
 
 </resources>
