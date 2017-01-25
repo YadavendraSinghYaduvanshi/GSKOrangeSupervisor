@@ -49,7 +49,7 @@ import cpm.com.gskmtorange.gsk_dailyentry.StoreWisePerformanceActivity;
  */
 
 public class StoreListActivity extends AppCompatActivity {
-    ArrayList<CoverageBean> coverage;
+    ArrayList<CoverageBean> coverage = new ArrayList<CoverageBean>();
     ArrayList<StoreBean> storelist = new ArrayList<StoreBean>();
     //ListView list;
     private SharedPreferences preferences;
@@ -110,7 +110,7 @@ public class StoreListActivity extends AppCompatActivity {
 
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(getString(R.string.title_activity_store_list));
-
+        db.open();
         storelist = db.getStoreData(date);
         coverage = db.getCoverageData(date);
 
@@ -200,10 +200,11 @@ public class StoreListActivity extends AppCompatActivity {
             viewHolder.txt.setText(current.getSTORE_NAME());
             viewHolder.address.setText(current.getADDRESS());
 
-            if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_VALID)) {
+           /* if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_VALID)) {
                 viewHolder.chkbtn.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setVisibility(View.INVISIBLE);
-            } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_U)) {
+            } else*/
+            if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_U)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.tick);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
@@ -228,20 +229,62 @@ public class StoreListActivity extends AppCompatActivity {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-            } else if (checkleavestatus(storeid)) {
+            }/* else if (checkleavestatus(storeid)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-            } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
+            }*/
+            /*else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
 
-                if (coverage.size() > 0) {
+            }*/
+            else if (coverage.size() > 0) {
+                String statusleave="";
 
-                    int i;
+                    for (int i = 0; i < coverage.size(); i++) {
 
-                    for (i = 0; i < coverage.size(); i++) {
+                       if (storeid.equals(coverage.get(i).getStoreId())) {
+                         statusleave=coverage.get(i).getStatus();
 
 
-                        if (coverage.get(i).getInTime() != null) {
+                           if(statusleave.equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)){
+
+                               viewHolder.imageview.setVisibility(View.VISIBLE);
+                               viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
+                               viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+
+
+                           }
+
+                           else if(coverage.get(i).getStatus().equalsIgnoreCase(CommonString.KEY_VALID))
+                           {
+                               viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
+                               viewHolder.chkbtn.setVisibility(View.VISIBLE);
+                               viewHolder.imageview.setVisibility(View.INVISIBLE);
+
+                           }
+                           else  if(coverage.get(i).getStatus().equalsIgnoreCase(CommonString.KEY_INVALID)){
+
+                               viewHolder.imageview.setVisibility(View.INVISIBLE);
+                               viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                               viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.green));
+                           }
+
+
+                           else {
+
+                               viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
+                               viewHolder.imageview.setVisibility(View.INVISIBLE);
+                               viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                           }
+
+                            break;
+
+
+
+
+                       }
+
+                       /* if (coverage.get(i).getInTime() != null) {
 
                             if (coverage.get(i).getOutTime() == null) {
 
@@ -256,11 +299,11 @@ public class StoreListActivity extends AppCompatActivity {
                                 break;
                             }
 
-                        }
+                        }*/
 
                     }
-                }
-            } else {
+
+        }else {
 
                 viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
                 viewHolder.imageview.setVisibility(View.INVISIBLE);
@@ -290,7 +333,9 @@ public class StoreListActivity extends AppCompatActivity {
                         Snackbar.make(v, R.string.title_store_list_activity_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
                         Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    } else if (checkleavestatus(store_id)) {
+                    }
+
+                    else if (checkleavestatus(store_id)) {
 
                         Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
@@ -298,20 +343,7 @@ public class StoreListActivity extends AppCompatActivity {
                     } else {
 
                         // PUT IN PREFERENCES
-                        editor = preferences.edit();
-                        editor.putString(CommonString.KEY_STORE_ID, current.getSTORE_ID());
-                        editor.putString(CommonString.KEY_STORE_NAME, current.getSTORE_NAME());
-                        editor.putString(CommonString.KEY_VISIT_DATE, current.getVISIT_DATE());
-                        editor.putString(CommonString.KEY_CAMERA_ALLOW, current.getCAMERA_ALLOW());
-                        editor.putString(CommonString.KEY_CHECKOUT_STATUS, current.getCHECKOUT_STATUS());
-                        editor.putString(CommonString.KEY_CLASS_ID, current.getCLASS_ID());
-                        editor.putString(CommonString.KEY_EMP_ID, current.getEMP_ID());
-                        editor.putString(CommonString.KEY_GEO_TAG, current.getGEO_TAG());
-                        editor.putString(CommonString.KEY_KEYACCOUNT_ID, current.getKEYACCOUNT_ID());
-                        editor.putString(CommonString.KEY_STORETYPE_ID, current.getSTORETYPE_ID());
-                        editor.putString(CommonString.KEY_UPLOAD_STATUS, current.getUPLOAD_STATUS());
 
-                        editor.commit();
 
                         // showMyDialog(store_id, current.getSTORE_NAME(), "Yes", current.getVISIT_DATE(), current.getCHECKOUT_STATUS());
 
@@ -336,7 +368,7 @@ public class StoreListActivity extends AppCompatActivity {
                             }
 
                             if (enteryflag) {
-                                showMyDialog(store_id, current.getSTORE_NAME(), "Yes", current.getVISIT_DATE(), current.getCHECKOUT_STATUS());
+                                showMyDialog(store_id, current.getSTORE_NAME(), "Yes", current.getVISIT_DATE(), current.getCHECKOUT_STATUS(),current.getGEO_TAG(),current);
                             }
                         } else {
                             Snackbar.make(v, R.string.title_store_list_checkout_Already_filled, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -439,7 +471,7 @@ public class StoreListActivity extends AppCompatActivity {
     }
 
 
-    void showMyDialog(final String storeCd, final String storeName, final String status, final String visitDate, final String checkout_status) {
+    void showMyDialog(final String storeCd, final String storeName, final String status, final String visitDate, final String checkout_status,final String GeotagStatus,final StoreBean current) {
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialogbox);
@@ -452,6 +484,25 @@ public class StoreListActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // find which radio button is selected
                 if (checkedId == R.id.yes) {
+
+                    if(!GeotagStatus.equalsIgnoreCase("N")){
+
+                        editor = preferences.edit();
+                        editor.putString(CommonString.KEY_STORE_ID, current.getSTORE_ID());
+                        editor.putString(CommonString.KEY_STORE_NAME, current.getSTORE_NAME());
+                        editor.putString(CommonString.KEY_VISIT_DATE, current.getVISIT_DATE());
+                        editor.putString(CommonString.KEY_CAMERA_ALLOW, current.getCAMERA_ALLOW());
+                        editor.putString(CommonString.KEY_CHECKOUT_STATUS, current.getCHECKOUT_STATUS());
+                        editor.putString(CommonString.KEY_CLASS_ID, current.getCLASS_ID());
+                        editor.putString(CommonString.KEY_EMP_ID, current.getEMP_ID());
+                        editor.putString(CommonString.KEY_GEO_TAG, current.getGEO_TAG());
+                        editor.putString(CommonString.KEY_KEYACCOUNT_ID, current.getKEYACCOUNT_ID());
+                        editor.putString(CommonString.KEY_STORETYPE_ID, current.getSTORETYPE_ID());
+                        editor.putString(CommonString.KEY_UPLOAD_STATUS, current.getUPLOAD_STATUS());
+
+                        editor.commit();
+
+
                     boolean flag = true;
                     if (coverage.size() > 0) {
                         for (int i = 0; i < coverage.size(); i++) {
@@ -462,7 +513,8 @@ public class StoreListActivity extends AppCompatActivity {
                         }
                     }
                     if (flag == true) {
-                        Intent in = new Intent(StoreListActivity.this, StoreimageActivity.class);
+
+                         Intent in = new Intent(StoreListActivity.this, StoreimageActivity.class);
                         startActivity(in);
                         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
                         dialog.cancel();
@@ -473,7 +525,31 @@ public class StoreListActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
 
-                } else if (checkedId == R.id.no) {
+                }
+                else{
+                        dialog.cancel();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(StoreListActivity.this);
+                        builder.setTitle(getResources().getString(R.string.dialog_title));
+                        builder.setMessage(R.string.first_geotag_the_store).setCancelable(false)
+                                .setPositiveButton(getResources().getString(R.string.ok),
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog1,
+                                                                int id) {
+
+                                                dialog1.cancel();
+
+                                            }
+                                        });
+
+
+                        AlertDialog alert = builder.create();
+
+                        alert.show();
+
+                    }
+
+
+                }else if (checkedId == R.id.no) {
 
                     dialog.cancel();
 

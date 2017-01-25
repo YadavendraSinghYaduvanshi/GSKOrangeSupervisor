@@ -124,7 +124,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
     ArrayList<GeotaggingBeans> geotaglist = new ArrayList<GeotaggingBeans>();
 
     ArrayList<GeotaggingBeans> geotaglistImage = new ArrayList<GeotaggingBeans>();
-
+    Boolean markerflag=true;
     private TextView percentage, message;
     private FailureGetterSetter failureGetterSetter = null;
     /**
@@ -251,7 +251,8 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         fabcarmabtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+
+               /* List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
                 for (int n = 0; n < list.size(); n++) {
                     if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
                         Log.d("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
@@ -261,9 +262,9 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                             break;
                         }
                     }
-                }
+                }*/
 
-                _pathforcheck = storeid + getResources().getString(R.string.store) + getResources().getString(R.string.image) + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck = storeid +"GeoTag" + visitData.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
                 _path = CommonString.FILE_PATH + _pathforcheck;
 
@@ -333,8 +334,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onConnected(Bundle bundle) {
 
-        mLastLocation = LocationServices.FusedLocationApi
-                .getLastLocation(mGoogleApiClient);
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -344,11 +344,17 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 mMap.setMyLocationEnabled(true);
 
-                // Add a marker of latest location and move the camera
-                LatLng latLng = new LatLng(latitude, longitude);
-                mMap.addMarker(new MarkerOptions().position(latLng));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                if(markerflag=true)
+                {
+                    // Add a marker of latest location and move the camera
+                    LatLng latLng = new LatLng(latitude, longitude);
+                    mMap.addMarker(new MarkerOptions().position(latLng));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+
+                }
+
             }
         }
 
@@ -526,6 +532,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                         img_str = _pathforcheck;
                         _pathforcheck = "";
+                        markerflag=false;
 
                     }
                 }

@@ -157,8 +157,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.img_cam_selfie:
 
-                _pathforcheck = store_id + getResources().getString(R.string.store)
-                        + getResources().getString(R.string.image) + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck = store_id +"SI" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
                 _path = CommonString.FILE_PATH + _pathforcheck;
 
