@@ -164,6 +164,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
             t2PGetterSetters = db.getT2PDefaultData(store_id);
         } else {
             for (int i = 0; i < t2PGetterSetters.size(); i++) {
+
                 ArrayList<GapsChecklistGetterSetter> gapsList = db.getGapsData(t2PGetterSetters.get(i).getKey_id());
                 ArrayList<SkuGetterSetter> skuList = db.getT2PSKUData(t2PGetterSetters.get(i).getKey_id());
 
@@ -174,14 +175,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
         }
 
         if (t2PGetterSetters.size() > 0) {
-
-           /* for (int i = 0; i < t2PGetterSetters.size(); i++) {
-
-                ArrayList<GapsChecklistGetterSetter> gapsChecklist = db.getGapsDefaultData(t2PGetterSetters.get(i).getDisplay_id());
-
-                t2PGetterSetters.get(i).setGapsChecklist(gapsChecklist);
-
-            }*/
 
             rec_t2p.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             t2PAdapter = new T2PAdapter(t2PGetterSetters);
@@ -717,7 +710,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     break;
                 } else if (t2PGetterSetters.get(i).getSkulist().size() == 0) {
                     flag = false;
-                    error_msg = getResources().getString(R.string.fill_sku_data);
+                    error_msg = getResources().getString(R.string.title_activity_fill_sku);
                     break;
                 }
             }

@@ -132,6 +132,13 @@ public class MainActivity extends AppCompatActivity
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(getString(R.string.main_menu_activity_name));
 
+        db.open();
+
+        coverageList = db.getCoverageData(date);
+
+        storelist = db.getStoreData(date);
+
+
     }
 
     @Override
@@ -227,8 +234,6 @@ public class MainActivity extends AppCompatActivity
                     if (coverageList.size() == 0) {
                         Snackbar.make(webView, R.string.no_data_for_upload, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
 
-                        Intent i = new Intent(getBaseContext(), UploadActivity.class);
-                        startActivity(i);
                     } else {
                         if (isStoreCheckedIn() && isValid()) {
 
@@ -253,8 +258,7 @@ public class MainActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_geotag) {
 
-            db.open();
-            storelist = db.getStoreData(date);
+
 
 
             if (storelist.size() > 0) {

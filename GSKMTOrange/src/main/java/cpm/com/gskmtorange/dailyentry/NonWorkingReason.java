@@ -310,7 +310,8 @@ public class NonWorkingReason extends AppCompatActivity implements
     public void onClick(View v) {
         // TODO Auto-generated method stub
         if (v.getId() == R.id.imgcam) {
-            _pathforcheck = store_id + "NonWorking" + _UserId + ".jpg";
+
+            _pathforcheck = store_id +"NonWorking" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
             _path = CommonString.FILE_PATH + _pathforcheck;
 

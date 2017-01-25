@@ -228,7 +228,11 @@
     <string name="title_activity_checkout">Çıkış yapmak</string>
     <string name="Areyou_sure_take_backup">Verilerinizin yedeğini almak istediğinizden emin misiniz</string>
     <string name="data_exported_successfully">Veritabanı Başarıyla Gönderildi</string>
+    <string name="first_geotag_the_store">İlk depoyu coğrafi etiketle göster</string>
 
+    <string name="fill_gaps_data">Lütfen GAP verilerini doldurun</string>
+
+    <string name="enter_the_values">Değerleri girin</string>
 </resources>
 
 
