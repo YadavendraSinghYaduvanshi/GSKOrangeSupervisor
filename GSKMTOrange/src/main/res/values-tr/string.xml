@@ -216,6 +216,16 @@
     <string name="select_promo">Seçiniz</string>
     <!--Gagan end code 3-->
 
+    //text for uploading screen
+
+    <string name="coverage_data_uploading">Kapsam yükleniyor</string>
+    <string name="availability_data_uploading">Bulunurluk verisi paylaşılıyor</string>
+    <string name="stock_data_uploading">Stok verisi paylaşılıyor</string>
+    <string name="t2p_data_uploading">Kalıcı teşhir verisi paylaşılıyor</string>
+    <string name="additional_data_uploading">Ek teşhir verisi paylaşılıyor</string>
+    <string name="promo_data_uploading">Promosyon verisi paylaşılıyor</string>
+    <string name="no_data_for_upload">Yükleme İçin Veri Yok</string>
+    <string name="title_activity_checkout">Çıkış yapmak</string>
 
 </resources>
 
