@@ -49,12 +49,14 @@ public class CommonString {
     public static final String KEY_REASON = "REASON";
     public static final String KEY_COVERAGE_REMARK = "REMARK";
     public static final String KEY_IMAGE = "IMAGE";
+    public static final String KEY_IMAGE1 = "IMAGE1";
+    public static final String KEY_IMAGE2 = "IMAGE2";
     public static final String KEY_IMAGE_URL = "IMAGE_URL";
     public static final String KEY_IMAGE_PATH = "IMAGE_PATH";
     public static final String KEY_ID = "Id";
     public static final String KEY_MERCHANDISER_ID = "MERCHANDISER_ID";
 
-    public static final String KEY_LOOGIN_PREF ="LOGIN_PREF";
+    public static final String KEY_LOOGIN_PREF = "LOGIN_PREF";
 
     //KEYS RELATED TO T2P COMPLIANCE
 
@@ -306,12 +308,11 @@ public class CommonString {
             + ")";
 
 
-
     public static final String CREATE_TABLE_STOCK_DIALOG = "CREATE TABLE "
             + TABLE_INSERT_STOCK_DIALOG + " (" + KEY_ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " VARCHAR,"
             + KEY_BRAND_ID + " VARCHAR," + KEY_BRAND + " VARCHAR,"
-            + KEY_DISPLAY_ID +" VARCHAR,"
+            + KEY_DISPLAY_ID + " VARCHAR,"
             + KEY_SKU_ID + " VARCHAR," + KEY_QUANTITY + " VARCHAR," + KEY_Common_ID + " VARCHAR,"
             + "categoryId" + " VARCHAR,"
             + KEY_SKUNAME + " VARCHAR,"
@@ -478,7 +479,7 @@ public class CommonString {
             + TABLE_INSERT_STOCK_DIALOG_MAIN + " (" + KEY_ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_STORE_ID + " VARCHAR,"
             + KEY_BRAND_ID + " VARCHAR," + KEY_BRAND + " VARCHAR,"
-            + KEY_DISPLAY_ID +" VARCHAR,"
+            + KEY_DISPLAY_ID + " VARCHAR,"
             + KEY_SKU_ID + " VARCHAR," + KEY_QUANTITY + " VARCHAR," + KEY_Common_ID + " VARCHAR,"
             + "categoryId" + " VARCHAR,"
             + KEY_SKUNAME + " VARCHAR,"
@@ -498,9 +499,11 @@ public class CommonString {
             + KEY_DISPLAY_ID + " INTEGER,"
             + KEY_BRAND + " VARCHAR,"
             + KEY_IMAGE_URL + " VARCHAR,"
-            + KEY_IMAGE_PATH+ " VARCHAR,"
+            + KEY_IMAGE_PATH + " VARCHAR,"
             + KEY_DISPLAY + " VARCHAR,"
             + KEY_IMAGE + " VARCHAR,"
+            + KEY_IMAGE1 + " VARCHAR,"
+            + KEY_IMAGE2 + " VARCHAR,"
             + KEY_REMARK + " VARCHAR,"
             + KEY_PRESENT + " VARCHAR"
 
@@ -517,7 +520,7 @@ public class CommonString {
             + KEY_CHECKLIST_ID + " INTEGER,"
             + KEY_DISPLAY_ID + " INTEGER,"
             + KEY_CHECKLIST + " VARCHAR,"
-             + KEY_PRESENT + " VARCHAR"
+            + KEY_PRESENT + " VARCHAR"
             + ")";
 
 
@@ -531,7 +534,7 @@ public class CommonString {
             + KEY_SKU_ID + " INTEGER,"
             + KEY_BRAND_ID + " INTEGER,"
             + KEY_STOCK + " INTEGER,"
-            + KEY_BRAND+ " VARCHAR,"
+            + KEY_BRAND + " VARCHAR,"
             + KEY_SKU + " VARCHAR"
             + ")";
 

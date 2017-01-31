@@ -261,6 +261,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                             .getColumnIndexOrThrow("IMAGE_PATH")));
 
                     t2p.setImage("");
+                    t2p.setImage1("");
+                    t2p.setImage2("");
 
                     t2p.setRemark("");
 
@@ -2576,6 +2578,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put(CommonString.KEY_IMAGE_URL, data.get(i).getRef_image_url());
                 values.put(CommonString.KEY_IMAGE_PATH, data.get(i).getRef_image_path());
                 values.put(CommonString.KEY_IMAGE, data.get(i).getImage());
+                values.put(CommonString.KEY_IMAGE1, data.get(i).getImage1());
+                values.put(CommonString.KEY_IMAGE2, data.get(i).getImage2());
                 values.put(CommonString.KEY_REMARK, data.get(i).getRemark());
                 values.put(CommonString.KEY_PRESENT, data.get(i).isPresent());
 
@@ -2829,6 +2833,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     tp.setRef_image_url(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE_URL)));
                     tp.setRef_image_path(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE_PATH)));
                     tp.setImage(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE)));
+                    tp.setImage1(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE1)));
+                    tp.setImage2(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE2)));
                     tp.setRemark(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_REMARK)));
                     tp.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
                     tp.setPresent((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PRESENT)).equalsIgnoreCase("1")));

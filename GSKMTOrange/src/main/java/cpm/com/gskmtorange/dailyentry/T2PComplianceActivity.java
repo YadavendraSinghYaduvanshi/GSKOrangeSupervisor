@@ -72,8 +72,11 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
     String categoryName, categoryId;
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
-    String path = "", str = CommonString.FILE_PATH, _pathforcheck = "", img = "";
-    int child_position = -1;
+    String str = CommonString.FILE_PATH,
+            path = "", path1 = "", path2 = "",
+            _pathforcheck = "", _pathforcheck1 = "", _pathforcheck2 = "",
+            img = "", img1 = "", img2 = "";
+    int child_position = -1, child_position1 = -1, child_position2 = -1;
     String error_msg;
     private SharedPreferences preferences;
 
@@ -164,9 +167,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         }
 
-        rec_t2p.addOnScrollListener(new RecyclerView.OnScrollListener(){
+        rec_t2p.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0)
                     fab.hide();
                 else if (dy < 0)
@@ -194,8 +197,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.t2p_item_layout, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.t2p_item_layout, parent, false);
             return new ViewHolder(view);
         }
 
@@ -214,9 +216,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
             holder.btn_gaps.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     showGapsDialog(mItem);
-
                 }
             });
 
@@ -230,9 +230,23 @@ public class T2PComplianceActivity extends AppCompatActivity {
                         mItem.setPresent(false);
                         mItem.getGapsChecklist().clear();
                         mItem.getSkulist().clear();
+
+                        //Camera
                         if (!mItem.getImage().equals("")) {
                             new File(str + mItem.getImage()).delete();
                             mItem.setImage("");
+                        }
+
+                        //Camera 1
+                        if (!mItem.getImage1().equals("")) {
+                            new File(str + mItem.getImage1()).delete();
+                            mItem.setImage1("");
+                        }
+
+                        //Camera 2
+                        if (!mItem.getImage2().equals("")) {
+                            new File(str + mItem.getImage2()).delete();
+                            mItem.setImage2("");
                         }
 
                     }
@@ -249,10 +263,27 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 }
             });
 
+            //Camera
             if (!img.equalsIgnoreCase("")) {
                 if (position == child_position) {
                     mItem.setImage(img);
                     img = "";
+                }
+            }
+
+            //Camera 1
+            if (!img1.equalsIgnoreCase("")) {
+                if (position == child_position1) {
+                    mItem.setImage1(img1);
+                    img1 = "";
+                }
+            }
+
+            //Camera 2
+            if (!img2.equalsIgnoreCase("")) {
+                if (position == child_position2) {
+                    mItem.setImage2(img2);
+                    img2 = "";
                 }
             }
 
@@ -263,16 +294,20 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 }
             });
 
+
             if (camera_allow.equals("1")) {
 
+                //Camera
                 holder.img_cam.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _pathforcheck = "T2P_Image_" + store_id + "_" + mItem.getBrand_id() + mItem.getDisplay_id() + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                        _pathforcheck = "T2P_Image_" + store_id + "_" + mItem.getBrand_id() +
+                                mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
+                                getCurrentTime().replace(":", "") + ".jpg";
                         child_position = position;
                         path = str + _pathforcheck;
 
-                        startCameraActivity();
+                        startCameraActivity(1);
                     }
                 });
 
@@ -287,8 +322,62 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 } else {
                     holder.img_cam.setBackgroundResource(R.mipmap.camera_green);
                 }
+
+                //Camera 1
+                holder.img_cam1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        _pathforcheck1 = "T2P_Image1_" + store_id + "_" + mItem.getBrand_id() +
+                                mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
+                                getCurrentTime().replace(":", "") + ".jpg";
+                        child_position1 = position;
+                        path = str + _pathforcheck1;
+
+                        startCameraActivity(2);
+                    }
+                });
+
+                if (mItem.getImage1().equals("")) {
+                    if (mItem.isPresent()) {
+                        holder.img_cam1.setBackgroundResource(R.mipmap.camera_orange);
+                    } else {
+                        //if not present camera disabled
+                        holder.img_cam1.setBackgroundResource(R.mipmap.camera_grey);
+                    }
+
+                } else {
+                    holder.img_cam1.setBackgroundResource(R.mipmap.camera_green);
+                }
+
+                //Camera 2
+                holder.img_cam2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        _pathforcheck2 = "T2P_Image2_" + store_id + "_" + mItem.getBrand_id() +
+                                mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
+                                getCurrentTime().replace(":", "") + ".jpg";
+                        child_position2 = position;
+                        path = str + _pathforcheck2;
+
+                        startCameraActivity(3);
+                    }
+                });
+
+                if (mItem.getImage2().equals("")) {
+                    if (mItem.isPresent()) {
+                        holder.img_cam2.setBackgroundResource(R.mipmap.camera_orange);
+                    } else {
+                        //if not present camera disabled
+                        holder.img_cam2.setBackgroundResource(R.mipmap.camera_grey);
+                    }
+
+                } else {
+                    holder.img_cam2.setBackgroundResource(R.mipmap.camera_green);
+                }
             } else {
                 holder.img_cam.setBackgroundResource(R.mipmap.camera_grey);
+                holder.img_cam1.setBackgroundResource(R.mipmap.camera_grey);
+                holder.img_cam2.setBackgroundResource(R.mipmap.camera_grey);
             }
 
 
@@ -296,6 +385,8 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
             holder.toggle_btn.setChecked(is_enabled);
             holder.img_cam.setEnabled(is_enabled);
+            holder.img_cam1.setEnabled(is_enabled);
+            holder.img_cam2.setEnabled(is_enabled);
             holder.btn_gaps.setEnabled(is_enabled);
             holder.btn_sku.setEnabled(is_enabled);
 
@@ -303,10 +394,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
             if (mItem.getGapsChecklist().size() > 0) {
                 holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.green));
             } else {
-                if(mItem.isPresent()){
+                if (mItem.isPresent()) {
                     holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                }
-                else {
+                } else {
                     holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.grey_background));
                 }
             }
@@ -314,10 +404,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
             if (mItem.getSkulist().size() > 0) {
                 holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.green));
             } else {
-                if(mItem.isPresent()){
+                if (mItem.isPresent()) {
                     holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                }
-                else {
+                } else {
                     holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.grey_background));
                 }
             }
@@ -333,7 +422,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
             public final View mView;
             public final LinearLayout parentLayout;
             public final TextView tv_brand, tv_display;
-            public final ImageView img_cam, img_remark;
+            public final ImageView img_cam;
+            public ImageView img_cam1, img_cam2;
+            //public ImageView img_remark;
             public final Button btn_gaps, btn_sku, btn_ref_img;
             public final ToggleButton toggle_btn;
 
@@ -346,7 +437,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 tv_brand = (TextView) mView.findViewById(R.id.tv_brand);
                 tv_display = (TextView) mView.findViewById(R.id.tv_display);
                 img_cam = (ImageView) mView.findViewById(R.id.img_cam);
-                img_remark = (ImageView) mView.findViewById(R.id.img_remark);
+                img_cam1 = (ImageView) mView.findViewById(R.id.img_cam1);
+                img_cam2 = (ImageView) mView.findViewById(R.id.img_cam2);
+                // img_remark = (ImageView) mView.findViewById(R.id.img_remark);
                 btn_gaps = (Button) mView.findViewById(R.id.btn_gaps);
                 btn_sku = (Button) mView.findViewById(R.id.btn_sku);
                 btn_ref_img = (Button) mView.findViewById(R.id.btn_ref_image);
@@ -600,7 +693,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         return cdate;
     }
 
-    private void startCameraActivity() {
+    private void startCameraActivity(int pos) {
         try {
 
             Log.i("Stock & Facing ", "startCameraActivity()");
@@ -638,7 +731,8 @@ public class T2PComplianceActivity extends AppCompatActivity {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             intent.setPackage(defaultCameraPackage);
-            startActivityForResult(intent, 1);
+            //startActivityForResult(intent, 1);
+            startActivityForResult(intent, pos);
             //startActivityForResult(intent, position);
 
         } catch (ActivityNotFoundException e) {
@@ -647,7 +741,8 @@ public class T2PComplianceActivity extends AppCompatActivity {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             intent.setPackage(gallery_package);
-            startActivityForResult(intent, 0);
+            //startActivityForResult(intent, 0);
+            startActivityForResult(intent, pos);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -656,8 +751,8 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("Stock & Facing", "resultCode: " + resultCode);
-        switch (resultCode) {
+        Log.e("Stock & Facing", "resultCode: " + resultCode + " requestCode: " + requestCode);
+        /*switch (resultCode) {
             case 0:
                 Log.e("Stock & Facing", "User cancelled");
 
@@ -671,6 +766,49 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     }
                 }
                 break;
+        }*/
+
+        switch (requestCode) {
+            case 1:
+                if (resultCode == 0) {
+                    Log.e("Stock & Facing", "User cancelled");
+                } else if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img = _pathforcheck;
+                            t2PAdapter.notifyDataSetChanged();
+                            _pathforcheck = "";
+                        }
+                    }
+                }
+                break;
+            case 2:
+                if (resultCode == 0) {
+                    Log.e("Stock & Facing", "User cancelled");
+                } else if (resultCode == -1) {
+                    if (_pathforcheck1 != null && !_pathforcheck1.equals("")) {
+                        if (new File(str + _pathforcheck1).exists()) {
+                            img1 = _pathforcheck1;
+                            t2PAdapter.notifyDataSetChanged();
+                            _pathforcheck1 = "";
+                        }
+                    }
+                }
+                break;
+
+            case 3:
+                if (resultCode == 0) {
+                    Log.e("Stock & Facing", "User cancelled");
+                } else if (resultCode == -1) {
+                    if (_pathforcheck2 != null && !_pathforcheck2.equals("")) {
+                        if (new File(str + _pathforcheck2).exists()) {
+                            img2 = _pathforcheck2;
+                            t2PAdapter.notifyDataSetChanged();
+                            _pathforcheck2 = "";
+                        }
+                    }
+                }
+                break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -681,18 +819,21 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         for (int i = 0; i < t2PGetterSetters.size(); i++) {
 
-            if(t2PGetterSetters.get(i).isPresent()){
-                if (camera_allow.equals("1") && t2PGetterSetters.get(i).getImage().equals("")) {
-                    flag = false;
-                    error_msg = getResources().getString(R.string.click_image);
-                    break;
-                } else if (t2PGetterSetters.get(i).getGapsChecklist().size() == 0) {
+            if (t2PGetterSetters.get(i).isPresent()) {
+                //if (camera_allow.equals("1") && t2PGetterSetters.get(i).getImage().equals("")) {
+                if (t2PGetterSetters.get(i).getGapsChecklist().size() == 0) {
                     flag = false;
                     error_msg = getResources().getString(R.string.fill_gaps_data);
                     break;
                 } else if (t2PGetterSetters.get(i).getSkulist().size() == 0) {
                     flag = false;
                     error_msg = getResources().getString(R.string.fill_sku_data);
+                    break;
+                } else if (camera_allow.equals("1") && (t2PGetterSetters.get(i).getImage().equals("") &&
+                        t2PGetterSetters.get(i).getImage1().equals("") &&
+                        t2PGetterSetters.get(i).getImage2().equals(""))) {
+                    flag = false;
+                    error_msg = getResources().getString(R.string.click_image);
                     break;
                 }
             }
@@ -986,7 +1127,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         return true;
     }
 
-    public void showPlanogram(String planogram_image){
+    public void showPlanogram(String planogram_image) {
 
         final Dialog dialog = new Dialog(T2PComplianceActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
