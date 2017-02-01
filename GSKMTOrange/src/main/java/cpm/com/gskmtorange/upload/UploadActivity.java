@@ -736,18 +736,10 @@ public class UploadActivity extends AppCompatActivity {
                                         gaps_child = "[GAPS]"
                                                 + "[MID]" + mid + "[/MID]"
                                                 + "[USER_ID]" + userId + "[/USER_ID]"
-                                                + "[CHECK_LIST_ID]"
-                                                + gapsList.get(l).getChecklist_id()
-                                                + "[/CHECK_LIST_ID]"
-                                                + "[DISPLAY_ID]"
-                                                + gapsList.get(l).getDisplay_id()
-                                                + "[/DISPLAY_ID]"
-                                                + "[PRESENT]"
-                                                + present
-                                                + "[/PRESENT]"
-                                                + "[COMMON_ID]"
-                                                + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
-                                                + "[/COMMON_ID]"
+                                                + "[CHECK_LIST_ID]" + gapsList.get(l).getChecklist_id() + "[/CHECK_LIST_ID]"
+                                                + "[DISPLAY_ID]" + gapsList.get(l).getDisplay_id() + "[/DISPLAY_ID]"
+                                                + "[PRESENT]" + present + "[/PRESENT]"
+                                                + "[COMMON_ID]" + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id()) + "[/COMMON_ID]"
                                                 + "[/GAPS]";
                                         gaps_xml = gaps_xml + gaps_child;
                                     }
@@ -760,18 +752,10 @@ public class UploadActivity extends AppCompatActivity {
                                         sku_child = "[SKU]"
                                                 + "[MID]" + mid + "[/MID]"
                                                 + "[USER_ID]" + userId + "[/USER_ID]"
-                                                + "[SKU_ID]"
-                                                + skuList.get(k).getSKU_ID()
-                                                + "[/SKU_ID]"
-                                                + "[BRAND_ID]"
-                                                + skuList.get(k).getBRAND_ID()
-                                                + "[/BRAND_ID]"
-                                                + "[STOCK]"
-                                                + skuList.get(k).getSTOCK()
-                                                + "[/STOCK]"
-                                                + "[COMMON_ID]"
-                                                + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
-                                                + "[/COMMON_ID]"
+                                                + "[SKU_ID]" + skuList.get(k).getSKU_ID() + "[/SKU_ID]"
+                                                + "[BRAND_ID]" + skuList.get(k).getBRAND_ID() + "[/BRAND_ID]"
+                                                + "[STOCK]" + skuList.get(k).getSTOCK() + "[/STOCK]"
+                                                + "[COMMON_ID]" + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id()) + "[/COMMON_ID]"
                                                 + "[/SKU]";
                                         sku_xml = sku_xml + sku_child;
                                     }
@@ -786,30 +770,16 @@ public class UploadActivity extends AppCompatActivity {
                                     onXML = "[T2P_DATA]"
                                             + "[MID]" + mid + "[/MID]"
                                             + "[USER_ID]" + userId + "[/USER_ID]"
-                                            + "[CATEGORY_ID]"
-                                            + Integer.parseInt(t2PGetterSetters.get(i1).getCategory_id())
-                                            + "[/CATEGORY_ID]"
-                                            + "[BRAND_ID]"
-                                            + Integer.parseInt(t2PGetterSetters.get(i1).getBrand_id())
-                                            + "[/BRAND_ID]"
-                                            + "[DISPLAY_ID]"
-                                            + Integer.parseInt(t2PGetterSetters.get(i1).getDisplay_id())
-                                            + "[/DISPLAY_ID]"
-                                            + "[COMMON_ID]"
-                                            + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id())
-                                            + "[/COMMON_ID]"
-                                            + "[IMAGE]"
-                                            + t2PGetterSetters.get(i1).getImage()
-                                            + "[/IMAGE]"
-                                            + "[PRESENT]"
-                                            + present
-                                            + "[/PRESENT]"
-                                            + "[GAPS_DATA]"
-                                            + gaps_xml
-                                            + "[/GAPS_DATA]"
-                                            + "[SKU_DATA]"
-                                            + sku_xml
-                                            + "[/SKU_DATA]"
+                                            + "[CATEGORY_ID]" + Integer.parseInt(t2PGetterSetters.get(i1).getCategory_id()) + "[/CATEGORY_ID]"
+                                            + "[BRAND_ID]" + Integer.parseInt(t2PGetterSetters.get(i1).getBrand_id()) + "[/BRAND_ID]"
+                                            + "[DISPLAY_ID]" + Integer.parseInt(t2PGetterSetters.get(i1).getDisplay_id()) + "[/DISPLAY_ID]"
+                                            + "[COMMON_ID]" + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id()) + "[/COMMON_ID]"
+                                            + "[IMAGE]" + t2PGetterSetters.get(i1).getImage() + "[/IMAGE]"
+                                            + "[IMAGE1]" + t2PGetterSetters.get(i1).getImage1() + "[/IMAGE1]"
+                                            + "[IMAGE2]" + t2PGetterSetters.get(i1).getImage2() + "[/IMAGE2]"
+                                            + "[PRESENT]" + present + "[/PRESENT]"
+                                            + "[GAPS_DATA]" + gaps_xml + "[/GAPS_DATA]"
+                                            + "[SKU_DATA]" + sku_xml + "[/SKU_DATA]"
                                             + "[/T2P_DATA]";
 
                                     t2p_data_xml = t2p_data_xml + onXML;
@@ -981,6 +951,46 @@ public class UploadActivity extends AppCompatActivity {
                                     }
                                 }
 
+                                if (t2PGetterSetters.get(m).getImage1() != null && !t2PGetterSetters.get(m).getImage1().equals("")) {
+                                    if (new File(CommonString.FILE_PATH + t2PGetterSetters.get(m).getImage1()).exists()) {
+
+                                        try {
+                                            result = UploadImage(t2PGetterSetters.get(m).getImage1(), "T2PImages1");
+                                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                return "T2PImages1";
+                                            }
+
+                                            runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    message.setText("T2P Images1 Uploaded");
+                                                }
+                                            });
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                                if (t2PGetterSetters.get(m).getImage2() != null && !t2PGetterSetters.get(m).getImage2().equals("")) {
+                                    if (new File(CommonString.FILE_PATH + t2PGetterSetters.get(m).getImage2()).exists()) {
+
+                                        try {
+                                            result = UploadImage(t2PGetterSetters.get(m).getImage2(), "T2PImages2");
+                                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                return "T2PImages2";
+                                            }
+
+                                            runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    message.setText("T2P Images2 Uploaded");
+                                                }
+                                            });
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
                             }
 
 
@@ -1041,7 +1051,7 @@ public class UploadActivity extends AppCompatActivity {
                 e.printStackTrace();
             } catch (XmlPullParserException e) {
                 e.printStackTrace();
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -1056,7 +1066,7 @@ public class UploadActivity extends AppCompatActivity {
 
             if (result.contains(CommonString.KEY_SUCCESS)) {
                 db.deleteAllTables();
-                showAlert(getString(R.string.menu_upload_data));           
+                showAlert(getString(R.string.menu_upload_data));
 
                 //showAlert(getString(R.string.menu_upload_data));
 
