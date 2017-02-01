@@ -567,6 +567,7 @@ public class StoreListActivity extends AppCompatActivity {
 
 
                                                 Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
+                                                in.putExtra(CommonString.KEY_STORE_ID,current.getSTORE_ID());
                                                 startActivity(in);
 
                                             }
@@ -587,6 +588,7 @@ public class StoreListActivity extends AppCompatActivity {
 
 
                         Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
+                        in.putExtra(CommonString.KEY_STORE_ID,current.getSTORE_ID());
                         startActivity(in);
                     }
 

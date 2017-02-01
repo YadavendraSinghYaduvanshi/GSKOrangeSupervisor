@@ -1033,6 +1033,7 @@ public class UploadActivity extends AppCompatActivity {
                     }
                 }
 
+                return result.toString();
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -1044,7 +1045,7 @@ public class UploadActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            return result.toString();
+            return "";
         }
 
         @Override

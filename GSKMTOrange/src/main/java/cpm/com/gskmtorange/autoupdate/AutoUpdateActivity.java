@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -24,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 import cpm.com.gskmtorange.LoginActivity;
 import cpm.com.gskmtorange.R;
@@ -43,6 +46,8 @@ public class AutoUpdateActivity extends AppCompatActivity {
     ProgressBar progressBar;
     private boolean status;
 
+    private SharedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +56,15 @@ public class AutoUpdateActivity extends AppCompatActivity {
 
         path = intent.getStringExtra(CommonString.KEY_PATH);
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Parinaam");
-        builder.setMessage("New Update Available.")
+        builder.setMessage(getString(R.string.new_update_available))
                 .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         SharedPreferences preferences = PreferenceManager
@@ -116,7 +125,7 @@ public class AutoUpdateActivity extends AppCompatActivity {
                 versionCode = getPackageManager().getPackageInfo(
                         getPackageName(), 0).versionName;
 
-                data.name = "Upgraditing Version : " + versionCode;
+                data.name = "Upgrading Version : " + versionCode;
                 publishProgress(data);
 
                 // download application
@@ -278,6 +287,31 @@ public class AutoUpdateActivity extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private static boolean updateResources(Context context, String language) {
+
+        String lang;
+
+        if (language.equalsIgnoreCase("English")) {
+            lang = "EN";
+        } else if (language.equalsIgnoreCase("UAE")) {
+            lang = "AR";
+        } else {
+            lang = "TR";
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
     }
 
 }
