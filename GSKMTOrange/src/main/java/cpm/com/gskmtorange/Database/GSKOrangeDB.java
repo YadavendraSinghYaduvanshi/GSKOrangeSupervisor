@@ -592,9 +592,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
             values.put("CHECKOUT_STATUS", status);
             values1.put(CommonString.KEY_COVERAGE_STATUS, status);
-
+            db.update(CommonString.TABLE_COVERAGE_DATA, values1, CommonString.KEY_STORE_ID + "='" + id + "'", null);
             db.update(CommonString.KEY_JOURNEY_PLAN, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
-            //db.update(CommonString.TABLE_COVERAGE_DATA, values1, CommonString.KEY_STORE_ID + "='" + id + "'", null);
+
 
         } catch (Exception ex) {
 

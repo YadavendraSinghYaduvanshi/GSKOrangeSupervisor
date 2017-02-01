@@ -145,9 +145,9 @@ public class ServiceActivityFragment extends Fragment {
     public void showExportDialog(){
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-        builder1.setMessage("Are you sure you want to take the backup of your data")
+        builder1.setMessage(R.string.Areyou_sure_take_backup)
                 .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @SuppressWarnings("resource")
                     public void onClick(DialogInterface dialog, int id) {
                         try {
@@ -192,7 +192,7 @@ public class ServiceActivityFragment extends Fragment {
                         }
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

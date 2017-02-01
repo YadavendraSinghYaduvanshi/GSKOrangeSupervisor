@@ -101,7 +101,9 @@ public class NonWorkingReason extends AppCompatActivity implements
 
         _UserId = preferences.getString(CommonString.KEY_USERNAME, "");
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
-        store_id = preferences.getString(CommonString.KEY_STORE_ID, "");
+
+        store_id = getIntent().getStringExtra(CommonString.KEY_STORE_ID);
+        //store_id = preferences.getString(CommonString.KEY_STORE_ID, "");
 
         database = new GSKOrangeDB(this);
         database.open();
@@ -310,7 +312,8 @@ public class NonWorkingReason extends AppCompatActivity implements
     public void onClick(View v) {
         // TODO Auto-generated method stub
         if (v.getId() == R.id.imgcam) {
-            _pathforcheck = store_id + "NonWorking" + _UserId + ".jpg";
+
+            _pathforcheck = store_id +"NonWorking" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
             _path = CommonString.FILE_PATH + _pathforcheck;
 

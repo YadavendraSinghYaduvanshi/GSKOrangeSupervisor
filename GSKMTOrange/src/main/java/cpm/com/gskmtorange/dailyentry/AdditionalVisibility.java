@@ -676,8 +676,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             btnimage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    _pathforcheck = store_id + getResources().getString(R.string.store)
-                            + getResources().getString(R.string.image) + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck = store_id + "AdditionalVisibility" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
                     _path = CommonString.FILE_PATH + _pathforcheck;
                     intime = getCurrentTime();

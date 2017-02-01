@@ -260,4 +260,10 @@
     <string name="additional_data_uploading">Additional Visibility Data Uploading</string>
     <string name="promo_data_uploading">Promo Data Uploading</string>
 
+    <string name="Areyou_sure_take_backup"> Are you sure you want to take the backup of your data</string>
+
+    <string name="first_geotag_the_store">First geotag the store</string>
+
+    <string name="new_update_available">New Update Available \n\n Yeni güncelleme var</string>
+
 </resources>

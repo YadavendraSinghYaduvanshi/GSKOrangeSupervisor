@@ -34,11 +34,13 @@ public class SettingsActivity extends AppCompatActivity implements SelectLanguag
 
     private SharedPreferences.Editor editor = null;
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -131,6 +133,7 @@ public class SettingsActivity extends AppCompatActivity implements SelectLanguag
     protected void onResume() {
         super.onResume();
         updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar.setTitle(R.string.title_activity_settings);
     }
 
     private static boolean updateResources(Context context, String language) {

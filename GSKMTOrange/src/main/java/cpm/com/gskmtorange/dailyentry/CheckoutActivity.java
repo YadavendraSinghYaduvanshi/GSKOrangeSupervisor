@@ -293,7 +293,8 @@ public class CheckoutActivity extends AppCompatActivity {
 
                 finish();
 
-            } else if (!result.equals("")) {
+            }
+            else if (!result.equals("")) {
 				/*AlertMessage message = new AlertMessage(
 						CheckOutStoreActivity.this, CommonString1.ERROR + result, "success", null);
 				message.showMessage();*/

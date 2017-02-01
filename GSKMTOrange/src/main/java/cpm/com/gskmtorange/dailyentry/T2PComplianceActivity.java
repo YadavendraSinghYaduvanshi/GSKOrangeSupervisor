@@ -1,6 +1,7 @@
 package cpm.com.gskmtorange.dailyentry;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -53,6 +54,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
+import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
@@ -122,12 +124,35 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
                 if (isValid()) {
 
-                    db.InsertT2PData(t2PGetterSetters, store_id, categoryId);
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                            T2PComplianceActivity.this);
+                    // set title
+                    alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
+                    // set dialog message
+                    alertDialogBuilder
+                            .setMessage(getResources().getString(R.string.title_activity_Want_save))
+                            .setCancelable(false)
+                            .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    db.InsertT2PData(t2PGetterSetters, store_id, categoryId);
+                                    //Snackbar.make(view, "Data Saved", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // if this button is clicked, just close
+                                    // the dialog box and do nothing
+                                    dialog.cancel();
+                                }
+                            });
 
-                    Snackbar.make(view, "Data Saved", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    // create alert dialog
+                    AlertDialog alertDialog = alertDialogBuilder.create();
 
-                    finish();
+                    // show it
+                    alertDialog.show();
+
                 } else {
                     Snackbar.make(view, error_msg, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -142,6 +167,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
             t2PGetterSetters = db.getT2PDefaultData(store_id);
         } else {
             for (int i = 0; i < t2PGetterSetters.size(); i++) {
+
                 ArrayList<GapsChecklistGetterSetter> gapsList = db.getGapsData(t2PGetterSetters.get(i).getKey_id());
                 ArrayList<SkuGetterSetter> skuList = db.getT2PSKUData(t2PGetterSetters.get(i).getKey_id());
 
@@ -152,14 +178,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
         }
 
         if (t2PGetterSetters.size() > 0) {
-
-           /* for (int i = 0; i < t2PGetterSetters.size(); i++) {
-
-                ArrayList<GapsChecklistGetterSetter> gapsChecklist = db.getGapsDefaultData(t2PGetterSetters.get(i).getDisplay_id());
-
-                t2PGetterSetters.get(i).setGapsChecklist(gapsChecklist);
-
-            }*/
 
             rec_t2p.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             t2PAdapter = new T2PAdapter(t2PGetterSetters);
@@ -827,7 +845,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     break;
                 } else if (t2PGetterSetters.get(i).getSkulist().size() == 0) {
                     flag = false;
-                    error_msg = getResources().getString(R.string.fill_sku_data);
+                    error_msg = getResources().getString(R.string.title_activity_fill_sku);
                     break;
                 } else if (camera_allow.equals("1") && (t2PGetterSetters.get(i).getImage().equals("") &&
                         t2PGetterSetters.get(i).getImage1().equals("") &&
