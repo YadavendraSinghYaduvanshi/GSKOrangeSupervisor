@@ -636,7 +636,7 @@ public class UploadActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    onXML = "[ADDITIONAL_VISIBILITY_DATA]"
+                                    onXML = "[ADDITIONAL_VISIBILITY_NEW]"
                                             + "[MID]" + mid + "[/MID]"
                                             + "[USER_ID]"
                                             + userId
@@ -650,19 +650,25 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[ADDITIONAL_DISPLAY]"
                                             + additionalVisibilityList.get(J).getBtn_toogle()
                                             + "[/ADDITIONAL_DISPLAY]"
-                                            + "[BRAND_ID]"
+                                            /* + "[BRAND_ID]"
                                             + additionalVisibilityList.get(J).getBrand_id()
-                                            + "[/BRAND_ID]"
+                                            + "[/BRAND_ID]"*/
                                             + "[IMAGE_URL]"
                                             + additionalVisibilityList.get(J).getImage()
                                             + "[/IMAGE_URL]"
+                                            + "[IMAGE_URL1]"
+                                            + additionalVisibilityList.get(J).getImage2()
+                                            + "[/IMAGE_URL1]"
+                                            + "[IMAGE_URL2]"
+                                            + additionalVisibilityList.get(J).getImage3()
+                                            + "[/IMAGE_URL2]"
                                             + "[DISPLAY_ID]"
                                             + additionalVisibilityList.get(J).getSku_id()
                                             + "[/DISPLAY_ID]"
                                             + "[SKU_LIST]"
                                             + additional_visibility_dialog_xml
                                             + "[/SKU_LIST]"
-                                            + "[/ADDITIONAL_VISIBILITY_DATA]";
+                                            + "[/ADDITIONAL_VISIBILITY_NEW]";
 
 
                                     additional_visibility_data_xml = additional_visibility_data_xml + onXML;
@@ -677,7 +683,7 @@ public class UploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "ADDITIONAL_VISIBILITY_DATA");
+                                request.addProperty("KEYS", "ADDITIONAL_VISIBILITY_NEW");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
@@ -893,8 +899,53 @@ public class UploadActivity extends AppCompatActivity {
                                             }
                                         }
                                     }
+
+                                    if (additionalVisibilityList.get(i1).getImage2() != null && !additionalVisibilityList.get(i1).getImage2().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + additionalVisibilityList.get(i1).getImage2()).exists()) {
+
+                                            try {
+                                                result = UploadImage(additionalVisibilityList.get(i1).getImage2(), "AdditionalVisibilityImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "AdditionalVisibilityImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("AdditionalVisibilityImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+
+                                    if (additionalVisibilityList.get(i1).getImage3() != null && !additionalVisibilityList.get(i1).getImage3().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + additionalVisibilityList.get(i1).getImage3()).exists()) {
+
+                                            try {
+                                                result = UploadImage(additionalVisibilityList.get(i1).getImage3(), "AdditionalVisibilityImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "AdditionalVisibilityImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("AdditionalVisibilityImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
                                 }
                             }
+
 
                             //// ashish close image
 

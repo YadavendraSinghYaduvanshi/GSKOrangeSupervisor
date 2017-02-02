@@ -56,6 +56,27 @@ public class AddittionalGetterSetter {
 
     String Brand,Brand_id,Sku,Sku_id,Store_id,Image;
 
+
+    String Image2;
+
+    public String getImage3() {
+        return Image3;
+    }
+
+    public void setImage3(String image3) {
+        Image3 = image3;
+    }
+
+    public String getImage2() {
+        return Image2;
+    }
+
+    public void setImage2(String image2) {
+        Image2 = image2;
+    }
+
+    String Image3;
+
     public String getKey_id() {
         return key_id;
     }

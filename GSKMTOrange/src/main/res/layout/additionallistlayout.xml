@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="184dp"
+        android:layout_height="96dp"
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -22,6 +22,7 @@
             android:layout_marginTop="10dp"
             android:layout_weight="10"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:weightSum="25">
 
             <TextView
@@ -51,14 +52,14 @@
             android:layout_marginBottom="2dp"
             android:layout_weight="10"
             android:orientation="horizontal"
-            android:weightSum="25">
+            android:weightSum="50">
 
             <TextView
 
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
 
-                android:layout_weight="10"
+                android:layout_weight="30"
                 android:text="@string/displayname"
                 android:textStyle="bold" />
 
@@ -106,19 +107,21 @@
         <!--         </LinearLayout> -->
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="10"
+            android:orientation="vertical"
             android:weightSum="25">
 
             <Button
                 android:id="@+id/delete_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="10"
+                android:layout_marginRight="30dp"
+                android:layout_weight="7"
                 android:background="@color/grey_background"
-                android:text="@string/delete" />
+                android:text="@string/delete"
+                android:layout_gravity="right"/>
 
         </LinearLayout>
 
