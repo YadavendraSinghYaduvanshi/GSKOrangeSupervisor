@@ -945,6 +945,46 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                     }
                                 }
 
+                                if (t2PGetterSetters.get(m).getImage1() != null && !t2PGetterSetters.get(m).getImage1().equals("")) {
+                                    if (new File(CommonString.FILE_PATH + t2PGetterSetters.get(m).getImage1()).exists()) {
+
+                                        try {
+                                            result = UploadImage(t2PGetterSetters.get(m).getImage1(), "T2PImages1");
+                                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                return "T2PImages1";
+                                            }
+
+                                            runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    message.setText("T2P Images1 Uploaded");
+                                                }
+                                            });
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                                if (t2PGetterSetters.get(m).getImage2() != null && !t2PGetterSetters.get(m).getImage2().equals("")) {
+                                    if (new File(CommonString.FILE_PATH + t2PGetterSetters.get(m).getImage2()).exists()) {
+
+                                        try {
+                                            result = UploadImage(t2PGetterSetters.get(m).getImage2(), "T2PImages2");
+                                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                return "T2PImages2";
+                                            }
+
+                                            runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    message.setText("T2P Images2 Uploaded");
+                                                }
+                                            });
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
                             }
 
 
