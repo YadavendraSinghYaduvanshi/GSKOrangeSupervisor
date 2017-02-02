@@ -32,9 +32,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Locale;
@@ -91,6 +93,8 @@ public class DownloadActivity extends AppCompatActivity {
     private TextView percentage, message;
     private SharedPreferences preferences = null;
     Toolbar toolbar;
+    String str;
+    boolean ResultFlag=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -473,7 +477,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "DISPLAY_CHECKLIST_MASTER";
                     }
-                    data.value = 55;
+                    data.value = 60;
                     data.name = "DISPLAY_CHECKLIST_MASTER " + getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -506,7 +510,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     if (mappingChecklistGetterSetter.getCHECKLIST_ID().size() > 0) {
-                        data.value = 60;
+                        data.value = 65;
                         data.name = "MAPPING_DISPLAY_CHECKLIST " + getResources().getString(R.string.download_data);
                     } else {
                         //return "MAPPING_DISPLAY_CHECKLIST";
@@ -545,7 +549,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         return "NON_WORKING_REASON";
                     }
-                    data.value = 65;
+                    data.value = 70;
                     data.name = "NON_WORKING_REASON " + getResources().getString(R.string.download_data);
                 }
                 publishProgress(data);
@@ -579,7 +583,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     if (mappingPromotionGetterSetter.getSTORE_ID().size() > 0) {
-                        data.value = 70;
+                        data.value = 75;
                         data.name = "MAPPING_PROMOTION " + getResources().getString(R.string.download_data);
                     }
 
@@ -619,7 +623,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     if (mapping_additional_promotion_masterGetterSetter.getSTORE_ID().size() > 0) {
-                        data.value = 75;
+                        data.value = 80;
                         data.name = "MAPPING_ADDITIONAL_PROMOTION " + getResources().getString(R.string.download_data);
                     }
                 }
@@ -654,7 +658,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     if (store_performance_masterGetterSetter.getSTORE_ID().size() > 0) {
-                        data.value = 80;
+                        data.value = 85;
                         data.name = "STORE_PERFORMANCE Data Download";
                     } else {
                         //return "STORE_PERFORMANCE";
@@ -694,7 +698,7 @@ public class DownloadActivity extends AppCompatActivity {
                     } else {
                         //return "ADDITIONAL_DISPLAY_MASTER";
                     }
-                    data.value = 100;
+                    data.value = 90;
                     data.name = "ADDITIONAL_DISPLAY_MASTER Data Download";
                 }
                 publishProgress(data);
@@ -727,7 +731,7 @@ public class DownloadActivity extends AppCompatActivity {
                         TableBean.setMappingPlanogram(table_mapping_planogram);
                     }
                     if (mapping_planogram_masterGetterSetter.getKEYACCOUNT_ID().size() > 0) {
-                        data.value = 85;
+                        data.value = 92;
                         data.name = "MAPPING_PLANOGRAM Data Download";
                     } else {
                         //return "MAPPING_PLANOGRAM";
@@ -765,7 +769,7 @@ public class DownloadActivity extends AppCompatActivity {
                     }
 
                     if (mapping_sos_target_masterGetterSetter.getSTORE_ID().size() > 0) {
-                        data.value = 75;
+                        data.value = 95;
                         data.name = "MAPPING_SOS_TARGET " + getResources().getString(R.string.download_data);
                     }
                 }
@@ -910,31 +914,53 @@ public class DownloadActivity extends AppCompatActivity {
                 db.InsertMAPPING_SOS_TARGET(mapping_sos_target_masterGetterSetter);
 
             } catch (MalformedURLException e) {
-                /*final AlertMessage message = new AlertMessage(
-                        CompleteDownloadActivity.this,
-                        AlertMessage.MESSAGE_EXCEPTION, "download", e);*/
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        showAlert(CommonString.MESSAGE_EXCEPTION);
-                    }
-                });
-            } catch (IOException e) {
-               /* final AlertMessage message = new AlertMessage(
-                        CompleteDownloadActivity.this,
-                        AlertMessage.MESSAGE_SOCKETEXCEPTION, "socket", e);*/
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showAlert(CommonString.MESSAGE_SOCKETEXCEPTION);
-                    }
-                });
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
+                ResultFlag=false;
+                str=CommonString.MESSAGE_EXCEPTION;
+                return CommonString.MESSAGE_EXCEPTION;
             }
-            return "";
+            catch (SocketTimeoutException e) {
+                ResultFlag=false;
+                str=CommonString.MESSAGE_SOCKETEXCEPTION;
+                return CommonString.MESSAGE_SOCKETEXCEPTION;
+            }
+            catch (InterruptedIOException e){
+
+                ResultFlag=false;
+                str=CommonString.MESSAGE_EXCEPTION;
+                return CommonString.MESSAGE_EXCEPTION;
+
+            } catch (IOException e) {
+
+                ResultFlag=false;
+                str=CommonString.MESSAGE_SOCKETEXCEPTION;
+                return CommonString.MESSAGE_SOCKETEXCEPTION;
+            }
+            catch (XmlPullParserException e) {
+                ResultFlag=false;
+                str=CommonString.MESSAGE_XmlPull;
+                return CommonString.MESSAGE_XmlPull;
+            } catch (Exception e) {
+                ResultFlag=false;
+                str=CommonString.MESSAGE_EXCEPTION;
+
+                return CommonString.MESSAGE_EXCEPTION;
+            }
+
+            if(ResultFlag)
+            {
+                return "";
+            }
+            else
+            {
+                return str;
+            }
+
+
+
+
+
+
         }
 
         @Override
@@ -950,10 +976,16 @@ public class DownloadActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            dialog.dismiss();
+            if(s.equalsIgnoreCase("")){
+                dialog.dismiss();
 
-            showAlert(getString(R.string.data_downloaded_successfully));
-
+                showAlert(getString(R.string.data_downloaded_successfully));
+            }
+            else
+            {
+                dialog.dismiss();
+                showAlert(getString(R.string.datanotfound)+" "+s);
+            }
         }
 
     }

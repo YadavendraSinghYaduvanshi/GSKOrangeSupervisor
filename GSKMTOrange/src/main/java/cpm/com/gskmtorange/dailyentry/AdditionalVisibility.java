@@ -80,11 +80,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     Spinner spinner_brand, spinner_sku;
     Spinner spinner_brand_list, spinner_sku_list;
 
-    
     AdditionalDialogGetterSetter additionalgeetersetter;
     public static ArrayList<AddittionalGetterSetter> data = new ArrayList<AddittionalGetterSetter>();
     ToggleButton btntoggle;
-    ImageView btnimage, btnedit;
+    ImageView btnimage, btnedit,btnimage1,btnimage2;
     Button btnsku, btnaddlayout;
     GSKOrangeDB db;
     ArrayList<SkuGetterSetter> sku_list;
@@ -101,9 +100,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
 
     ArrayList<SkuGetterSetter> empty_list = new ArrayList<>();
-    String _pathforcheck, _path, str, msg;
+    String _pathforcheck1,_pathforcheck2,_pathforcheck3, _path, str, msg;
     private SharedPreferences preferences;
-    String store_id, date, intime, img_str, togglevalue = "1", CATEGORY_ID, camera_allow,store_type_id,class_id,key_account_id;
+    String store_id, date, intime, img_str1,img_str2,img_str3, togglevalue = "1", CATEGORY_ID, camera_allow,store_type_id,class_id,key_account_id;
     ImageView img_cam, img_clicked;
     Button btn_add, btn_close;
     EditText Edt_txt;
@@ -152,6 +151,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         cardvew = (CardView) findViewById(R.id.cardviewid);
         btntoggle = (ToggleButton) findViewById(R.id.btntoggle);
         btnimage = (ImageView) findViewById(R.id.btn_image);
+        btnimage1 = (ImageView) findViewById(R.id.btn_image2);
+        btnimage2 = (ImageView) findViewById(R.id.btn_image3);
+
         btnedit = (ImageView) findViewById(R.id.btn_edit);
         btnsku = (Button) findViewById(R.id.btn_sku);
         btnaddlayout = (Button) findViewById(R.id.btadd);
@@ -236,7 +238,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 listviewlay.setVisibility(View.INVISIBLE);
                 maincard.setVisibility(View.INVISIBLE);
                 btntoggle.setChecked(false);
-                brandlayout.setVisibility(View.INVISIBLE);
+                brandlayout.setVisibility(View.GONE);
                 diaplylayout.setVisibility(View.INVISIBLE);
                 cameralayout.setVisibility(View.INVISIBLE);
                 btnsku.setVisibility(View.INVISIBLE);
@@ -261,7 +263,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                 maincard.setVisibility(View.INVISIBLE);
                 btntoggle.setChecked(false);
-                brandlayout.setVisibility(View.INVISIBLE);
+                brandlayout.setVisibility(View.GONE);
                 diaplylayout.setVisibility(View.INVISIBLE);
                 cameralayout.setVisibility(View.INVISIBLE);
                 btnsku.setVisibility(View.INVISIBLE);
@@ -317,6 +319,8 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                                             newadd.setBrand(listdata.get(J).getBrand_id());
                                             newadd.setBrand_id(listdata.get(J).getBrand_id());
                                             newadd.setImage(listdata.get(J).getImage());
+                                            newadd.setImage2(listdata.get(J).getImage2());
+                                            newadd.setImage3(listdata.get(J).getImage3());
                                             newadd.setSku(listdata.get(J).getSku());
                                             newadd.setSku_id(listdata.get(J).getSku_id());
                                             newadd.setStore_id(listdata.get(J).getStore_id());
@@ -365,21 +369,23 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                                 public void onClick(DialogInterface dialog, int id) {
 
 
-                        db.deleteStockEntryall(store_id, categoryId);
+                                    db.deleteStockEntryall(store_id, categoryId);
 
-                        newadd = new AddittionalGetterSetter();
-                        newadd.setBrand(brand_list_name);
-                        newadd.setBrand_id(brand_list_id);
-                        newadd.setImage(img_str);
-                        newadd.setSku(sku_list_name);
-                        newadd.setSku_id(sku_list_id);
-                        newadd.setStore_id(store_id);
-                        newadd.setBtn_toogle(togglevalue);
-                        newadd.setCategoryId(categoryId);
+                                    newadd = new AddittionalGetterSetter();
+                                    newadd.setBrand(brand_list_name);
+                                    newadd.setBrand_id(brand_list_id);
+                                    newadd.setImage(img_str1);
+                                    newadd.setImage2(img_str2);
+                                    newadd.setImage3(img_str3);
+                                    newadd.setSku(sku_list_name);
+                                    newadd.setSku_id(sku_list_id);
+                                    newadd.setStore_id(store_id);
+                                    newadd.setBtn_toogle(togglevalue);
+                                    newadd.setCategoryId(categoryId);
 
 
-                        db.InsertMainListAdditionalData(newadd, additionalVisibilitySkuList, categoryId);
-                        finish();
+                                    db.InsertMainListAdditionalData(newadd, additionalVisibilitySkuList, categoryId);
+                                    finish();
                                 }
                             })
                             .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -395,7 +401,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                     // show it
                     alertDialog.show();
-                    }
+                }
 
 
             }
@@ -409,7 +415,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 adGt = new AddittionalGetterSetter();
                 adGt.setBrand(brand_list_name);
                 adGt.setBrand_id(brand_list_id);
-                adGt.setImage(img_str);
+                adGt.setImage(img_str1);
+                adGt.setImage2(img_str2);
+                adGt.setImage3(img_str3);
+
                 adGt.setSku(sku_list_name);
                 adGt.setSku_id(sku_list_id);
                 adGt.setStore_id(store_id);
@@ -431,7 +440,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                                     db.InsertAdditionalData(adGt, defdata, categoryId);
                                     spinner_brand_list.setSelection(0);
                                     spinner_sku_list.setSelection(0);
-                                    img_str = "";
+                                    img_str1 = "";
+                                    img_str2 = "";
+                                    img_str3 = "";
                                     brand_list_name = "";
                                     brand_list_id = "";
                                     sku_list_name = "";
@@ -440,8 +451,15 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                                     if (camera_allow.equals("1")) {
                                         btnimage.setBackgroundResource(R.mipmap.camera_orange);
+
+                                        btnimage1.setBackgroundResource(R.mipmap.camera_orange);
+                                        btnimage2.setBackgroundResource(R.mipmap.camera_orange);
+
                                     } else {
                                         btnimage.setBackgroundResource(R.mipmap.camera_grey);
+
+                                        btnimage1.setBackgroundResource(R.mipmap.camera_grey);
+                                        btnimage2.setBackgroundResource(R.mipmap.camera_grey);
                                     }
 
 
@@ -512,7 +530,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                                         togglevalue = "1";
                                         btntoggle.setChecked(true);
                                         db.deleteStockEntryall(store_id, categoryId);
-                                        brandlayout.setVisibility(View.VISIBLE);
+                                        brandlayout.setVisibility(View.GONE);
                                         diaplylayout.setVisibility(View.VISIBLE);
                                         cameralayout.setVisibility(View.VISIBLE);
                                         btnsku.setVisibility(View.VISIBLE);
@@ -561,7 +579,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                                             db.deleteStockEntryall(store_id, categoryId);
                                             togglevalue = "1";
                                             btntoggle.setChecked(true);
-                                            brandlayout.setVisibility(View.VISIBLE);
+                                            brandlayout.setVisibility(View.GONE);
                                             diaplylayout.setVisibility(View.VISIBLE);
                                             cameralayout.setVisibility(View.VISIBLE);
                                             btnsku.setVisibility(View.VISIBLE);
@@ -589,7 +607,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                         else{
                             togglevalue = "1";
                             btntoggle.setChecked(true);
-                            brandlayout.setVisibility(View.VISIBLE);
+                            brandlayout.setVisibility(View.GONE);
                             diaplylayout.setVisibility(View.VISIBLE);
                             cameralayout.setVisibility(View.VISIBLE);
                             btnsku.setVisibility(View.VISIBLE);
@@ -627,7 +645,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                                         defdata.clear();
                                         btnaddlayout.setVisibility(View.INVISIBLE);
-                                        brandlayout.setVisibility(View.INVISIBLE);
+                                        brandlayout.setVisibility(View.GONE);
                                         diaplylayout.setVisibility(View.INVISIBLE);
                                         cameralayout.setVisibility(View.INVISIBLE);
                                         btnsku.setVisibility(View.INVISIBLE);
@@ -660,7 +678,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                         defdata.clear();
                         btntoggle.setChecked(false);
                         btnaddlayout.setVisibility(View.INVISIBLE);
-                        brandlayout.setVisibility(View.INVISIBLE);
+                        brandlayout.setVisibility(View.GONE);
                         diaplylayout.setVisibility(View.INVISIBLE);
                         cameralayout.setVisibility(View.INVISIBLE);
                         btnsku.setVisibility(View.INVISIBLE);
@@ -677,19 +695,46 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             btnimage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    _pathforcheck = store_id + "AdditionalVisibility" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck1 = store_id + "AdditionalImage1" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
-                    _path = CommonString.FILE_PATH + _pathforcheck;
+                    _path = CommonString.FILE_PATH + _pathforcheck1;
                     intime = getCurrentTime();
                     startCameraActivity();
 
                 }
             });
 
+            btnimage1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    _pathforcheck2 = store_id + "AdditionalImage2" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+
+                    _path = CommonString.FILE_PATH + _pathforcheck2;
+                    intime = getCurrentTime();
+                    startCameraActivity();
+
+                }
+            });
+
+            btnimage2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    _pathforcheck3 = store_id + "AdditionalImage3" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+
+                    _path = CommonString.FILE_PATH + _pathforcheck3;
+                    intime = getCurrentTime();
+                    startCameraActivity();
+
+                }
+            });
+
+
+
+
         } else {
             btnimage.setBackgroundResource(R.mipmap.camera_grey);
-
-
+            btnimage1.setBackgroundResource(R.mipmap.camera_grey);
+            btnimage2.setBackgroundResource(R.mipmap.camera_grey);
         }
 
 
@@ -993,15 +1038,36 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
             case -1:
 
-                if (_pathforcheck != null && !_pathforcheck.equals("")) {
-                    if (new File(str + _pathforcheck).exists()) {
+                if (_pathforcheck1 != null && !_pathforcheck1.equals("")) {
+                    if (new File(str + _pathforcheck1).exists()) {
 
                         btnimage.setBackgroundResource(R.mipmap.camera_green);
 
-                        img_str = _pathforcheck;
-                        _pathforcheck = "";
+                        img_str1 = _pathforcheck1;
+                        _pathforcheck1 = "";
                     }
                 }
+                if (_pathforcheck2 != null && !_pathforcheck2.equals("")) {
+                    if (new File(str + _pathforcheck2).exists()) {
+
+                        btnimage1.setBackgroundResource(R.mipmap.camera_green);
+
+                        img_str2 = _pathforcheck2;
+                        _pathforcheck2 = "";
+                    }
+                }
+
+                if (_pathforcheck3 != null && !_pathforcheck3.equals("")) {
+                    if (new File(str + _pathforcheck3).exists()) {
+
+                        btnimage2.setBackgroundResource(R.mipmap.camera_green);
+
+                        img_str3 = _pathforcheck3;
+                        _pathforcheck3 = "";
+                    }
+                }
+
+
 
                 break;
         }
@@ -1108,7 +1174,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                     defdata.add(ab);
                     // db.InsertStockDialog(ab);
 
-                    spinner_brand.setSelection(0);
+                    // spinner_brand.setSelection(0);
                     spinner_sku.setSelection(0);
                     Edt_txt.setText("");
 
@@ -1512,7 +1578,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             flag = true;
         } else {
 
-            if (brandid.equalsIgnoreCase("") || skuid.equalsIgnoreCase("")) {
+            if (/*brandid.equalsIgnoreCase("") ||*/ skuid.equalsIgnoreCase("")) {
                 flag = false;
 
                 errormsg = getResources().getString(R.string.title_activity_select_dropdown);
@@ -1523,6 +1589,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                     errormsg = getResources().getString(R.string.title_activity_take_image);
 
+                }
+                else if (dialog.size() == 0) {
+                    errormsg = getResources().getString(R.string.title_activity_fill_sku);
+                    flag = false;
                 }
 
             } else if (dialog.size() == 0) {

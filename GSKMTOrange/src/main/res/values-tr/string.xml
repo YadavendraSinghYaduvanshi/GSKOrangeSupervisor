@@ -235,7 +235,7 @@
     <string name="fill_gaps_data">Lütfen GAP verilerini doldurun</string>
 
     <string name="enter_the_values">Değerleri girin</string>
-
+    <string name="datanotfound">Içinde bulunmayan veri</string>
 </resources>
 
 

@@ -2,6 +2,8 @@ package cpm.com.gskmtorange.constant;
 
 import android.os.Environment;
 
+import org.xmlpull.v1.XmlPullParserException;
+
 /**
  * Created by yadavendras on 19-12-2016.
  */
@@ -145,6 +147,8 @@ public class CommonString {
 
     public static final String MESSAGE_EXCEPTION = "Problem Occured : Report The Problem To Parinaam ";
     public static final String MESSAGE_SOCKETEXCEPTION = "Network Communication Failure. Check Your Network Connection";
+    public static final String MESSAGE_XmlPull = "Problem Occured xml pull: Report The Problem To Parinaam";
+
     public static final String TABLE_STORE_GEOTAGGING = "STORE_GEOTAGGING";
     public static final String TABLE_COVERAGE_DATA = "COVERAGE_DATA";
 
@@ -338,6 +342,10 @@ public class CommonString {
 
             + "image_url"
             + " VARCHAR,"
+            + "image_url2"
+            + " VARCHAR,"
+            + "image_url3"
+            + " VARCHAR,"
 
             + "sku_id"
             + " VARCHAR,"
@@ -458,6 +466,10 @@ public class CommonString {
             + " VARCHAR,"
 
             + "image_url"
+            + " VARCHAR,"
+            + "image_url2"
+            + " VARCHAR,"
+            + "image_url3"
             + " VARCHAR,"
 
             + "sku_id"
