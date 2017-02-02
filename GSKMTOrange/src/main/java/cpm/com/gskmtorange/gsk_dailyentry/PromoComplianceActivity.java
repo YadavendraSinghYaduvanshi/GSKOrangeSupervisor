@@ -127,9 +127,9 @@ public class PromoComplianceActivity extends AppCompatActivity {
             cd.setPromo("");
             cd.setSku_id("");
             cd.setSku("");
-            cd.setIn_stock("1");
-            cd.setPromo_announcer("1");
-            cd.setRunning_pos("1");
+            cd.setIn_stock("0");
+            cd.setPromo_announcer("0");
+            cd.setRunning_pos("0");
             cd.setSp_promo("0");
 
             toggle_add_InStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -227,9 +227,9 @@ public class PromoComplianceActivity extends AppCompatActivity {
                                         AdditionalPromoListView();
 
                                         sp_promo.setSelection(0);
-                                        toggle_add_InStock.setChecked(true);
-                                        toggle_add_promoAnnouncer.setChecked(true);
-                                        toggle_add_runningPos.setChecked(true);
+                                        toggle_add_InStock.setChecked(false);
+                                        toggle_add_promoAnnouncer.setChecked(false);
+                                        toggle_add_runningPos.setChecked(false);
 
                                         Snackbar.make(v, getResources().getString(R.string.promo_add), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                         //Toast.makeText(getApplicationContext(), "promo is add", Toast.LENGTH_LONG).show();

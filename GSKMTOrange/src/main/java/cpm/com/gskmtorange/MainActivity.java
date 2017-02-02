@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity
 
                                     Intent in = new Intent(getApplicationContext(), PreviousDataUploadActivity.class);
                                     startActivity(in);
-                                    finish();
+                                    //finish();
                                 }
                             });
                     AlertDialog alert = builder.create();
