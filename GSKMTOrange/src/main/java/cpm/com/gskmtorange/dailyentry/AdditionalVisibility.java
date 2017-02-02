@@ -80,6 +80,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     Spinner spinner_brand, spinner_sku;
     Spinner spinner_brand_list, spinner_sku_list;
 
+    
     AdditionalDialogGetterSetter additionalgeetersetter;
     public static ArrayList<AddittionalGetterSetter> data = new ArrayList<AddittionalGetterSetter>();
     ToggleButton btntoggle;
