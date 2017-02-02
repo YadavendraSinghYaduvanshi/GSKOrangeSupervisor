@@ -1528,9 +1528,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
                     cd.setPromo_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ID")));
                     cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
-                    cd.setIn_stock("1");
-                    cd.setPromo_announcer("1");
-                    cd.setRunning_pos("1");
+                    cd.setIn_stock("0");
+                    cd.setPromo_announcer("0");
+                    cd.setRunning_pos("0");
 
                     list.add(cd);
                     dbcursor.moveToNext();
