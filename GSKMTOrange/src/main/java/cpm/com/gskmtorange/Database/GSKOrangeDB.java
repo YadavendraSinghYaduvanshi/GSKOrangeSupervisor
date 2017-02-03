@@ -42,6 +42,8 @@ import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.ShelfMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
@@ -128,6 +130,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             db.execSQL(TableBean.getAdditionalDisplay());
 
             db.execSQL(TableBean.getMappingSosTarget());
+
+            db.execSQL(TableBean.getShelfMaster());
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(context, "Error -" + e.toString(), Toast.LENGTH_SHORT).show();
@@ -3544,6 +3548,54 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         } catch (Exception ex) {
             Log.d("Exception ", " MAPPING_SOS_TARGET " + ex.toString());
         }
+    }
+
+    public void InsertSHELF_MASTER(ShelfMasterGetterSetter data) {
+        db.delete("SHELF_MASTER", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getSHELF_ID().size(); i++) {
+
+                values.put("SHELF_ID", data.getSHELF_ID().get(i));
+                values.put("SHELF", data.getSHELF().get(i));
+
+                db.insert("SHELF_MASTER", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " SHELF_MASTER " + ex.toString());
+        }
+    }
+
+    public ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> getSHELF_MASTERData() {
+        Cursor cursordata = null;
+        ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> Data = new ArrayList<>();
+
+        try {
+            StockFacing_PlanogramTrackerDataGetterSetter sb1 = new StockFacing_PlanogramTrackerDataGetterSetter();
+            sb1.setShelf_id("0");
+            sb1.setShelf("Select");
+
+            Data.add(sb1);
+
+            cursordata = db.rawQuery("SELECT * FROM SHELF_MASTER ", null);
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    StockFacing_PlanogramTrackerDataGetterSetter sb = new StockFacing_PlanogramTrackerDataGetterSetter();
+                    sb.setShelf_id(cursordata.getString(cursordata.getColumnIndexOrThrow("SHELF_ID")));
+                    sb.setShelf(cursordata.getString(cursordata.getColumnIndexOrThrow("SHELF")));
+
+                    Data.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " Get SHELF_MASTER " + ex.toString());
+        }
+        return Data;
     }
 
 }

@@ -31,7 +31,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/white" />
 
-            <Button
+            <!--<Button
                 android:id="@+id/btn_addSKU"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                 android:padding="5dp"
                 android:text="Add SKU"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/white" />
+                android:textColor="@color/white" />-->
         </RelativeLayout>
 
         <View
@@ -49,9 +49,18 @@
             android:layout_height="1dp"
             android:background="@color/grey_dark_background" />
 
-        <android.support.v7.widget.RecyclerView
+        <!--<android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView_stockFacingPlanogramTracker"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" />-->
+
+        <ExpandableListView
+            android:id="@+id/exp_stockFacing_PlanogramTrackerListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollingCache="false" />
     </LinearLayout>
 </RelativeLayout>
