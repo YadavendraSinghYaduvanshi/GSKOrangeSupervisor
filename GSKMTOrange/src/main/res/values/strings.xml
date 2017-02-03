@@ -251,7 +251,7 @@
     <string name="select_promo">Select</string>
 
     <!--Gagan end code 3-->
-    
+
     //text for uploading screen
     <string name="coverage_data_uploading">Coverage Uploading</string>
     <string name="availability_data_uploading">Availability Data Uploading</string>
@@ -265,5 +265,6 @@
     <string name="first_geotag_the_store">First geotag the store</string>
 
     <string name="new_update_available">New Update Available \n\n Yeni güncelleme var</string>
+    <string name="title_activity_stock_facing__planogram_tracker">Planogram Tracker</string>
 
 </resources>
