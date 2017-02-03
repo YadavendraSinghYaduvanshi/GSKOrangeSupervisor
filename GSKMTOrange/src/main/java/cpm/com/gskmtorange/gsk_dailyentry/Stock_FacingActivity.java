@@ -947,6 +947,21 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 //Camera allow disable
                 img_camera1.setBackgroundResource(R.mipmap.camera_grey);
                 img_camera2.setBackgroundResource(R.mipmap.camera_grey);
+
+                img_camera1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Stock_FacingActivity.this, StockFacing_PlanogramTrackerActivity.class);
+
+                        intent.putExtra("brand", headerTitle.getBrand());
+                        intent.putExtra("brand_id", headerTitle.getBrand_id());
+                        intent.putExtra("company_id", headerTitle.getCompany_id());
+                        intent.putExtra("sub_category", headerTitle.getSub_category());
+                        intent.putExtra("sub_category_id", headerTitle.getSub_category_id());
+
+                        startActivity(intent);
+                    }
+                });
             }
 
             if (headerTitle.getCompany_id().equals("1")) {
