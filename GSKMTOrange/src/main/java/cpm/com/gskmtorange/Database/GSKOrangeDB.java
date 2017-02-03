@@ -2459,6 +2459,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             values.put("brand_name", data.getBrand());
             values.put("brand_id", data.getBrand_id());
             values.put("image_url", data.getImage());
+            values.put("image_url2", data.getImage2());
+            values.put("image_url3", data.getImage3());
             values.put("sku_id", data.getSku_id());
             values.put("sku_name", data.getSku());
             values.put("toggle_value", data.getBtn_toogle());
@@ -2520,6 +2522,10 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     sb.setImage(cursordata.getString(cursordata
                             .getColumnIndexOrThrow("image_url")));
+                    sb.setImage2(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("image_url2")));
+                    sb.setImage3(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("image_url3")));
 
                     sb.setSku_id(cursordata.getString(cursordata
                             .getColumnIndexOrThrow("sku_id")));
@@ -2686,6 +2692,10 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     sb.setImage(cursordata.getString(cursordata
                             .getColumnIndexOrThrow("image_url")));
+                    sb.setImage2(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("image_url2")));
+                    sb.setImage3(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("image_url3")));
 
                     sb.setSku_id(cursordata.getString(cursordata
                             .getColumnIndexOrThrow("sku_id")));
@@ -2720,6 +2730,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             values.put("brand_name", Mainlist.getBrand());
             values.put("brand_id", Mainlist.getBrand_id());
             values.put("image_url", Mainlist.getImage());
+            values.put("image_url2", Mainlist.getImage2());
+            values.put("image_url3", Mainlist.getImage3());
             values.put("sku_id", Mainlist.getSku_id());
             values.put("sku_name", Mainlist.getSku());
             values.put("toggle_value", Mainlist.getBtn_toogle());
@@ -3159,6 +3171,10 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     sb.setImage(cursordata.getString(cursordata
                             .getColumnIndexOrThrow("image_url")));
+                    sb.setImage2(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("image_url2")));
+                    sb.setImage3(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("image_url3")));
 
                     sb.setSku_id(cursordata.getString(cursordata
                             .getColumnIndexOrThrow("sku_id")));
