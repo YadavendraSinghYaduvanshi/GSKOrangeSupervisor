@@ -3598,4 +3598,53 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return Data;
     }
 
+    public ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> getStockAndFacingPlanogramDefaultSKUData(
+            String category_id, String brand_id, String keyAccount_id, String storeType_id, String class_id) {
+
+        ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select DISTINCT SK.SKU_ID,SK.SKU,SK.MRP,SK.SKU_SEQUENCE,M.MBQ,BR.COMPANY_ID " +
+                    "from MAPPING_STOCK M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where CA.CATEGORY_ID='" + category_id + "' AND BR.BRAND_ID='" + brand_id +
+                    "' AND M.KEYACCOUNT_ID = '" + keyAccount_id + "' AND M.STORETYPE_ID = '" + storeType_id +
+                    "' AND M.CLASS_ID = '" + class_id + "'", null);
+
+            if (dbcursor != null) {
+
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    StockFacing_PlanogramTrackerDataGetterSetter cd = new StockFacing_PlanogramTrackerDataGetterSetter();
+
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setMrp(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MRP")));
+                    cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
+                    cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+                    /*cd.setStock("");
+                    cd.setFacing("");*/
+                    cd.setCheckbox_sku("0");
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            return list;
+        }
+        return list;
+    }
 }

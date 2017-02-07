@@ -45,18 +45,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight=".8"
                 android:gravity="center_vertical|right"
-                android:orientation="horizontal"
-                android:padding="2dp">
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btn_addSku"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/colorPrimary"
+                    android:layout_marginRight="15dp"
                     android:text="Add SKU"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/black" />
             </LinearLayout>
 
         </LinearLayout>

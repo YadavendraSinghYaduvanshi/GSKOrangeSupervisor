@@ -55,7 +55,7 @@
             android:layout_height="match_parent" />-->
 
         <ExpandableListView
-            android:id="@+id/exp_stockFacing_PlanogramTrackerListView"
+            android:id="@+id/exp_PlanogramListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:cacheColorHint="#00000000"

@@ -958,6 +958,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         intent.putExtra("company_id", headerTitle.getCompany_id());
                         intent.putExtra("sub_category", headerTitle.getSub_category());
                         intent.putExtra("sub_category_id", headerTitle.getSub_category_id());
+                        intent.putExtra("categoryName", categoryName);
+                        intent.putExtra("categoryId", categoryId);
 
                         startActivity(intent);
                     }
