@@ -266,4 +266,5 @@
 
     <string name="new_update_available">New Update Available \n\n Yeni güncelleme var</string>
     <string name="datanotfound">Data not found in</string>
+    <string name="title_activity_t2p_brand__avaibility">T2pBrand_Avaibility</string>
 </resources>

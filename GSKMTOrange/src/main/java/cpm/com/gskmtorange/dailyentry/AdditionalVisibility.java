@@ -169,6 +169,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         str = CommonString.FILE_PATH;
 
         ///band List
+
         brand_list = db.getBrandMasterData(store_id, categoryId);
         BrandMasterGetterSetter brand = new BrandMasterGetterSetter();
         String str = getResources().getString(R.string.select);

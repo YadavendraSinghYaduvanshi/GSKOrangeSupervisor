@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
+import cpm.com.gskmtorange.GetterSetter.BrandAvabilityGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.GeotaggingBeans;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
@@ -128,6 +129,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             db.execSQL(TableBean.getAdditionalDisplay());
 
             db.execSQL(TableBean.getMappingSosTarget());
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_BRAND_AVAIBILITY_DATA);
+
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(context, "Error -" + e.toString(), Toast.LENGTH_SHORT).show();
@@ -2620,6 +2623,21 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                 }
 
+
+                ArrayList<BrandAvabilityGetterSetter> brand = data.get(i).getBrandlist();
+
+                for (int k = 0; k < brand.size(); k++) {
+
+                    values.put("COMMON_ID", l);
+                    values.put("BRAND_NAME", brand.get(i).getBRAND());
+                    values.put("BRAND_ID", brand.get(i).getBRAND_ID());
+
+                    db.insert(CommonString.TABLE_INSERT_BRAND_AVAIBILITY_DATA, null, values);
+
+                }
+
+
+
             }
         } catch (Exception ex) {
             Log.d("Exception ", " in T2P_COMPLIANCE " + ex.toString());
@@ -3544,6 +3562,98 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         } catch (Exception ex) {
             Log.d("Exception ", " MAPPING_SOS_TARGET " + ex.toString());
         }
+    }
+
+    public ArrayList<BrandAvabilityGetterSetter> getBrandAvailbilitydata(String store_id, String category_id,String keyAccount_id,String class_id,String storeType_id) {
+        Cursor cursordata = null;
+        ArrayList<BrandAvabilityGetterSetter> Data = new ArrayList<BrandAvabilityGetterSetter>();
+
+        try {
+
+            cursordata = db.rawQuery("SELECT DISTINCT BR.BRAND_ID, BR.BRAND FROM SKU_MASTER SK INNER JOIN BRAND_MASTER BR ON SK.BRAND_ID = BR.BRAND_ID " +
+                    "INNER JOIN SUB_CATEGORY_MASTER SB ON BR.SUB_CATEGORY_ID = SB.SUB_CATEGORY_ID " +
+                    "INNER JOIN CATEGORY_MASTER CA ON SB.CATEGORY_ID = CA.CATEGORY_ID " +
+                    "INNER JOIN " +
+                    "(SELECT DISTINCT SKU_ID FROM MAPPING_STOCK WHERE KEYACCOUNT_ID = '"+ keyAccount_id+ "' AND STORETYPE_ID = '" +storeType_id+ "' AND CLASS_ID = '" +class_id +"') A " +
+                    "ON SK.SKU_ID = A.SKU_ID " +
+                    "WHERE CA.CATEGORY_ID = '"+category_id+"'", null);
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    BrandAvabilityGetterSetter sb = new BrandAvabilityGetterSetter();
+
+                    sb.setBRAND_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("BRAND_ID")));
+
+                    sb.setBRAND(cursordata.getString(cursordata.getColumnIndexOrThrow("BRAND")));
+
+                    Data.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+        return Data;
+
+    }
+
+    public void InsertBrandAvabilitydata(BrandAvabilityGetterSetter data,ArrayList<BrandAvabilityGetterSetter> list) {
+
+        db.delete("Camera_Not_Allowed ", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < list.size(); i++) {
+
+                values.put("STORETYPE_ID", data.getStoreType_id());
+                values.put("class_id", data.getClass_id());
+                values.put("CATEGORY_ID", data.getCategoryId());
+                values.put("keyAccount_id", data.getKeyAccount_id());
+                values.put("STORE_ID", data.getStore_id());
+                values.put("BRAND_NAME", list.get(i).getBRAND());
+                values.put("BRAND_ID", list.get(i).getBRAND_ID());
+
+
+                db.insert(CommonString.TABLE_INSERT_BRAND_AVAIBILITY_DATA, null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " Camera_Not_Allowed " + ex.toString());
+        }
+    }
+
+
+    // get T2P brand data
+    public ArrayList<BrandAvabilityGetterSetter> getT2BrandData(String common_id) {
+
+        ArrayList<BrandAvabilityGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_BRAND_AVAIBILITY_DATA + " where " +
+                    CommonString.KEY_COMMON_ID + "='" + common_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    BrandAvabilityGetterSetter BG = new BrandAvabilityGetterSetter();
+
+                    BG.setBRAND(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_NAME")));
+                    BG.setBRAND_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
+
+                    list.add(BG);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            return list;
+        }
+        return list;
     }
 
 }
