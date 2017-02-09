@@ -93,6 +93,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
     //CardView cardlay;
     String brand_name="",brand_id="";
     ArrayList<BrandAvabilityGetterSetter> brand_new_list=new ArrayList<BrandAvabilityGetterSetter>();
+    ArrayList<BrandAvabilityGetterSetter> brandList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +188,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 t2PGetterSetters.get(i).setSkulist(skuList);
                 t2PGetterSetters.get(i).setBrandlist(brandList);
 
+
+
+
             }
 
         }
@@ -245,6 +249,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
            /* Typeface iconFont = FontManager.getTypeface(getApplicationContext(), FontManager.FONTAWESOME);
             FontManager.markAsIconContainer(findViewById(R.id.icons_container), iconFont);
 */
+
+
+
             holder.btn_gaps.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -415,9 +422,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     holder.img_cam2.setBackgroundResource(R.mipmap.camera_green);
                 }
             } else {
-                holder.img_cam.setBackgroundResource(R.mipmap.camera_grey);
-                holder.img_cam1.setBackgroundResource(R.mipmap.camera_grey);
-                holder.img_cam2.setBackgroundResource(R.mipmap.camera_grey);
+               // holder.img_cam.setBackgroundResource(R.mipmap.camera_grey);
+               // holder.img_cam1.setBackgroundResource(R.mipmap.camera_grey);
+               // holder.img_cam2.setBackgroundResource(R.mipmap.camera_grey);
                 holder.img_cam1.setVisibility(View.INVISIBLE);
                 holder.img_cam2.setVisibility(View.INVISIBLE);
 
@@ -437,13 +444,31 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     }
                 });
 
+
+
+                if(mItem.getBrandlist().size()>0)
+                {
+
+                    holder.img_cam.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
+                }else{
+
+                    if (mItem.isPresent()) {
+
+                        holder.img_cam.setBackgroundResource(R.mipmap.new_no_camera_edit);
+                    } else {
+                        //if not present camera disabled
+                        holder.img_cam.setBackgroundResource(R.mipmap.no_camera);
+                    }
+
+                }
+
             }
 
 
             boolean is_enabled = mItem.isPresent();
 
             holder.toggle_btn.setChecked(is_enabled);
-          //  holder.img_cam.setEnabled(is_enabled);
+             holder.img_cam.setEnabled(is_enabled);
             holder.img_cam1.setEnabled(is_enabled);
             holder.img_cam2.setEnabled(is_enabled);
             holder.btn_gaps.setEnabled(is_enabled);
