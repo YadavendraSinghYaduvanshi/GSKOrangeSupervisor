@@ -270,4 +270,7 @@
 
     <string name="datanotfound">Data not found in</string>
 
+    <!--Stock Facing Planogram Tracker-->
+    <string name="stock_planogram_data_uploading">Stock Planogram Data Uploading</string>
+
 </resources>

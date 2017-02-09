@@ -59,6 +59,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.ShelfMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
@@ -86,15 +87,16 @@ public class DownloadActivity extends AppCompatActivity {
     STORE_PERFORMANCE_MasterGetterSetter store_performance_masterGetterSetter;
     ADDITIONAL_DISPLAY_MASTERGetterSetter additional_display_getter_setter;
     MAPPING_SOS_TARGET_MasterGetterSetter mapping_sos_target_masterGetterSetter;
-
     MAPPING_PLANOGRAM_MasterGetterSetter mapping_planogram_masterGetterSetter;
+    ShelfMasterGetterSetter shelfMasterGetterSetter;
+
     private Dialog dialog;
     private ProgressBar pb;
     private TextView percentage, message;
     private SharedPreferences preferences = null;
     Toolbar toolbar;
     String str;
-    boolean ResultFlag=true;
+    boolean ResultFlag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -776,6 +778,43 @@ public class DownloadActivity extends AppCompatActivity {
                 publishProgress(data);
 
 
+                //SHELF_MASTER
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "SHELF_MASTER");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    shelfMasterGetterSetter = XMLHandlers.shelfMasterXMLHandler(xpp, eventType);
+
+                    String table_ShelfMaster = shelfMasterGetterSetter.getTable_SHELF_MASTER();
+                    if (table_ShelfMaster != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setShelfMaster(table_ShelfMaster);
+                    }
+
+                    if (shelfMasterGetterSetter.getSHELF_ID().size() > 0) {
+                        data.value = 96;
+                        data.name = "SHELF_MASTER " + getResources().getString(R.string.download_data);
+                    }
+                }
+                publishProgress(data);
+
+
+                //Images DownLoads
+
                 //MAPPING_PLANOGRAM Image save into folder
                 if (mapping_planogram_masterGetterSetter != null) {
 
@@ -912,54 +951,44 @@ public class DownloadActivity extends AppCompatActivity {
                 db.InsertMAPPING_PLANOGRAM(mapping_planogram_masterGetterSetter);
                 db.InsertADDITIONAL_DISPLAY(additional_display_getter_setter);
                 db.InsertMAPPING_SOS_TARGET(mapping_sos_target_masterGetterSetter);
+                db.InsertSHELF_MASTER(shelfMasterGetterSetter);
 
             } catch (MalformedURLException e) {
 
-                ResultFlag=false;
-                str=CommonString.MESSAGE_EXCEPTION;
+                ResultFlag = false;
+                str = CommonString.MESSAGE_EXCEPTION;
                 return CommonString.MESSAGE_EXCEPTION;
-            }
-            catch (SocketTimeoutException e) {
-                ResultFlag=false;
-                str=CommonString.MESSAGE_SOCKETEXCEPTION;
+            } catch (SocketTimeoutException e) {
+                ResultFlag = false;
+                str = CommonString.MESSAGE_SOCKETEXCEPTION;
                 return CommonString.MESSAGE_SOCKETEXCEPTION;
-            }
-            catch (InterruptedIOException e){
+            } catch (InterruptedIOException e) {
 
-                ResultFlag=false;
-                str=CommonString.MESSAGE_EXCEPTION;
+                ResultFlag = false;
+                str = CommonString.MESSAGE_EXCEPTION;
                 return CommonString.MESSAGE_EXCEPTION;
 
             } catch (IOException e) {
 
-                ResultFlag=false;
-                str=CommonString.MESSAGE_SOCKETEXCEPTION;
+                ResultFlag = false;
+                str = CommonString.MESSAGE_SOCKETEXCEPTION;
                 return CommonString.MESSAGE_SOCKETEXCEPTION;
-            }
-            catch (XmlPullParserException e) {
-                ResultFlag=false;
-                str=CommonString.MESSAGE_XmlPull;
+            } catch (XmlPullParserException e) {
+                ResultFlag = false;
+                str = CommonString.MESSAGE_XmlPull;
                 return CommonString.MESSAGE_XmlPull;
             } catch (Exception e) {
-                ResultFlag=false;
-                str=CommonString.MESSAGE_EXCEPTION;
+                ResultFlag = false;
+                str = CommonString.MESSAGE_EXCEPTION;
 
                 return CommonString.MESSAGE_EXCEPTION;
             }
 
-            if(ResultFlag)
-            {
+            if (ResultFlag) {
                 return "";
-            }
-            else
-            {
+            } else {
                 return str;
             }
-
-
-
-
-
 
         }
 
@@ -976,15 +1005,13 @@ public class DownloadActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            if(s.equalsIgnoreCase("")){
+            if (s.equalsIgnoreCase("")) {
                 dialog.dismiss();
 
                 showAlert(getString(R.string.data_downloaded_successfully));
-            }
-            else
-            {
+            } else {
                 dialog.dismiss();
-                showAlert(getString(R.string.datanotfound)+" "+s);
+                showAlert(getString(R.string.datanotfound) + " " + s);
             }
         }
 

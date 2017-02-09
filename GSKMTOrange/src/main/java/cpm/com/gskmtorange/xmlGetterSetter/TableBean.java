@@ -24,7 +24,7 @@ public class TableBean {
     public static String STORE_PERFORMANCE;
     public static String MAPPING_PLANOGRAM;
     public static String MAPPING_SOS_TARGET;
-
+    public static String SHELF_MASTER;
 
 
     public static String getAdditionalDisplay() {
@@ -169,5 +169,13 @@ public class TableBean {
         MAPPING_SOS_TARGET = mappingSosTarget;
     }
 
-//Gagan end code
+    public static String getShelfMaster() {
+        return SHELF_MASTER;
+    }
+
+    public static void setShelfMaster(String shelfMaster) {
+        SHELF_MASTER = shelfMaster;
+    }
+
+    //Gagan end code
 }
