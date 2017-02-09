@@ -560,13 +560,13 @@ public class CommonString {
             + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
 
             + "COMMON_ID"
-            + " VARCHAR,"
+            + " INTEGER,"
 
             + "BRAND_NAME"
             + " VARCHAR,"
 
             + "BRAND_ID"
-            + " VARCHAR"
+            + " INTEGER"
 
             + ")";
 

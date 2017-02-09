@@ -61,6 +61,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     TableBean tableBean;
     private SQLiteDatabase db;
     Context context;
+    ArrayList<T2PGetterSetter> t2PGetterSetters;
 
     public GSKOrangeDB(Context context) {
 
@@ -159,6 +160,16 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.TABLE_INSERT_PROMO_SKU, "STORE_ID='" + storeid + "'", null);
         //Gagan end code
 
+        t2PGetterSetters = getT2pCompliancedaletedata(storeid);
+
+        for (int q = 0; q < t2PGetterSetters.size(); q++) {
+
+            db.delete(CommonString.TABLE_INSERT_T2P_GAPS, "COMMON_ID='" + t2PGetterSetters.get(q).getKey_id() + "'", null);
+            db.delete(CommonString.TABLE_INSERT_T2P_SKU, "COMMON_ID='" + t2PGetterSetters.get(q).getKey_id() + "'", null);
+            db.delete(CommonString.TABLE_INSERT_BRAND_AVAIBILITY_DATA, "COMMON_ID='" + t2PGetterSetters.get(q).getKey_id() + "'", null);
+
+        }
+
         db.delete(CommonString.TABLE_INSERT_T2P_COMPLIANCE, "STORE_ID='" + storeid + "'", null);
     }
 
@@ -180,7 +191,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         //Gagan end code
 
         db.delete(CommonString.TABLE_INSERT_T2P_COMPLIANCE, null, null);
-
+        db.delete(CommonString.TABLE_INSERT_T2P_GAPS, null, null);
+        db.delete(CommonString.TABLE_INSERT_T2P_SKU, null, null);
+        db.delete(CommonString.TABLE_INSERT_BRAND_AVAIBILITY_DATA, null, null);
     }
 
     public void InsertJCP(JourneyPlanGetterSetter data) {
@@ -2575,6 +2588,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         ContentValues values1 = new ContentValues();
         ContentValues values2 = new ContentValues();
+        ContentValues values3 = new ContentValues();
         try {
             for (int i = 0; i < data.size(); i++) {
 
@@ -2626,16 +2640,15 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                 ArrayList<BrandAvabilityGetterSetter> brand = data.get(i).getBrandlist();
 
-                for (int k = 0; k < brand.size(); k++) {
+                for (int p = 0; p < brand.size(); p++) {
 
-                    values.put("COMMON_ID", l);
-                    values.put("BRAND_NAME", brand.get(i).getBRAND());
-                    values.put("BRAND_ID", brand.get(i).getBRAND_ID());
+                    values3.put("COMMON_ID", l);
+                    values3.put("BRAND_NAME", brand.get(p).getBRAND());
+                    values3.put("BRAND_ID", brand.get(p).getBRAND_ID());
 
-                    db.insert(CommonString.TABLE_INSERT_BRAND_AVAIBILITY_DATA, null, values);
+                    db.insert(CommonString.TABLE_INSERT_BRAND_AVAIBILITY_DATA, null, values3);
 
                 }
-
 
 
             }
@@ -3564,7 +3577,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<BrandAvabilityGetterSetter> getBrandAvailbilitydata(String store_id, String category_id,String keyAccount_id,String class_id,String storeType_id) {
+    public ArrayList<BrandAvabilityGetterSetter> getBrandAvailbilitydata(String store_id, String category_id, String keyAccount_id, String class_id, String storeType_id) {
         Cursor cursordata = null;
         ArrayList<BrandAvabilityGetterSetter> Data = new ArrayList<BrandAvabilityGetterSetter>();
 
@@ -3574,9 +3587,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     "INNER JOIN SUB_CATEGORY_MASTER SB ON BR.SUB_CATEGORY_ID = SB.SUB_CATEGORY_ID " +
                     "INNER JOIN CATEGORY_MASTER CA ON SB.CATEGORY_ID = CA.CATEGORY_ID " +
                     "INNER JOIN " +
-                    "(SELECT DISTINCT SKU_ID FROM MAPPING_STOCK WHERE KEYACCOUNT_ID = '"+ keyAccount_id+ "' AND STORETYPE_ID = '" +storeType_id+ "' AND CLASS_ID = '" +class_id +"') A " +
+                    "(SELECT DISTINCT SKU_ID FROM MAPPING_STOCK WHERE KEYACCOUNT_ID = '" + keyAccount_id + "' AND STORETYPE_ID = '" + storeType_id + "' AND CLASS_ID = '" + class_id + "') A " +
                     "ON SK.SKU_ID = A.SKU_ID " +
-                    "WHERE CA.CATEGORY_ID = '"+category_id+"'", null);
+                    "WHERE CA.CATEGORY_ID = '" + category_id + "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
@@ -3602,7 +3615,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     }
 
-    public void InsertBrandAvabilitydata(BrandAvabilityGetterSetter data,ArrayList<BrandAvabilityGetterSetter> list) {
+    public void InsertBrandAvabilitydata(BrandAvabilityGetterSetter data, ArrayList<BrandAvabilityGetterSetter> list) {
 
         db.delete("Camera_Not_Allowed ", null, null);
 
@@ -3655,5 +3668,50 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return list;
     }
+
+
+    // get T2P Compliance data
+    public ArrayList<T2PGetterSetter> getT2pCompliancedaletedata(String store_id) {
+
+        ArrayList<T2PGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+        try {
+
+            dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
+                    CommonString.KEY_STORE_ID + "='" + store_id + "'", null);
+
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    T2PGetterSetter tp = new T2PGetterSetter();
+
+                    tp.setKey_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_ID)));
+
+                   /* tp.setDisplay_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_DISPLAY_ID)));
+                    tp.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND_ID)));
+                    tp.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_BRAND)));
+                    tp.setDisplay(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_DISPLAY)));
+                    tp.setRef_image_url(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE_URL)));
+                    tp.setRef_image_path(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE_PATH)));
+                    tp.setImage(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE)));
+                    tp.setImage1(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE1)));
+                    tp.setImage2(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE2)));
+                    tp.setRemark(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_REMARK)));
+                    tp.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
+                    tp.setPresent((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PRESENT)).equalsIgnoreCase("1")));
+*/
+                    list.add(tp);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            return list;
+        }
+        return list;
+    }
+
 
 }

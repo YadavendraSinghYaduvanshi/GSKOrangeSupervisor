@@ -90,7 +90,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
     Button btn_add,btn_close;
     ListView listview;
     LinearLayout linearlay;
-    CardView cardlay;
+    //CardView cardlay;
     String brand_name="",brand_id="";
     ArrayList<BrandAvabilityGetterSetter> brand_new_list=new ArrayList<BrandAvabilityGetterSetter>();
     @Override
@@ -1272,7 +1272,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         listview = (ListView) dialog.findViewById(R.id.lv);
         linearlay = (LinearLayout) dialog.findViewById(R.id.list_layout);
-        cardlay = (CardView) dialog.findViewById(R.id.cardId);
+       // cardlay = (CardView) dialog.findViewById(R.id.cardId);
 
         // Create custom adapter object ( see below CustomAdapter.java )
         T2PComplianceActivity.CustomBRANDAdapter adapter = new T2PComplianceActivity.CustomBRANDAdapter(T2PComplianceActivity.this, R.layout.custom_spinner_item, brandList);
@@ -1281,13 +1281,13 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         if (brandGetdata.size() > 0) {
             linearlay.setVisibility(View.VISIBLE);
-            cardlay.setVisibility(View.VISIBLE);
+           // cardlay.setVisibility(View.VISIBLE);
             adapterData = new T2PComplianceActivity.MyAdaptorStock(T2PComplianceActivity.this, brandGetdata);
             listview.setAdapter(adapterData);
             listview.invalidateViews();
         } else {
             linearlay.setVisibility(View.GONE);
-            cardlay.setVisibility(View.GONE);
+           // cardlay.setVisibility(View.GONE);
         }
 
         spinner_brand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1337,7 +1337,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     listview.setAdapter(adapterData);
                     listview.invalidateViews();
 
-                    cardlay.setVisibility(View.VISIBLE);
+                   // cardlay.setVisibility(View.VISIBLE);
                     linearlay.setVisibility(View.VISIBLE);
                     spinner_brand.setSelection(0);
                     brand_name="";
