@@ -829,6 +829,7 @@ public class UploadActivity extends AppCompatActivity {
                             publishProgress(data);
 
 
+                            //Stock Facing Planogram Tracker
                             String stock_facing_planogram_xml = "";
                             onXML = "";
                             stockFacingPlanogramDataList = db.getStockAndFacingPlanogramServerUploadData(coverageList.get(i).getStoreId());
