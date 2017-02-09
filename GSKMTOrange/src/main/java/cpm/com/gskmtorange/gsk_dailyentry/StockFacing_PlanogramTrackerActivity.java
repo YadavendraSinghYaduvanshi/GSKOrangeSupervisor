@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,10 +20,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,6 +42,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +50,7 @@ import java.util.List;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 
@@ -56,8 +64,11 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
     GSKOrangeDB db;
     PlanogramExpandableListAdapter adapter;
     String categoryName, categoryId, Error_Message = "";
+    boolean checkflag = true;
 
+    List<Integer> checkHeaderArray = new ArrayList<>();
     ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> headerDataList = new ArrayList<>();
+    ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> tempHeaderDataList;
     ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> childDataList, tempChildDataList;
     HashMap<StockFacing_PlanogramTrackerDataGetterSetter, List<StockFacing_PlanogramTrackerDataGetterSetter>> hashMapListChildData = new HashMap<>();
 
@@ -72,6 +83,8 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
         try {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             db = new GSKOrangeDB(this);
             db.open();
@@ -118,17 +131,6 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
             for (int j = 0; j < shelfList.size(); j++) {
                 shelfAdapter.add(shelfList.get(j).getShelf());
             }
-
-            //Add Shelf Header Data
-            //prepareHeaderList(headerDataList);
-
-            /*StockFacing_PlanogramTrackerDataGetterSetter sb = new StockFacing_PlanogramTrackerDataGetterSetter();
-            sb.setSp_addShelf_id("1");
-            sb.setSp_addShelf("Shelf1");
-            sb.setSp_shelfPosition("1");
-
-            headerDataList.add(sb);
-            prepareHeaderList(headerDataList);*/
 
             btn_addShelf.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -190,13 +192,14 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
                         public void onClick(View view) {
 
                             if (!data.getSp_addShelf_id().equals("0") && !data.getSp_shelfPosition().equals("Select")) {
+                                tempHeaderDataList = new ArrayList<>();
 
                                 headerDataList.add(data);
+                                //tempHeaderDataList.add(data);
+
                                 dialog.dismiss();
                                 prepareHeaderList(headerDataList);
                             } else {
-                                /*Snackbar.make(view1, getResources().getString(R.string.empty_field), Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();*/
                                 Toast.makeText(StockFacing_PlanogramTrackerActivity.this, getResources().getString(R.string.empty_field), Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -211,10 +214,47 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();*/
+
+                    if (validateData(headerDataList, hashMapListChildData)) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(StockFacing_PlanogramTrackerActivity.this);
+                        builder.setMessage(getResources().getString(R.string.check_save_message))
+                                .setCancelable(false)
+                                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        db.InsertStock_Facing_PlanogramTracker(store_id, categoryId, company_id, brand_id,
+                                                sub_category_id, headerDataList, hashMapListChildData);
+
+                                        finish();
+                                        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                                    }
+                                })
+                                .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(StockFacing_PlanogramTrackerActivity.this);
+                        //builder.setMessage(getResources().getString(R.string.empty_field))
+                        builder.setMessage(Error_Message)
+                                .setCancelable(false)
+                                .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+
                 }
             });
+
 
             expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
@@ -225,9 +265,9 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
                         fab.setVisibility(View.VISIBLE);
                     } else if (lastItem == totalItemCount) {
                         fab.setVisibility(View.INVISIBLE);
-                    } else {
+                    } /*else {
                         fab.setVisibility(View.VISIBLE);
-                    }
+                    }*/
                 }
 
                 @Override
@@ -324,10 +364,10 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
         }
     }
 
-    private void prepareHeaderList(ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> headerDataList) {
+    private void prepareHeaderList(ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> headerDataList1) {
         try {
             //Header Data
-            if (headerDataList.size() > 0) {
+            if (headerDataList1.size() > 0) {
 
                 /*for (int i = 0; i < headerDataList.size(); i++) {
                     hashMapListChildData.put(headerDataList.get(i), childDataList);
@@ -343,7 +383,7 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
                     }*//*
                 }*/
 
-                adapter = new PlanogramExpandableListAdapter(this, headerDataList, hashMapListChildData);
+                adapter = new PlanogramExpandableListAdapter(this, headerDataList1, hashMapListChildData);
                 expandableListView.setAdapter(adapter);
 
                 if (childDataList != null && childDataList.size() > 0) {
@@ -376,7 +416,9 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
 
 /*                adapter = new PlanogramExpandableListAdapter(this, headerDataList, hashMapListChildData);
                 expandableListView.setAdapter(adapter);*/
-                expandableListView.invalidate();
+
+                adapter.notifyDataSetChanged();
+                //expandableListView.invalidate();
 
 
                 if (childDataList != null && childDataList.size() > 0) {
@@ -428,85 +470,110 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
                 if (convertView == null) {
                     LayoutInflater infalInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     convertView = infalInflater.inflate(R.layout.item_stock_facing_planogram_header, null, false);
+                }
 
-                    TextView txt_shelfHeader = (TextView) convertView.findViewById(R.id.txt_shelfHeader);
-                    Button btn_addSku = (Button) convertView.findViewById(R.id.btn_addSku);
+                TextView txt_shelfHeader = (TextView) convertView.findViewById(R.id.txt_shelfHeader);
+                Button btn_addSku = (Button) convertView.findViewById(R.id.btn_addSku);
 
-                    txt_shelfHeader.setText(headerTitle.getSp_addShelf() + " (Position : " + headerTitle.getSp_shelfPosition() + ")");
+                txt_shelfHeader.setText(headerTitle.getSp_addShelf() + " (Position : " + headerTitle.getSp_shelfPosition() + ")");
 
-                    btn_addSku.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //Stock Facing Planogram SKU Data
-                            tempChildDataList = db.getStockAndFacingPlanogramDefaultSKUData(categoryId, brand_id,
-                                    keyAccount_id, storeType_id, class_id);
+                btn_addSku.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Stock Facing Planogram SKU Data
+                        tempChildDataList = db.getStockAndFacingPlanogramDefaultSKUData(categoryId, brand_id,
+                                keyAccount_id, storeType_id, class_id);
 
-                            final Dialog dialog1 = new Dialog(StockFacing_PlanogramTrackerActivity.this);
-                            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                            dialog1.setContentView(R.layout.dialog_stock_facing_planogram_tracker_add_sku);
+                        final Dialog dialog1 = new Dialog(StockFacing_PlanogramTrackerActivity.this);
+                        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        dialog1.setContentView(R.layout.dialog_stock_facing_planogram_tracker_add_sku);
 
-                            LinearLayout lin_addSku = (LinearLayout) dialog1.findViewById(R.id.lin_addSku);
-                            Button addSKU = (Button) dialog1.findViewById(R.id.dialog_btn_addSku_Shelf);
-                            Button cancel = (Button) dialog1.findViewById(R.id.dialog_btn_cancel_addSku);
+                        LinearLayout lin_addSku = (LinearLayout) dialog1.findViewById(R.id.lin_addSku);
+                        Button addSKU = (Button) dialog1.findViewById(R.id.dialog_btn_addSku_Shelf);
+                        Button cancel = (Button) dialog1.findViewById(R.id.dialog_btn_cancel_addSku);
 
-                            cancel.setOnClickListener(new View.OnClickListener() {
+                        cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog1.dismiss();
+                            }
+                        });
+
+                        childDataList = new ArrayList<>();
+
+                        for (int i = 0; i < tempChildDataList.size(); i++) {
+                            View view1 = getLayoutInflater().inflate(R.layout.item_stock_facing_planogram_child, null);
+
+                            TextView txt_skuChild = (TextView) view1.findViewById(R.id.txt_skuChild);
+                            CheckBox chk_sku = (CheckBox) view1.findViewById(R.id.chk_sku);
+
+                            final StockFacing_PlanogramTrackerDataGetterSetter childData = tempChildDataList.get(i);
+                            txt_skuChild.setText(childData.getSku());
+
+                            childData.setSp_addShelf_id(headerTitle.getSp_addShelf_id());
+
+                            if (childData.getCheckbox_sku().equals("0")) {
+                                chk_sku.setChecked(false);
+                            } else if (childData.getCheckbox_sku().equals("1")) {
+                                chk_sku.setChecked(true);
+                            }
+
+                            chk_sku.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                 @Override
-                                public void onClick(View view) {
-                                    dialog1.dismiss();
+                                public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
+                                    if (isCheck) {
+                                        childData.setCheckbox_sku("1");
+                                    } else {
+                                        childData.setCheckbox_sku("0");
+                                    }
                                 }
                             });
 
-                            childDataList = new ArrayList<>();
+                            childDataList.add(childData);
+                            lin_addSku.addView(view1);
+                        }
 
-                            for (int i = 0; i < tempChildDataList.size(); i++) {
-                                View view1 = getLayoutInflater().inflate(R.layout.item_stock_facing_planogram_child, null);
-
-                                TextView txt_skuChild = (TextView) view1.findViewById(R.id.txt_skuChild);
-                                CheckBox chk_sku = (CheckBox) view1.findViewById(R.id.chk_sku);
-
-                                final StockFacing_PlanogramTrackerDataGetterSetter childData = tempChildDataList.get(i);
-                                txt_skuChild.setText(childData.getSku());
-
-                                childData.setSp_addShelf_id(headerTitle.getSp_addShelf_id());
-
-                                if (childData.getCheckbox_sku().equals("0")) {
-                                    chk_sku.setChecked(false);
-                                } else if (childData.getCheckbox_sku().equals("1")) {
-                                    chk_sku.setChecked(true);
-                                }
-
-                                chk_sku.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                    @Override
-                                    public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
-                                        if (isCheck) {
-                                            childData.setCheckbox_sku("1");
-                                        } else {
-                                            childData.setCheckbox_sku("0");
-                                        }
-                                    }
-                                });
-
-                                childDataList.add(childData);
-                                lin_addSku.addView(view1);
-                            }
-
-                            addSKU.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
+                        addSKU.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
                                     /*headerTitle.getShelf_id();
                                     childDataList.size();*/
 
+                                /*prepareSkuList(childDataList, headerTitle);
+                                dialog1.dismiss();*/
+
+                                boolean flag = false;
+                                for (int i = 0; i < childDataList.size(); i++) {
+                                    if (childDataList.get(i).getCheckbox_sku().equals("1")) {
+                                        flag = true;
+                                        break;
+                                    }
+                                }
+
+                                if (flag) {
                                     prepareSkuList(childDataList, headerTitle);
                                     dialog1.dismiss();
+                                } else {
+                                    Snackbar.make(view, "Please select atleast one sku", Snackbar.LENGTH_LONG)
+                                            .setAction("Action", null).show();
                                 }
-                            });
-                            dialog1.show();
-                        }
-                    });
-                }
-            }
 
+                            }
+                        });
+                        dialog1.show();
+                    }
+                });
+
+                if (!checkflag) {
+                    if (checkHeaderArray.contains(groupPosition)) {
+                        txt_shelfHeader.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    } else {
+                        txt_shelfHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                    }
+                }
+
+            }
             return convertView;
         }
 
@@ -529,30 +596,33 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             StockFacing_PlanogramTrackerDataGetterSetter childData =
                     (StockFacing_PlanogramTrackerDataGetterSetter) getChild(groupPosition, childPosition);
-            //ViewHolder holder = null;
+            ViewHolder holder = null;
 
-            if (convertView == null) {
-                LayoutInflater infalInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(R.layout.item_stock_facing_planogram_child, null, false);
+            if (childData != null) {
+                if (convertView == null) {
+                    LayoutInflater infalInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = infalInflater.inflate(R.layout.item_stock_facing_planogram_child, null, false);
 
-                //holder = new ViewHolder();
-                TextView txt_skuChild = (TextView) convertView.findViewById(R.id.txt_skuChild);
-                CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.chk_sku);
-                //checkBox.setVisibility(View.GONE);
-                checkBox.setEnabled(false);
+                    holder = new ViewHolder();
+                    holder.txt_skuChild = (TextView) convertView.findViewById(R.id.txt_skuChild);
+                    holder.checkBox = (CheckBox) convertView.findViewById(R.id.chk_sku);
 
-                txt_skuChild.setText(childData.getSku());
-
-                if (childData.getCheckbox_sku().equals("1")) {
-                    checkBox.setChecked(true);
+                    convertView.setTag(holder);
+                } else {
+                    holder = (ViewHolder) convertView.getTag();
                 }
 
+                //holder.checkBox.setVisibility(View.GONE);
+                holder.checkBox.setEnabled(false);
 
-                //convertView.setTag(holder);
-            } /*else {
-                holder = (ViewHolder) convertView.getTag();
-            }*/
+                holder.txt_skuChild.setText(childData.getSku());
 
+                if (childData.getCheckbox_sku().equals("1")) {
+                    holder.checkBox.setChecked(true);
+                } else {
+                    holder.checkBox.setChecked(false);
+                }
+            }
 
             return convertView;
         }
@@ -571,5 +641,93 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
     public class ViewHolder {
         TextView txt_skuChild;
         CheckBox checkBox;
+    }
+
+    boolean validateData(List<StockFacing_PlanogramTrackerDataGetterSetter> listDataHeader,
+                         HashMap<StockFacing_PlanogramTrackerDataGetterSetter, List<StockFacing_PlanogramTrackerDataGetterSetter>> listDataChild) {
+        boolean flag = true;
+        checkHeaderArray.clear();
+
+        for (int i = 0; i < listDataHeader.size(); i++) {
+
+            if (listDataChild.get(listDataHeader.get(i)) == null) {
+                if (!checkHeaderArray.contains(i)) {
+                    checkHeaderArray.add(i);
+                }
+
+                checkflag = false;
+                Error_Message = "add sku shelf can not be empty";
+                break;
+            } else {
+                if (listDataChild.get(listDataHeader.get(i)).size() <= 0) {
+                    if (!checkHeaderArray.contains(i)) {
+                        checkHeaderArray.add(i);
+                    }
+
+                    flag = false;
+                    Error_Message = "add sku shelf can not be empty";
+                    break;
+                }
+            }
+
+            if (flag == false) {
+                checkflag = false;
+                break;
+            } else {
+                checkflag = true;
+            }
+        }
+
+        //expListView.invalidate();
+        adapter.notifyDataSetChanged();
+
+        return checkflag;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(StockFacing_PlanogramTrackerActivity.this);
+        builder.setTitle(getResources().getString(R.string.dialog_title));
+        builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(StockFacing_PlanogramTrackerActivity.this);
+            builder.setTitle(getResources().getString(R.string.dialog_title));
+            builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            android.app.AlertDialog alert = builder.create();
+            alert.show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
