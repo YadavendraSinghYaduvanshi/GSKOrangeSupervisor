@@ -615,4 +615,35 @@ public class CommonString {
             + " VARCHAR"
 
             + ")";
+
+    public static final String TABLE_INSERT_STORE_CAMERA = "Store_wise_camera";
+
+    public static final String CREATE_TABLE_INSERT_STORE_CAMERA = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_STORE_CAMERA
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "Store_id"
+            + " VARCHAR,"
+
+            + "Category_id"
+            + " VARCHAR,"
+
+            + "Camera1"
+            + " VARCHAR,"
+
+            + "Camera2"
+            + " VARCHAR,"
+
+            + "Camera3"
+            + " VARCHAR,"
+
+            + "Camera4"
+            + " VARCHAR,"
+
+            + "checkSaveStatus"
+            + " VARCHAR"
+
+            + ")";
 }

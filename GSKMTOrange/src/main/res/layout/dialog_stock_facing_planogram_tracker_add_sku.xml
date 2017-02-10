@@ -1,50 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_margin="10dp"
         card_view:cardBackgroundColor="@color/light_orange_background"
         card_view:cardCornerRadius="20dp">
         <!--android:background="@drawable/bg_boarder_orange_transparent"-->
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <!--        <ScrollView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">-->
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_orange_background"
+            android:orientation="vertical"
+            android:weightSum="10">
+
+            <!--Add Shelf View-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/light_orange_background"
+                android:layout_height="0dp"
+                android:layout_weight="9"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <!--Add Shelf View-->
-                <LinearLayout
+                <!--        <LinearLayout
+                            android:id="@+id/lin_addSku"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />-->
+
+
+                <ExpandableListView
+                    android:id="@+id/exp_addSkuListView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="#00000000"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:scrollingCache="false" />
+            </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/lin_addSku"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" />
-                </LinearLayout>
+            <!--Bottom Buttom-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
-                <!--Bottom Buttom-->
                 <RelativeLayout
                     android:id="@+id/rel_addSku_Cancel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp">
+                    android:padding="5dp">
 
                     <Button
                         android:id="@+id/dialog_btn_addSku_Shelf"
@@ -70,8 +89,7 @@
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/white" />
                 </RelativeLayout>
-
             </LinearLayout>
-        </ScrollView>
+        </LinearLayout><!--</ScrollView>-->
     </android.support.v7.widget.CardView>
 </LinearLayout>

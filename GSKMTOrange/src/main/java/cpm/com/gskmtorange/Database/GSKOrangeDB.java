@@ -48,6 +48,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.StoreWisePerformaceGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.Store_wise_camera_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
@@ -135,6 +136,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
             db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_HEADER);
             db.execSQL(CommonString.CREATE_TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_CHILD);
+
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_STORE_CAMERA);
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(context, "Error -" + e.toString(), Toast.LENGTH_SHORT).show();
@@ -3735,4 +3738,232 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return list;
     }
+
+    public void InsertStore_wise_camera(Store_wise_camera_DataGetterSetter data) {
+
+        ContentValues values = new ContentValues();
+        try {
+            values.put("Store_id", data.getStore_id());
+            values.put("Category_id", data.getCategory_id());
+            values.put("Camera1", data.getCamera1());
+            values.put("Camera2", data.getCamera2());
+            values.put("Camera3", data.getCamera3());
+            values.put("Camera4", data.getCamera4());
+            values.put("checkSaveStatus", data.getCheckSaveStatus());
+
+            db.insert(CommonString.TABLE_INSERT_STORE_CAMERA, null, values);
+        } catch (Exception ex) {
+            Log.d("Exception ", " Store_wise_camera " + ex.toString());
+        }
+    }
+
+    public Store_wise_camera_DataGetterSetter getStore_wise_camera(String store_id, String category_id) {
+        Store_wise_camera_DataGetterSetter data = new Store_wise_camera_DataGetterSetter();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Store_wise_camera " +
+                    "where Store_id='" + store_id + "' and Category_id='" + category_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+
+                    data.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Store_id")));
+                    data.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Category_id")));
+                    data.setCamera1(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Camera1")));
+                    data.setCamera2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Camera2")));
+                    data.setCamera3(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Camera3")));
+                    data.setCamera4(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Camera4")));
+                    data.setCheckSaveStatus(dbcursor.getString(dbcursor.getColumnIndexOrThrow("checkSaveStatus")));
+
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return data;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get Stock Facing Planogram server upload !" + e.toString());
+            return data;
+        }
+        return data;
+    }
+
+    //check if table is empty
+    public boolean isStorewiseCameraSave(String store_id, String category_id) {
+        boolean filled = false;
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select checkSaveStatus from Store_wise_camera " +
+                    "where Store_id='" + store_id + "' and Category_id='" + category_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                String value = dbcursor.getString(dbcursor.getColumnIndexOrThrow("checkSaveStatus"));
+
+                if (value.equals("1")) {
+                    filled = true;
+                } else {
+                    filled = false;
+                }
+                //dbcursor.close();
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " when fetching Records!!!!!!!!!!!!!!!!!!!!! " + e.toString());
+            return filled;
+        }
+        return filled;
+    }
+
+    public void updateStore_wise_camera(Store_wise_camera_DataGetterSetter data) {
+
+        ContentValues values = new ContentValues();
+        try {
+            //values.put("Store_id", data.getStore_id());
+            //values.put("Category_id", data.getCategory_id());
+            values.put("Camera1", data.getCamera1());
+            values.put("Camera2", data.getCamera2());
+            values.put("Camera3", data.getCamera3());
+            values.put("Camera4", data.getCamera4());
+
+            db.update(CommonString.TABLE_INSERT_STORE_CAMERA, values,
+                    " Store_id='" + data.getStore_id() + "' and Category_id='" + data.getCategory_id() + "'", null);
+        } catch (Exception ex) {
+            Log.d("Exception ", " Store_wise_camera " + ex.toString());
+        }
+    }
+
+    public void deleteStore_wise_camera(String store_id, String category_id) {
+        db.delete(CommonString.TABLE_INSERT_STORE_CAMERA, null, null);
+    }
+
+    //Stock Facing Planogram Server Upload Data
+    public ArrayList<Store_wise_camera_DataGetterSetter> getStoreWiseCameraServerUploadData(String store_id) {
+        ArrayList<Store_wise_camera_DataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Store_wise_camera " +
+                    "where Store_id='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    Store_wise_camera_DataGetterSetter data = new Store_wise_camera_DataGetterSetter();
+
+                    data.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Store_id")));
+                    data.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Category_id")));
+                    data.setCamera1(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Camera1")));
+                    data.setCamera2(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Camera2")));
+                    data.setCamera3(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Camera3")));
+                    data.setCamera4(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Camera4")));
+
+                    list.add(data);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get Stock Facing Planogram server upload !" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    //Stock_facing Planogram Add Sku
+    public ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> getPlanogramAddSkuHeaderData(
+            String category_id, String keyAccount_id, String storeType_id, String class_id) {
+
+        ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select DISTINCT SB.SUB_CATEGORY_ID,SB.SUB_CATEGORY,BR.BRAND_ID,BR.BRAND,BR.COMPANY_ID ," +
+                    " (SELECT SUM(SOS_TARGET) FROM MAPPING_SOS_TARGET WHERE STORE_ID = 1 AND BRAND_ID = BR.BRAND_ID)AS SOS_TARGET " +
+                    "from MAPPING_STOCK M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where CA.CATEGORY_ID='" + category_id + "' AND M.KEYACCOUNT_ID = '" + keyAccount_id +
+                    "' AND M.STORETYPE_ID = '" + storeType_id + "' AND M.CLASS_ID = '" + class_id + "'" +
+                    "order by SB.SUB_CATEGORY,BR.COMPANY_ID,BR.BRAND", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    StockFacing_PlanogramTrackerDataGetterSetter cd = new StockFacing_PlanogramTrackerDataGetterSetter();
+
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+                    cd.setSub_category_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
+                    cd.setSub_category(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
+                    cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
+                    cd.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get Planogram Add Sku Header!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> getPlanogramAddSkuChildData(
+            String category_id, String brand_id, String keyAccount_id, String storeType_id, String class_id) {
+
+        ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select DISTINCT SK.SKU_ID,SK.SKU,SK.MRP,SK.SKU_SEQUENCE,M.MBQ,BR.COMPANY_ID " +
+                    "from MAPPING_STOCK M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where CA.CATEGORY_ID='" + category_id + "' AND BR.BRAND_ID='" + brand_id +
+                    "' AND M.KEYACCOUNT_ID = '" + keyAccount_id + "' AND M.STORETYPE_ID = '" + storeType_id +
+                    "' AND M.CLASS_ID = '" + class_id + "'", null);
+
+            if (dbcursor != null) {
+
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    StockFacing_PlanogramTrackerDataGetterSetter cd = new StockFacing_PlanogramTrackerDataGetterSetter();
+
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setMrp(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MRP")));
+                    cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
+                    cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
 }
