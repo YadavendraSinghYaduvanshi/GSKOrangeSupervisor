@@ -38,6 +38,7 @@ import javax.xml.parsers.SAXParserFactory;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
+import cpm.com.gskmtorange.GetterSetter.BrandAvabilityGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
@@ -75,7 +76,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
     private FailureGetterSetter failureGetterSetter = null;
     private SharedPreferences preferences;
     private int factor, k = 0;
-
+    Object result = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -267,7 +268,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                             HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
                             androidHttpTransport.call(CommonString.SOAP_ACTION_UPLOAD_STORE_COVERAGE, envelope);
 
-                            Object result = envelope.getResponse();
+                            result = envelope.getResponse();
 
                             datacheck = result.toString();
                             words = datacheck.split("\\;");
@@ -338,7 +339,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                 }
                             }
                             data.value = 10;
-                            data.name = "MSL_Availability Uploading";
+                            data.name = getString(R.string.availability_data_uploading);
                             publishProgress(data);
 
 
@@ -463,7 +464,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                 }
                             }
                             data.value = 20;
-                            data.name = "Stock Facing Uploading";
+                            data.name = getString(R.string.stock_data_uploading);
                             publishProgress(data);
 
 
@@ -522,7 +523,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                 }
                             }
                             data.value = 30;
-                            data.name = "Promotion Data Uploading";
+                            data.name = getString(R.string.promo_data_uploading);
                             publishProgress(data);
 
 
@@ -581,7 +582,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                 }
                             }
                             data.value = 35;
-                            data.name = "Additional Promotion Data Uploading";
+                            data.name = getString(R.string.additional_data_uploading);
                             publishProgress(data);
 
 
@@ -629,7 +630,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    onXML = "[ADDITIONAL_VISIBILITY_DATA]"
+                                    onXML = "[ADDITIONAL_VISIBILITY_NEW]"
                                             + "[MID]" + mid + "[/MID]"
                                             + "[USER_ID]"
                                             + userId
@@ -643,19 +644,25 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                             + "[ADDITIONAL_DISPLAY]"
                                             + additionalVisibilityList.get(J).getBtn_toogle()
                                             + "[/ADDITIONAL_DISPLAY]"
-                                            + "[BRAND_ID]"
+                                            /* + "[BRAND_ID]"
                                             + additionalVisibilityList.get(J).getBrand_id()
-                                            + "[/BRAND_ID]"
+                                            + "[/BRAND_ID]"*/
                                             + "[IMAGE_URL]"
                                             + additionalVisibilityList.get(J).getImage()
                                             + "[/IMAGE_URL]"
+                                            + "[IMAGE_URL1]"
+                                            + additionalVisibilityList.get(J).getImage2()
+                                            + "[/IMAGE_URL1]"
+                                            + "[IMAGE_URL2]"
+                                            + additionalVisibilityList.get(J).getImage3()
+                                            + "[/IMAGE_URL2]"
                                             + "[DISPLAY_ID]"
                                             + additionalVisibilityList.get(J).getSku_id()
                                             + "[/DISPLAY_ID]"
                                             + "[SKU_LIST]"
                                             + additional_visibility_dialog_xml
                                             + "[/SKU_LIST]"
-                                            + "[/ADDITIONAL_VISIBILITY_DATA]";
+                                            + "[/ADDITIONAL_VISIBILITY_NEW]";
 
 
                                     additional_visibility_data_xml = additional_visibility_data_xml + onXML;
@@ -670,7 +677,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "ADDITIONAL_VISIBILITY_DATA");
+                                request.addProperty("KEYS", "ADDITIONAL_VISIBILITY_NEW");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
@@ -696,9 +703,8 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                 }
                             }
 
-
                             data.value = 35;
-                            data.name = "Additional Visibility Data";
+                            data.name = getString(R.string.additional_data_uploading);
                             publishProgress(data);
 
                             /////ashish close
@@ -714,7 +720,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                     ArrayList<GapsChecklistGetterSetter> gapsList = db.getGapsData(t2PGetterSetters.get(i).getKey_id());
                                     ArrayList<SkuGetterSetter> skuList = db.getT2PSKUData(t2PGetterSetters.get(i).getKey_id());
-
+                                    ArrayList<BrandAvabilityGetterSetter> brandList = db.getT2BrandData(t2PGetterSetters.get(i).getKey_id());
                                     String gaps_xml = "";
                                     String gaps_child;
 
@@ -754,6 +760,24 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                         sku_xml = sku_xml + sku_child;
                                     }
 
+
+                                    String brandxml = "";
+                                    String brandchild;
+
+                                    if (brandList.size() > 0) {
+
+                                        for (int M = 0; M < brandList.size(); M++) {
+
+                                            brandchild = "[BRAND]"
+                                                    + "[MID]" + mid + "[/MID]"
+                                                    + "[USER_ID]" + userId + "[/USER_ID]"
+                                                    + "[BRAND_ID]" + brandList.get(M).getBRAND_ID() + "[/BRAND_ID]"
+                                               /* + "[BRAND]" + brandList.get(M).getBRAND() + "[/BRAND]"*/
+                                                    + "[COMMON_ID]" + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id()) + "[/COMMON_ID]"
+                                                    + "[/BRAND]";
+                                            brandxml = brandxml + brandchild;
+                                        }
+                                    }
                                     String present = "";
                                     if (t2PGetterSetters.get(i1).isPresent()) {
                                         present = "1";
@@ -774,6 +798,8 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                             + "[PRESENT]" + present + "[/PRESENT]"
                                             + "[GAPS_DATA]" + gaps_xml + "[/GAPS_DATA]"
                                             + "[SKU_DATA]" + sku_xml + "[/SKU_DATA]"
+                                            + "[BRAND_DATA]" + brandxml + "[/BRAND_DATA]"
+
                                             + "[/T2P_DATA]";
 
                                     t2p_data_xml = t2p_data_xml + onXML;
@@ -784,7 +810,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", t2p_final_xml);
-                                request.addProperty("KEYS", "T2P_DATA");
+                                request.addProperty("KEYS", "T2P_DATA_NEW");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
@@ -811,7 +837,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                             }
 
                             data.value = 40;
-                            data.name = "T2P Data Uploading";
+                            data.name = getString(R.string.t2p_data_uploading);
                             publishProgress(data);
 
                             //Image Upload
@@ -887,8 +913,53 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                             }
                                         }
                                     }
+
+                                    if (additionalVisibilityList.get(i1).getImage2() != null && !additionalVisibilityList.get(i1).getImage2().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + additionalVisibilityList.get(i1).getImage2()).exists()) {
+
+                                            try {
+                                                result = UploadImage(additionalVisibilityList.get(i1).getImage2(), "AdditionalVisibilityImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "AdditionalVisibilityImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("AdditionalVisibilityImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+
+                                    if (additionalVisibilityList.get(i1).getImage3() != null && !additionalVisibilityList.get(i1).getImage3().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + additionalVisibilityList.get(i1).getImage3()).exists()) {
+
+                                            try {
+                                                result = UploadImage(additionalVisibilityList.get(i1).getImage3(), "AdditionalVisibilityImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "AdditionalVisibilityImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("AdditionalVisibilityImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
                                 }
                             }
+
 
                             //// ashish close image
 
