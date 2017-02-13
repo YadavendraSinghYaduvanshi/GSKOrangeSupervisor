@@ -620,7 +620,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     sku.setBRAND(brand_selected[0].getBRAND().get(0));
                     sku.setSKU(sku_selected[0].getSKU());
                     sku.setSKU_ID(sku_selected[0].getSKU_ID());
-                    sku.setSTOCK(et_stock.getText().toString());
+                    sku.setSTOCK(et_stock.getText().toString().replaceFirst("^0+(?!$)", ""));
 
                     skuAddedList.add(sku);
 

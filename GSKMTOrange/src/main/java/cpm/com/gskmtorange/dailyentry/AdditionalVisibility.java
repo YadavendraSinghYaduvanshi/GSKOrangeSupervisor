@@ -1165,9 +1165,8 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 ab.setSku_id(SKU_ID);
                 ab.setSku_name(SKU_name);
                 // ab.setProcess_id(process_id);
-                ab.setQuantity(Edt_txt.getText().toString());
+                ab.setQuantity( Edt_txt.getText().toString().replaceFirst("^0+(?!$)", ""));
                 // ab.setCategory_id(category_id);
-
 
                 if (validateDialogData(ab)) {
 
