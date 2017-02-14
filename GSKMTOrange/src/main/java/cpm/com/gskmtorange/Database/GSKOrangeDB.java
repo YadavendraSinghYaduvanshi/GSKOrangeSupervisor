@@ -2144,7 +2144,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     //Store wise Performance
     public void InsertSTORE_PERFORMANCE(STORE_PERFORMANCE_MasterGetterSetter data) {
-        db.delete("STORE_PERFORMANCE", null, null);
+        db.delete("STORE_PERFORMANCE_NEW", null, null);
 
         ContentValues values = new ContentValues();
         try {
@@ -2153,17 +2153,18 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put("STORE_ID", data.getSTORE_ID().get(i));
                 values.put("CATEGORY_ID", data.getCATEGORY_ID().get(i));
                 values.put("PERIOD", data.getPERIOD().get(i));
-                values.put("MSL_AVAILABILITY", data.getMSL_AVAILABILITY().get(i));
+                values.put("MSL", data.getMSL_AVAILABILITY().get(i));
                 values.put("SOS", data.getSOS().get(i));
                 values.put("T2P", data.getT2P().get(i));
                 values.put("PROMO", data.getPROMO().get(i));
                 values.put("OSS", data.getOSS().get(i));
                 values.put("ORDERID", data.getORDERID().get(i));
+                values.put("PLANOGRAM", data.getPLANOGRAM().get(i));
 
-                db.insert("STORE_PERFORMANCE", null, values);
+                db.insert("STORE_PERFORMANCE_NEW", null, values);
             }
         } catch (Exception ex) {
-            Log.d("Exception ", " STORE_PERFORMANCE " + ex.toString());
+            Log.d("Exception ", " STORE_PERFORMANCE_NEW " + ex.toString());
         }
     }
 
@@ -2173,7 +2174,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("Select * from STORE_PERFORMANCE " +
+            dbcursor = db.rawQuery("Select * from STORE_PERFORMANCE_NEW " +
                     "where STORE_ID='" + store_id + "' and CATEGORY_ID='" + category_id + "'", null);
 
             if (dbcursor != null) {
@@ -2184,13 +2185,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
                     cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY_ID")));
                     cd.setPeriod(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PERIOD")));
-                    cd.setMsl_availability(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MSL_AVAILABILITY")));
+                    cd.setMsl_availability(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MSL")));
                     cd.setSos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SOS")));
                     cd.setT2p(dbcursor.getString(dbcursor.getColumnIndexOrThrow("T2P")));
                     cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
                     cd.setOss(dbcursor.getString(dbcursor.getColumnIndexOrThrow("OSS")));
                     cd.setOrder_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("ORDERID")));
-
+                    cd.setPLANOGRAM(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PLANOGRAM")));
                     list.add(cd);
                     dbcursor.moveToNext();
                 }
@@ -2209,9 +2210,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("Select PERIOD, ROUND(avg(MSL_AVAILABILITY),1) as MSL_AVAILABILITY,ROUND(avg(sos),1) as SOS ," +
-                    " ROUND(avg(t2p),1) as T2P,ROUND(avg(pROMO),1) as PROMO,ROUND(SUM(oss),1) AS OSS " +
-                    "from STORE_PERFORMANCE " +
+            dbcursor = db.rawQuery("Select PERIOD, ROUND(avg(MSL),1) as MSL,ROUND(avg(sos),1) as SOS ," +
+                    " ROUND(avg(t2p),1) as T2P,ROUND(avg(pROMO),1) as PROMO , ROUND(avg(pLANOGRAM),1) as PLANOGRAM, ROUND(SUM(oss),1) AS OSS " +
+                    "from STORE_PERFORMANCE_NEW " +
                     "where  STORE_ID='" + store_id + "' " +
                     "GROUP BY PERIOD " +
                     "ORDER BY ORDERID ", null);
@@ -2224,12 +2225,12 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 /*                    cd.setStore_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STORE_ID")));
                     cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("CATEGORY_ID")));*/
                     cd.setPeriod(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PERIOD")));
-                    cd.setMsl_availability(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MSL_AVAILABILITY")));
+                    cd.setMsl_availability(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MSL")));
                     cd.setSos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SOS")));
                     cd.setT2p(dbcursor.getString(dbcursor.getColumnIndexOrThrow("T2P")));
                     cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
                     cd.setOss(dbcursor.getString(dbcursor.getColumnIndexOrThrow("OSS")));
-                    //                   cd.setOrder_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("ORDERID")));
+                    cd.setPLANOGRAM(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PLANOGRAM")));
 
                     list.add(cd);
                     dbcursor.moveToNext();

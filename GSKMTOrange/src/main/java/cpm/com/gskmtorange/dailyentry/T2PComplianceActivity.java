@@ -919,6 +919,12 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     error_msg = getResources().getString(R.string.click_image);
                     break;
                 }
+                else if (t2PGetterSetters.get(i).getBrandlist().size() == 0) {
+                    flag = false;
+                    error_msg = getResources().getString(R.string.title_activity_fill_brand);
+                    break;
+                }
+
             }
 
         }

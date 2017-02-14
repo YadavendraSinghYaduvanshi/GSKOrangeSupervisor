@@ -129,12 +129,12 @@
     <string name="promo_compliance_add">Add</string>
 
     <string name="category_performance_period">Period</string>
-    <string name="category_performance_msl_availability">MSL Availability</string>
+    <string name="category_performance_msl_availability">MSL</string>
     <string name="category_performance_sos">SOS</string>
     <string name="category_performance_t2p">T2P</string>
     <string name="category_performance_promo">Promo</string>
     <string name="category_performance_oss">OSS</string>
-
+    <string name="category_performance_PLANOGRAM">Planogram</string>
     <string name="category_performance_ltm">LTM</string>
     <string name="category_performance_mtd">MTD</string>
     <string name="category_performance_lsv">LSV</string>
@@ -267,4 +267,5 @@
     <string name="new_update_available">New Update Available \n\n Yeni güncelleme var</string>
     <string name="datanotfound">Data not found in</string>
     <string name="title_activity_t2p_brand__avaibility">T2pBrand_Avaibility</string>
+    <string name="title_activity_fill_brand">Please fill brand data</string>
 </resources>

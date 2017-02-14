@@ -633,7 +633,7 @@ public class DownloadActivity extends AppCompatActivity {
                 //STORE_PERFORMANCE
                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
                 request.addProperty("UserName", userId);
-                request.addProperty("Type", "STORE_PERFORMANCE");
+                request.addProperty("Type", "STORE_PERFORMANCE_NEW");
                 request.addProperty("cultureid", culture_id);
 
                 envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -659,7 +659,7 @@ public class DownloadActivity extends AppCompatActivity {
 
                     if (store_performance_masterGetterSetter.getSTORE_ID().size() > 0) {
                         data.value = 85;
-                        data.name = "STORE_PERFORMANCE Data Download";
+                        data.name = "STORE_PERFORMANCE_NEW Data Download";
                     } else {
                         //return "STORE_PERFORMANCE";
                     }

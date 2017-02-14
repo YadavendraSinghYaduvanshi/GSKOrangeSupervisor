@@ -658,7 +658,7 @@ public class XMLHandlers {
                     if (xpp.getName().equals("PROMO")) {
                         st.setPROMO(xpp.nextText());
                     }
-                    if (xpp.getName().equals("MSL_AVAILABILITY")) {
+                    if (xpp.getName().equals("MSL")) {
                         st.setMSL_AVAILABILITY(xpp.nextText());
                     }
                     if (xpp.getName().equals("OSS")) {
@@ -667,6 +667,10 @@ public class XMLHandlers {
                     if (xpp.getName().equals("ORDERID")) {
                         st.setORDERID(xpp.nextText());
                     }
+                    if (xpp.getName().equals("PLANOGRAM")) {
+                        st.setPLANOGRAM(xpp.nextText());
+                    }
+
                 }
                 xpp.next();
             }

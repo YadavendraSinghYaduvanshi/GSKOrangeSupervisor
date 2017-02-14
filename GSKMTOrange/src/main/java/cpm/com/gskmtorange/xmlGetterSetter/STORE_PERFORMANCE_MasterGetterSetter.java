@@ -18,6 +18,18 @@ public class STORE_PERFORMANCE_MasterGetterSetter {
     ArrayList<String> MSL_AVAILABILITY = new ArrayList<>();
     ArrayList<String> OSS = new ArrayList<>();
     ArrayList<String> ORDERID = new ArrayList<>();
+    ArrayList<String> PLANOGRAM = new ArrayList<>();
+    public ArrayList<String> getPLANOGRAM() {
+        return PLANOGRAM;
+    }
+
+    public void setPLANOGRAM(String PLANOGRAM) {
+        this.PLANOGRAM.add(PLANOGRAM);
+    }
+
+
+
+
 
     public String getTable_STORE_PERFORMANCE() {
         return table_STORE_PERFORMANCE;
