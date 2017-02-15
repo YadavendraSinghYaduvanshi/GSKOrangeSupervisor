@@ -616,4 +616,24 @@ public class CommonString {
 
             + ")";
 
+    public static final String TABLE_INSERT_BRAND_AVAIBILITY_DATA = "Camera_Not_Allowed";
+
+    public static final String CREATE_TABLE_INSERT_BRAND_AVAIBILITY_DATA = "CREATE TABLE IF NOT EXISTS "
+        + TABLE_INSERT_BRAND_AVAIBILITY_DATA
+        + "("
+        + "KEY_ID"
+        + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+        + "COMMON_ID"
+        + " INTEGER,"
+
+        + "BRAND_NAME"
+        + " VARCHAR,"
+
+        + "BRAND_ID"
+        + " INTEGER"
+
+        + ")";
+
+
 }
