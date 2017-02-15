@@ -555,10 +555,10 @@ public class CommonString {
 
     public static final String CREATE_TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_HEADER = "CREATE TABLE IF NOT EXISTS "
             + TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_HEADER
+
             + "("
             + "KEY_ID"
             + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
-
             + "store_id"
             + " VARCHAR,"
 
@@ -615,4 +615,5 @@ public class CommonString {
             + " VARCHAR"
 
             + ")";
+
 }

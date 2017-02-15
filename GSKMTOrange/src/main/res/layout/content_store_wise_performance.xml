@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_category_wise_performance">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,12 +41,12 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:weightSum="30">
+                    android:weightSum="28">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="5"
+                        android:layout_weight="4"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="@string/category_performance_period"
@@ -61,7 +61,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="5"
+                        android:layout_weight="4"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="@string/category_performance_msl_availability"
@@ -76,7 +76,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="5"
+                        android:layout_weight="4"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="@string/category_performance_sos"
@@ -91,7 +91,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="5"
+                        android:layout_weight="4"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="@string/category_performance_t2p"
@@ -106,7 +106,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="5"
+                        android:layout_weight="4"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="@string/category_performance_promo"
@@ -121,12 +121,28 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="5"
+                        android:layout_weight="4"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="@string/category_performance_oss"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="#000" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/category_performance_PLANOGRAM"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#000" />
+
                 </LinearLayout>
 
                 <View

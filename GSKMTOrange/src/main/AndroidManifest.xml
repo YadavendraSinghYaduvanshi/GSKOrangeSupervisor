@@ -171,11 +171,17 @@
             android:label="@string/title_activity_upload"
             android:screenOrientation="portrait" />
         <activity
+
+            android:name=".dailyentry.T2pBrand_Avaibility"
+            android:label="@string/title_activity_t2p_brand__avaibility"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+ <activity
             android:name=".gsk_dailyentry.StockFacing_PlanogramTrackerActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_stock_facing__planogram_tracker"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

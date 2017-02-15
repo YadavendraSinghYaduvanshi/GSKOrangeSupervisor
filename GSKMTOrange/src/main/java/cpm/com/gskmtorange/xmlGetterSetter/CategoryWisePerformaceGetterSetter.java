@@ -7,6 +7,15 @@ package cpm.com.gskmtorange.xmlGetterSetter;
 public class CategoryWisePerformaceGetterSetter {
     String store_id, category_id, period, msl_availability, sos, t2p, promo, oss, order_id;
 
+    public String getPLANOGRAM() {
+        return PLANOGRAM;
+    }
+
+    public void setPLANOGRAM(String PLANOGRAM) {
+        this.PLANOGRAM = PLANOGRAM;
+    }
+
+    String PLANOGRAM;
     public String getStore_id() {
         return store_id;
     }

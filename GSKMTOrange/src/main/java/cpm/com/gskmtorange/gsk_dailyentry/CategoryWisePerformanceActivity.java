@@ -163,6 +163,8 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
             holder.txt_t2p.setText(categoryData.getT2p());
             holder.txt_promo.setText(categoryData.getPromo());
             holder.txt_oss.setText(categoryData.getOss());
+            holder.txt_planogram.setText(categoryData.getPLANOGRAM());
+
         }
 
         @Override
@@ -171,7 +173,7 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
-            TextView txt_period, txt_sos, txt_t2p, txt_promo, txt_msl_availability, txt_oss;
+            TextView txt_period, txt_sos, txt_t2p, txt_promo, txt_msl_availability, txt_oss,txt_planogram;
             LinearLayout lay_menu;
 
             public MyViewHolder(View itemView) {
@@ -183,6 +185,8 @@ public class CategoryWisePerformanceActivity extends AppCompatActivity {
                 txt_promo = (TextView) itemView.findViewById(R.id.txt_promo);
                 txt_msl_availability = (TextView) itemView.findViewById(R.id.txt_msl_availability);
                 txt_oss = (TextView) itemView.findViewById(R.id.txt_oss);
+                txt_planogram = (TextView) itemView.findViewById(R.id.txt_planogram);
+
             }
         }
     }
