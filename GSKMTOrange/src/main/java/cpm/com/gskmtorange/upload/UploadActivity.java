@@ -51,7 +51,9 @@ import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.Store_wise_camera_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
 import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
 
@@ -80,8 +82,11 @@ public class UploadActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private int factor, k = 0;
     Object result = "";
-
     Toolbar toolbar;
+
+    ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> stockFacingPlanogramDataList;
+
+    ArrayList<Store_wise_camera_DataGetterSetter> storeWiseCameraDataGetterSetters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -847,10 +852,213 @@ public class UploadActivity extends AppCompatActivity {
                             data.name = getString(R.string.t2p_data_uploading);
                             publishProgress(data);
 
+
+                            //Stock Facing Planogram Tracker
+                            String stock_facing_planogram_xml = "";
+                            onXML = "";
+                            stockFacingPlanogramDataList = db.getStockAndFacingPlanogramServerUploadData(coverageList.get(i).getStoreId());
+
+                            if (stockFacingPlanogramDataList.size() > 0) {
+
+                                for (int i1 = 0; i1 < stockFacingPlanogramDataList.size(); i1++) {
+                                    onXML = "[STOCK_FACING_PLANOGRAM_DATA]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
+                                            + "[SKU_ID]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getSku_id()) + "[/SKU_ID]"
+                                            //+ "[category_id]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getCategory_id()) + "[/category_id]"
+                                            //+ "[company_id]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getCompany_id()) + "[/company_id]"
+                                            //+ "[sub_category_id]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getSub_category_id()) + "[/sub_category_id]"
+                                            + "[BRAND_ID]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getBrand_id()) + "[/BRAND_ID]"
+                                            + "[SHELF_ID]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getSp_addShelf_id()) + "[/SHELF_ID]"
+                                            + "[SHELF_POSITION]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getSp_shelfPosition()) + "[/SHELF_POSITION]"
+                                            + "[CHECKBOX]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getCheckbox_sku()) + "[/CHECKBOX]"
+                                            + "[/STOCK_FACING_PLANOGRAM_DATA]";
+
+                                    stock_facing_planogram_xml = stock_facing_planogram_xml + onXML;
+                                }
+
+                                final String sos_xml = "[DATA]" + stock_facing_planogram_xml + "[/DATA]";
+
+                                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                                request.addProperty("XMLDATA", sos_xml);
+                                request.addProperty("KEYS", "STOCK_FACING_PLANOGRAM_DATA");
+                                request.addProperty("USERNAME", userId);
+                                request.addProperty("MID", mid);
+
+                                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                                envelope.dotNet = true;
+                                envelope.setOutputSoapObject(request);
+
+                                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                                androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                                result = envelope.getResponse();
+
+                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+                            }
+                            data.value = 50;
+                            data.name = getString(R.string.stock_planogram_data_uploading);
+                            publishProgress(data);
+
+
+                            //Store Wise Camera
+                            String store_wise_camera_xml = "";
+                            onXML = "";
+                            storeWiseCameraDataGetterSetters = db.getStoreWiseCameraServerUploadData(coverageList.get(i).getStoreId());
+
+                            if (storeWiseCameraDataGetterSetters.size() > 0) {
+
+                                for (int i1 = 0; i1 < storeWiseCameraDataGetterSetters.size(); i1++) {
+                                    onXML = "[STORE_WISE_CAMERA_DATA]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
+                                            + "[CAMERA1]" + storeWiseCameraDataGetterSetters.get(i).getCamera1() + "[/CAMERA1]"
+                                            + "[CAMERA2]" + storeWiseCameraDataGetterSetters.get(i).getCamera2() + "[/CAMERA2]"
+                                            + "[CAMERA3]" + storeWiseCameraDataGetterSetters.get(i).getCamera3() + "[/CAMERA3]"
+                                            + "[CAMERA4]" + storeWiseCameraDataGetterSetters.get(i).getCamera4() + "[/CAMERA4]"
+                                            + "[/STORE_WISE_CAMERA_DATA]";
+
+                                    store_wise_camera_xml = store_wise_camera_xml + onXML;
+                                }
+
+                                final String sos_xml = "[DATA]" + store_wise_camera_xml + "[/DATA]";
+
+                                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                                request.addProperty("XMLDATA", sos_xml);
+                                request.addProperty("KEYS", "STORE_WISE_CAMERA_DATA");
+                                request.addProperty("USERNAME", userId);
+                                request.addProperty("MID", mid);
+
+                                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                                envelope.dotNet = true;
+                                envelope.setOutputSoapObject(request);
+
+                                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                                androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                                result = envelope.getResponse();
+
+                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+                            }
+                            data.value = 55;
+                            data.name = getString(R.string.stock_planogram_data_uploading);
+                            publishProgress(data);
+
+
                             //Image Upload
 
+                            //Store Wise Camera Images Upload
+                            if (storeWiseCameraDataGetterSetters.size() > 0) {
+                                for (int i1 = 0; i1 < storeWiseCameraDataGetterSetters.size(); i1++) {
+
+                                    if (storeWiseCameraDataGetterSetters.get(i1).getCamera1() != null && !storeWiseCameraDataGetterSetters.get(i1).getCamera1().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + storeWiseCameraDataGetterSetters.get(i1).getCamera1()).exists()) {
+
+                                            try {
+                                                result = UploadImage(storeWiseCameraDataGetterSetters.get(i1).getCamera1(), "StockCameraImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "StockCameraImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("StockFacing Images Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    if (storeWiseCameraDataGetterSetters.get(i1).getCamera2() != null && !storeWiseCameraDataGetterSetters.get(i1).getCamera2().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + storeWiseCameraDataGetterSetters.get(i1).getCamera2()).exists()) {
+
+                                            try {
+                                                result = UploadImage(storeWiseCameraDataGetterSetters.get(i1).getCamera2(), "StockCameraImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "StockCameraImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("StockFacing Images Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    if (storeWiseCameraDataGetterSetters.get(i1).getCamera3() != null && !storeWiseCameraDataGetterSetters.get(i1).getCamera3().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + storeWiseCameraDataGetterSetters.get(i1).getCamera3()).exists()) {
+
+                                            try {
+                                                result = UploadImage(storeWiseCameraDataGetterSetters.get(i1).getCamera3(), "StockCameraImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "StockCameraImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("StockFacing Images Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    if (storeWiseCameraDataGetterSetters.get(i1).getCamera4() != null && !storeWiseCameraDataGetterSetters.get(i1).getCamera4().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + storeWiseCameraDataGetterSetters.get(i1).getCamera4()).exists()) {
+
+                                            try {
+                                                result = UploadImage(storeWiseCameraDataGetterSetters.get(i1).getCamera4(), "StockCameraImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "StockCameraImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("StockFacing Images Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             //Stock Facing Images Upload
-                            if (stock_facingHeaderList.size() > 0) {
+                            /*if (stock_facingHeaderList.size() > 0) {
                                 for (int i1 = 0; i1 < stock_facingHeaderList.size(); i1++) {
 
                                     if (stock_facingHeaderList.get(i1).getImage1() != null && !stock_facingHeaderList.get(i1).getImage1().equals("")) {
@@ -894,9 +1102,10 @@ public class UploadActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
-                            }
-//// ashish visibility image start
+                            }*/
 
+
+                            // ashish visibility image start
                             if (additionalVisibilityList.size() > 0) {
                                 for (int i1 = 0; i1 < additionalVisibilityList.size(); i1++) {
 

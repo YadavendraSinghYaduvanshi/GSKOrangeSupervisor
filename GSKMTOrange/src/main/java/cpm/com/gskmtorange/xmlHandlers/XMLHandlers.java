@@ -22,6 +22,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.ShelfMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 
@@ -787,5 +788,31 @@ public class XMLHandlers {
         return st;
     }
 
+    public static ShelfMasterGetterSetter shelfMasterXMLHandler(XmlPullParser xpp, int eventType) {
+        ShelfMasterGetterSetter st = new ShelfMasterGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+
+                    if (xpp.getName().equals("META_DATA")) {
+                        st.setTable_SHELF_MASTER(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SHELF_ID")) {
+                        st.setSHELF_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SHELF")) {
+                        st.setSHELF(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return st;
+    }
 
 }

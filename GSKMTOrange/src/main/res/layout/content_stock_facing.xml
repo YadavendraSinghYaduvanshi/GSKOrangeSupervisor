@@ -24,21 +24,123 @@
             android:text="Stock Facing"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
+        <!--Camera Layout-->
+        <LinearLayout
+            android:id="@+id/lin_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <!--camera 1-->
+            <LinearLayout
+                android:id="@+id/lin_camera1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/layout_click_background_effect"
+                android:gravity="center_horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/img_camera1"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="10dp" />
+                <!--android:src="@mipmap/camera_orange"-->
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/grey_dark_background" />
+
+            <!--camera 2-->
+            <LinearLayout
+                android:id="@+id/lin_camera2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/layout_click_background_effect"
+                android:gravity="center_horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/img_camera2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="10dp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view_camera2"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/grey_dark_background" />
+
+            <!--camera 3-->
+            <LinearLayout
+                android:id="@+id/lin_camera3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/layout_click_background_effect"
+                android:gravity="center_horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/img_camera3"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="10dp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view_camera3"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/grey_dark_background" />
+
+            <!--camera 4-->
+            <LinearLayout
+                android:id="@+id/lin_camera4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/layout_click_background_effect"
+                android:gravity="center_horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/img_camera4"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="10dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_dark_background" />
+
+        <!--Title Header-->
         <LinearLayout
             android:id="@+id/lin_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="5dp"
             android:weightSum="5">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2.5"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -55,7 +157,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1.25"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -72,7 +175,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1.25"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -86,6 +190,7 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!--Expandable ListView-->
         <ExpandableListView
             android:id="@+id/expandableListView"
             android:layout_width="match_parent"

@@ -15,6 +15,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -70,6 +71,7 @@ import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.Store_wise_camera_DataGetterSetter;
 
 import static android.R.attr.angle;
 
@@ -93,6 +95,10 @@ public class Stock_FacingActivity extends AppCompatActivity {
     String gallery_package = "";
     private SharedPreferences preferences;
     boolean isExpand = true;
+    ImageView camera1, camera2, camera3, camera4;
+    LinearLayout lin_camera1, lin_camera2, lin_camera3, lin_camera4;
+    String img3 = "", img4 = "", img5 = "", img6 = "";
+    Store_wise_camera_DataGetterSetter cameraData;
 
     private static boolean updateResources(Context context, String language) {
 
@@ -132,6 +138,15 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
             expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
             //txt_stockFacingName = (TextView) findViewById(R.id.txt_stockFacingName);
+            camera1 = (ImageView) findViewById(R.id.img_camera1);
+            camera2 = (ImageView) findViewById(R.id.img_camera2);
+            camera3 = (ImageView) findViewById(R.id.img_camera3);
+            camera4 = (ImageView) findViewById(R.id.img_camera4);
+
+            lin_camera1 = (LinearLayout) findViewById(R.id.lin_camera1);
+            lin_camera2 = (LinearLayout) findViewById(R.id.lin_camera2);
+            lin_camera3 = (LinearLayout) findViewById(R.id.lin_camera3);
+            lin_camera4 = (LinearLayout) findViewById(R.id.lin_camera4);
 
 
             //preference data
@@ -156,9 +171,14 @@ public class Stock_FacingActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+            //Stock Facing List
             prepareList();
 
             str = CommonString.FILE_PATH + _pathforcheck;
+
+            //Camera
+            cameraMethod();
+
 
             final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +187,14 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();*/
 
-                    if (validateData(hashMapListHeaderData, hashMapListChildData)) {
+                    /*if (db.isStorewiseCameraSave(store_id, categoryId)) {
+                        db.updateStore_wise_camera(cameraData);
+                    } else {
+                        cameraData.setCheckSaveStatus("1");
+                        db.InsertStore_wise_camera(cameraData);
+                    }*/
+
+                    if (validateData(hashMapListHeaderData, hashMapListChildData, cameraData)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
                         builder.setMessage(getResources().getString(R.string.check_save_message))
                                 .setCancelable(false)
@@ -175,6 +202,15 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int id) {
                                         db.open();
 
+                                        //Camera insert or update
+                                        if (db.isStorewiseCameraSave(store_id, categoryId)) {
+                                            db.updateStore_wise_camera(cameraData);
+                                        } else {
+                                            cameraData.setCheckSaveStatus("1");
+                                            db.InsertStore_wise_camera(cameraData);
+                                        }
+
+                                        //Stock Facing insert or update
                                         if (db.checkStockAndFacingData(store_id, categoryId)) {
                                             db.updateStockAndFacing(store_id, categoryId, hashMapListHeaderData, hashMapListChildData);
                                             Snackbar.make(view, getResources().getString(R.string.update_message), Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -197,7 +233,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         alert.show();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
-                        //builder.setMessage(getResources().getString(R.string.empty_field))
                         builder.setMessage(Error_Message)
                                 .setCancelable(false)
                                 .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -303,6 +338,124 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
     }
 
+    private void cameraMethod() {
+        cameraData = new Store_wise_camera_DataGetterSetter();
+
+        if (db.isStorewiseCameraSave(store_id, categoryId)) {
+            cameraData = db.getStore_wise_camera(store_id, categoryId);
+        } else {
+            cameraData.setStore_id(store_id);
+            cameraData.setCategory_id(categoryId);
+            cameraData.setCamera1("");
+            cameraData.setCamera2("");
+            cameraData.setCamera3("");
+            cameraData.setCamera4("");
+            cameraData.setCheckSaveStatus("0");
+        }
+
+
+        if (camera_allow.equals("1")) {
+
+            findViewById(R.id.view_camera2).setVisibility(View.VISIBLE);
+            findViewById(R.id.view_camera3).setVisibility(View.VISIBLE);
+
+            if (cameraData.getCamera1().equals("")) {
+                camera1.setBackgroundResource(R.mipmap.camera_orange);
+            } else {
+                camera1.setBackgroundResource(R.mipmap.camera_green);
+            }
+
+            if (cameraData.getCamera2().equals("")) {
+                camera2.setBackgroundResource(R.mipmap.camera_orange);
+            } else {
+                camera2.setBackgroundResource(R.mipmap.camera_green);
+            }
+
+            if (cameraData.getCamera3().equals("")) {
+                camera3.setBackgroundResource(R.mipmap.camera_orange);
+            } else {
+                camera3.setBackgroundResource(R.mipmap.camera_green);
+            }
+
+            if (cameraData.getCamera4().equals("")) {
+                camera4.setBackgroundResource(R.mipmap.camera_orange);
+            } else {
+                camera4.setBackgroundResource(R.mipmap.camera_green);
+            }
+
+
+            lin_camera1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    _pathforcheck = "Stock_Camera1_" + store_id + "_" + categoryId
+                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    path = str + _pathforcheck;
+
+                    startCameraActivity(3);
+                }
+            });
+
+            lin_camera2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    _pathforcheck = "Stock_Camera2_" + store_id + "_" + categoryId
+                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    path = str + _pathforcheck;
+
+                    startCameraActivity(4);
+                }
+            });
+
+            lin_camera3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    _pathforcheck = "Stock_Camera3_" + store_id + "_" + categoryId
+                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    path = str + _pathforcheck;
+
+                    startCameraActivity(5);
+                }
+            });
+
+            lin_camera4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    _pathforcheck = "Stock_Camera4_" + store_id + "_" + categoryId
+                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    path = str + _pathforcheck;
+
+                    startCameraActivity(6);
+                }
+            });
+
+        } else {
+            findViewById(R.id.view_camera2).setVisibility(View.GONE);
+            findViewById(R.id.view_camera3).setVisibility(View.GONE);
+
+            lin_camera2.setVisibility(View.GONE);
+            lin_camera3.setVisibility(View.GONE);
+            lin_camera4.setVisibility(View.GONE);
+
+            camera1.setBackgroundResource(R.mipmap.camera_grey);
+
+            lin_camera1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Stock_FacingActivity.this, StockFacing_PlanogramTrackerActivity.class);
+
+                    intent.putExtra("storeId", store_id);
+                    intent.putExtra("keyAccount_id", keyAccount_id);
+                    intent.putExtra("class_id", class_id);
+                    intent.putExtra("storeType_id", storeType_id);
+                    intent.putExtra("categoryId", categoryId);
+                    intent.putExtra("categoryName", categoryName);
+
+                    startActivity(intent);
+                }
+            });
+        }
+    }
+
     private void prepareList() {
         try {
             hashMapListHeaderData = new ArrayList<>();
@@ -337,7 +490,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
     }
 
     boolean validateData(List<Stock_FacingGetterSetter> listDataHeader,
-                         HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listDataChild) {
+                         HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listDataChild,
+                         Store_wise_camera_DataGetterSetter cameraData) {
         boolean flag = true;
         checkHeaderArray.clear();
 
@@ -354,9 +508,12 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     //Camera allow enable
                     if (camera_allow.equalsIgnoreCase("1")) {
 
-                        //if (!imagePath.equals("") || !imagePath1.equals("")) {
-                        if (!stock.equals("0")) {
-                            if (!imagePath.equals("") || !imagePath1.equals("")) {
+                        //Atleast Single camera is click
+                        if (!cameraData.getCamera1().equals("") || !cameraData.getCamera2().equals("") ||
+                                !cameraData.getCamera3().equals("") || !cameraData.getCamera4().equals("")) {
+
+                            if (!stock.equals("0")) {
+                                //if (!imagePath.equals("") || !imagePath1.equals("")) {
                                 if (stock.equals("") || faceup.equals("")) {
                                     if (!checkHeaderArray.contains(i)) {
                                         checkHeaderArray.add(i);
@@ -366,7 +523,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                     Error_Message = getResources().getString(R.string.fill_data);
                                     break;
                                 }
-                            } else {
+                            /*} else {
                                 if (!checkHeaderArray.contains(i)) {
                                     checkHeaderArray.add(i);
                                 }
@@ -374,27 +531,23 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                 flag = false;
                                 Error_Message = getResources().getString(R.string.click_image);
                                 break;
+                            }*/
+                            } else {
+                                if (stock.equals("")) {
+                                    if (!checkHeaderArray.contains(i)) {
+                                        checkHeaderArray.add(i);
+                                    }
+
+                                    flag = false;
+                                    Error_Message = getResources().getString(R.string.fill_data);
+                                    break;
+                                }
                             }
                         } else {
-                            if (stock.equals("")) {
-                                if (!checkHeaderArray.contains(i)) {
-                                    checkHeaderArray.add(i);
-                                }
-
-                                flag = false;
-                                Error_Message = getResources().getString(R.string.fill_data);
-                                break;
-                            }
-                        }
-                        /*} else {
-                            if (!checkHeaderArray.contains(i)) {
-                                checkHeaderArray.add(i);
-                            }
-
                             flag = false;
                             Error_Message = getResources().getString(R.string.click_image);
                             break;
-                        }*/
+                        }
 
                     } else {
                         //Camera allow disable
@@ -440,10 +593,150 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 checkflag = true;
             }
         }
+
+        /*for (int i = 0; i < listDataHeader.size(); i++) {
+            String imagePath = listDataHeader.get(i).getImage1();
+            String imagePath1 = listDataHeader.get(i).getImage2();
+
+            for (int j = 0; j < listDataChild.get(listDataHeader.get(i)).size(); j++) {
+                String stock = listDataChild.get(listDataHeader.get(i)).get(j).getStock();
+                String faceup = listDataChild.get(listDataHeader.get(i)).get(j).getFacing();
+
+                //Company_id
+                if (listDataChild.get(listDataHeader.get(i)).get(j).getCompany_id().equals("1")) {
+                    //Camera allow enable
+                    if (camera_allow.equalsIgnoreCase("1")) {
+
+                        if (!stock.equals("0")) {
+                            if (!imagePath.equals("") || !imagePath1.equals("")) {
+                                if (stock.equals("") || faceup.equals("")) {
+                                    if (!checkHeaderArray.contains(i)) {
+                                        checkHeaderArray.add(i);
+                                    }
+
+                                    flag = false;
+                                    Error_Message = getResources().getString(R.string.fill_data);
+                                    break;
+                                }
+                            } else {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = getResources().getString(R.string.click_image);
+                                break;
+                            }
+                        } else {
+                            if (stock.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = getResources().getString(R.string.fill_data);
+                                break;
+                            }
+                        }
+
+                    } else {
+                        //Camera allow disable
+                        if (!stock.equals("0")) {
+                            if (stock.equals("") || faceup.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = getResources().getString(R.string.fill_data);
+                                break;
+                            }
+                        } else {
+                            if (stock.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = getResources().getString(R.string.fill_data);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    if (faceup.equals("")) {
+                        if (!checkHeaderArray.contains(i)) {
+                            checkHeaderArray.add(i);
+                        }
+
+                        flag = false;
+                        Error_Message = getResources().getString(R.string.fill_data);
+                        break;
+                    }
+                }
+            }
+
+            if (flag == false) {
+                checkflag = false;
+                break;
+            } else {
+                checkflag = true;
+            }
+        }*/
         //expListView.invalidate();
         adapter.notifyDataSetChanged();
 
         return checkflag;
+    }
+
+    private void startCameraActivity(int position) {
+        try {
+            Log.e("MakeMachine", "startCameraActivity()");
+            File file = new File(path);
+            outputFileUri = Uri.fromFile(file);
+
+            String defaultCameraPackage = "";
+            final PackageManager packageManager = getPackageManager();
+            List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+
+            for (int n = 0; n < list.size(); n++) {
+                if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+
+                    //temp value in case camera is gallery app above jellybean
+                    String packag = list.get(n).loadLabel(packageManager).toString();
+                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri")) {
+                        gallery_package = list.get(n).packageName;
+                    }
+
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(defaultCameraPackage);
+            startActivityForResult(intent, position);
+
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(gallery_package);
+            startActivityForResult(intent, position);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void startCameraActivity1(int position) {
@@ -661,6 +954,102 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     Log.e("Stock & Facing", "User cancelled");
                 }
                 break;
+
+            case 3:
+                if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img3 = _pathforcheck;
+                            _pathforcheck = "";
+
+                            if (!img3.equalsIgnoreCase("")) {
+                                cameraData.setCamera1(img3);
+                                img3 = "";
+                            }
+
+                            if (cameraData.getCamera1().equals("")) {
+                                camera1.setBackgroundResource(R.mipmap.camera_orange);
+                            } else {
+                                camera1.setBackgroundResource(R.mipmap.camera_green);
+                            }
+                        }
+                    }
+                } else {
+                    Log.e("Stock & Facing", "User cancelled");
+                }
+                break;
+
+            case 4:
+                if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img4 = _pathforcheck;
+                            _pathforcheck = "";
+
+                            if (!img4.equalsIgnoreCase("")) {
+                                cameraData.setCamera2(img4);
+                                img4 = "";
+                            }
+
+                            if (cameraData.getCamera2().equals("")) {
+                                camera2.setBackgroundResource(R.mipmap.camera_orange);
+                            } else {
+                                camera2.setBackgroundResource(R.mipmap.camera_green);
+                            }
+                        }
+                    }
+                } else {
+                    Log.e("Stock & Facing", "User cancelled");
+                }
+                break;
+
+            case 5:
+                if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img5 = _pathforcheck;
+                            _pathforcheck = "";
+
+                            if (!img5.equalsIgnoreCase("")) {
+                                cameraData.setCamera3(img5);
+                                img5 = "";
+                            }
+
+                            if (cameraData.getCamera3().equals("")) {
+                                camera3.setBackgroundResource(R.mipmap.camera_orange);
+                            } else {
+                                camera3.setBackgroundResource(R.mipmap.camera_green);
+                            }
+                        }
+                    }
+                } else {
+                    Log.e("Stock & Facing", "User cancelled");
+                }
+                break;
+
+            case 6:
+                if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img6 = _pathforcheck;
+                            _pathforcheck = "";
+
+                            if (!img6.equalsIgnoreCase("")) {
+                                cameraData.setCamera4(img6);
+                                img6 = "";
+                            }
+
+                            if (cameraData.getCamera4().equals("")) {
+                                camera4.setBackgroundResource(R.mipmap.camera_orange);
+                            } else {
+                                camera4.setBackgroundResource(R.mipmap.camera_green);
+                            }
+                        }
+                    }
+                } else {
+                    Log.e("Stock & Facing", "User cancelled");
+                }
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -790,7 +1179,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
@@ -884,6 +1272,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 img_camera2.setVisibility(View.GONE);
             }
 
+            //img_camera1.setVisibility(View.GONE);
+            img_camera2.setVisibility(View.GONE);
+
             //Camera allow enable
             if (camera_allow.equalsIgnoreCase("1")) {
 
@@ -947,6 +1338,23 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 //Camera allow disable
                 img_camera1.setBackgroundResource(R.mipmap.camera_grey);
                 img_camera2.setBackgroundResource(R.mipmap.camera_grey);
+
+                img_camera1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Stock_FacingActivity.this, StockFacing_PlanogramTrackerActivity.class);
+
+                        intent.putExtra("brand", headerTitle.getBrand());
+                        intent.putExtra("brand_id", headerTitle.getBrand_id());
+                        intent.putExtra("company_id", headerTitle.getCompany_id());
+                        intent.putExtra("sub_category", headerTitle.getSub_category());
+                        intent.putExtra("sub_category_id", headerTitle.getSub_category_id());
+                        intent.putExtra("categoryName", categoryName);
+                        intent.putExtra("categoryId", categoryId);
+
+                        startActivity(intent);
+                    }
+                });
             }
 
             if (headerTitle.getCompany_id().equals("1")) {

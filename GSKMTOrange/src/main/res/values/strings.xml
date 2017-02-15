@@ -265,7 +265,15 @@
     <string name="first_geotag_the_store">First geotag the store</string>
 
     <string name="new_update_available">New Update Available \n\n Yeni güncelleme var</string>
+
+    <string name="title_activity_stock_facing__planogram_tracker">Planogram Tracker</string>
+
     <string name="datanotfound">Data not found in</string>
+
     <string name="title_activity_t2p_brand__avaibility">T2pBrand_Avaibility</string>
     <string name="title_activity_fill_brand">Please fill brand data</string>
+
+    <!--Stock Facing Planogram Tracker-->
+    <string name="stock_planogram_data_uploading">Stock Planogram Data Uploading</string>
+
 </resources>
