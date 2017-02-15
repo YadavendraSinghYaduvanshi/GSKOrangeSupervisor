@@ -169,6 +169,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         str = CommonString.FILE_PATH;
 
         ///band List
+
         brand_list = db.getBrandMasterData(store_id, categoryId);
         BrandMasterGetterSetter brand = new BrandMasterGetterSetter();
         String str = getResources().getString(R.string.select);
@@ -1164,9 +1165,8 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 ab.setSku_id(SKU_ID);
                 ab.setSku_name(SKU_name);
                 // ab.setProcess_id(process_id);
-                ab.setQuantity(Edt_txt.getText().toString());
+                ab.setQuantity( Edt_txt.getText().toString().replaceFirst("^0+(?!$)", ""));
                 // ab.setCategory_id(category_id);
-
 
                 if (validateDialogData(ab)) {
 
