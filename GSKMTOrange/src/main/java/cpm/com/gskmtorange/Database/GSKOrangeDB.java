@@ -3788,18 +3788,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return list;
     }
 
-
-    // get T2P Compliance data
-    public ArrayList<T2PGetterSetter> getT2pCompliancedaletedata(String store_id) {
-
-        ArrayList<T2PGetterSetter> list = new ArrayList<>();
-        Cursor dbcursor = null;
-        try {
-
-            dbcursor = db.rawQuery("SELECT * FROM " + CommonString.TABLE_INSERT_T2P_COMPLIANCE + " where " +
-                    CommonString.KEY_STORE_ID + "='" + store_id + "'", null);
-
-=======
     public void InsertStock_Facing_PlanogramTracker(String storeId, String categoryId, String company_id, String brand_id, String sub_category_id,
                                                     List<StockFacing_PlanogramTrackerDataGetterSetter> hashMapListHeaderData,
                                                     HashMap<StockFacing_PlanogramTrackerDataGetterSetter, List<StockFacing_PlanogramTrackerDataGetterSetter>> hashMapListChildData) {
