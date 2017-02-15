@@ -7,11 +7,12 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="grey_background">#EEEEEE</color>
+    <color name="grey_dark_background">#888</color>
+    <color name="light_orange_background">#FFF9E0BA</color>
     <color name="green">#FF27A404</color>
     <color name="blue">#2196F3</color>
 
     <color name="colorOrange">#FFE0B2</color>
-
 
 
 </resources>

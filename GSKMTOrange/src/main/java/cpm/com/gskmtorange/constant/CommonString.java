@@ -551,26 +551,69 @@ public class CommonString {
             + ")";
 
 
-    public static final String TABLE_INSERT_BRAND_AVAIBILITY_DATA = "Camera_Not_Allowed";
+    public static final String TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_HEADER = "Stock_Facing_Planogram_Header_Data";
 
-    public static final String CREATE_TABLE_INSERT_BRAND_AVAIBILITY_DATA = "CREATE TABLE IF NOT EXISTS "
-            + TABLE_INSERT_BRAND_AVAIBILITY_DATA
+    public static final String CREATE_TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_HEADER = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_HEADER
+
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            + "store_id"
+            + " VARCHAR,"
+
+            + "category_id"
+            + " VARCHAR,"
+
+            + "company_id"
+            + " VARCHAR,"
+
+            + "brand_id"
+            + " VARCHAR,"
+
+            + "sub_category_id"
+            + " VARCHAR,"
+
+            + "Shelf"
+            + " VARCHAR,"
+
+            + "Shelf_id"
+            + " VARCHAR,"
+
+            + "Shelf_Position"
+            + " VARCHAR"
+
+            + ")";
+
+    public static final String TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_CHILD = "Stock_Facing_Planogram_Child_Data";
+
+    public static final String CREATE_TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_CHILD = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_CHILD
             + "("
             + "KEY_ID"
             + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
 
-            + "COMMON_ID"
-            + " INTEGER,"
-
-            + "BRAND_NAME"
+            + "common_id"
             + " VARCHAR,"
 
-            + "BRAND_ID"
-            + " INTEGER"
+            + "Shelf"
+            + " VARCHAR,"
+
+            + "Shelf_id"
+            + " VARCHAR,"
+
+            + "Shelf_Position"
+            + " VARCHAR,"
+
+            + "sku"
+            + " VARCHAR,"
+
+            + "sku_id"
+            + " VARCHAR,"
+
+            + "checkbox_sku"
+            + " VARCHAR"
 
             + ")";
-
-
-
 
 }
