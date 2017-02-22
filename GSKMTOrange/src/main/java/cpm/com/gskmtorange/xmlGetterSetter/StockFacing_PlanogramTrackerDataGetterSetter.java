@@ -1,11 +1,12 @@
 package cpm.com.gskmtorange.xmlGetterSetter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class StockFacing_PlanogramTrackerDataGetterSetter {
     String shelf_id, shelf, sp_addShelf_id, sp_addShelf, sp_shelfPosition, checkbox_sku;
     String category_id, sub_category_id, sub_category, brand_id, brand,
-            sku_id, sku, mrp, sku_sequence, stock, facing, mbq, company_id, image1, image2, sos_target;
+            sku_id, sku, mrp, sku_sequence, stock, facing, mbq, company_id, image1, image2, sos_target, key_id;
 
     public String getShelf_id() {
         return shelf_id;
@@ -182,4 +183,74 @@ public class StockFacing_PlanogramTrackerDataGetterSetter {
     public void setCheckbox_sku(String checkbox_sku) {
         this.checkbox_sku = checkbox_sku;
     }
+
+    public String getKey_id() {
+        return key_id;
+    }
+
+    public void setKey_id(String key_id) {
+        this.key_id = key_id;
+    }
+
+    //Comprable Interface
+
+    /*@Override
+    public int compareTo(StockFacing_PlanogramTrackerDataGetterSetter compare) {
+        int compareShelf = Integer.parseInt(compare.getSp_addShelf_id());
+
+        *//* For Ascending order*//*
+        return Integer.parseInt(this.sp_addShelf_id) - compareShelf;
+
+        *//* For Descending order do like this *//*
+        //return compareage-this.studentage;
+    }*/
+
+    //Comparator Interface
+
+    public static Comparator<StockFacing_PlanogramTrackerDataGetterSetter> shelfComparator =
+            new Comparator<StockFacing_PlanogramTrackerDataGetterSetter>() {
+
+                public int compare(StockFacing_PlanogramTrackerDataGetterSetter s1, StockFacing_PlanogramTrackerDataGetterSetter s2) {
+                    String shelf1 = s1.getSp_addShelf_id();
+                    String shelf2 = s2.getSp_addShelf_id();
+
+                    /*Comparator<StockFacing_PlanogramTrackerDataGetterSetter> shelfPositionComparator =
+                            new Comparator<StockFacing_PlanogramTrackerDataGetterSetter>() {
+
+                                public int compare(StockFacing_PlanogramTrackerDataGetterSetter s1,
+                                                   StockFacing_PlanogramTrackerDataGetterSetter s2) {
+
+                                    String shelf1 = s1.getSp_shelfPosition();
+                                    String shelf2 = s2.getSp_shelfPosition();
+
+                                    //ascending order
+                                    return shelf1.compareTo(shelf2);
+
+                                    //descending order
+                                    //return StudentName2.compareTo(StudentName1);
+                                }
+                            };*/
+
+                    //ascending order
+                    return shelf1.compareTo(shelf2);
+
+                    //descending order
+                    //return StudentName2.compareTo(StudentName1);
+                }
+            };
+
+    public static Comparator<StockFacing_PlanogramTrackerDataGetterSetter> shelfPositionComparator =
+            new Comparator<StockFacing_PlanogramTrackerDataGetterSetter>() {
+
+                public int compare(StockFacing_PlanogramTrackerDataGetterSetter s1, StockFacing_PlanogramTrackerDataGetterSetter s2) {
+                    String shelf1 = s1.getSp_shelfPosition();
+                    String shelf2 = s2.getSp_shelfPosition();
+
+                    //ascending order
+                    return shelf1.compareTo(shelf2);
+
+                    //descending order
+                    //return StudentName2.compareTo(StudentName1);
+                }
+            };
 }
