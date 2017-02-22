@@ -3801,7 +3801,19 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     public void InsertStock_Facing_PlanogramTracker(String storeId, String categoryId, String company_id, String brand_id, String sub_category_id,
                                                     List<StockFacing_PlanogramTrackerDataGetterSetter> hashMapListHeaderData,
-                                                    HashMap<StockFacing_PlanogramTrackerDataGetterSetter, List<StockFacing_PlanogramTrackerDataGetterSetter>> hashMapListChildData) {
+                                                    HashMap<StockFacing_PlanogramTrackerDataGetterSetter, ArrayList<StockFacing_PlanogramTrackerDataGetterSetter>> hashMapListChildData) {
+
+        //Delete child sku data
+        for (int i1 = 0; i1 < hashMapListHeaderData.size(); i1++) {
+            db.delete(CommonString.TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_CHILD,
+                    "common_id='" + hashMapListHeaderData.get(i1).getKey_id() + "'", null);
+        }
+        //Delete Header shelf data
+        db.delete(CommonString.TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_HEADER,
+                "store_id='" + storeId + "' And category_id='" + categoryId + "' ", null);
+
+
+        //Insert the data
         ContentValues values = new ContentValues();
         ContentValues values1 = new ContentValues();
 
@@ -4037,7 +4049,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     "inner join CATEGORY_MASTER CA " +
                     "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
                     "where CA.CATEGORY_ID='" + category_id + "' AND M.KEYACCOUNT_ID = '" + keyAccount_id +
-                    "' AND M.STORETYPE_ID = '" + storeType_id + "' AND M.CLASS_ID = '" + class_id + "'" +
+                    "' AND M.STORETYPE_ID = '" + storeType_id + "' AND M.CLASS_ID = '" + class_id + "' AND BR.COMPANY_ID = 1 " +
                     "order by SB.SUB_CATEGORY,BR.COMPANY_ID,BR.BRAND", null);
 
             if (dbcursor != null) {
@@ -4097,6 +4109,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
                     cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
                     cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+                    cd.setCheckbox_sku("0");
 
                     list.add(cd);
                     dbcursor.moveToNext();
@@ -4161,6 +4174,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
+
                     CategoryPictureGetterSetter CPGS = new CategoryPictureGetterSetter();
 
                     CPGS.setSUB_CATEGORY(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
@@ -4170,6 +4184,41 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     CPGS.setSubCategoryCamera2("");
 
                     list.add(CPGS);
+   dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) 
+            Log.d("Exception ", "get Planogram Shelf Header After Save !" + e.toString());
+         //   return list;
+
+        }
+        return list;
+    }
+
+   public ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> getPlanogramAddShelfHeaderAfterSaveData(
+            String store_id, String category_id) {
+
+        ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Stock_Facing_Planogram_Header_Data " +
+                    "where Store_id='" + store_id + "' and category_id='" + category_id + "'", null);
+           
+          if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    StockFacing_PlanogramTrackerDataGetterSetter cd = new StockFacing_PlanogramTrackerDataGetterSetter();
+
+                    cd.setKey_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("KEY_ID")));
+                    cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("category_id")));
+                    cd.setSp_addShelf_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Shelf_id")));
+                    cd.setSp_addShelf(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Shelf")));
+                    cd.setSp_shelfPosition(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Shelf_Position")));
+
+                    list.add(cd);
 
                     dbcursor.moveToNext();
                 }
@@ -4178,7 +4227,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
 
-            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            Log.d("Exception ", "get Planogram Shelf Header After Save !" + e.toString());
+
         }
         return list;
     }
@@ -4449,11 +4499,90 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
+    public ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> getStockAndFacingPlanogramAfterSKUData(
+            String key_id) {
 
+        ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
 
+        try {
+            //Select * from Stock_Facing_Planogram_Child_Data  where Shelf_id=1 and Shelf_Position=3
 
+            dbcursor = db.rawQuery("Select * from Stock_Facing_Planogram_Child_Data  " +
+                    "where common_id='" + key_id + "'", null);
 
+            if (dbcursor != null) {
 
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    StockFacing_PlanogramTrackerDataGetterSetter cd = new StockFacing_PlanogramTrackerDataGetterSetter();
 
+                    cd.setSp_addShelf_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Shelf_id")));
+                    cd.setSp_addShelf(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Shelf")));
+                    cd.setSp_shelfPosition(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Shelf_Position")));
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("sku_id")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("sku")));
+                    cd.setCheckbox_sku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("checkbox_sku")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> getStockAndFacingPlanogramAfterSKU_PerShelfData(
+            String shelf_id, String shelf_position) {
+
+        ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Stock_Facing_Planogram_Child_Data " +
+                    "where Shelf_id='" + shelf_id + "' and Shelf_Position='" + shelf_position + "'", null);
+
+            if (dbcursor != null) {
+
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    StockFacing_PlanogramTrackerDataGetterSetter cd = new StockFacing_PlanogramTrackerDataGetterSetter();
+
+                    cd.setSp_addShelf_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Shelf_id")));
+                    cd.setSp_addShelf(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Shelf")));
+                    cd.setSp_shelfPosition(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Shelf_Position")));
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("sku_id")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("sku")));
+                    cd.setCheckbox_sku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("checkbox_sku")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public void deletePlanogramListStoreAndCategorywise(String storeId, String categoryId,
+                                                        List<StockFacing_PlanogramTrackerDataGetterSetter> hashMapListHeaderData,
+                                                        HashMap<StockFacing_PlanogramTrackerDataGetterSetter, ArrayList<StockFacing_PlanogramTrackerDataGetterSetter>> hashMapListChildData) {
+        for (int i1 = 0; i1 < hashMapListHeaderData.size(); i1++) {
+            db.delete(CommonString.TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_CHILD,
+                    "common_id='" + hashMapListHeaderData.get(i1).getKey_id() + "'", null);
+        }
+        //Delete Header shelf data
+        db.delete(CommonString.TABLE_INSERT_STOCK_FACING_PLANOGRAM_TRACKER_HEADER,
+                "store_id='" + storeId + "' And category_id='" + categoryId + "' ", null);
+    }
 
 }
