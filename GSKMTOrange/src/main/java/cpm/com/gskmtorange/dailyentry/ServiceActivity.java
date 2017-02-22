@@ -88,7 +88,7 @@ public class ServiceActivity extends AppCompatActivity {
         if(language.equalsIgnoreCase("English")){
             lang = "EN";
         }
-        else if(language.equalsIgnoreCase("UAE")) {
+        else if(language.equalsIgnoreCase("KSA")) {
 
             lang = "AR";
         } else {

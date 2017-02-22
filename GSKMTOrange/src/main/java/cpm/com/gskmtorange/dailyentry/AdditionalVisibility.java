@@ -1651,7 +1651,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
         if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        } else if (language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("KSA")) {
             lang = "AR";
         } else {
             lang = "TR";
