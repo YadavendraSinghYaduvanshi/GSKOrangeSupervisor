@@ -438,7 +438,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
             camera1.setBackgroundResource(R.mipmap.camera_grey);
 
-            lin_camera1.setOnClickListener(new View.OnClickListener() {
+           /* lin_camera1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Stock_FacingActivity.this, StockFacing_PlanogramTrackerActivity.class);
@@ -452,7 +452,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
                     startActivity(intent);
                 }
-            });
+            });*/
         }
     }
 
