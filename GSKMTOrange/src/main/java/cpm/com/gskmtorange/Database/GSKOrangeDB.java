@@ -3687,7 +3687,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     BG.setBRAND_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
 
                     list.add(BG);
-                dbcursor.moveToNext();
+                    dbcursor.moveToNext();
                 }
                 dbcursor.close();
                 return list;
@@ -3697,7 +3697,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
         }
         return list;
-    }  
+    }
 
     //Stock Facing Planogram Tracker
     public void InsertSHELF_MASTER(ShelfMasterGetterSetter data) {
@@ -4124,8 +4124,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
         return list;
     }
-        
-          // get T2P Compliance data
+
+    // get T2P Compliance data
     public ArrayList<T2PGetterSetter> getT2pCompliancedaletedata(String store_id) {
 
         ArrayList<T2PGetterSetter> list = new ArrayList<>();
@@ -4168,7 +4168,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     " INNER JOIN BRAND_MASTER BR ON SK.BRAND_ID = BR.BRAND_ID" +
                     " INNER JOIN SUB_CATEGORY_MASTER SB ON BR.SUB_CATEGORY_ID = SB.SUB_CATEGORY_ID" +
                     " INNER JOIN CATEGORY_MASTER CA ON SB.CATEGORY_ID = CA.CATEGORY_ID" +
-                    " WHERE M.KEYACCOUNT_ID = '" + key_account_id + " 'AND M.STORETYPE_ID = '" + store_type_id + "' AND M.CLASS_ID = '" + class_id + "' AND CA.CATEGORY_ID = '" + categoryId+"'", null);
+                    " WHERE M.KEYACCOUNT_ID = '" + key_account_id + " 'AND M.STORETYPE_ID = '" + store_type_id + "' AND M.CLASS_ID = '" + class_id + "' AND CA.CATEGORY_ID = '" + categoryId + "'", null);
 
 
             if (dbcursor != null) {
@@ -4184,20 +4184,19 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     CPGS.setSubCategoryCamera2("");
 
                     list.add(CPGS);
-   dbcursor.moveToNext();
+                    dbcursor.moveToNext();
                 }
                 dbcursor.close();
                 return list;
             }
-        } catch (Exception e) 
+        } catch (Exception e) {
             Log.d("Exception ", "get Planogram Shelf Header After Save !" + e.toString());
-         //   return list;
-
+            //   return list;
         }
         return list;
     }
 
-   public ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> getPlanogramAddShelfHeaderAfterSaveData(
+    public ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> getPlanogramAddShelfHeaderAfterSaveData(
             String store_id, String category_id) {
 
         ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> list = new ArrayList<>();
@@ -4206,8 +4205,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
             dbcursor = db.rawQuery("Select * from Stock_Facing_Planogram_Header_Data " +
                     "where Store_id='" + store_id + "' and category_id='" + category_id + "'", null);
-           
-          if (dbcursor != null) {
+
+            if (dbcursor != null) {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
                     StockFacing_PlanogramTrackerDataGetterSetter cd = new StockFacing_PlanogramTrackerDataGetterSetter();
@@ -4234,7 +4233,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-
     public void InsertCategoryPictureData(CategoryPictureGetterSetter gettersetter, ArrayList<CategoryPictureGetterSetter> skulist, String categoryId) {
         ContentValues values = new ContentValues();
         ContentValues values1 = new ContentValues();
@@ -4247,7 +4245,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             values.put("CategoryImage3", gettersetter.getCategoryImage3());
             values.put("CategoryImage4", gettersetter.getCategoryImage4());
             values.put("camera_allow", gettersetter.getCamera_allow());
-
 
 
             long key_id = db.insert(CommonString.TABLE_INSERT_CATEGORY_PICTURE, null, values);
@@ -4273,8 +4270,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
 
     }
-
-
 
 
     public ArrayList<CategoryPictureGetterSetter> getCategoryPictureData(String store_id, String categoryId) {
@@ -4327,8 +4322,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-
-    public ArrayList<CategoryPictureGetterSetter> getCategoryPictureListData(String store_id, String categoryId,String key_id) {
+    public ArrayList<CategoryPictureGetterSetter> getCategoryPictureListData(String store_id, String categoryId, String key_id) {
         Cursor cursordata = null;
         ArrayList<CategoryPictureGetterSetter> productData = new ArrayList<CategoryPictureGetterSetter>();
 
@@ -4368,9 +4362,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return productData;
 
     }
-
-
-
 
 
     public ArrayList<CategoryPictureGetterSetter> getCategoryPictureUpload(String store_id) {
@@ -4433,7 +4424,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            cursordata = db.rawQuery("Select * from Stock_CATEGORY_PICTURE_LIST  " + "where COMMON_ID = '" + key_id  + "'", null);
+            cursordata = db.rawQuery("Select * from Stock_CATEGORY_PICTURE_LIST  " + "where COMMON_ID = '" + key_id + "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
@@ -4469,8 +4460,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return productData;
 
     }
-
-
 
 
     public boolean isCategoryPictureData(String store_id, String category_id) {

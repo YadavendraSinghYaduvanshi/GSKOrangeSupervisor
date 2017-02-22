@@ -238,6 +238,19 @@
     <string name="datanotfound">Içinde bulunmayan veri</string>
     <string name="title_activity_fill_brand">Lütfen marka verilerini doldurun</string>
     <string name="category_performance_PLANOGRAM">PLANOGRAM</string>
+
+    <!--Stock Facing Planogram Tracker-->
+    <string name="stock_planogram_data_uploading">Stok Planogram Veri Gönderimi</string>
+
+    <string name="daily_data_menu_category_picture">Kategori Resimleri</string>
+    <string name="title_activity_category_picture">KategoriResimleri</string>
+
+    <string name="stock_planogram_data_noCamera_data">Lütfen kamera yok datasını doldurun</string>
+    <string name="stock_planogram_shelf">Raf </string>
+    <string name="stock_planogram_shelf_position"> Konum  </string>
+    <string name="stock_planogram_already_exists">Zaten var</string>
+    <string name="stock_planogram_data_select_one_sku">En azindan 1 SKU seçmelisiniz</string>
+    <string name="stock_planogram_data_add_shelf">SKU ekleyin, raf boş olamaz</string>
 </resources>
 
 
