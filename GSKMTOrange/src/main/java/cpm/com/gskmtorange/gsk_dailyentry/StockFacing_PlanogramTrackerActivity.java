@@ -69,7 +69,7 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
     List<Integer> checkHeaderArray = new ArrayList<>();
 
     ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> shelfHeaderDataList = new ArrayList<>();
-    ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> childDataList, tempChildDataList, childDataList2;
+    ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> childDataList, childDataList1;
     HashMap<StockFacing_PlanogramTrackerDataGetterSetter, ArrayList<StockFacing_PlanogramTrackerDataGetterSetter>> hashMapListChildData = new HashMap<>();
     private SharedPreferences preferences;
 
@@ -79,7 +79,6 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
     ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> addSkuHeaderList;
     ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> addSkuChildList;
     HashMap<StockFacing_PlanogramTrackerDataGetterSetter, ArrayList<StockFacing_PlanogramTrackerDataGetterSetter>> addSkuHashMapChildData;
-    ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,19 +225,8 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
                                 } else {
                                     shelfHeaderDataList.add(data);
                                     dialog.dismiss();
-
-                                    //Sort Shelf wise
-                                    //Collections.sort(shelfHeaderDataList, StockFacing_PlanogramTrackerDataGetterSetter.shelfComparator);
-                                    //Sort Shelf Position wise
-                                    //Collections.sort(shelfHeaderDataList, StockFacing_PlanogramTrackerDataGetterSetter.shelfPositionComparator);
-
                                     prepareHeaderList(shelfHeaderDataList);
                                 }
-
-                                    /*shelfHeaderDataList.add(data);
-                                    dialog.dismiss();
-                                    prepareHeaderList(shelfHeaderDataList);*/
-                                // }
                             } else {
                                 Toast.makeText(StockFacing_PlanogramTrackerActivity.this, getResources().getString(R.string.empty_field), Toast.LENGTH_SHORT).show();
                             }
@@ -335,13 +323,13 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
         //After save shelf header data
         shelfHeaderDataList = db.getPlanogramAddShelfHeaderAfterSaveData(store_id, categoryId);
 
-
         if (shelfHeaderDataList.size() > 0) {
 
             //Sort Shelf Position wise
             Collections.sort(shelfHeaderDataList, StockFacing_PlanogramTrackerDataGetterSetter.shelfPositionComparator);
             //Sort Shelf wise
             Collections.sort(shelfHeaderDataList, StockFacing_PlanogramTrackerDataGetterSetter.shelfComparator);
+
 
             for (int i = 0; i < shelfHeaderDataList.size(); i++) {
                 childDataList = db.getStockAndFacingPlanogramAfterSKUData(shelfHeaderDataList.get(i).getKey_id());
@@ -371,12 +359,14 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
             //Header Data
             if (shelfHeaderDataList1.size() > 0) {
 
+                //Sort Shelf Position wise
+/*                Collections.sort(shelfHeaderDataList1, StockFacing_PlanogramTrackerDataGetterSetter.shelfPositionComparator);
+                //Sort Shelf wise
+                Collections.sort(shelfHeaderDataList1, StockFacing_PlanogramTrackerDataGetterSetter.shelfComparator);*/
+
                 adapter.notifyDataSetChanged();
 
-                /*adapter = new PlanogramExpandableListAdapter(this, shelfHeaderDataList1, hashMapListChildData);
-                expandableListView.setAdapter(adapter);*/
-
-                if (childDataList2 != null && childDataList2.size() > 0) {
+                if (childDataList1 != null && childDataList1.size() > 0) {
                     for (int j = 0; j < shelfHeaderDataList.size(); j++) {
                         if (hashMapListChildData.get(shelfHeaderDataList.get(j)).size() > 0) {
                             expandableListView.expandGroup(j);
@@ -391,15 +381,15 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
 
     //Sku Add in Particular Shelf with position
     private void prepareSkuList(StockFacing_PlanogramTrackerDataGetterSetter object,
-                                ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> childDataList1,
+                                ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> tempAddSkuHeaderList,
                                 HashMap<StockFacing_PlanogramTrackerDataGetterSetter,
-                                        ArrayList<StockFacing_PlanogramTrackerDataGetterSetter>> addSkuHashMapChildData1) {
+                                        ArrayList<StockFacing_PlanogramTrackerDataGetterSetter>> tempAddSkuHashMapChildData) {
         try {
-            childDataList2 = new ArrayList<>();
+            childDataList1 = new ArrayList<>();
 
-            for (int i1 = 0; i1 < childDataList1.size(); i1++) {
+            for (int i1 = 0; i1 < tempAddSkuHeaderList.size(); i1++) {
                 ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> tempList =
-                        addSkuHashMapChildData1.get(childDataList1.get(i1));
+                        tempAddSkuHashMapChildData.get(tempAddSkuHeaderList.get(i1));
 
                 for (int j = 0; j < tempList.size(); j++) {
                     StockFacing_PlanogramTrackerDataGetterSetter data = tempList.get(j);
@@ -407,17 +397,17 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
                     data.setSp_addShelf_id(object.getSp_addShelf_id());
 
                     if (data.getCheckbox_sku().equals("1")) {
-                        childDataList2.add(data);
+                        childDataList1.add(data);
                     }
                 }
             }
 
             if (shelfHeaderDataList.size() > 0) {
                 //Child Sku Data
-                hashMapListChildData.put(object, childDataList2);
+                hashMapListChildData.put(object, childDataList1);
                 adapter.notifyDataSetChanged();
 
-                if (childDataList2 != null && childDataList2.size() > 0) {
+                if (childDataList1 != null && childDataList1.size() > 0) {
                     for (int j = 0; j < shelfHeaderDataList.size(); j++) {
                         if (hashMapListChildData.get(shelfHeaderDataList.get(j)).size() > 0) {
                             expandableListView.expandGroup(j);
@@ -425,6 +415,7 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
                     }
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -476,10 +467,8 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
                 btn_addSku.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //Stock Facing Planogram SKU Data
-                        /*tempChildDataList = db.getStockAndFacingPlanogramDefaultSKUData(categoryId, brand_id,
-                                keyAccount_id, storeType_id, class_id);*/
 
+                        //Stock Facing Planogram SKU Data
                         final Dialog dialog1 = new Dialog(StockFacing_PlanogramTrackerActivity.this);
                         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -499,41 +488,6 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
 
                         //Add Sku Dailog List
                         dialogAddSkuList(exp_addSkuListView, headerTitle);
-
-                        /*childDataList = new ArrayList<>();
-
-                        for (int i = 0; i < tempChildDataList.size(); i++) {
-                            View view1 = getLayoutInflater().inflate(R.layout.item_stock_facing_planogram_child, null);
-
-                            TextView txt_skuChild = (TextView) view1.findViewById(R.id.txt_skuChild);
-                            CheckBox chk_sku = (CheckBox) view1.findViewById(R.id.chk_sku);
-
-                            final StockFacing_PlanogramTrackerDataGetterSetter childData = tempChildDataList.get(i);
-                            txt_skuChild.setText(childData.getSku());
-
-                            childData.setSp_addShelf_id(headerTitle.getSp_addShelf_id());
-
-                            if (childData.getCheckbox_sku().equals("0")) {
-                                chk_sku.setChecked(false);
-                            } else if (childData.getCheckbox_sku().equals("1")) {
-                                chk_sku.setChecked(true);
-                            }
-
-                            chk_sku.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
-                                    if (isCheck) {
-                                        childData.setCheckbox_sku("1");
-                                    } else {
-                                        childData.setCheckbox_sku("0");
-                                    }
-                                }
-                            });
-
-                            childDataList.add(childData);
-                            lin_addSku.addView(view1);
-                        }*/
-
 
                         addSku_Shelf.setOnClickListener(new View.OnClickListener() {
                             @Override
