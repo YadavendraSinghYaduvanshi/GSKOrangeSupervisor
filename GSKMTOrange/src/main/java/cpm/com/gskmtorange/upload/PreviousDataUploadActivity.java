@@ -427,16 +427,16 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                             if (stock_facingHeaderList.size() > 0) {
 
                                 for (int i1 = 0; i1 < stock_facingHeaderList.size(); i1++) {
-                                    onXML = "[STOCK_FACING_DATA]"
+                                    onXML = "[STOCK_FACING_DATA_NEW]"
                                             + "[MID]" + mid + "[/MID]"
                                             + "[USER_ID]" + userId + "[/USER_ID]"
                                             + "[BRAND_ID]" + Integer.parseInt(stock_facingHeaderList.get(i1).getBrand_id()) + "[/BRAND_ID]"
-                                            + "[IAMGE1]" + stock_facingHeaderList.get(i1).getImage1() + "[/IAMGE1]"
-                                            + "[IAMGE2]" + stock_facingHeaderList.get(i1).getImage2() + "[/IAMGE2]"
+                                            //+ "[IAMGE1]" + stock_facingHeaderList.get(i1).getImage1() + "[/IAMGE1]"
+                                            //+ "[IAMGE2]" + stock_facingHeaderList.get(i1).getImage2() + "[/IAMGE2]"
                                             + "[SKU_ID]" + Integer.parseInt(stock_facingHeaderList.get(i1).getSku_id()) + "[/SKU_ID]"
                                             + "[STOCK]" + Integer.parseInt(stock_facingHeaderList.get(i1).getStock()) + "[/STOCK]"
                                             + "[FACEUP]" + Integer.parseInt(stock_facingHeaderList.get(i1).getFacing()) + "[/FACEUP]"
-                                            + "[/STOCK_FACING_DATA]";
+                                            + "[/STOCK_FACING_DATA_NEW]";
 
                                     stock_facing_xml = stock_facing_xml + onXML;
                                 }
@@ -445,7 +445,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "STOCK_FACING_DATA");
+                                request.addProperty("KEYS", "STOCK_FACING_DATA_NEW");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
@@ -860,13 +860,13 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                             + "[MID]" + mid + "[/MID]"
                                             + "[USER_ID]" + userId + "[/USER_ID]"
                                             + "[SKU_ID]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getSku_id()) + "[/SKU_ID]"
-                                            //+ "[category_id]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getCategory_id()) + "[/category_id]"
+                                            + "[CATEGORY_ID]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getCategory_id()) + "[/CATEGORY_ID]"
                                             //+ "[company_id]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getCompany_id()) + "[/company_id]"
                                             //+ "[sub_category_id]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getSub_category_id()) + "[/sub_category_id]"
-                                            + "[BRAND_ID]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getBrand_id()) + "[/BRAND_ID]"
+                                            //+ "[BRAND_ID]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getBrand_id()) + "[/BRAND_ID]"
                                             + "[SHELF_ID]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getSp_addShelf_id()) + "[/SHELF_ID]"
                                             + "[SHELF_POSITION]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getSp_shelfPosition()) + "[/SHELF_POSITION]"
-                                            + "[CHECKBOX]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getCheckbox_sku()) + "[/CHECKBOX]"
+                                            //+ "[CHECKBOX]" + Integer.parseInt(stockFacingPlanogramDataList.get(i1).getCheckbox_sku()) + "[/CHECKBOX]"
                                             + "[/STOCK_FACING_PLANOGRAM_DATA]";
 
                                     stock_facing_planogram_xml = stock_facing_planogram_xml + onXML;
@@ -907,7 +907,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
 
                             //Store Wise Camera
-                            String store_wise_camera_xml = "";
+                            /*String store_wise_camera_xml = "";
                             onXML = "";
                             storeWiseCameraDataGetterSetters = db.getStoreWiseCameraServerUploadData(coverageList.get(i).getStoreId());
 
@@ -957,13 +957,13 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                             }
                             data.value = 55;
                             data.name = getString(R.string.stock_planogram_data_uploading);
-                            publishProgress(data);
+                            publishProgress(data);*/
 
 
                             //Image Upload
 
                             //Store Wise Camera Images Upload
-                            if (storeWiseCameraDataGetterSetters.size() > 0) {
+                            /*if (storeWiseCameraDataGetterSetters.size() > 0) {
                                 for (int i1 = 0; i1 < storeWiseCameraDataGetterSetters.size(); i1++) {
 
                                     if (storeWiseCameraDataGetterSetters.get(i1).getCamera1() != null && !storeWiseCameraDataGetterSetters.get(i1).getCamera1().equals("")) {
@@ -1050,7 +1050,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
-                            }
+                            }*/
 
                             //Stock Facing Images Upload
                             /*if (stock_facingHeaderList.size() > 0) {
