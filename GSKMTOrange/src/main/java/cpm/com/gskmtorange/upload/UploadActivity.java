@@ -41,6 +41,7 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.BrandAvabilityGetterSetter;
+import cpm.com.gskmtorange.GetterSetter.CategoryPictureGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
@@ -83,7 +84,8 @@ public class UploadActivity extends AppCompatActivity {
     private int factor, k = 0;
     Object result = "";
     Toolbar toolbar;
-
+    ArrayList<CategoryPictureGetterSetter> adddata = new ArrayList<CategoryPictureGetterSetter>();
+    ArrayList<CategoryPictureGetterSetter> listdat = new ArrayList<CategoryPictureGetterSetter>();
     ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> stockFacingPlanogramDataList;
 
     ArrayList<Store_wise_camera_DataGetterSetter> storeWiseCameraDataGetterSetters;
@@ -605,10 +607,41 @@ public class UploadActivity extends AppCompatActivity {
                             String additional_visibility_dialog_xml = "";
                             onXML = "";
                             String onXMLdIALOG = "";
+
+                            String imageV1,imageV2,imageV3;
+
                             additionalVisibilityList = db.getAdditionalStockUpload(coverageList.get(i).getStoreId());
 
                             if (additionalVisibilityList.size() > 0) {
                                 for (int J = 0; J < additionalVisibilityList.size(); J++) {
+
+                                    if(additionalVisibilityList.get(J).getImage()==null)
+                                    {
+                                        imageV1="";
+                                    }
+                                    else{
+                                        imageV1=additionalVisibilityList.get(J).getImage();
+                                    }
+
+                                    if(additionalVisibilityList.get(J).getImage2()==null)
+                                    {
+                                        imageV2="";
+                                    }
+                                    else{
+                                        imageV2=additionalVisibilityList.get(J).getImage2();
+                                    }
+
+                                    if(additionalVisibilityList.get(J).getImage3()==null)
+                                    {
+                                        imageV3="";
+                                    }
+                                    else{
+                                        imageV3=additionalVisibilityList.get(J).getImage3();
+                                    }
+
+
+
+
 
                                     String KeyID = additionalVisibilityList.get(J).getKey_id();
 
@@ -660,13 +693,13 @@ public class UploadActivity extends AppCompatActivity {
                                             + additionalVisibilityList.get(J).getBrand_id()
                                             + "[/BRAND_ID]"*/
                                             + "[IMAGE_URL]"
-                                            + additionalVisibilityList.get(J).getImage()
+                                            + imageV1 /*additionalVisibilityList.get(J).getImage()*/
                                             + "[/IMAGE_URL]"
                                             + "[IMAGE_URL1]"
-                                            + additionalVisibilityList.get(J).getImage2()
+                                            + imageV2 /*additionalVisibilityList.get(J).getImage2()*/
                                             + "[/IMAGE_URL1]"
                                             + "[IMAGE_URL2]"
-                                            + additionalVisibilityList.get(J).getImage3()
+                                            + imageV3 /*additionalVisibilityList.get(J).getImage3()*/
                                             + "[/IMAGE_URL2]"
                                             + "[DISPLAY_ID]"
                                             + additionalVisibilityList.get(J).getSku_id()
@@ -1105,6 +1138,165 @@ public class UploadActivity extends AppCompatActivity {
                             }*/
 
 
+
+                            //Category Picture  Data
+                            String Category_xml = "";
+
+                            onXML = "";
+                            String onCategoryList = "";
+                            String CategoryLISTDATA = "";
+                            String image1,image2,image3,image4;
+
+
+                            adddata = db.getCategoryPictureUpload(coverageList.get(i).getStoreId());
+
+                            if (adddata.size() > 0) {
+                                for (int J = 0; J < adddata.size(); J++) {
+
+
+                                    if(adddata.get(J).getCategoryImage1()==null)
+                                    {
+                                        image1="";
+                                    }
+                                    else{
+                                        image1=adddata.get(J).getCategoryImage1();
+                                    }
+
+                                    if(adddata.get(J).getCategoryImage2()==null)
+                                    {
+                                        image2="";
+                                    }
+                                    else{
+                                        image2=adddata.get(J).getCategoryImage2();
+                                    }
+
+                                    if(adddata.get(J).getCategoryImage3()==null)
+                                    {
+                                        image3="";
+                                    }
+                                    else{
+                                        image3=adddata.get(J).getCategoryImage3();
+                                    }
+
+                                    if(adddata.get(J).getCategoryImage4()==null)
+                                    {
+                                        image4="";
+                                    }
+                                    else{
+                                        image4=adddata.get(J).getCategoryImage4();
+                                    }
+
+
+
+                                    String KeyID = adddata.get(J).getKEY_ID();
+
+
+
+                                    listdat = db.getCategoryPictureListUploaded(KeyID);
+
+                                    if (listdat.size() > 0) {
+
+                                        for (int k = 0; k < listdat.size(); k++) {
+
+                                            onCategoryList = "[SUB_CATEGORY_LIST]"
+                                                    + "[MID]" + mid + "[/MID]"
+                                                    + "[USER_ID]"
+                                                    + userId
+                                                    + "[/USER_ID]"
+                                                    + "[KEY_ID]"
+                                                    + listdat.get(k).getCOMMON_ID()
+                                                    + "[/KEY_ID]"
+                                                    + "[SUB_CATEGORY_ID]"
+                                                    + listdat.get(k).getSUB_CATEGORY_ID()
+                                                    + "[/SUB_CATEGORY_ID]"
+                                                    + "[SUB_CategoryImage1]"
+                                                    + listdat.get(k).getSubCategoryCamera1()
+                                                    + "[/SUB_CategoryImage1]"
+                                                    + "[SUB_CategoryImage2]"
+                                                    + listdat.get(k).getSubCategoryCamera2()
+                                                    + "[/SUB_CategoryImage2]"
+                                                    + "[/SUB_CATEGORY_LIST]";
+
+                                            CategoryLISTDATA = CategoryLISTDATA + onCategoryList;
+
+                                        }
+                                    }
+
+                                    onXML = "[CATEGORY_LIST]"
+                                            + "[MID]" + mid + "[/MID]"
+                                            + "[USER_ID]"
+                                            + userId
+                                            + "[/USER_ID]"
+                                            + "[KEY_ID]"
+                                            + adddata.get(J).getKEY_ID()
+                                            + "[/KEY_ID]"
+                                            + "[CATEGORY_ID]"
+                                            + adddata.get(J).getCategoryId()
+                                            + "[/CATEGORY_ID]"
+                                            + "[CAMERA_ALLOW]"
+                                            + adddata.get(J).getCamera_allow()
+                                            + "[/CAMERA_ALLOW]"
+
+                                            + "[IMAGE_URL_1]"
+                                            + image1 /*adddata.get(J).getCategoryImage1()*/
+                                            + "[/IMAGE_URL_1]"
+                                            + "[IMAGE_URL_2]"
+                                            +  image2 /*adddata.get(J).getCategoryImage2()*/
+                                            + "[/IMAGE_URL_2]"
+                                            + "[IMAGE_URL_3]"
+                                            + image3 /*adddata.get(J).getCategoryImage3()*/
+                                            + "[/IMAGE_URL_3]"
+                                            + "[IMAGE_URL_4]"
+                                            + image4 /*adddata.get(J).getCategoryImage4()*/
+                                            + "[/IMAGE_URL_4]"
+                                            + "[SUB_LIST]"
+                                            + CategoryLISTDATA
+                                            + "[/SUB_LIST]"
+                                            + "[/CATEGORY_LIST]";
+
+
+                                    Category_xml = Category_xml + onXML;
+
+                                    CategoryLISTDATA = "";
+
+                                }
+
+                                final String sos_xml = "[DATA]" + Category_xml + "[/DATA]";
+
+                                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                                request.addProperty("XMLDATA", sos_xml);
+                                request.addProperty("KEYS", "CATEGORY_PICTURE");
+                                request.addProperty("USERNAME", userId);
+                                request.addProperty("MID", mid);
+
+                                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                                envelope.dotNet = true;
+                                envelope.setOutputSoapObject(request);
+
+                                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                                androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                                result = envelope.getResponse();
+
+                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+                            }
+
+                            data.value = 35;
+                            data.name = getString(R.string.additional_data_uploading);
+                            publishProgress(data);
+
+
+
                             // ashish visibility image start
                             if (additionalVisibilityList.size() > 0) {
                                 for (int i1 = 0; i1 < additionalVisibilityList.size(); i1++) {
@@ -1178,6 +1370,151 @@ public class UploadActivity extends AppCompatActivity {
 
 
                             //// ashish close image
+
+
+
+                            // ashish SUB_CATEGORY_PICTURE start
+                            if (listdat.size() > 0) {
+                                for (int i1 = 0; i1 < listdat.size(); i1++) {
+
+                                    if (listdat.get(i1).getSubCategoryCamera1() != null && !listdat.get(i1).getSubCategoryCamera1().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + listdat.get(i1).getSubCategoryCamera1()).exists()) {
+
+                                            try {
+                                                result = UploadImage(listdat.get(i1).getSubCategoryCamera1(), "CategoryImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    if (listdat.get(i1).getSubCategoryCamera2() != null && !listdat.get(i1).getSubCategoryCamera2().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + listdat.get(i1).getSubCategoryCamera2()).exists()) {
+
+                                            try {
+                                                result = UploadImage(listdat.get(i1).getSubCategoryCamera2(), "CategoryImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+
+
+
+                            // ashish CATEGORY_PICTURE start
+                            if (adddata.size() > 0) {
+                                for (int i1 = 0; i1 < adddata.size(); i1++) {
+
+                                    if (adddata.get(i1).getCategoryImage1() != null && !adddata.get(i1).getCategoryImage1().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage1()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage1(), "CategoryImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    if (adddata.get(i1).getCategoryImage2() != null && !adddata.get(i1).getCategoryImage2().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage2()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage2(), "CategoryImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    if (adddata.get(i1).getCategoryImage3() != null && !adddata.get(i1).getCategoryImage3().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage3()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage3(), "CategoryImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                    if (adddata.get(i1).getCategoryImage4() != null && !adddata.get(i1).getCategoryImage4().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage4()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage4(), "CategoryImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+
+
 
                             ///////Start store images
 

@@ -54,10 +54,10 @@ public class AddittionalGetterSetter {
         Image = image;
     }
 
-    String Brand,Brand_id,Sku,Sku_id,Store_id,Image;
+    String Brand,Brand_id,Sku,Sku_id,Store_id,Image="";
 
 
-    String Image2;
+    String Image2="";
 
     public String getImage3() {
         return Image3;
@@ -75,7 +75,7 @@ public class AddittionalGetterSetter {
         Image2 = image2;
     }
 
-    String Image3;
+    String Image3="";
 
     public String getKey_id() {
         return key_id;

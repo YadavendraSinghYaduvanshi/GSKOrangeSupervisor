@@ -29,6 +29,7 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.AdditionalVisibility;
+import cpm.com.gskmtorange.dailyentry.CategoryPicture;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.DailyDataMenuGetterSetter;
 
@@ -40,7 +41,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
 
     GSKOrangeDB db;
     String categoryName = "", categoryId;
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id,camera_allow;
     private SharedPreferences preferences;
 
     @Override
@@ -70,7 +71,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
             class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
             storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
-
+            camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
             //Intent data
             categoryName = getIntent().getStringExtra("categoryName");
             categoryId = getIntent().getStringExtra("categoryId");
@@ -175,6 +176,28 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             }
             categoryList.add(data);
 
+
+            //Category Pictures
+
+            data = new DailyDataMenuGetterSetter();
+            //data.setCategory_name("Additional Visibility");
+            data.setCategory_name(getResources().getString(R.string.daily_data_menu_category_picture));
+
+            if(camera_allow.equalsIgnoreCase("1")){
+
+            if (db.isCategoryPictureData(store_id, categoryId)) {
+                data.setCategory_img(R.mipmap.picturecatogory_done);
+            } else {
+                data.setCategory_img(R.mipmap.picturecatogory);
+            }
+            }
+            else{
+                data.setCategory_img(R.mipmap.picturecatogory_grey);
+            }
+
+            categoryList.add(data);
+
+
             /*data = new DailyDataMenuGetterSetter();
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_competition_tracking));
             //data.setCategory_name("Competition Tracking");
@@ -271,7 +294,18 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                 } else {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
                 }
+
             }
+
+            else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_category_picture)))) {
+                if(camera_allow.equalsIgnoreCase("1")){
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                } else {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
+                }
+
+            }
+
 
             holder.lay_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -314,7 +348,23 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
                     }
+                    else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_category_picture)))) {
 
+                        if(camera_allow.equalsIgnoreCase("1")){
+
+                            Intent intent = new Intent(DailyDataMenuActivity.this, CategoryPicture.class);
+                            intent.putExtra("categoryName", dailyData.getCategory_name());
+                            intent.putExtra("categoryId", categoryId);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+
+                        }
+                       else{
+
+                        }
+
+
+                    }
 
                 }
             });

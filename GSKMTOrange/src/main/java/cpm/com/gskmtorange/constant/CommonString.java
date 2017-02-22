@@ -668,4 +668,73 @@ public class CommonString {
         + ")";
 
 
+
+
+
+    public static final String TABLE_INSERT_CATEGORY_PICTURE = "Stock_CATEGORY_PICTURE";
+
+    public static final String CREATE_TABLE_INSERT_CATEGORY_PICTURE = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_CATEGORY_PICTURE
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "Store_Id"
+            + " VARCHAR,"
+
+            + "categoryId"
+            + " VARCHAR,"
+
+            + "CategoryImage1"
+            + " VARCHAR,"
+
+            + "CategoryImage2"
+            + " VARCHAR,"
+            + "CategoryImage3"
+            + " VARCHAR,"
+            + "CategoryImage4"
+            + " VARCHAR,"
+
+            + "camera_allow"
+            + " VARCHAR"
+
+            + ")";
+
+
+
+    public static final String TABLE_INSERT_CATEGORY_PICTURE_LIST = "Stock_CATEGORY_PICTURE_LIST";
+
+    public static final String CREATE_TABLE_INSERT_CATEGORY_PICTURE_LIST = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_CATEGORY_PICTURE_LIST
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "COMMON_ID"
+            + " INTEGER,"
+
+            + "Store_Id"
+            + " VARCHAR,"
+
+            + "categoryId"
+            + " VARCHAR,"
+
+            + "SUB_CategoryImage1"
+            + " VARCHAR,"
+            + "SUB_CategoryImage2"
+            + " VARCHAR,"
+            + "SUB_Category"
+            + " VARCHAR,"
+
+            + "SUB_Category_ID"
+            + " INTEGER"
+
+            + ")";
+
+
+
+
+
+
+
 }
