@@ -694,7 +694,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        } else if (language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
             lang = "AR";
         } else {
             lang = "TR";
