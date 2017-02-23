@@ -1,6 +1,7 @@
 package cpm.com.gskmtorange.dailyentry;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,24 +29,49 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.File;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
+import cpm.com.gskmtorange.GeoTag.GeoTagActivity;
+import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.download.DownloadActivity;
+import cpm.com.gskmtorange.messgae.AlertMessage;
+import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
+import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
 
 
 public class NonWorkingReason extends AppCompatActivity implements
@@ -53,10 +80,11 @@ public class NonWorkingReason extends AppCompatActivity implements
     ArrayList<NonWorkingReasonGetterSetter> reasondata = new ArrayList<NonWorkingReasonGetterSetter>();
     private Spinner reasonspinner;
     private GSKOrangeDB database;
-    String reasonname, reasonid, entry_allow, image, entry, reason_reamrk, intime,image_allow;
+    String reasonname, reasonid, entry_allow, image, entry, reason_reamrk, intime, image_allow;
     Button save;
+    boolean ResultFlag = true;
     private ArrayAdapter<CharSequence> reason_adapter;
-    protected String _path, str;
+    protected String _path, str,strflag;
     protected String _pathforcheck = "";
     private ArrayList<StoreBean> storedata = new ArrayList<StoreBean>();
     private String image1 = "";
@@ -64,7 +92,7 @@ public class NonWorkingReason extends AppCompatActivity implements
     protected boolean _taken;
     protected static final String PHOTO_TAKEN = "photo_taken";
     private SharedPreferences preferences;
-    String _UserId, visit_date, store_id;
+    String _UserId, visit_date, store_id, username;
     protected boolean status = true;
     EditText text;
     AlertDialog alert;
@@ -73,8 +101,12 @@ public class NonWorkingReason extends AppCompatActivity implements
     String gallery_package = "";
     Uri outputFileUri;
     boolean leave_flag = false;
-
+    ArrayList<CoverageBean> coverage = new ArrayList<CoverageBean>();
     ArrayList<StoreBean> jcp;
+    private Dialog dialog;
+    private TextView percentage, message;
+    private ProgressBar pb;
+    private FailureGetterSetter failureGetterSetter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,11 +129,11 @@ public class NonWorkingReason extends AppCompatActivity implements
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         _UserId = preferences.getString(CommonString.KEY_USERNAME, "");
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
-
+        username = preferences.getString(CommonString.KEY_USERNAME, null);
         store_id = getIntent().getStringExtra(CommonString.KEY_STORE_ID);
         //store_id = preferences.getString(CommonString.KEY_STORE_ID, "");
 
@@ -109,7 +141,17 @@ public class NonWorkingReason extends AppCompatActivity implements
         database.open();
         str = CommonString.FILE_PATH;
 
-        reasondata = database.getNonWorkingData();
+
+        coverage = database.getCoverageData(visit_date);
+
+        if (coverage.size() > 0) {
+            reasondata = database.getNonWorkingEntryAllowData();
+
+        } else {
+            reasondata = database.getNonWorkingData();
+
+        }
+
 
         intime = getCurrentTime();
 
@@ -313,7 +355,7 @@ public class NonWorkingReason extends AppCompatActivity implements
         // TODO Auto-generated method stub
         if (v.getId() == R.id.imgcam) {
 
-            _pathforcheck = store_id +"NonWorking" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+            _pathforcheck = store_id + "NonWorking" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
             _path = CommonString.FILE_PATH + _pathforcheck;
 
@@ -329,7 +371,7 @@ public class NonWorkingReason extends AppCompatActivity implements
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(
                                 NonWorkingReason.this);
-                        builder.setMessage( R.string.title_activity_save_data)
+                        builder.setMessage(R.string.title_activity_save_data)
                                 .setCancelable(false)
                                 .setPositiveButton(R.string.ok,
                                         new DialogInterface.OnClickListener() {
@@ -427,7 +469,9 @@ public class NonWorkingReason extends AppCompatActivity implements
 
                                                 }
 
-                                                finish();
+                                                new NonWorkingReason.GeoTagUpload(NonWorkingReason.this).execute();
+
+                                              //  finish();
                                             }
                                         })
                                 .setNegativeButton(R.string.closed,
@@ -505,20 +549,18 @@ public class NonWorkingReason extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("KSA")) {
+        } else if (language.equalsIgnoreCase("KSA")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
         }
 
@@ -534,4 +576,222 @@ public class NonWorkingReason extends AppCompatActivity implements
 
         return true;
     }
+
+
+    public class GeoTagUpload extends AsyncTask<Void, Void, String> {
+
+        private Context context;
+
+        GeoTagUpload(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+
+            dialog = new Dialog(context);
+            dialog.setContentView(R.layout.custom);
+            dialog.setTitle(getResources().getString(R.string.dialog_title));
+            dialog.setCancelable(false);
+            dialog.show();
+            pb = (ProgressBar) dialog.findViewById(R.id.progressBar1);
+            percentage = (TextView) dialog.findViewById(R.id.percentage);
+            message = (TextView) dialog.findViewById(R.id.message);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                GSKOrangeDB db = new GSKOrangeDB(NonWorkingReason.this);
+                db.open();
+
+                coverage = db.getCoverageWithStoreID_Data(store_id);
+
+                // uploading Geotag
+
+                SAXParserFactory saxPF = SAXParserFactory.newInstance();
+                SAXParser saxP = saxPF.newSAXParser();
+                XMLReader xmlR = saxP.getXMLReader();
+
+
+                String current_xml = "";
+
+                if (coverage.size() > 0) {
+
+                    for (int i = 0; i < coverage.size(); i++) {
+
+
+                        String onXML = "[Coverage_Intime][USER_ID]"
+                                + _UserId
+                                + "[/USER_ID]"
+                                + "[STORE_ID]"
+                                + coverage.get(i).getStoreId()
+                                + "[/STORE_ID]"
+                                + "[VISIT_DATE]"
+                                + coverage.get(i).getVisitDate()
+                                + "[/VISIT_DATE]"
+                                + "[IN_TIME]"
+                                + coverage.get(i).getInTime()
+                                + "[/IN_TIME]"
+                                + "[LATITUDE]"
+                                + coverage.get(i).getLatitude()
+                                + "[/LATITUDE]"
+                                + "[LONGITUDE ]"
+                                + coverage.get(i).getLongitude()
+                                + "[/LONGITUDE ]"
+                                + "[REASON_ID]"
+                                + coverage.get(i).getReasonid()
+                                + "[/REASON_ID]"
+                                + "[REMARK]"
+                                + coverage.get(i).getReason()
+                                + "[/REMARK][/Coverage_Intime]";
+
+                        current_xml = current_xml + onXML;
+
+
+                    }
+
+                    current_xml = "[DATA]" + current_xml
+                            + "[/DATA]";
+
+                    SoapObject request = new SoapObject(CommonString.NAMESPACE,
+                            CommonString.METHOD_UPLOAD_CURRENT_DATA);
+                    //request.addProperty("MID", "0");
+                   // request.addProperty("KEYS", "CURRENT_DATA");
+                   // request.addProperty("USERNAME", username);
+
+                    request.addProperty("onXML", current_xml);
+
+                    SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                            SoapEnvelope.VER11);
+                    envelope.dotNet = true;
+                    envelope.setOutputSoapObject(request);
+
+                    HttpTransportSE androidHttpTransport = new HttpTransportSE(
+                            CommonString.URL);
+                    androidHttpTransport.call(
+                            CommonString.SOAP_ACTION_UPLOAD_CURRRENT_DATA, envelope);
+                    Object result = (Object) envelope.getResponse();
+
+                    if (result.toString().equalsIgnoreCase(
+                            CommonString.KEY_SUCCESS)) {
+
+
+                    } else {
+
+                        if (result.toString().equalsIgnoreCase(
+                                CommonString.KEY_FALSE)) {
+                            return CommonString.METHOD_UPLOAD_CURRENT_DATA;
+                        }
+
+                        // for failure
+                        FailureXMLHandler failureXMLHandler = new FailureXMLHandler();
+                        xmlR.setContentHandler(failureXMLHandler);
+
+                        InputSource is = new InputSource();
+                        is.setCharacterStream(new StringReader(result
+                                .toString()));
+                        xmlR.parse(is);
+
+                        failureGetterSetter = failureXMLHandler
+                                .getFailureGetterSetter();
+
+                        if (failureGetterSetter.getStatus().equalsIgnoreCase(
+                                CommonString.KEY_FAILURE)) {
+                            return CommonString.METHOD_UPLOAD_CURRENT_DATA + ","
+                                    + failureGetterSetter.getErrorMsg();
+
+                        } else {
+
+                        }
+                    }
+                }
+
+
+                return CommonString.KEY_SUCCESS;
+
+            } catch (MalformedURLException e) {
+
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_EXCEPTION;
+
+            } catch (SocketTimeoutException e) {
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_SOCKETEXCEPTION;
+
+            } catch (InterruptedIOException e) {
+
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_EXCEPTION;
+
+
+            } catch (IOException e) {
+
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_SOCKETEXCEPTION;
+
+            } catch (XmlPullParserException e) {
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_XmlPull;
+
+            } catch (Exception e) {
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_EXCEPTION;
+
+            }
+
+            if (ResultFlag) {
+                return CommonString.KEY_SUCCESS;
+
+            } else {
+
+                return strflag;
+            }
+
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result.equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                dialog.dismiss();
+
+                showAlert(getString(R.string.data_downloaded_successfully));
+            } else {
+
+                GSKOrangeDB db = new GSKOrangeDB(NonWorkingReason.this);
+                db.open();
+
+                dialog.dismiss();
+                db.deleteTableWithStoreID(store_id);
+
+                showAlert(getString(R.string.datanotfound) + " " + result);
+            }
+        }
+
+    }
+    public void showAlert(String str) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(NonWorkingReason.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(str).setCancelable(false)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+
+                        finish();
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
 }

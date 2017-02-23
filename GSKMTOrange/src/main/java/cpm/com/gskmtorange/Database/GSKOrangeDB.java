@@ -4574,4 +4574,106 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 "store_id='" + storeId + "' And category_id='" + categoryId + "' ", null);
     }
 
+    // get NonWorking data
+    public ArrayList<NonWorkingReasonGetterSetter> getNonWorkingEntryAllowData() {
+
+        ArrayList<NonWorkingReasonGetterSetter> list = new ArrayList<NonWorkingReasonGetterSetter>();
+        Cursor dbcursor = null;
+        try {
+            dbcursor = db.rawQuery("SELECT * FROM NON_WORKING_REASON WHERE ENTRY_ALLOW=1", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    NonWorkingReasonGetterSetter sb = new NonWorkingReasonGetterSetter();
+
+                    sb.setREASON_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("REASON_ID")));
+
+                    sb.setREASON(dbcursor.getString(dbcursor.getColumnIndexOrThrow("REASON")));
+
+                    sb.setENTRY_ALLOW(dbcursor.getString(dbcursor.getColumnIndexOrThrow("ENTRY_ALLOW")));
+
+                    sb.setIMAGE_ALLOW(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE_ALLOW")));
+
+
+                    list.add(sb);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+
+        } catch (Exception e) {
+
+            return list;
+        }
+
+
+        return list;
+    }
+
+    public ArrayList<CoverageBean> getCoverageWithStoreID_Data(String store_id) {
+
+        ArrayList<CoverageBean> list = new ArrayList<CoverageBean>();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT  * from " + CommonString.TABLE_COVERAGE_DATA + " where " + CommonString.KEY_STORE_ID + "='" + store_id + "'",
+                    null);
+
+
+            if (dbcursor != null) {
+
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    CoverageBean sb = new CoverageBean();
+
+                    sb.setStoreId(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_STORE_ID)));
+                    sb.setUserId((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_USER_ID))));
+                    sb.setInTime(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_IN_TIME)))));
+                    sb.setOutTime(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_OUT_TIME)))));
+                    sb.setVisitDate((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_VISIT_DATE))))));
+                    sb.setLatitude(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_LATITUDE)))));
+                    sb.setLongitude(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_LONGITUDE)))));
+                    sb.setStatus((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_COVERAGE_STATUS))))));
+                    sb.setImage((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_IMAGE))))));
+                    sb.setReason((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_REASON))))));
+                    sb.setReasonid((((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_REASON_ID))))));
+                    sb.setMID(Integer.parseInt(((dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_ID))))));
+                    if (dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow(CommonString.KEY_COVERAGE_REMARK)) == null) {
+                        sb.setRemark("");
+                    } else {
+                        sb.setRemark((((dbcursor.getString(dbcursor
+                                .getColumnIndexOrThrow(CommonString.KEY_COVERAGE_REMARK))))));
+                    }
+
+                    list.add(sb);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception get JCP!", e.toString());
+            return list;
+        }
+        return list;
+    }
+
+
+
 }

@@ -115,8 +115,18 @@ public class CommonString {
     public static final String SOAP_ACTION_UNIVERSAL = "http://tempuri.org/"
             + METHOD_NAME_UNIVERSAL_DOWNLOAD;
     public static final String METHOD_UPLOAD_STOCK_XML_DATA = "DrUploadXml";
+
+    public static final String METHOD_UPLOAD_CURRENT_DATA = "CurrentLocation";
+
+    public static final String SOAP_ACTION_UPLOAD_CURRRENT_DATA = "http://tempuri.org/"
+            + METHOD_UPLOAD_CURRENT_DATA;
+
+
     public static final String SOAP_ACTION_UPLOAD_ASSET_XMLDATA = "http://tempuri.org/"
             + METHOD_UPLOAD_STOCK_XML_DATA;
+
+
+
     public static final String METHOD_UPLOAD_ASSET = "Upload_Stock_Availiablity_V1";
     public static final String METHOD_Get_DR_POSM_IMAGES = "GetImageNew";
     public static final String SOAP_ACTION_Get_DR_POSM_IMAGES = "http://tempuri.org/"
