@@ -73,7 +73,7 @@
                         android:layout_marginLeft="10dp"
                         android:background="@color/colorPrimary"
                         android:padding="5dp"
-                        android:text="Add SKU to Shelf"
+                        android:text="@string/stock_planogram_add_sku_to_shelf"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/white" />
 
@@ -85,7 +85,7 @@
                         android:layout_marginRight="10dp"
                         android:background="@color/colorPrimary"
                         android:padding="5dp"
-                        android:text="Cancel"
+                        android:text="@string/cancel"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/white" />
                 </RelativeLayout>

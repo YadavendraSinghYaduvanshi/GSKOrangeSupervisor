@@ -3724,7 +3724,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
             StockFacing_PlanogramTrackerDataGetterSetter sb1 = new StockFacing_PlanogramTrackerDataGetterSetter();
             sb1.setShelf_id("0");
-            sb1.setShelf("Select");
+            sb1.setShelf(context.getString(R.string.select));
 
             Data.add(sb1);
 

@@ -731,10 +731,19 @@ public class CommonString {
 
             + ")";
 
+    public static final String KEY_LANGUAGE_DEFAULT = "";
+    public static final String KEY_RETURN_LANGUAGE_DEFAULT = "EN";
 
+    public static final String KEY_LANGUAGE_ENGLISH = "English";
+    public static final String KEY_RETURE_LANGUAGE_ENGLISH = "EN";
 
+    public static final String KEY_LANGUAGE_ARABIC_KSA = "ARABIC-KSA";
+    public static final String KEY_RETURE_LANGUAGE_ARABIC_KSA = "AR";
 
+    public static final String KEY_LANGUAGE_TURKISH = "TURKISH";
+    public static final String KEY_RETURE_LANGUAGE_TURKISH = "TR";
 
-
+    public static final String KEY_LANGUAGE_OMAN = "English";
+    public static final String KEY_RETURE_LANGUAGE_OMAN = "EN";
 
 }

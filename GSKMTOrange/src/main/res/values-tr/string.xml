@@ -243,7 +243,7 @@
     <string name="stock_planogram_data_uploading">Stok Planogram Veri Gönderimi</string>
 
     <string name="daily_data_menu_category_picture">Kategori Resimleri</string>
-    <string name="title_activity_category_picture">KategoriResimleri</string>
+    <string name="title_activity_category_picture">Kategori Resimleri</string>
 
     <string name="stock_planogram_data_noCamera_data">Lütfen kamera yok datasını doldurun</string>
     <string name="stock_planogram_shelf">Raf </string>
@@ -252,8 +252,14 @@
     <string name="stock_planogram_data_select_one_sku">En azindan 1 SKU seçmelisiniz</string>
     <string name="stock_planogram_data_add_shelf">SKU ekleyin, raf boş olamaz</string>
 
-    <string name="language">English</string>
-    <string name="language_return">TR</string>
+    <string name="stock_planogram_data_add_shelf_position_already_exists">Raf / Konum zaten var</string>
+
+    <string name="stock_planogram_add_shelf">Add Shelf</string>
+    <string name="stock_planogram_add_sku">Add Sku</string>
+    <string name="stock_planogram_add_sku_to_shelf">Add Sku to Shelf</string>
+    <string name="stock_planogram_planogram_tracker">Planogram Tracker</string>
+    <string name="stock_planogram_position_on_shelf">Position on Shelf</string>
+
 </resources>
 
 
