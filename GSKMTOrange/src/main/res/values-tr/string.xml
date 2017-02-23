@@ -251,6 +251,9 @@
     <string name="stock_planogram_already_exists">Zaten var</string>
     <string name="stock_planogram_data_select_one_sku">En azindan 1 SKU seçmelisiniz</string>
     <string name="stock_planogram_data_add_shelf">SKU ekleyin, raf boş olamaz</string>
+
+    <string name="language">English</string>
+    <string name="language_return">TR</string>
 </resources>
 
 

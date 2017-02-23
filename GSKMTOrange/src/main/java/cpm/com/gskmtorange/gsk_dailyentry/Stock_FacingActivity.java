@@ -462,7 +462,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
             lin_camera3.setVisibility(View.GONE);
             lin_camera4.setVisibility(View.GONE);
 
-            camera1.setBackgroundResource(R.mipmap.camera_grey);
+            camera1.setBackgroundResource(R.mipmap.new_no_camera);
 
            lin_camera1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1093,7 +1093,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 //Planogram List for check and delete on backPress
                 prepareDefaultList();
                 if (planogramShelfHeaderDataList.size() > 0) {
-                    camera1.setBackgroundResource(R.mipmap.camera_grey);
+                    camera1.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
                 }
 
                 break;
