@@ -1114,6 +1114,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 prepareDefaultList();
                 if (db.isPlanogramAddShelfSaveData(store_id, categoryId)) {
                     camera1.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
+                }else {
+                    camera1.setBackgroundResource(R.mipmap.new_no_camera);
                 }
 
                 break;
