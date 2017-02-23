@@ -70,6 +70,7 @@ import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Store_wise_camera_DataGetterSetter;
 
@@ -99,6 +100,10 @@ public class Stock_FacingActivity extends AppCompatActivity {
     LinearLayout lin_camera1, lin_camera2, lin_camera3, lin_camera4;
     String img3 = "", img4 = "", img5 = "", img6 = "";
     Store_wise_camera_DataGetterSetter cameraData;
+
+    ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> planogramShelfHeaderDataList = new ArrayList<>();
+    ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> planogramSkuChildDataList;
+    HashMap<StockFacing_PlanogramTrackerDataGetterSetter, ArrayList<StockFacing_PlanogramTrackerDataGetterSetter>> planogramHashMapListChildData = new HashMap<>();
 
     private static boolean updateResources(Context context, String language) {
 
@@ -179,7 +184,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
             //Camera
             cameraMethod();
 
-
             final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -203,12 +207,12 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                         db.open();
 
                                         //Camera insert or update
-                                        if (db.isStorewiseCameraSave(store_id, categoryId)) {
+                                        /*if (db.isStorewiseCameraSave(store_id, categoryId)) {
                                             db.updateStore_wise_camera(cameraData);
                                         } else {
                                             cameraData.setCheckSaveStatus("1");
                                             db.InsertStore_wise_camera(cameraData);
-                                        }
+                                        }*/
 
                                         //Stock Facing insert or update
                                         if (db.checkStockAndFacingData(store_id, categoryId)) {
@@ -338,8 +342,26 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
     }
 
+    //Planogram List for check and delete on backPress
+    private void prepareDefaultList() {
+        // Planogram After save shelf header data
+        planogramShelfHeaderDataList = db.getPlanogramAddShelfHeaderAfterSaveData(store_id, categoryId);
+
+        if (planogramShelfHeaderDataList.size() > 0) {
+
+            for (int i = 0; i < planogramShelfHeaderDataList.size(); i++) {
+                planogramSkuChildDataList = db.getStockAndFacingPlanogramAfterSKUData(planogramShelfHeaderDataList.get(i).getKey_id());
+
+                //After save sku child data
+                if (planogramSkuChildDataList.size() > 0) {
+                    planogramHashMapListChildData.put(planogramShelfHeaderDataList.get(i), planogramSkuChildDataList);
+                }
+            }
+        }
+    }
+
     private void cameraMethod() {
-        cameraData = new Store_wise_camera_DataGetterSetter();
+        /*cameraData = new Store_wise_camera_DataGetterSetter();
 
         if (db.isStorewiseCameraSave(store_id, categoryId)) {
             cameraData = db.getStore_wise_camera(store_id, categoryId);
@@ -428,7 +450,11 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 }
             });
 
-        } else {
+        } else {*/
+
+        if (!camera_allow.equals("1")) {
+            findViewById(R.id.lin_camera).setVisibility(View.VISIBLE);
+
             findViewById(R.id.view_camera2).setVisibility(View.GONE);
             findViewById(R.id.view_camera3).setVisibility(View.GONE);
 
@@ -436,9 +462,9 @@ public class Stock_FacingActivity extends AppCompatActivity {
             lin_camera3.setVisibility(View.GONE);
             lin_camera4.setVisibility(View.GONE);
 
-            camera1.setBackgroundResource(R.mipmap.camera_grey);
+            camera1.setBackgroundResource(R.mipmap.new_no_camera);
 
-           /* lin_camera1.setOnClickListener(new View.OnClickListener() {
+           lin_camera1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Stock_FacingActivity.this, StockFacing_PlanogramTrackerActivity.class);
@@ -450,9 +476,13 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     intent.putExtra("categoryId", categoryId);
                     intent.putExtra("categoryName", categoryName);
 
-                    startActivity(intent);
+                    startActivityForResult(intent, 100);
                 }
-            });*/
+
+            });
+        } else {
+            findViewById(R.id.lin_camera).setVisibility(View.GONE);
+
         }
     }
 
@@ -509,20 +539,20 @@ public class Stock_FacingActivity extends AppCompatActivity {
                     if (camera_allow.equalsIgnoreCase("1")) {
 
                         //Atleast Single camera is click
-                        if (!cameraData.getCamera1().equals("") || !cameraData.getCamera2().equals("") ||
-                                !cameraData.getCamera3().equals("") || !cameraData.getCamera4().equals("")) {
+                        /*if (!cameraData.getCamera1().equals("") || !cameraData.getCamera2().equals("") ||
+                                !cameraData.getCamera3().equals("") || !cameraData.getCamera4().equals("")) {*/
 
-                            if (!stock.equals("0")) {
-                                //if (!imagePath.equals("") || !imagePath1.equals("")) {
-                                if (stock.equals("") || faceup.equals("")) {
-                                    if (!checkHeaderArray.contains(i)) {
-                                        checkHeaderArray.add(i);
-                                    }
-
-                                    flag = false;
-                                    Error_Message = getResources().getString(R.string.fill_data);
-                                    break;
+                        if (!stock.equals("0")) {
+                            //if (!imagePath.equals("") || !imagePath1.equals("")) {
+                            if (stock.equals("") || faceup.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
                                 }
+
+                                flag = false;
+                                Error_Message = getResources().getString(R.string.fill_data);
+                                break;
+                            }
                             /*} else {
                                 if (!checkHeaderArray.contains(i)) {
                                     checkHeaderArray.add(i);
@@ -532,6 +562,38 @@ public class Stock_FacingActivity extends AppCompatActivity {
                                 Error_Message = getResources().getString(R.string.click_image);
                                 break;
                             }*/
+                        } else {
+                            if (stock.equals("")) {
+                                if (!checkHeaderArray.contains(i)) {
+                                    checkHeaderArray.add(i);
+                                }
+
+                                flag = false;
+                                Error_Message = getResources().getString(R.string.fill_data);
+                                break;
+                            }
+                        }
+                        /*} else {
+                            flag = false;
+                            Error_Message = getResources().getString(R.string.click_image);
+                            break;
+                        }*/
+
+                    } else {
+                        //Camera allow disable
+
+                        //Planogram list is not empty
+                        if (planogramShelfHeaderDataList.size() > 0) {
+                            if (!stock.equals("0")) {
+                                if (stock.equals("") || faceup.equals("")) {
+                                    if (!checkHeaderArray.contains(i)) {
+                                        checkHeaderArray.add(i);
+                                    }
+
+                                    flag = false;
+                                    Error_Message = getResources().getString(R.string.fill_data);
+                                    break;
+                                }
                             } else {
                                 if (stock.equals("")) {
                                     if (!checkHeaderArray.contains(i)) {
@@ -545,32 +607,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
                             }
                         } else {
                             flag = false;
-                            Error_Message = getResources().getString(R.string.click_image);
+                            Error_Message = getResources().getString(R.string.stock_planogram_data_noCamera_data);
                             break;
-                        }
-
-                    } else {
-                        //Camera allow disable
-                        if (!stock.equals("0")) {
-                            if (stock.equals("") || faceup.equals("")) {
-                                if (!checkHeaderArray.contains(i)) {
-                                    checkHeaderArray.add(i);
-                                }
-
-                                flag = false;
-                                Error_Message = getResources().getString(R.string.fill_data);
-                                break;
-                            }
-                        } else {
-                            if (stock.equals("")) {
-                                if (!checkHeaderArray.contains(i)) {
-                                    checkHeaderArray.add(i);
-                                }
-
-                                flag = false;
-                                Error_Message = getResources().getString(R.string.fill_data);
-                                break;
-                            }
                         }
                     }
                 } else {
@@ -928,7 +966,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
         }*/
 
         switch (requestCode) {
-            case 1:
+            /*case 1:
                 if (resultCode == -1) {
                     if (_pathforcheck != null && !_pathforcheck.equals("")) {
                         if (new File(str + _pathforcheck).exists()) {
@@ -1049,6 +1087,15 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 } else {
                     Log.e("Stock & Facing", "User cancelled");
                 }
+                break;*/
+
+            case 100:
+                //Planogram List for check and delete on backPress
+                prepareDefaultList();
+                if (planogramShelfHeaderDataList.size() > 0) {
+                    camera1.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
+                }
+
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -1072,9 +1119,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
@@ -1083,6 +1127,13 @@ public class Stock_FacingActivity extends AppCompatActivity {
             builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
                     .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            if (!validateData(hashMapListHeaderData, hashMapListChildData, cameraData)) {
+                                if (!camera_allow.equals("1")) {
+                                    db.deletePlanogramListStoreAndCategorywise(store_id, categoryId,
+                                            planogramShelfHeaderDataList, planogramHashMapListChildData);
+                                }
+                            }
+
                             finish();
                         }
                     })
@@ -1188,6 +1239,13 @@ public class Stock_FacingActivity extends AppCompatActivity {
         builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
                 .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        if (!validateData(hashMapListHeaderData, hashMapListChildData, cameraData)) {
+                            if (!camera_allow.equals("1")) {
+                                db.deletePlanogramListStoreAndCategorywise(store_id, categoryId,
+                                        planogramShelfHeaderDataList, planogramHashMapListChildData);
+                            }
+                        }
+
                         finish();
                     }
                 })
@@ -1272,7 +1330,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 img_camera2.setVisibility(View.GONE);
             }
 
-            //img_camera1.setVisibility(View.GONE);
+            img_camera1.setVisibility(View.GONE);
             img_camera2.setVisibility(View.GONE);
 
             //Camera allow enable
