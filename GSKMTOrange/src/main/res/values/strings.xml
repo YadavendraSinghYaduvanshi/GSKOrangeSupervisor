@@ -286,4 +286,7 @@
     <string name="stock_planogram_data_select_one_sku">Please select atleast one sku</string>
     <string name="stock_planogram_data_add_shelf">Add sku, shelf can not be empty</string>
 
+    <string name="language">English</string>
+    <string name="language_return">EN</string>
+
 </resources>
