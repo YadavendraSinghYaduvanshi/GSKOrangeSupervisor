@@ -35,7 +35,7 @@
                     android:paddingLeft="20dp"
                     android:paddingRight="10dp"
                     android:paddingTop="15dp"
-                    android:text="Add Shelf"
+                    android:text="@string/stock_planogram_add_shelf"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorPrimary" />
             </LinearLayout>
@@ -161,7 +161,7 @@
                             android:paddingBottom="5dp"
                             android:paddingLeft="10dp"
                             android:paddingTop="5dp"
-                            android:text="Add Shelf"
+                            android:text="@string/stock_planogram_add_shelf"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/colorPrimary" />
 
@@ -187,7 +187,7 @@
                             android:paddingBottom="5dp"
                             android:paddingLeft="10dp"
                             android:paddingTop="5dp"
-                            android:text="Position on Shelf"
+                            android:text="@string/stock_planogram_position_on_shelf"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/colorPrimary" />
 
@@ -222,7 +222,7 @@
                     android:layout_marginLeft="10dp"
                     android:background="@color/colorPrimary"
                     android:padding="5dp"
-                    android:text="Add Shelf"
+                    android:text="@string/stock_planogram_add_shelf"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/white" />
 
@@ -234,7 +234,7 @@
                     android:layout_marginRight="10dp"
                     android:background="@color/colorPrimary"
                     android:padding="5dp"
-                    android:text="Cancel"
+                    android:text="@string/cancel"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/white" />
             </RelativeLayout>

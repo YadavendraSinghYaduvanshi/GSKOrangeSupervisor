@@ -83,7 +83,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     AdditionalDialogGetterSetter additionalgeetersetter;
     public static ArrayList<AddittionalGetterSetter> data = new ArrayList<AddittionalGetterSetter>();
     ToggleButton btntoggle;
-    ImageView btnimage, btnedit,btnimage1,btnimage2;
+    ImageView btnimage, btnedit, btnimage1, btnimage2;
     Button btnsku, btnaddlayout;
     GSKOrangeDB db;
     ArrayList<SkuGetterSetter> sku_list;
@@ -98,11 +98,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     //ArrayList<ADDITIONAL_DISPLAY_MASTERGetterSetter> DisplayMaster_list;
 
 
-
     ArrayList<SkuGetterSetter> empty_list = new ArrayList<>();
-    String _pathforcheck1,_pathforcheck2,_pathforcheck3, _path, str, msg;
+    String _pathforcheck1, _pathforcheck2, _pathforcheck3, _path, str, msg;
     private SharedPreferences preferences;
-    String store_id, date, intime, img_str1,img_str2,img_str3, togglevalue = "1", CATEGORY_ID, camera_allow,store_type_id,class_id,key_account_id;
+    String store_id, date, intime, img_str1, img_str2, img_str3, togglevalue = "1", CATEGORY_ID, camera_allow, store_type_id, class_id, key_account_id;
     ImageView img_cam, img_clicked;
     Button btn_add, btn_close;
     EditText Edt_txt;
@@ -132,9 +131,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
         camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
-        store_type_id= preferences.getString(CommonString.KEY_STORETYPE_ID, "");
-        class_id= preferences.getString(CommonString.KEY_CLASS_ID, "");
-        key_account_id= preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
+        store_type_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+        class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
+        key_account_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         categoryName = getIntent().getStringExtra("categoryName");
@@ -355,7 +354,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                     } else {
                         Snackbar.make(view, getResources().getString(R.string.title_activity_Want_add), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
-                }  else {
+                } else {
 
 
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -564,8 +563,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                         listMain = db.getAdditionalMainStock(store_id, categoryId);
 
-                        if(listMain.size()>0)
-                        {
+                        if (listMain.size() > 0) {
 
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                     AdditionalVisibility.this);
@@ -604,8 +602,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                             // show it
                             alertDialog.show();
 
-                        }
-                        else{
+                        } else {
                             togglevalue = "1";
                             btntoggle.setChecked(true);
                             brandlayout.setVisibility(View.GONE);
@@ -618,8 +615,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                             maincard.setVisibility(View.INVISIBLE);
 
                         }
-
-
 
 
                     }
@@ -673,8 +668,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                         AlertDialog alertDialog = alertDialogBuilder.create();
                         // show it
                         alertDialog.show();
-                    }
-                    else {
+                    } else {
                         togglevalue = "0";
                         defdata.clear();
                         btntoggle.setChecked(false);
@@ -728,8 +722,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                 }
             });
-
-
 
 
         } else {
@@ -1069,7 +1061,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 }
 
 
-
                 break;
         }
 
@@ -1079,7 +1070,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
     public void showSkuDialog() {
 
-        final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData(store_type_id, class_id, key_account_id,categoryId);
+        final ArrayList<BrandMasterGetterSetter> brandList = db.getBrandT2PData(store_type_id, class_id, key_account_id, categoryId);
 
         BrandMasterGetterSetter brand = new BrandMasterGetterSetter();
         brand.setBRAND(getResources().getString(R.string.select));
@@ -1165,7 +1156,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 ab.setSku_id(SKU_ID);
                 ab.setSku_name(SKU_name);
                 // ab.setProcess_id(process_id);
-                ab.setQuantity( Edt_txt.getText().toString().replaceFirst("^0+(?!$)", ""));
+                ab.setQuantity(Edt_txt.getText().toString().replaceFirst("^0+(?!$)", ""));
                 // ab.setCategory_id(category_id);
 
                 if (validateDialogData(ab)) {
@@ -1589,8 +1580,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                     errormsg = getResources().getString(R.string.title_activity_take_image);
 
-                }
-                else if (dialog.size() == 0) {
+                } else if (dialog.size() == 0) {
                     errormsg = getResources().getString(R.string.title_activity_fill_sku);
                     flag = false;
                 }
@@ -1646,15 +1636,23 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
 
     private static boolean updateResources(Context context, String language) {
+       
 
         String lang;
 
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
+        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
+        }else{
+            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
         Locale locale = new Locale(lang);

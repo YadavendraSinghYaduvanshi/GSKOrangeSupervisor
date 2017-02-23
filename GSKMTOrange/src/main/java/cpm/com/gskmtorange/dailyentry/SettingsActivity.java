@@ -137,16 +137,23 @@ public class SettingsActivity extends AppCompatActivity implements SelectLanguag
     }
 
     private static boolean updateResources(Context context, String language) {
+       
+
         String lang;
 
-        if(language.equalsIgnoreCase("English")){
-            lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("KSA")) {
+        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
 
-            lang = "AR";
-        } else {
-            lang = "TR";
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
+        }else{
+            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
         Locale locale = new Locale(lang);

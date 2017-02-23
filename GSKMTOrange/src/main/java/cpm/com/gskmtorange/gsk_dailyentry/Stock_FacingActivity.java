@@ -107,14 +107,31 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang;
+        /*String lang;
 
         if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        } else if (language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
             lang = "AR";
         } else {
             lang = "TR";
+        }*/
+
+        String lang;
+
+        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
+        } else {
+            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
         Locale locale = new Locale(lang);
@@ -462,9 +479,13 @@ public class Stock_FacingActivity extends AppCompatActivity {
             lin_camera3.setVisibility(View.GONE);
             lin_camera4.setVisibility(View.GONE);
 
-            camera1.setBackgroundResource(R.mipmap.new_no_camera);
+            if (db.isPlanogramAddShelfSaveData(store_id, categoryId)) {
+                camera1.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
+            } else {
+                camera1.setBackgroundResource(R.mipmap.new_no_camera);
+            }
 
-           lin_camera1.setOnClickListener(new View.OnClickListener() {
+            lin_camera1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Stock_FacingActivity.this, StockFacing_PlanogramTrackerActivity.class);
@@ -482,7 +503,6 @@ public class Stock_FacingActivity extends AppCompatActivity {
             });
         } else {
             findViewById(R.id.lin_camera).setVisibility(View.GONE);
-
         }
     }
 
@@ -1092,8 +1112,10 @@ public class Stock_FacingActivity extends AppCompatActivity {
             case 100:
                 //Planogram List for check and delete on backPress
                 prepareDefaultList();
-                if (planogramShelfHeaderDataList.size() > 0) {
+                if (db.isPlanogramAddShelfSaveData(store_id, categoryId)) {
                     camera1.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
+                }else {
+                    camera1.setBackgroundResource(R.mipmap.new_no_camera);
                 }
 
                 break;

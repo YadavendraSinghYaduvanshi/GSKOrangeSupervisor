@@ -202,18 +202,24 @@
     <string name="yes">نعم</string>
 
     <!--Stock Facing Planogram Tracker-->
-    <string name="stock_planogram_data_uploading">Stock Planogram Data Uploading</string>
+    <string name="stock_planogram_data_uploading">تحميل بيانات البلانوجرام الخاص بالمخزون</string>
 
-    <string name="daily_data_menu_category_picture">Category Pictures</string>
-    <string name="title_activity_category_picture">CategoryPicture</string>
+    <string name="daily_data_menu_category_picture">صور الفئة</string>
+    <string name="title_activity_category_picture">صور الفئة</string>
 
-    <string name="stock_planogram_data_noCamera_data">Please fill the no camera data</string>
-    <string name="stock_planogram_shelf">Shelf </string>
-    <string name="stock_planogram_shelf_position"> Position </string>
-    <string name="stock_planogram_already_exists">is already exists</string>
-    <string name="stock_planogram_data_select_one_sku">Please select atleast one sku</string>
-    <string name="stock_planogram_data_add_shelf">Add sku, shelf can not be empty</string>
+    <string name="stock_planogram_data_noCamera_data">رجاء املأ بيانات عدم امكانية التصوير</string>
+    <string name="stock_planogram_shelf"> الرف</string>
+    <string name="stock_planogram_shelf_position"> الموقع </string>
+    <string name="stock_planogram_already_exists">موجود بالفعل</string>
+    <string name="stock_planogram_data_select_one_sku">رجاء اختيار صنف واحد على الأقل</string>
+    <string name="stock_planogram_data_add_shelf">أضف صنف لا يمكن ترك الرف فارغا</string>
 
-    <string name="language">ARABIC-KSA</string>
-    <string name="language_return">AR</string>
+    <string name="stock_planogram_data_add_shelf_position_already_exists">الرف/ الموقع موجود بالفعل</string>
+
+    <string name="stock_planogram_add_shelf">Add Shelf</string>
+    <string name="stock_planogram_add_sku">Add Sku</string>
+    <string name="stock_planogram_add_sku_to_shelf">Add Sku to Shelf</string>
+    <string name="stock_planogram_planogram_tracker">Planogram Tracker</string>
+    <string name="stock_planogram_position_on_shelf">Position on Shelf</string>
+
 </resources>

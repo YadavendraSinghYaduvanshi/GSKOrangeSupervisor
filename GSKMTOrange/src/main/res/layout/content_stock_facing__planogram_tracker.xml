@@ -27,7 +27,7 @@
                 android:layout_marginLeft="10dp"
                 android:background="@color/colorPrimary"
                 android:padding="5dp"
-                android:text="Add Shelf"
+                android:text="@string/stock_planogram_add_shelf"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/white" />
 

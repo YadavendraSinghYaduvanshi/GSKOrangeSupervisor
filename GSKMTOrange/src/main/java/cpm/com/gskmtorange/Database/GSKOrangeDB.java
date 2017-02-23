@@ -3724,7 +3724,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
             StockFacing_PlanogramTrackerDataGetterSetter sb1 = new StockFacing_PlanogramTrackerDataGetterSetter();
             sb1.setShelf_id("0");
-            sb1.setShelf("Select");
+            sb1.setShelf(context.getString(R.string.select));
 
             Data.add(sb1);
 
@@ -4574,6 +4574,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 "store_id='" + storeId + "' And category_id='" + categoryId + "' ", null);
     }
 
+
     // get NonWorking data
     public ArrayList<NonWorkingReasonGetterSetter> getNonWorkingEntryAllowData() {
 
@@ -4675,5 +4676,32 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
+
+
+    public boolean isPlanogramAddShelfSaveData(String store_id, String category_id) {
+        boolean filled = false;
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Stock_Facing_Planogram_Header_Data " +
+                    "where Store_id='" + store_id + "' and category_id='" + category_id + "'", null);
+
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                int icount = dbcursor.getInt(0);
+                dbcursor.close();
+                if (icount > 0) {
+                    filled = true;
+                } else {
+                    filled = false;
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", " when fetching Records!!!!!!!!!!!!!!!!!!!!! " + e.toString());
+            return filled;
+        }
+        return filled;
+    }
 
 }
