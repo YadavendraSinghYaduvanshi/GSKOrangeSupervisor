@@ -1,6 +1,7 @@
 package cpm.com.gskmtorange.dailyentry;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -26,18 +28,36 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.File;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
@@ -45,6 +65,8 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
 import cpm.com.gskmtorange.gsk_dailyentry.StoreWisePerformanceActivity;
+import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
+import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
 
 /**
  * Created by ashishc on 31-05-2016.
@@ -57,20 +79,24 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
     ImageView img_cam, img_clicked;
     Button btn_save;
-
+    private Dialog dialog;
+    private TextView percentage, message;
+    private ProgressBar pb;
+    private FailureGetterSetter failureGetterSetter = null;
     String _pathforcheck, _path, str;
 
-    String store_id, visit_date, username, intime, date;
+    String store_id, visit_date, username, intime, date,_UserId;
     private SharedPreferences preferences;
     AlertDialog alert;
-    String img_str;
+    String img_str,strflag;
     private GSKOrangeDB database;
 
     String lat, lon;
     GoogleApiClient mGoogleApiClient;
     ArrayList<CoverageBean> coverage_list;
     Toolbar toolbar;
-
+    boolean ResultFlag = true;
+    ArrayList<CoverageBean> coverage = new ArrayList<CoverageBean>();
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storeimage);
@@ -92,7 +118,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
         date = preferences.getString(CommonString.KEY_DATE, null);
         username = preferences.getString(CommonString.KEY_USERNAME, null);
-
+        _UserId = preferences.getString(CommonString.KEY_USERNAME, "");
         intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
 
         str = CommonString.FILE_PATH;
@@ -204,9 +230,8 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
 
                                     //Intent in = new Intent(StoreimageActivity.this, CategoryListActivity.class);
-                                    Intent in = new Intent(StoreimageActivity.this, StoreWisePerformanceActivity.class);
-                                    startActivity(in);
-                                    finish();
+                                    new StoreimageActivity.GeoTagUpload(StoreimageActivity.this).execute();
+
                                 }
                             })
                             .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -406,5 +431,228 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
         return true;
     }
+
+
+    public class GeoTagUpload extends AsyncTask<Void, Void, String> {
+
+        private Context context;
+
+        GeoTagUpload(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+
+            dialog = new Dialog(context);
+            dialog.setContentView(R.layout.custom);
+            dialog.setTitle(getResources().getString(R.string.dialog_title));
+            dialog.setCancelable(false);
+            dialog.show();
+            pb = (ProgressBar) dialog.findViewById(R.id.progressBar1);
+            percentage = (TextView) dialog.findViewById(R.id.percentage);
+            message = (TextView) dialog.findViewById(R.id.message);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                GSKOrangeDB db = new GSKOrangeDB(StoreimageActivity.this);
+                db.open();
+
+                coverage = db.getCoverageWithStoreID_Data(store_id);
+
+                // uploading Geotag
+
+                SAXParserFactory saxPF = SAXParserFactory.newInstance();
+                SAXParser saxP = saxPF.newSAXParser();
+                XMLReader xmlR = saxP.getXMLReader();
+
+
+                String current_xml = "";
+
+                if (coverage.size() > 0) {
+
+                    for (int i = 0; i < coverage.size(); i++) {
+
+
+                        String onXML = "[Coverage_Intime][USER_ID]"
+                                + _UserId
+                                + "[/USER_ID]"
+                                + "[STORE_ID]"
+                                + coverage.get(i).getStoreId()
+                                + "[/STORE_ID]"
+                                + "[VISIT_DATE]"
+                                + coverage.get(i).getVisitDate()
+                                + "[/VISIT_DATE]"
+                                + "[IN_TIME]"
+                                + coverage.get(i).getInTime()
+                                + "[/IN_TIME]"
+                                + "[LATITUDE]"
+                                + coverage.get(i).getLatitude()
+                                + "[/LATITUDE]"
+                                + "[LONGITUDE ]"
+                                + coverage.get(i).getLongitude()
+                                + "[/LONGITUDE ]"
+                                + "[REASON_ID]"
+                                + coverage.get(i).getReasonid()
+                                + "[/REASON_ID]"
+                                + "[REMARK]"
+                                + coverage.get(i).getReason()
+                                + "[/REMARK][/Coverage_Intime]";
+
+                        current_xml = current_xml + onXML;
+
+
+                    }
+
+                    current_xml = "[DATA]" + current_xml
+                            + "[/DATA]";
+
+                    SoapObject request = new SoapObject(CommonString.NAMESPACE,
+                            CommonString.METHOD_UPLOAD_CURRENT_DATA);
+                    //request.addProperty("MID", "0");
+                    // request.addProperty("KEYS", "CURRENT_DATA");
+                    // request.addProperty("USERNAME", username);
+
+                    request.addProperty("onXML", current_xml);
+
+                    SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                            SoapEnvelope.VER11);
+                    envelope.dotNet = true;
+                    envelope.setOutputSoapObject(request);
+
+                    HttpTransportSE androidHttpTransport = new HttpTransportSE(
+                            CommonString.URL);
+                    androidHttpTransport.call(
+                            CommonString.SOAP_ACTION_UPLOAD_CURRRENT_DATA, envelope);
+                    Object result = (Object) envelope.getResponse();
+
+                    if (result.toString().equalsIgnoreCase(
+                            CommonString.KEY_SUCCESS)) {
+
+
+                    } else {
+
+                        if (result.toString().equalsIgnoreCase(
+                                CommonString.KEY_FALSE)) {
+                            return CommonString.METHOD_UPLOAD_CURRENT_DATA;
+                        }
+
+                        // for failure
+                        FailureXMLHandler failureXMLHandler = new FailureXMLHandler();
+                        xmlR.setContentHandler(failureXMLHandler);
+
+                        InputSource is = new InputSource();
+                        is.setCharacterStream(new StringReader(result
+                                .toString()));
+                        xmlR.parse(is);
+
+                        failureGetterSetter = failureXMLHandler
+                                .getFailureGetterSetter();
+
+                        if (failureGetterSetter.getStatus().equalsIgnoreCase(
+                                CommonString.KEY_FAILURE)) {
+                            return CommonString.METHOD_UPLOAD_CURRENT_DATA + ","
+                                    + failureGetterSetter.getErrorMsg();
+
+                        } else {
+
+                        }
+                    }
+                }
+
+
+                return CommonString.KEY_SUCCESS;
+
+            } catch (MalformedURLException e) {
+
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_EXCEPTION;
+
+            } catch (SocketTimeoutException e) {
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_SOCKETEXCEPTION;
+
+            } catch (InterruptedIOException e) {
+
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_EXCEPTION;
+
+
+            } catch (IOException e) {
+
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_SOCKETEXCEPTION;
+
+            } catch (XmlPullParserException e) {
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_XmlPull;
+
+            } catch (Exception e) {
+                ResultFlag = false;
+                strflag = CommonString.MESSAGE_EXCEPTION;
+
+            }
+
+            if (ResultFlag) {
+                return CommonString.KEY_SUCCESS;
+
+            } else {
+
+                return strflag;
+            }
+
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result.equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                dialog.dismiss();
+
+                Intent in = new Intent(StoreimageActivity.this, StoreWisePerformanceActivity.class);
+                startActivity(in);
+                finish();
+
+
+                //showAlert(getString(R.string.data_downloaded_successfully));
+            } else {
+
+                GSKOrangeDB db = new GSKOrangeDB(StoreimageActivity.this);
+                db.open();
+
+                dialog.dismiss();
+                db.deleteTableWithStoreID(store_id);
+
+                showAlert(getString(R.string.datanotfound) + " " + result);
+            }
+        }
+
+    }
+    public void showAlert(String str) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(StoreimageActivity.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(str).setCancelable(false)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+
+                        finish();
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
 
 }

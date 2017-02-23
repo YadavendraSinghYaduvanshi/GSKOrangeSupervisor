@@ -137,15 +137,7 @@ public class SettingsActivity extends AppCompatActivity implements SelectLanguag
     }
 
     private static boolean updateResources(Context context, String language) {
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
+       
 
         String lang;
 
