@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="title_activity_Want_save">هل أنت متأكد من أنك تريد الحفظ؟</string>
     <string name="Areyou_sure_take_backup">هل أنت متأكد من أنك تريد القيام بالنسخ الاحتياطي للبيانات الخاصة بك؟</string>
