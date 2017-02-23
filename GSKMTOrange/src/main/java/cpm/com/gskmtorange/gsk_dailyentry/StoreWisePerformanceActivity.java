@@ -43,16 +43,31 @@ public class StoreWisePerformanceActivity extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-        String lang ;
+        /*String lang;
 
-        if(language.equalsIgnoreCase("English")){
+        if (language.equalsIgnoreCase("English")) {
             lang = "EN";
-        }
-        else if(language.equalsIgnoreCase("UAE")) {
+        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
             lang = "AR";
-        }
-        else {
+        } else {
             lang = "TR";
+        }*/
+
+        String lang;
+
+        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
+
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
+        }else{
+            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
         Locale locale = new Locale(lang);
