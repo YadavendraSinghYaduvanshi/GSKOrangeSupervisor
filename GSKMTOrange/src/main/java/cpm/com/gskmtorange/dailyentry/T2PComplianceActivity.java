@@ -336,7 +336,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 holder.img_cam.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _pathforcheck = "T2P_Image_" + store_id + "_" + mItem.getBrand_id() +
+                        _pathforcheck = "T2P_Image_" + store_id+ categoryId+ "_" + mItem.getBrand_id() +
                                 mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
                                 getCurrentTime().replace(":", "") + ".jpg";
                         child_position = position;
@@ -366,7 +366,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 holder.img_cam1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _pathforcheck1 = "T2P_Image1_" + store_id + "_" + mItem.getBrand_id() +
+                        _pathforcheck1 = "T2P_Image1_" + store_id+categoryId + "_" + mItem.getBrand_id() +
                                 mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
                                 getCurrentTime().replace(":", "") + ".jpg";
                         child_position1 = position;
@@ -394,7 +394,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 holder.img_cam2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _pathforcheck2 = "T2P_Image2_" + store_id + "_" + mItem.getBrand_id() +
+                        _pathforcheck2 = "T2P_Image2_" + store_id + categoryId+"_" + mItem.getBrand_id() +
                                 mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
                                 getCurrentTime().replace(":", "") + ".jpg";
                         child_position2 = position;

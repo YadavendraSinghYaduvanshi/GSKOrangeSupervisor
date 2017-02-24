@@ -690,7 +690,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             btnimage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    _pathforcheck1 = store_id + "AdditionalImage1" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck1 = store_id +categoryId+ "AdditionalImage1" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
                     _path = CommonString.FILE_PATH + _pathforcheck1;
                     intime = getCurrentTime();
@@ -702,7 +702,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             btnimage1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    _pathforcheck2 = store_id + "AdditionalImage2" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck2 = store_id +categoryId+ "AdditionalImage2" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
                     _path = CommonString.FILE_PATH + _pathforcheck2;
                     intime = getCurrentTime();
@@ -714,7 +714,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             btnimage2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    _pathforcheck3 = store_id + "AdditionalImage3" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck3 = store_id +categoryId+ "AdditionalImage3" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
 
                     _path = CommonString.FILE_PATH + _pathforcheck3;
                     intime = getCurrentTime();

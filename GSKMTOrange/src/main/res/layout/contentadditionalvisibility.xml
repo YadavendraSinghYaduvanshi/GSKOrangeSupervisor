@@ -205,7 +205,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@mipmap/new_no_camera"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:visibility="invisible"/>
                 </RelativeLayout>
 
             </LinearLayout>
