@@ -608,39 +608,30 @@ public class UploadActivity extends AppCompatActivity {
                             onXML = "";
                             String onXMLdIALOG = "";
 
-                            String imageV1,imageV2,imageV3;
+                            String imageV1, imageV2, imageV3;
 
                             additionalVisibilityList = db.getAdditionalStockUpload(coverageList.get(i).getStoreId());
 
                             if (additionalVisibilityList.size() > 0) {
                                 for (int J = 0; J < additionalVisibilityList.size(); J++) {
 
-                                    if(additionalVisibilityList.get(J).getImage()==null)
-                                    {
-                                        imageV1="";
-                                    }
-                                    else{
-                                        imageV1=additionalVisibilityList.get(J).getImage();
+                                    if (additionalVisibilityList.get(J).getImage() == null) {
+                                        imageV1 = "";
+                                    } else {
+                                        imageV1 = additionalVisibilityList.get(J).getImage();
                                     }
 
-                                    if(additionalVisibilityList.get(J).getImage2()==null)
-                                    {
-                                        imageV2="";
-                                    }
-                                    else{
-                                        imageV2=additionalVisibilityList.get(J).getImage2();
+                                    if (additionalVisibilityList.get(J).getImage2() == null) {
+                                        imageV2 = "";
+                                    } else {
+                                        imageV2 = additionalVisibilityList.get(J).getImage2();
                                     }
 
-                                    if(additionalVisibilityList.get(J).getImage3()==null)
-                                    {
-                                        imageV3="";
+                                    if (additionalVisibilityList.get(J).getImage3() == null) {
+                                        imageV3 = "";
+                                    } else {
+                                        imageV3 = additionalVisibilityList.get(J).getImage3();
                                     }
-                                    else{
-                                        imageV3=additionalVisibilityList.get(J).getImage3();
-                                    }
-
-
-
 
 
                                     String KeyID = additionalVisibilityList.get(J).getKey_id();
@@ -811,18 +802,18 @@ public class UploadActivity extends AppCompatActivity {
 
                                     if (brandList.size() > 0) {
 
-                                    for (int M = 0; M < brandList.size(); M++) {
+                                        for (int M = 0; M < brandList.size(); M++) {
 
-                                        brandchild = "[BRAND]"
-                                                + "[MID]" + mid + "[/MID]"
-                                                + "[USER_ID]" + userId + "[/USER_ID]"
-                                                + "[BRAND_ID]" + brandList.get(M).getBRAND_ID() + "[/BRAND_ID]"
+                                            brandchild = "[BRAND]"
+                                                    + "[MID]" + mid + "[/MID]"
+                                                    + "[USER_ID]" + userId + "[/USER_ID]"
+                                                    + "[BRAND_ID]" + brandList.get(M).getBRAND_ID() + "[/BRAND_ID]"
                                                /* + "[BRAND]" + brandList.get(M).getBRAND() + "[/BRAND]"*/
-                                                + "[COMMON_ID]" + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id()) + "[/COMMON_ID]"
-                                                + "[/BRAND]";
-                                        brandxml = brandxml + brandchild;
+                                                    + "[COMMON_ID]" + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id()) + "[/COMMON_ID]"
+                                                    + "[/BRAND]";
+                                            brandxml = brandxml + brandchild;
+                                        }
                                     }
-                                }
                                     String present = "";
                                     if (t2PGetterSetters.get(i1).isPresent()) {
                                         present = "1";
@@ -1138,14 +1129,13 @@ public class UploadActivity extends AppCompatActivity {
                             }*/
 
 
-
                             //Category Picture  Data
                             String Category_xml = "";
 
                             onXML = "";
                             String onCategoryList = "";
                             String CategoryLISTDATA = "";
-                            String image1,image2,image3,image4;
+                            String image1, image2, image3, image4;
 
 
                             adddata = db.getCategoryPictureUpload(coverageList.get(i).getStoreId());
@@ -1154,42 +1144,32 @@ public class UploadActivity extends AppCompatActivity {
                                 for (int J = 0; J < adddata.size(); J++) {
 
 
-                                    if(adddata.get(J).getCategoryImage1()==null)
-                                    {
-                                        image1="";
-                                    }
-                                    else{
-                                        image1=adddata.get(J).getCategoryImage1();
+                                    if (adddata.get(J).getCategoryImage1() == null) {
+                                        image1 = "";
+                                    } else {
+                                        image1 = adddata.get(J).getCategoryImage1();
                                     }
 
-                                    if(adddata.get(J).getCategoryImage2()==null)
-                                    {
-                                        image2="";
-                                    }
-                                    else{
-                                        image2=adddata.get(J).getCategoryImage2();
+                                    if (adddata.get(J).getCategoryImage2() == null) {
+                                        image2 = "";
+                                    } else {
+                                        image2 = adddata.get(J).getCategoryImage2();
                                     }
 
-                                    if(adddata.get(J).getCategoryImage3()==null)
-                                    {
-                                        image3="";
-                                    }
-                                    else{
-                                        image3=adddata.get(J).getCategoryImage3();
+                                    if (adddata.get(J).getCategoryImage3() == null) {
+                                        image3 = "";
+                                    } else {
+                                        image3 = adddata.get(J).getCategoryImage3();
                                     }
 
-                                    if(adddata.get(J).getCategoryImage4()==null)
-                                    {
-                                        image4="";
+                                    if (adddata.get(J).getCategoryImage4() == null) {
+                                        image4 = "";
+                                    } else {
+                                        image4 = adddata.get(J).getCategoryImage4();
                                     }
-                                    else{
-                                        image4=adddata.get(J).getCategoryImage4();
-                                    }
-
 
 
                                     String KeyID = adddata.get(J).getKEY_ID();
-
 
 
                                     listdat = db.getCategoryPictureListUploaded(KeyID);
@@ -1241,7 +1221,7 @@ public class UploadActivity extends AppCompatActivity {
                                             + image1 /*adddata.get(J).getCategoryImage1()*/
                                             + "[/IMAGE_URL_1]"
                                             + "[IMAGE_URL_2]"
-                                            +  image2 /*adddata.get(J).getCategoryImage2()*/
+                                            + image2 /*adddata.get(J).getCategoryImage2()*/
                                             + "[/IMAGE_URL_2]"
                                             + "[IMAGE_URL_3]"
                                             + image3 /*adddata.get(J).getCategoryImage3()*/
@@ -1294,7 +1274,6 @@ public class UploadActivity extends AppCompatActivity {
                             data.value = 35;
                             data.name = getString(R.string.additional_data_uploading);
                             publishProgress(data);
-
 
 
                             // ashish visibility image start
@@ -1372,56 +1351,63 @@ public class UploadActivity extends AppCompatActivity {
                             //// ashish close image
 
 
-
                             // ashish SUB_CATEGORY_PICTURE start
-                            if (listdat.size() > 0) {
-                                for (int i1 = 0; i1 < listdat.size(); i1++) {
+                            if (adddata.size() > 0) {
+                                for (int J = 0; J < adddata.size(); J++) {
 
-                                    if (listdat.get(i1).getSubCategoryCamera1() != null && !listdat.get(i1).getSubCategoryCamera1().equals("")) {
-                                        if (new File(CommonString.FILE_PATH + listdat.get(i1).getSubCategoryCamera1()).exists()) {
+                                    String KeyID = adddata.get(J).getKEY_ID();
 
-                                            try {
-                                                result = UploadImage(listdat.get(i1).getSubCategoryCamera1(), "CategoryImages");
+                                    listdat = db.getCategoryPictureListUploaded(KeyID);
 
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                    return "CategoryImages";
-                                                }
+                                    if (listdat.size() > 0) {
+                                        for (int i1 = 0; i1 < listdat.size(); i1++) {
 
-                                                runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        message.setText("CategoryImages Uploaded");
+                                            if (listdat.get(i1).getSubCategoryCamera1() != null && !listdat.get(i1).getSubCategoryCamera1().equals("")) {
+                                                if (new File(CommonString.FILE_PATH + listdat.get(i1).getSubCategoryCamera1()).exists()) {
+
+                                                    try {
+                                                        result = UploadImage(listdat.get(i1).getSubCategoryCamera1(), "CategoryImages");
+
+                                                        if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                            return "CategoryImages";
+                                                        }
+
+                                                        runOnUiThread(new Runnable() {
+                                                            public void run() {
+                                                                message.setText("CategoryImages Uploaded");
+                                                            }
+                                                        });
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
                                                     }
-                                                });
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
+                                                }
                                             }
+
+                                            if (listdat.get(i1).getSubCategoryCamera2() != null && !listdat.get(i1).getSubCategoryCamera2().equals("")) {
+                                                if (new File(CommonString.FILE_PATH + listdat.get(i1).getSubCategoryCamera2()).exists()) {
+
+                                                    try {
+                                                        result = UploadImage(listdat.get(i1).getSubCategoryCamera2(), "CategoryImages");
+
+                                                        if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                            return "CategoryImages";
+                                                        }
+
+                                                        runOnUiThread(new Runnable() {
+                                                            public void run() {
+                                                                message.setText("CategoryImages Uploaded");
+                                                            }
+                                                        });
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+
                                         }
                                     }
-
-                                    if (listdat.get(i1).getSubCategoryCamera2() != null && !listdat.get(i1).getSubCategoryCamera2().equals("")) {
-                                        if (new File(CommonString.FILE_PATH + listdat.get(i1).getSubCategoryCamera2()).exists()) {
-
-                                            try {
-                                                result = UploadImage(listdat.get(i1).getSubCategoryCamera2(), "CategoryImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                    return "CategoryImages";
-                                                }
-
-                                                runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        message.setText("CategoryImages Uploaded");
-                                                    }
-                                                });
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-
                                 }
                             }
-
 
 
                             // ashish CATEGORY_PICTURE start
@@ -1513,7 +1499,6 @@ public class UploadActivity extends AppCompatActivity {
 
                                 }
                             }
-
 
 
                             ///////Start store images
@@ -1729,7 +1714,7 @@ public class UploadActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
