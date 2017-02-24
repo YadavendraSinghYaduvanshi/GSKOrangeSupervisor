@@ -91,6 +91,8 @@ public class CategoryPicture extends AppCompatActivity {
         im4 = (ImageView) findViewById(R.id.image4);
         listview = (ListView) findViewById(R.id.listview);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
 
         adddata = db.getCategoryPictureData(store_id, categoryId);
 
@@ -107,43 +109,35 @@ public class CategoryPicture extends AppCompatActivity {
                 String image3 = adddata.get(k).getCategoryImage3();
                 String image4 = adddata.get(k).getCategoryImage4();
 
-                if(image1 !=null)
-                {
+                if (image1 != null) {
                     im1.setBackgroundResource(R.mipmap.camera_green);
 
-                    img_str1=image1;
+                    img_str1 = image1;
 
-                }else
-                {
-                    im1.setBackgroundResource(R.mipmap.camera_orange);
+                } else {
+                    im1.setBackgroundResource(R.drawable.camera_orange_star_green);
                 }
 
 
-                if(image2 !=null)
-                {
+                if (image2 != null) {
                     im2.setBackgroundResource(R.mipmap.camera_green);
 
-                    img_str2=image2;
+                    img_str2 = image2;
 
-                }else
-                {
+                } else {
                     im2.setBackgroundResource(R.mipmap.camera_orange);
                 }
-                if(image3 !=null)
-                {
+                if (image3 != null) {
                     im3.setBackgroundResource(R.mipmap.camera_green);
-                    img_str3=image3;
-                }else
-                {
+                    img_str3 = image3;
+                } else {
                     im3.setBackgroundResource(R.mipmap.camera_orange);
                 }
-                if(image4 !=null)
-                {
+                if (image4 != null) {
                     im4.setBackgroundResource(R.mipmap.camera_green);
 
-                    img_str4=image4;
-                }else
-                {
+                    img_str4 = image4;
+                } else {
                     im4.setBackgroundResource(R.mipmap.camera_orange);
                 }
 
@@ -161,8 +155,6 @@ public class CategoryPicture extends AppCompatActivity {
         adapteradditional = new CategoryPicture.CategoryAdapter(CategoryPicture.this, listdat);
         listview.setAdapter(adapteradditional);
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,13 +169,11 @@ public class CategoryPicture extends AppCompatActivity {
                 CP.setCamera_allow(camera_allow);
 
 
-
                 if (validateData(CP, listdat)) {
 
                     db.InsertCategoryPictureData(CP, listdat, categoryId);
 
                     finish();
-
 
                 } else {
                     Snackbar.make(view, "Please take image", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -279,7 +269,6 @@ public class CategoryPicture extends AppCompatActivity {
 
     private static boolean updateResources(Context context, String language) {
 
-       
 
         String lang;
 
@@ -294,7 +283,7 @@ public class CategoryPicture extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
@@ -328,18 +317,18 @@ public class CategoryPicture extends AppCompatActivity {
 
                     //temp value in case camera is gallery app above jellybean
                     String packag = list.get(n).loadLabel(packageManager).toString();
-                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri") ||packag.equalsIgnoreCase("الاستوديو") ) {
+                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri") || packag.equalsIgnoreCase("الاستوديو")) {
                         gallery_package = list.get(n).packageName;
                     }
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")|| packag.equalsIgnoreCase("الكاميرا")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera") || packag.equalsIgnoreCase("الكاميرا")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
                     } else {
 
-                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")|| packag.equalsIgnoreCase("الكاميرا")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera") || packag.equalsIgnoreCase("الكاميرا")) {
 
                             defaultCameraPackage = list.get(n).packageName;
                             break;
@@ -496,7 +485,6 @@ public class CategoryPicture extends AppCompatActivity {
 
                 holder.brand = (TextView) convertView.findViewById(R.id.textviewname);
 
-
                 holder.camera1 = (Button) convertView.findViewById(R.id.button3);
                 holder.camera2 = (Button) convertView.findViewById(R.id.cameranew);
                 convertView.setTag(holder);
@@ -546,6 +534,8 @@ public class CategoryPicture extends AppCompatActivity {
                 holder.camera1.setBackgroundResource(R.mipmap.camera_green);
 
 
+            } else if (listdat.get(position1).getImage_allow().equals("1")) {
+                holder.camera1.setBackgroundResource(R.drawable.camera_orange_star_green);
             } else {
                 holder.camera1.setBackgroundResource(R.mipmap.camera_orange);
             }
@@ -575,26 +565,28 @@ public class CategoryPicture extends AppCompatActivity {
 
         if (cameraImage1 == null) {
             flag = false;
-
         }
 
 
-        for (int i = 0; i < list.size(); i++) {
+        if (flag) {
+            for (int i = 0; i < list.size(); i++) {
 
-            String imageu = list.get(i).getSubCategoryCamera1();
+                if (list.get(i).getImage_allow().equals("1")) {
 
-            if (imageu.equalsIgnoreCase("")) {
+                    String imageu = list.get(i).getSubCategoryCamera1();
 
-                flag = false;
+                    if (imageu.equalsIgnoreCase("")) {
+
+                        flag = false;
+                        break;
+                    }
+                }
+
             }
-
         }
-
 
         return flag;
     }
-
-
 
 
 }

@@ -25,6 +25,7 @@ public class TableBean {
     public static String MAPPING_PLANOGRAM;
     public static String MAPPING_SOS_TARGET;
     public static String SHELF_MASTER;
+    public static String MAPPING_SUB_CATEGORY_IMAGE_ALLOW;
 
 
     public static String getAdditionalDisplay() {
@@ -178,4 +179,13 @@ public class TableBean {
     }
 
     //Gagan end code
+
+
+    public static String getMappingSubCategoryImageAllow() {
+        return MAPPING_SUB_CATEGORY_IMAGE_ALLOW;
+    }
+
+    public static void setMappingSubCategoryImageAllow(String mappingSubCategoryImageAllow) {
+        MAPPING_SUB_CATEGORY_IMAGE_ALLOW = mappingSubCategoryImageAllow;
+    }
 }
