@@ -102,7 +102,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="category_performance_oss">OSS</string>
     <string name="dialog_title">Parinaam</string>
-    <string name="prompt_password">كلمة المرور</string>
+    <string name="prompt_userid">Username/Kullanıcı Adı/اسم المستخدم</string>
+    <string name="prompt_password">Password/Şifre/كلمة المرور</string>
     <string name="category_performance_period">الفترة</string>
     <string name="Photo">صور</string>
     <string name="category_performance_PLANOGRAM">بلانوجرام</string>
@@ -197,7 +198,6 @@
     <string name="uploaddata">تحميل البيانات</string>
     <string name="geotagdata">تحميل بيانات جغرافية...</string>
     <string name="uploadimge">تحميل صور جغرافية</string>
-    <string name="prompt_userid">اسم المستخدم</string>
     <string name="data_will_be_lost">هل ترغب في الاستمرار؟ سيتم حذف البيانات الغير المحفوظة</string>
     <string name="yes">نعم</string>
 
@@ -216,10 +216,10 @@
 
     <string name="stock_planogram_data_add_shelf_position_already_exists">الرف/ الموقع موجود بالفعل</string>
 
-    <string name="stock_planogram_add_shelf">Add Shelf</string>
-    <string name="stock_planogram_add_sku">Add Sku</string>
-    <string name="stock_planogram_add_sku_to_shelf">Add Sku to Shelf</string>
-    <string name="stock_planogram_planogram_tracker">Planogram Tracker</string>
-    <string name="stock_planogram_position_on_shelf">Position on Shelf</string>
+    <string name="stock_planogram_add_shelf">إضافة الرف</string>
+    <string name="stock_planogram_add_sku">الصنف إضافة</string>
+    <string name="stock_planogram_add_sku_to_shelf">إضافة منتج إلى الجرف</string>
+    <string name="stock_planogram_planogram_tracker">صورة مقطعية المقتفي</string>
+    <string name="stock_planogram_position_on_shelf">موقف بشأن الجرف</string>
 
 </resources>

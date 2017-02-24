@@ -212,7 +212,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:padding="10dp">
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp">
 
                 <Button
                     android:id="@+id/dialog_btn_addShelf"
@@ -221,7 +224,6 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="10dp"
                     android:background="@color/colorPrimary"
-                    android:padding="5dp"
                     android:text="@string/stock_planogram_add_shelf"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/white" />
@@ -233,7 +235,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:background="@color/colorPrimary"
-                    android:padding="5dp"
                     android:text="@string/cancel"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/white" />

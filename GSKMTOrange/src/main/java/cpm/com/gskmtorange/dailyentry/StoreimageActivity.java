@@ -85,10 +85,10 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
     private FailureGetterSetter failureGetterSetter = null;
     String _pathforcheck, _path, str;
 
-    String store_id, visit_date, username, intime, date,_UserId;
+    String store_id, visit_date, username, intime, date, _UserId;
     private SharedPreferences preferences;
     AlertDialog alert;
-    String img_str,strflag;
+    String img_str, strflag;
     private GSKOrangeDB database;
 
     String lat, lon;
@@ -97,12 +97,13 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
     Toolbar toolbar;
     boolean ResultFlag = true;
     ArrayList<CoverageBean> coverage = new ArrayList<CoverageBean>();
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storeimage);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -182,7 +183,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.img_cam_selfie:
 
-                _pathforcheck = store_id +"SI" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck = store_id + "SI_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
 
                 _path = CommonString.FILE_PATH + _pathforcheck;
 
@@ -276,18 +277,18 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
                     //temp value in case camera is gallery app above jellybean
                     String packag = list.get(n).loadLabel(packageManager).toString();
-                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri")) {
+                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri") ||packag.equalsIgnoreCase("الاستوديو") ) {
                         gallery_package = list.get(n).packageName;
                     }
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")|| packag.equalsIgnoreCase("الكاميرا")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
                     } else {
 
-                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")|| packag.equalsIgnoreCase("الكاميرا")) {
 
                             defaultCameraPackage = list.get(n).packageName;
                             break;
@@ -348,8 +349,9 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");
         String cdate = formatter.format(m_cal.getTime());
 
-       /* String intime = m_cal.get(Calendar.HOUR_OF_DAY) + ":"
-                + m_cal.get(Calendar.MINUTE) + ":" + m_cal.get(Calendar.SECOND);*/
+        if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
+            cdate = arabicToenglish(cdate);
+        }
 
         return cdate;
     }
@@ -376,7 +378,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(R.string.title_activity_store_image);
     }
 
@@ -415,7 +417,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
@@ -636,6 +638,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         }
 
     }
+
     public void showAlert(String str) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(StoreimageActivity.this);
@@ -654,5 +657,16 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-
+    private static String arabicToenglish(String number) {
+        char[] chars = new char[number.length()];
+        for (int i = 0; i < number.length(); i++) {
+            char ch = number.charAt(i);
+            if (ch >= 0x0660 && ch <= 0x0669)
+                ch -= 0x0660 - '0';
+            else if (ch >= 0x06f0 && ch <= 0x06F9)
+                ch -= 0x06f0 - '0';
+            chars[i] = ch;
+        }
+        return new String(chars);
+    }
 }

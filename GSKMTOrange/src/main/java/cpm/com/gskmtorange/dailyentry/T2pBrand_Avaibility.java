@@ -51,12 +51,11 @@ public class T2pBrand_Avaibility extends AppCompatActivity {
     Spinner spinner_brand;
     Button add;
     ArrayList<BrandAvabilityGetterSetter> brand_list;
-    String categoryName,categoryId,brand_name="",brand_id="";
+    String categoryName, categoryId, brand_name = "", brand_id = "";
     RecyclerView recyclerView;
-    ArrayList<BrandAvabilityGetterSetter> brand_new_list=new ArrayList<BrandAvabilityGetterSetter>();
-
-
+    ArrayList<BrandAvabilityGetterSetter> brand_new_list = new ArrayList<BrandAvabilityGetterSetter>();
     T2pBrand_Avaibility.ValueAdapter adapteravabiblity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +63,7 @@ public class T2pBrand_Avaibility extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         spinner_brand = (Spinner) findViewById(R.id.spinner);
-         add = (Button) findViewById(R.id.button2);
+        add = (Button) findViewById(R.id.button2);
         recyclerView = (RecyclerView) findViewById(R.id.layout_recycle);
 
 
@@ -87,7 +86,7 @@ public class T2pBrand_Avaibility extends AppCompatActivity {
         categoryName = getIntent().getStringExtra("categoryName");
         categoryId = getIntent().getStringExtra("categoryId");
 /////
-        brand_list = db.getBrandAvailbilitydata(store_id, categoryId,keyAccount_id,class_id,storeType_id);
+        brand_list = db.getBrandAvailbilitydata(store_id, categoryId, keyAccount_id, class_id, storeType_id);
         BrandAvabilityGetterSetter brand = new BrandAvabilityGetterSetter();
         String str = getResources().getString(R.string.select);
         brand.setBRAND(str);
@@ -99,27 +98,23 @@ public class T2pBrand_Avaibility extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(brand_new_list.size()>0)
-                {
-                    BrandAvabilityGetterSetter br=new BrandAvabilityGetterSetter();
+                if (brand_new_list.size() > 0) {
+                    BrandAvabilityGetterSetter br = new BrandAvabilityGetterSetter();
 
                     br.setCategoryId(categoryId);
                     br.setClass_id(class_id);
                     br.setKeyAccount_id(keyAccount_id);
                     br.setStoreType_id(storeType_id);
                     br.setStore_id(store_id);
-                    db.InsertBrandAvabilitydata( br, brand_new_list);
+                    db.InsertBrandAvabilitydata(br, brand_new_list);
 
                     brand_new_list.clear();
-                        finish();
+                    finish();
 
 
-                }
-                else{
+                } else {
                     Snackbar.make(view, "Please add data", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
-
-
 
 
             }
@@ -130,29 +125,27 @@ public class T2pBrand_Avaibility extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-            if (!brand_name.equalsIgnoreCase("") && brand_name!=null){
+                if (!brand_name.equalsIgnoreCase("") && brand_name != null) {
 
-                BrandAvabilityGetterSetter brand = new BrandAvabilityGetterSetter();
+                    BrandAvabilityGetterSetter brand = new BrandAvabilityGetterSetter();
 
-                brand.setBRAND(brand_name);
-                brand.setBRAND_ID(brand_id);
+                    brand.setBRAND(brand_name);
+                    brand.setBRAND_ID(brand_id);
 
-                brand_new_list.add(brand);
+                    brand_new_list.add(brand);
 
-                adapteravabiblity = new T2pBrand_Avaibility.ValueAdapter(T2pBrand_Avaibility.this, brand_new_list);
-                recyclerView.setAdapter(adapteravabiblity);
-                recyclerView.setLayoutManager(new LinearLayoutManager(T2pBrand_Avaibility.this));
+                    adapteravabiblity = new T2pBrand_Avaibility.ValueAdapter(T2pBrand_Avaibility.this, brand_new_list);
+                    recyclerView.setAdapter(adapteravabiblity);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(T2pBrand_Avaibility.this));
 
-                spinner_brand.setSelection(0);
-                brand_name="";
-                brand_id="";
+                    spinner_brand.setSelection(0);
+                    brand_name = "";
+                    brand_id = "";
 
-            }
-                else
-            {
-                Snackbar.make(view, "Please select dropdown", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+                } else {
+                    Snackbar.make(view, "Please select dropdown", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
 
             }
         });
@@ -177,9 +170,7 @@ public class T2pBrand_Avaibility extends AppCompatActivity {
         });
 
 
-
     }
-
 
     public class CustomAdapter extends ArrayAdapter<String> {
 
@@ -243,23 +234,6 @@ public class T2pBrand_Avaibility extends AppCompatActivity {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private static boolean updateResources(Context context, String language) {
 
         /*String lang;
@@ -285,7 +259,7 @@ public class T2pBrand_Avaibility extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
@@ -301,7 +275,6 @@ public class T2pBrand_Avaibility extends AppCompatActivity {
 
         return true;
     }
-
 
     public class ValueAdapter extends RecyclerView.Adapter<T2pBrand_Avaibility.ValueAdapter.MyViewHolder> {
 
@@ -355,6 +328,5 @@ public class T2pBrand_Avaibility extends AppCompatActivity {
         }
 
     }
-
 
 }

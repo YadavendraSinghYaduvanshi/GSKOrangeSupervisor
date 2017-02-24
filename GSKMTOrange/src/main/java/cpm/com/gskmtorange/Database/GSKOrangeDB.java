@@ -27,6 +27,7 @@ import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
@@ -60,7 +61,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
  */
 
 public class GSKOrangeDB extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "GSK_ORANGE_DB";
+    public static final String DATABASE_NAME = "GSK_ORANGE_DB1";
     public static final int DATABASE_VERSION = 13;
     TableBean tableBean;
     private SQLiteDatabase db;
@@ -146,6 +147,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             db.execSQL(CommonString.CREATE_TABLE_INSERT_CATEGORY_PICTURE_LIST);
 
             db.execSQL(CommonString.CREATE_TABLE_INSERT_CATEGORY_PICTURE);
+
+            db.execSQL(TableBean.getMappingSubCategoryImageAllow());
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -4164,10 +4167,11 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
         try {
 
-            dbcursor = db.rawQuery("SELECT  DISTINCT SB.SUB_CATEGORY_ID, SB.SUB_CATEGORY FROM MAPPING_STOCK M INNER JOIN SKU_MASTER SK ON M.SKU_ID = SK.SKU_ID" +
+            dbcursor = db.rawQuery("SELECT  DISTINCT SB.SUB_CATEGORY_ID, MIA.IMAGE_ALLOW,SB.SUB_CATEGORY FROM MAPPING_STOCK M INNER JOIN SKU_MASTER SK ON M.SKU_ID = SK.SKU_ID" +
                     " INNER JOIN BRAND_MASTER BR ON SK.BRAND_ID = BR.BRAND_ID" +
                     " INNER JOIN SUB_CATEGORY_MASTER SB ON BR.SUB_CATEGORY_ID = SB.SUB_CATEGORY_ID" +
                     " INNER JOIN CATEGORY_MASTER CA ON SB.CATEGORY_ID = CA.CATEGORY_ID" +
+                    " INNER JOIN MAPPING_SUB_CATEGORY_IMAGE_ALLOW MIA ON SB.SUB_CATEGORY_ID=MIA.SUB_CATEGORY_ID "+
                     " WHERE M.KEYACCOUNT_ID = '" + key_account_id + " 'AND M.STORETYPE_ID = '" + store_type_id + "' AND M.CLASS_ID = '" + class_id + "' AND CA.CATEGORY_ID = '" + categoryId + "'", null);
 
 
@@ -4179,6 +4183,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     CPGS.setSUB_CATEGORY(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
                     CPGS.setSUB_CATEGORY_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
+                    CPGS.setImage_allow(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IMAGE_ALLOW")));
 
                     CPGS.setSubCategoryCamera1("");
                     CPGS.setSubCategoryCamera2("");
@@ -4676,8 +4681,6 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
 
-
-
     public boolean isPlanogramAddShelfSaveData(String store_id, String category_id) {
         boolean filled = false;
         Cursor dbcursor = null;
@@ -4704,4 +4707,21 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         return filled;
     }
 
+    public void InsertMappingSubCategoryImageAllow(MappingSubCategoryImageAllowGetterSetter data) {
+        db.delete("MAPPING_SUB_CATEGORY_IMAGE_ALLOW", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getSUB_CATEGORY_ID().size(); i++) {
+
+                values.put("COUNTRY_ID", data.getCOUNTRY_ID().get(i));
+                values.put("SUB_CATEGORY_ID", data.getSUB_CATEGORY_ID().get(i));
+                values.put("IMAGE_ALLOW", data.getIMAGE_ALLOW().get(i));
+
+                db.insert("MAPPING_SUB_CATEGORY_IMAGE_ALLOW", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " in MAPPING_SUB_CATEGORY_IMAGE_ALLOW " + ex.toString());
+        }
+    }
 }

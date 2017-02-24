@@ -20,6 +20,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.ShelfMasterGetterSetter;
@@ -804,6 +805,37 @@ public class XMLHandlers {
                     if (xpp.getName().equals("SHELF")) {
                         st.setSHELF(xpp.nextText());
                     }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return st;
+    }
+
+    public static MappingSubCategoryImageAllowGetterSetter mappingSubCategoryImageAllowXMLHandler(XmlPullParser xpp, int eventType) {
+        MappingSubCategoryImageAllowGetterSetter st = new MappingSubCategoryImageAllowGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+
+                    if (xpp.getName().equals("META_DATA")) {
+                        st.setTable_MAPPING_SUB_CATEGORY_IMAGE_ALLOW(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("COUNTRY_ID")) {
+                        st.setCOUNTRY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SUB_CATEGORY_ID")) {
+                        st.setSUB_CATEGORY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("IMAGE_ALLOW")) {
+                        st.setIMAGE_ALLOW(xpp.nextText());
+                    }
+
                 }
                 xpp.next();
             }

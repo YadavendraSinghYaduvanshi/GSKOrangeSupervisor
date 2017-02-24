@@ -198,6 +198,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
 
             str = CommonString.FILE_PATH + _pathforcheck;
 
+            prepareDefaultList();
+
             //Camera
             cameraMethod();
 
@@ -215,7 +217,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                         db.InsertStore_wise_camera(cameraData);
                     }*/
 
-                    if (validateData(hashMapListHeaderData, hashMapListChildData, cameraData)) {
+                    if (validateData(hashMapListHeaderData, hashMapListChildData)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(Stock_FacingActivity.this);
                         builder.setMessage(getResources().getString(R.string.check_save_message))
                                 .setCancelable(false)
@@ -540,8 +542,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
     }
 
     boolean validateData(List<Stock_FacingGetterSetter> listDataHeader,
-                         HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listDataChild,
-                         Store_wise_camera_DataGetterSetter cameraData) {
+                         HashMap<Stock_FacingGetterSetter, List<Stock_FacingGetterSetter>> listDataChild) {
         boolean flag = true;
         checkHeaderArray.clear();
 
@@ -1114,7 +1115,7 @@ public class Stock_FacingActivity extends AppCompatActivity {
                 prepareDefaultList();
                 if (db.isPlanogramAddShelfSaveData(store_id, categoryId)) {
                     camera1.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
-                }else {
+                } else {
                     camera1.setBackgroundResource(R.mipmap.new_no_camera);
                 }
 
@@ -1149,7 +1150,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
             builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
                     .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            if (!validateData(hashMapListHeaderData, hashMapListChildData, cameraData)) {
+
+                            if (!validateData(hashMapListHeaderData, hashMapListChildData)) {
                                 if (!camera_allow.equals("1")) {
                                     db.deletePlanogramListStoreAndCategorywise(store_id, categoryId,
                                             planogramShelfHeaderDataList, planogramHashMapListChildData);
@@ -1261,7 +1263,8 @@ public class Stock_FacingActivity extends AppCompatActivity {
         builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
                 .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (!validateData(hashMapListHeaderData, hashMapListChildData, cameraData)) {
+
+                        if (!validateData(hashMapListHeaderData, hashMapListChildData)) {
                             if (!camera_allow.equals("1")) {
                                 db.deletePlanogramListStoreAndCategorywise(store_id, categoryId,
                                         planogramShelfHeaderDataList, planogramHashMapListChildData);

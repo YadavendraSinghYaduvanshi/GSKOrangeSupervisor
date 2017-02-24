@@ -1,4 +1,3 @@
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,9 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="8dp"
-
-        />
+        android:layout_marginBottom="8dp"/>
 
     <ScrollView
         android:id="@+id/login_form"
@@ -43,7 +40,6 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-
                     android:layout_centerInParent="true"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/parinaam_logo" />
@@ -80,10 +76,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/prompt_userid"
-
                             android:maxLines="1"
                             android:singleLine="true" />
-
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
