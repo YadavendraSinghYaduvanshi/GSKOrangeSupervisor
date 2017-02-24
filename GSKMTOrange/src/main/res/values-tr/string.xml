@@ -260,6 +260,9 @@
     <string name="stock_planogram_planogram_tracker">Planogram Tracker</string>
     <string name="stock_planogram_position_on_shelf">Position on Shelf</string>
 
+
+    <string name="prompt_userid">Username/Kullanıcı Adı/اسم المستخدم</string>
+    <string name="prompt_password">Password/Şifre/كلمة المرور</string>
 </resources>
 
 
