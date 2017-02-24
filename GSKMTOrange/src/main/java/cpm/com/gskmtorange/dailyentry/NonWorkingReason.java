@@ -771,7 +771,11 @@ public class NonWorkingReason extends AppCompatActivity implements
             if (result.equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                 dialog.dismiss();
 
-                showAlert(getString(R.string.data_downloaded_successfully));
+                finish();
+
+                //showAlert(getString(R.string.uploadeddata));
+
+
             } else {
 
                 GSKOrangeDB db = new GSKOrangeDB(NonWorkingReason.this);
