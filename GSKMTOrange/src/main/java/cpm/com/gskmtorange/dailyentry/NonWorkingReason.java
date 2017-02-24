@@ -102,12 +102,13 @@ public class NonWorkingReason extends AppCompatActivity implements
     Uri outputFileUri;
     boolean leave_flag = false;
     ArrayList<CoverageBean> coverage = new ArrayList<CoverageBean>();
+    ArrayList<StoreBean> storelist = new ArrayList<StoreBean>();
     ArrayList<StoreBean> jcp;
     private Dialog dialog;
     private TextView percentage, message;
     private ProgressBar pb;
     private FailureGetterSetter failureGetterSetter = null;
-
+    boolean nonflag=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -141,10 +142,26 @@ public class NonWorkingReason extends AppCompatActivity implements
         database.open();
         str = CommonString.FILE_PATH;
 
+        storelist = database.getStoreData(visit_date);
 
         coverage = database.getCoverageData(visit_date);
 
-        if (coverage.size() > 0) {
+        for(int i=0;i<storelist.size();i++)
+        {
+            if(!storelist.get(i).getCHECKOUT_STATUS().equalsIgnoreCase("N") || !storelist.get(i).getUPLOAD_STATUS().equalsIgnoreCase("N")){
+
+                nonflag=true;
+                break;
+            }
+            else
+            {
+                nonflag=false;
+            }
+
+        }
+
+
+        if (nonflag) {
             reasondata = database.getNonWorkingEntryAllowData();
 
         } else {
