@@ -320,7 +320,6 @@ public class StockFacing_PlanogramTrackerActivity extends AppCompatActivity {
                         AlertDialog alert = builder.create();
                         alert.show();
                     }
-
                 }
             });
 
