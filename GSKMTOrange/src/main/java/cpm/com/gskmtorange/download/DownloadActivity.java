@@ -57,6 +57,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.ShelfMasterGetterSetter;
@@ -89,6 +90,7 @@ public class DownloadActivity extends AppCompatActivity {
     MAPPING_SOS_TARGET_MasterGetterSetter mapping_sos_target_masterGetterSetter;
     MAPPING_PLANOGRAM_MasterGetterSetter mapping_planogram_masterGetterSetter;
     ShelfMasterGetterSetter shelfMasterGetterSetter;
+    MappingSubCategoryImageAllowGetterSetter mappingSubCategoryImageAllowGetterSetter;
 
     private Dialog dialog;
     private ProgressBar pb;
@@ -813,6 +815,42 @@ public class DownloadActivity extends AppCompatActivity {
                 publishProgress(data);
 
 
+                //MAPPING_SUB_CATEGORY_IMAGE_ALLOW
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_SUB_CATEGORY_IMAGE_ALLOW");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mappingSubCategoryImageAllowGetterSetter = XMLHandlers.mappingSubCategoryImageAllowXMLHandler(xpp, eventType);
+
+                    String table_ShelfMaster = mappingSubCategoryImageAllowGetterSetter.getTable_MAPPING_SUB_CATEGORY_IMAGE_ALLOW();
+                    if (table_ShelfMaster != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setMappingSubCategoryImageAllow(table_ShelfMaster);
+                    }
+
+                    if (mappingSubCategoryImageAllowGetterSetter.getSUB_CATEGORY_ID().size() > 0) {
+                        data.value = 96;
+                        data.name = "MAPPING_SUB_CATEGORY_IMAGE_ALLOW " + getResources().getString(R.string.download_data);
+                    }
+                }
+                publishProgress(data);
+
+
+
                 //Images DownLoads
 
                 //MAPPING_PLANOGRAM Image save into folder
@@ -952,6 +990,8 @@ public class DownloadActivity extends AppCompatActivity {
                 db.InsertADDITIONAL_DISPLAY(additional_display_getter_setter);
                 db.InsertMAPPING_SOS_TARGET(mapping_sos_target_masterGetterSetter);
                 db.InsertSHELF_MASTER(shelfMasterGetterSetter);
+
+                db.InsertMappingSubCategoryImageAllow(mappingSubCategoryImageAllowGetterSetter);
 
             } catch (MalformedURLException e) {
 

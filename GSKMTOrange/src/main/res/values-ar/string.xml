@@ -216,10 +216,10 @@
 
     <string name="stock_planogram_data_add_shelf_position_already_exists">الرف/ الموقع موجود بالفعل</string>
 
-    <string name="stock_planogram_add_shelf">Add Shelf</string>
-    <string name="stock_planogram_add_sku">Add Sku</string>
-    <string name="stock_planogram_add_sku_to_shelf">Add Sku to Shelf</string>
-    <string name="stock_planogram_planogram_tracker">Planogram Tracker</string>
-    <string name="stock_planogram_position_on_shelf">Position on Shelf</string>
+    <string name="stock_planogram_add_shelf">إضافة الرف</string>
+    <string name="stock_planogram_add_sku">الصنف إضافة</string>
+    <string name="stock_planogram_add_sku_to_shelf">إضافة منتج إلى الجرف</string>
+    <string name="stock_planogram_planogram_tracker">صورة مقطعية المقتفي</string>
+    <string name="stock_planogram_position_on_shelf">موقف بشأن الجرف</string>
 
 </resources>

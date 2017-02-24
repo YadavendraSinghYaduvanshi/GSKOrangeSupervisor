@@ -11,6 +11,8 @@ public class CategoryPictureGetterSetter {
     String CategoryImage3="";
     String CategoryImage4="";
 
+    String image_allow = "0";
+
     public String getCategoryId() {
         return categoryId;
     }
@@ -161,10 +163,11 @@ public class CategoryPictureGetterSetter {
     }
 
 
+    public String getImage_allow() {
+        return image_allow;
+    }
 
-
-
-
-
-
+    public void setImage_allow(String image_allow) {
+        this.image_allow = image_allow;
+    }
 }
