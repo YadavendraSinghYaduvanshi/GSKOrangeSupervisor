@@ -1573,14 +1573,14 @@ public class UploadActivity extends AppCompatActivity {
                                     if (new File(CommonString.FILE_PATH + t2PGetterSetters.get(m).getImage1()).exists()) {
 
                                         try {
-                                            result = UploadImage(t2PGetterSetters.get(m).getImage1(), "T2PImages1");
+                                            result = UploadImage(t2PGetterSetters.get(m).getImage1(), "T2PImages");
                                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                return "T2PImages1";
+                                                return "T2PImages";
                                             }
 
                                             runOnUiThread(new Runnable() {
                                                 public void run() {
-                                                    message.setText("T2P Images1 Uploaded");
+                                                    message.setText("T2P Images Uploaded");
                                                 }
                                             });
                                         } catch (Exception e) {
@@ -1593,14 +1593,14 @@ public class UploadActivity extends AppCompatActivity {
                                     if (new File(CommonString.FILE_PATH + t2PGetterSetters.get(m).getImage2()).exists()) {
 
                                         try {
-                                            result = UploadImage(t2PGetterSetters.get(m).getImage2(), "T2PImages2");
+                                            result = UploadImage(t2PGetterSetters.get(m).getImage2(), "T2PImages");
                                             if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                return "T2PImages2";
+                                                return "T2PImages";
                                             }
 
                                             runOnUiThread(new Runnable() {
                                                 public void run() {
-                                                    message.setText("T2P Images2 Uploaded");
+                                                    message.setText("T2P Images Uploaded");
                                                 }
                                             });
                                         } catch (Exception e) {

@@ -553,7 +553,13 @@ public class StoreListActivity extends AppCompatActivity {
 
                     dialog.cancel();
 
-                    if (checkout_status.equals(CommonString.KEY_INVALID) || checkout_status.equals(CommonString.KEY_VALID)) {
+                    GSKOrangeDB db = new GSKOrangeDB(StoreListActivity.this);
+                    db.open();
+
+                    coverage = db.getCoverageWithStoreID_Data(storeCd);
+
+
+                    if (coverage.get(0).getStatus().equals(CommonString.KEY_INVALID) || coverage.get(0).getStatus().equals(CommonString.KEY_VALID)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(StoreListActivity.this);
                         builder.setMessage(R.string.DELETE_ALERT_MESSAGE)
                                 .setCancelable(false)
