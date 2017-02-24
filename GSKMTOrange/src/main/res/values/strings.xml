@@ -10,8 +10,8 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">E Mail</string>
-    <string name="prompt_userid">Username/Kullanıcı Adı</string>
-    <string name="prompt_password">Password/Şifre</string>
+    <string name="prompt_userid">Username/Kullanıcı Adı/اسم المستخدم</string>
+    <string name="prompt_password">Password/Şifre/كلمة المرور</string>
     <string name="action_sign_in">Login/Giriş Yap</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
