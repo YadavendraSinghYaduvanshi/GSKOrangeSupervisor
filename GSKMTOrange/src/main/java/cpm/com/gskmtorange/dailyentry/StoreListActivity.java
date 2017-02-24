@@ -558,6 +558,7 @@ public class StoreListActivity extends AppCompatActivity {
 
                     coverage = db.getCoverageWithStoreID_Data(storeCd);
 
+                    if (coverage.size() > 0) {
 
                     if (coverage.get(0).getStatus().equals(CommonString.KEY_INVALID) || coverage.get(0).getStatus().equals(CommonString.KEY_VALID)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(StoreListActivity.this);
@@ -573,7 +574,7 @@ public class StoreListActivity extends AppCompatActivity {
 
 
                                                 Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
-                                                in.putExtra(CommonString.KEY_STORE_ID,current.getSTORE_ID());
+                                                in.putExtra(CommonString.KEY_STORE_ID, current.getSTORE_ID());
                                                 startActivity(in);
 
                                             }
@@ -590,8 +591,14 @@ public class StoreListActivity extends AppCompatActivity {
                         AlertDialog alert = builder.create();
 
                         alert.show();
-                    } else {
+                    }
+                        else{
+                        Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
+                        in.putExtra(CommonString.KEY_STORE_ID,current.getSTORE_ID());
+                        startActivity(in);
+                    }
 
+                }else {
 
                         Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
                         in.putExtra(CommonString.KEY_STORE_ID,current.getSTORE_ID());
