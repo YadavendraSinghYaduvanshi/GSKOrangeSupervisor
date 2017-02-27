@@ -1124,12 +1124,37 @@ public class Stock_FacingActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public String getCurrentTime() {
+    /*public String getCurrentTime() {
         Calendar m_cal = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         String cdate = formatter.format(m_cal.getTime());
-       /* String intime = m_cal.get(Calendar.HOUR_OF_DAY) + ":"
-                + m_cal.get(Calendar.MINUTE) + ":" + m_cal.get(Calendar.SECOND);*/
+
+        return cdate;
+    }*/
+
+    private static String arabicToenglish(String number) {
+        char[] chars = new char[number.length()];
+        for (int i = 0; i < number.length(); i++) {
+            char ch = number.charAt(i);
+            if (ch >= 0x0660 && ch <= 0x0669)
+                ch -= 0x0660 - '0';
+            else if (ch >= 0x06f0 && ch <= 0x06F9)
+                ch -= 0x06f0 - '0';
+            chars[i] = ch;
+        }
+
+        return new String(chars);
+    }
+
+    public String getCurrentTime() {
+        Calendar m_cal = Calendar.getInstance();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        String cdate = formatter.format(m_cal.getTime());
+
+        if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
+            cdate = arabicToenglish(cdate);
+        }
 
         return cdate;
     }
