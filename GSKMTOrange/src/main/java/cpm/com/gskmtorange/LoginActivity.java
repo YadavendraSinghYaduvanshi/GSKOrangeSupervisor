@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        tv_version.setText("Version/Versiyon - " + app_ver+"T");
+        tv_version.setText("Version/Versiyon - " + app_ver+"T1");
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
