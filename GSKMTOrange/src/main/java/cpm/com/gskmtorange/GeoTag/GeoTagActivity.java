@@ -492,23 +492,23 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
             List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
             for (int n = 0; n < list.size(); n++) {
                 if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-                   /* Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
-                    Log.e("TAG", "package name  : " + list.get(n).packageName);
-*/
+                  /*  Log.e("TAG", "Installed Applications  : " + list.get(n).loadLabel(packageManager).toString());
+                    Log.e("TAG", "package name  : " + list.get(n).packageName);*/
+
                     //temp value in case camera is gallery app above jellybean
                     String packag = list.get(n).loadLabel(packageManager).toString();
-                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri")) {
+                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri") ||packag.equalsIgnoreCase("الاستوديو") ) {
                         gallery_package = list.get(n).packageName;
                     }
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")|| packag.equalsIgnoreCase("الكاميرا")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
                     } else {
 
-                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")|| packag.equalsIgnoreCase("الكاميرا")) {
 
                             defaultCameraPackage = list.get(n).packageName;
                             break;
