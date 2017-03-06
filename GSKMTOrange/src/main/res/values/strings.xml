@@ -294,6 +294,7 @@
     <string name="stock_planogram_planogram_tracker">Planogram Tracker</string>
     <string name="stock_planogram_position_on_shelf">Position on Shelf</string>
 
-
+    <!--Change 06-03-2017-->
+    <string name="title_activity_store_checkout_image">Store Check out Image</string>
 
 </resources>
