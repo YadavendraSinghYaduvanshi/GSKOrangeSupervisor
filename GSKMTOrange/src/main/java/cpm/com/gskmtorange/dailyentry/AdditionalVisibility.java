@@ -449,6 +449,17 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                                     sku_list_id = "";
                                     defdata.clear();
 
+                                    if(defdata.size()>0)
+                                    {
+                                        // btn_add.setBackgroundResource(Color);
+                                        btnsku.setBackgroundResource(R.color.green);
+
+                                    }else{
+                                        btnsku.setBackgroundResource(R.color.colorPrimary);
+                                    }
+
+
+
                                     if (camera_allow.equals("1")) {
                                         btnimage.setBackgroundResource(R.mipmap.camera_orange);
 
@@ -1126,6 +1137,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                     SKU_name = sku_list.get(position).getSKU();
 
+                    listview.invalidateViews();
                 }
             }
 
@@ -1140,6 +1152,17 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             public void onClick(View v) {
 
                 dialog.cancel();
+
+                if(defdata.size()>0)
+                {
+                    // btn_add.setBackgroundResource(Color);
+                    btnsku.setBackgroundResource(R.color.green);
+
+                }else{
+                    btnsku.setBackgroundResource(R.color.colorPrimary);
+                }
+
+
             }
         });
 
@@ -1171,6 +1194,8 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                     // spinner_brand.setSelection(0);
                     spinner_sku.setSelection(0);
                     Edt_txt.setText("");
+                    SKU_ID="";
+                    SKU_name="";
 
                     // list = db.getDialogStock(store_id);
                     linearlay.setVisibility(View.VISIBLE);
@@ -1221,6 +1246,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                     spinner_sku.setAdapter(skuadapter);
 
                     spinner_sku.setSelection(0);
+                    SKU_ID="";
 
                 }
             }
@@ -1230,6 +1256,16 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
             }
         });
+
+
+        if(defdata.size()>0)
+        {
+            // btn_add.setBackgroundResource(Color);
+            btnsku.setBackgroundResource(R.color.green);
+
+        }else{
+            btnsku.setBackgroundResource(R.color.colorPrimary);
+        }
 
 
         spinner_sku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1242,6 +1278,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                     SKU_name = sku_list.get(position).getSKU();
 
+                }
+                else{
+                    SKU_ID="";
+                    SKU_name="";
                 }
             }
 
@@ -1610,6 +1650,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
         String brandid = data.getBrand_id();
         String displayid = data.getSku_id();
+        String skuname = data.getSku_name();
         String QTy = data.getQuantity();
 
 
@@ -1617,7 +1658,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             flag = false;
 
             msg = getResources().getString(R.string.title_activity_select_dropdown);
-        } else if (displayid == null || displayid.equalsIgnoreCase("")) {
+        } else if (displayid == null || displayid.equalsIgnoreCase("") || skuname.equalsIgnoreCase("select")) {
             flag = false;
             msg = getResources().getString(R.string.title_activity_select_dropdown);
         } else if (QTy.equalsIgnoreCase("") || QTy == null) {
@@ -1635,6 +1676,11 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     protected void onResume() {
         super.onResume();
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
+
+
+
+
     }
 
 
