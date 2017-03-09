@@ -41,7 +41,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private Dialog dialog;
     private ProgressBar pb;
     private TextView percentage, message;
-    private String username, visit_date, store_id, store_intime;;
+    private String username, visit_date, store_id, store_intime;
     private Data data;
     private SharedPreferences preferences = null;
 
@@ -50,7 +50,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
     CoverageBean coverageBean;
 
-    String lat,lon;
+    String lat, lon, checkOutImagePath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,17 +66,18 @@ public class CheckoutActivity extends AppCompatActivity {
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
         username = preferences.getString(CommonString.KEY_USERNAME, null);
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         store_id = getIntent().getStringExtra(CommonString.KEY_STORE_ID);
+        checkOutImagePath = getIntent().getStringExtra(CommonString.KEY_CHECKOUT_IMAGE);
 
-        coverageBean = db.getCoverageSpecificData(visit_date,store_id);
+        coverageBean = db.getCoverageSpecificData(visit_date, store_id);
         lat = coverageBean.getLatitude();
         lon = coverageBean.getLongitude();
-        if (lat==null || lat.equals("")){
+        if (lat == null || lat.equals("")) {
             lat = "0.0";
         }
-        if (lon==null || lon.equals("")){
+        if (lon == null || lon.equals("")) {
             lon = "0.0";
         }
        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -100,7 +101,6 @@ public class CheckoutActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            // TODO Auto-generated method stub
             super.onPreExecute();
 
             dialog = new Dialog(context);
@@ -111,16 +111,12 @@ public class CheckoutActivity extends AppCompatActivity {
             pb = (ProgressBar) dialog.findViewById(R.id.progressBar1);
             percentage = (TextView) dialog.findViewById(R.id.percentage);
             message = (TextView) dialog.findViewById(R.id.message);
-
         }
 
         @SuppressWarnings("deprecation")
         @Override
         protected String doInBackground(Void... params) {
-            // TODO Auto-generated method stub
-
             try {
-
                 //String result = "";
                 data = new Data();
 
@@ -128,72 +124,52 @@ public class CheckoutActivity extends AppCompatActivity {
                 data.name = "Checked out Data Uploading";
                 publishProgress(data);
 
-                String onXML = "[STORE_CHECK_OUT_STATUS][USER_ID]"
-                        + username
-                        + "[/USER_ID]" + "[STORE_ID]"
-                        + store_id
-                        + "[/STORE_ID][LATITUDE]"
-                        + lat
-                        + "[/LATITUDE][LOGITUDE]"
-                        + lon
-                        + "[/LOGITUDE][CHECKOUT_DATE]"
-                        + visit_date
-                        + "[/CHECKOUT_DATE][CHECK_OUTTIME]"
-                        + getCurrentTime()
-                        + "[/CHECK_OUTTIME][CHECK_INTIME]"
-                        + coverageBean.getInTime()
-                        + "[/CHECK_INTIME][CREATED_BY]"
-                        + username
-                        + "[/CREATED_BY][/STORE_CHECK_OUT_STATUS]";
+                String onXML =
+                        "[STORE_CHECK_OUT_STATUS]"
+                                + "[USER_ID]" + username + "[/USER_ID]"
+                                + "[STORE_ID]" + store_id + "[/STORE_ID]"
+                                + "[LATITUDE]" + lat + "[/LATITUDE]"
+                                + "[LOGITUDE]" + lon + "[/LOGITUDE]"
+                                + "[CHECKOUT_DATE]" + visit_date + "[/CHECKOUT_DATE]"
+                                + "[CHECK_OUTTIME]" + getCurrentTime() + "[/CHECK_OUTTIME]"
+                                + "[CHECK_INTIME]" + coverageBean.getInTime() + "[/CHECK_INTIME]"
+                                + "[CREATED_BY]" + username + "[/CREATED_BY]"
+                                + "[/STORE_CHECK_OUT_STATUS]";
 
-                final String sos_xml = "[DATA]" + onXML
-                        + "[/DATA]";
+                final String sos_xml = "[DATA]" + onXML + "[/DATA]";
 
-                SoapObject request = new SoapObject(
-                        CommonString.NAMESPACE,
-                        "Upload_Store_ChecOut_Status");
+                SoapObject request = new SoapObject(CommonString.NAMESPACE, "Upload_Store_ChecOut_Status");
                 request.addProperty("onXML", sos_xml);
-				/*request.addProperty("KEYS", "CHECKOUT_STATUS");
-				request.addProperty("USERNAME", username);*/
+                /*request.addProperty("KEYS", "CHECKOUT_STATUS");
+                request.addProperty("USERNAME", username);*/
                 //request.addProperty("MID", mid);
 
-                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                        SoapEnvelope.VER11);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.dotNet = true;
                 envelope.setOutputSoapObject(request);
 
-                HttpTransportSE androidHttpTransport = new HttpTransportSE(
-                        CommonString.URL);
+                HttpTransportSE androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION + "Upload_Store_ChecOut_Status", envelope);
 
-                androidHttpTransport.call(
-                        CommonString.SOAP_ACTION+"Upload_Store_ChecOut_Status",
-                        envelope);
                 Object result = (Object) envelope.getResponse();
 
-                if (!result.toString().equalsIgnoreCase(
-                        CommonString.KEY_SUCCESS)) {
+                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                     return "Upload_Store_ChecOut_Status";
                 }
-
-                if (result.toString().equalsIgnoreCase(
-                        CommonString.KEY_NO_DATA)) {
+                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
                     return "Upload_Store_ChecOut_Status";
                 }
-
-                if (result.toString().equalsIgnoreCase(
-                        CommonString.KEY_FAILURE)) {
+                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
                     return "Upload_Store_ChecOut_Status";
                 }
-
 
                 data.value = 100;
                 data.name = "Checkout Done";
                 publishProgress(data);
 
-                if (result.toString()
-                        .equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                if (result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
 
-                    db.updateCheckoutOuttime(store_id, getCurrentTime(),CommonString.KEY_Y);
+                    db.updateCheckoutOuttime(store_id, getCurrentTime(), CommonString.KEY_Y, checkOutImagePath);
 
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(CommonString.KEY_STORE_ID, "");
@@ -213,15 +189,9 @@ public class CheckoutActivity extends AppCompatActivity {
                     db.updateCheckoutStatus(store_id, CommonString.KEY_Y);
 
                 } else {
-
-
-
-                    if (result.toString().equalsIgnoreCase(
-                            CommonString.KEY_FALSE)) {
+                    if (result.toString().equalsIgnoreCase(CommonString.KEY_FALSE)) {
                         return "Upload_Store_ChecOut_Status";
                     }
-
-
                 }
                 return CommonString.KEY_SUCCESS;
 
@@ -238,17 +208,15 @@ public class CheckoutActivity extends AppCompatActivity {
                 });
 
             } catch (IOException e) {
-
                 // counter++;
                 runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
-
                         showAlert(CommonString.MESSAGE_SOCKETEXCEPTION);
                         // TODO Auto-generated method stub
-						/*
-						 * if (counter < 10) { new
+                        /*
+                         * if (counter < 10) { new
 						 * BackgroundTask(CheckOutUploadActivity
 						 * .this).execute(); } else { message.showMessage();
 						 * counter =1; }
@@ -256,9 +224,7 @@ public class CheckoutActivity extends AppCompatActivity {
                     }
                 });
             } catch (Exception e) {
-
                 runOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
                         // TODO Auto-generated method stub
@@ -293,10 +259,9 @@ public class CheckoutActivity extends AppCompatActivity {
 
                 finish();
 
-            }
-            else if (!result.equals("")) {
-				/*AlertMessage message = new AlertMessage(
-						CheckOutStoreActivity.this, CommonString1.ERROR + result, "success", null);
+            } else if (!result.equals("")) {
+                /*AlertMessage message = new AlertMessage(
+                        CheckOutStoreActivity.this, CommonString1.ERROR + result, "success", null);
 				message.showMessage();*/
 
                 Toast.makeText(getApplicationContext(), "Network Error Try Again", Toast.LENGTH_SHORT).show();
@@ -316,13 +281,11 @@ public class CheckoutActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
-
 
     private static boolean updateResources(Context context, String language) {
 
-      
 
         String lang;
 
@@ -337,7 +300,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 

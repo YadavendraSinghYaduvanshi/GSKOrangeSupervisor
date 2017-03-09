@@ -95,14 +95,16 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
     ArrayList<CoverageBean> coverage_list;
     Toolbar toolbar;
     boolean ResultFlag = true;
+    String checkOutStore_id = "";
     ArrayList<CoverageBean> coverage = new ArrayList<CoverageBean>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_storeimage);
+        setContentView(R.layout.activity_store_checkout_image);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -114,12 +116,13 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
         btn_save = (Button) findViewById(R.id.btn_save_selfie);
 
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
-
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
         date = preferences.getString(CommonString.KEY_DATE, null);
         username = preferences.getString(CommonString.KEY_USERNAME, null);
         _UserId = preferences.getString(CommonString.KEY_USERNAME, "");
         intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
+
+        checkOutStore_id = getIntent().getStringExtra(CommonString.KEY_STORE_ID);
 
         str = CommonString.FILE_PATH;
 
@@ -175,27 +178,21 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
 
     @Override
     public void onClick(View v) {
-
         int id = v.getId();
 
         switch (id) {
-
             case R.id.img_cam_selfie:
 
-                _pathforcheck = store_id + "SI_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
-
+                _pathforcheck = checkOutStore_id + "CHK_SI_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
                 _path = CommonString.FILE_PATH + _pathforcheck;
-
                 intime = getCurrentTime();
 
                 startCameraActivity();
-
                 break;
 
             case R.id.btn_save_selfie:
 
                 if (img_str != null) {
-
                     AlertDialog.Builder builder = new AlertDialog.Builder(StoreCheckoutImageActivity.this);
                     builder.setMessage(getResources().getString(R.string.title_activity_save_data))
                             .setCancelable(false)
@@ -204,34 +201,11 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
 
                                     alert.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
-                                    CoverageBean cdata = new CoverageBean();
-                                    cdata.setStoreId(store_id);
-                                    cdata.setVisitDate(visit_date);
-                                    cdata.setUserId(username);
-                                    cdata.setInTime(intime);
-                                    cdata.setReason("");
-                                    cdata.setReasonid("0");
-                                    cdata.setLatitude(lat);
-                                    cdata.setLongitude(lon);
-                                    cdata.setImage(img_str);
-                                    cdata.setRemark("");
-                                    cdata.setStatus(CommonString.KEY_INVALID);
-
-                                    database.InsertCoverageData(cdata);
-
-                                    database.updateCheckoutStatus(store_id, CommonString.KEY_INVALID);
-
-                                           /* SharedPreferences.Editor editor = preferences.edit();
-
-                                            editor.putString(CommonString.KEY_STOREVISITED_STATUS, "");
-                                            editor.putString(CommonString.KEY_STORE_IN_TIME, "");
-
-                                            editor.commit();*/
-
-
-                                    //Intent in = new Intent(StoreimageActivity.this, CategoryListActivity.class);
-                                    new StoreCheckoutImageActivity.GeoTagUpload(StoreCheckoutImageActivity.this).execute();
-
+                                    Intent i = new Intent(StoreCheckoutImageActivity.this, CheckoutActivity.class);
+                                    i.putExtra(CommonString.KEY_STORE_ID, checkOutStore_id);
+                                    i.putExtra(CommonString.KEY_CHECKOUT_IMAGE, img_str);
+                                    startActivity(i);
+                                    finish();
                                 }
                             })
                             .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -242,10 +216,10 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
 
                     alert = builder.create();
                     alert.show();
-
                 } else {
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.clickimage), Toast.LENGTH_SHORT).show();
                 }
+
                 break;
         }
     }
@@ -276,18 +250,18 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
 
                     //temp value in case camera is gallery app above jellybean
                     String packag = list.get(n).loadLabel(packageManager).toString();
-                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri") ||packag.equalsIgnoreCase("الاستوديو") ) {
+                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri") || packag.equalsIgnoreCase("الاستوديو")) {
                         gallery_package = list.get(n).packageName;
                     }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")|| packag.equalsIgnoreCase("الكاميرا")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera") || packag.equalsIgnoreCase("الكاميرا")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
                     } else {
 
-                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")|| packag.equalsIgnoreCase("الكاميرا")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera") || packag.equalsIgnoreCase("الكاميرا")) {
 
                             defaultCameraPackage = list.get(n).packageName;
                             break;
@@ -378,7 +352,7 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
     protected void onResume() {
         super.onResume();
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
-        toolbar.setTitle(R.string.title_activity_store_image);
+        toolbar.setTitle(R.string.title_activity_store_checkout_image);
     }
 
     protected void onStart() {
@@ -654,7 +628,6 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
         AlertDialog alert = builder.create();
         alert.show();
     }
-
 
     private static String arabicToenglish(String number) {
         char[] chars = new char[number.length()];

@@ -238,51 +238,42 @@ public class StoreListActivity extends AppCompatActivity {
 
             }*/
             else if (coverage.size() > 0) {
-                String statusleave="";
+                String statusleave = "";
 
-                    for (int i = 0; i < coverage.size(); i++) {
+                for (int i = 0; i < coverage.size(); i++) {
 
-                       if (storeid.equals(coverage.get(i).getStoreId())) {
-                         statusleave=coverage.get(i).getStatus();
-
-
-                           if(statusleave.equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)){
-
-                               viewHolder.imageview.setVisibility(View.VISIBLE);
-                               viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
-                               viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                    if (storeid.equals(coverage.get(i).getStoreId())) {
+                        statusleave = coverage.get(i).getStatus();
 
 
-                           }
+                        if (statusleave.equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
 
-                           else if(coverage.get(i).getStatus().equalsIgnoreCase(CommonString.KEY_VALID))
-                           {
-                               viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
-                               viewHolder.chkbtn.setVisibility(View.VISIBLE);
-                               viewHolder.imageview.setVisibility(View.INVISIBLE);
-
-                           }
-                           else  if(coverage.get(i).getStatus().equalsIgnoreCase(CommonString.KEY_INVALID)){
-
-                               viewHolder.imageview.setVisibility(View.INVISIBLE);
-                               viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-                               viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.green));
-                           }
+                            viewHolder.imageview.setVisibility(View.VISIBLE);
+                            viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
+                            viewHolder.chkbtn.setVisibility(View.INVISIBLE);
 
 
-                           else {
+                        } else if (coverage.get(i).getStatus().equalsIgnoreCase(CommonString.KEY_VALID)) {
+                            viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
+                            viewHolder.chkbtn.setVisibility(View.VISIBLE);
+                            viewHolder.imageview.setVisibility(View.INVISIBLE);
 
-                               viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
-                               viewHolder.imageview.setVisibility(View.INVISIBLE);
-                               viewHolder.chkbtn.setVisibility(View.INVISIBLE);
-                           }
+                        } else if (coverage.get(i).getStatus().equalsIgnoreCase(CommonString.KEY_INVALID)) {
 
-                            break;
+                            viewHolder.imageview.setVisibility(View.INVISIBLE);
+                            viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                            viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.green));
+                        } else {
+
+                            viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
+                            viewHolder.imageview.setVisibility(View.INVISIBLE);
+                            viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                        }
+
+                        break;
 
 
-
-
-                       }
+                    }
 
                        /* if (coverage.get(i).getInTime() != null) {
 
@@ -301,9 +292,9 @@ public class StoreListActivity extends AppCompatActivity {
 
                         }*/
 
-                    }
+                }
 
-        }else {
+            } else {
 
                 viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
                 viewHolder.imageview.setVisibility(View.INVISIBLE);
@@ -333,9 +324,7 @@ public class StoreListActivity extends AppCompatActivity {
                         Snackbar.make(v, R.string.title_store_list_activity_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
                         Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-
-                    else if (checkleavestatus(store_id)) {
+                    } else if (checkleavestatus(store_id)) {
 
                         Snackbar.make(v, R.string.title_store_list_activity_already_store_closed, Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
@@ -368,7 +357,7 @@ public class StoreListActivity extends AppCompatActivity {
                             }
 
                             if (enteryflag) {
-                                showMyDialog(store_id, current.getSTORE_NAME(), "Yes", current.getVISIT_DATE(), current.getCHECKOUT_STATUS(),current.getGEO_TAG(),current);
+                                showMyDialog(store_id, current.getSTORE_NAME(), "Yes", current.getVISIT_DATE(), current.getCHECKOUT_STATUS(), current.getGEO_TAG(), current);
                             }
                         } else {
                             Snackbar.make(v, R.string.title_store_list_checkout_Already_filled, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -381,42 +370,33 @@ public class StoreListActivity extends AppCompatActivity {
             viewHolder.chkbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(
-                            StoreListActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(StoreListActivity.this);
                     builder.setMessage(R.string.wantcheckout)
                             .setCancelable(false)
-                            .setPositiveButton(R.string.ok,
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(
-                                                DialogInterface dialog, int id) {
-                                            if (CheckNetAvailability()) {
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
 
+                                    if (CheckNetAvailability()) {
+                                        /*Intent i = new Intent(StoreListActivity.this, CheckoutActivity.class);
+                                        i.putExtra(CommonString.KEY_STORE_ID, current.getSTORE_ID());
+                                        startActivity(i);*/
 
-                                                Intent i = new Intent(StoreListActivity.this, CheckoutActivity.class);
-
-                                                i.putExtra(CommonString.KEY_STORE_ID, current.getSTORE_ID());
-
-                                                startActivity(i);
-                                            } else {
-
-                                                Snackbar.make(recyclerView, R.string.nonetwork, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-
-                                            }
-
-                                        }
-                                    })
-                            .setNegativeButton(R.string.closed,
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(
-                                                DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                                        Intent i = new Intent(StoreListActivity.this, StoreCheckoutImageActivity.class);
+                                        i.putExtra(CommonString.KEY_STORE_ID, current.getSTORE_ID());
+                                        startActivity(i);
+                                    } else {
+                                        Snackbar.make(recyclerView, R.string.nonetwork, Snackbar.LENGTH_SHORT)
+                                                .setAction("Action", null).show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton(R.string.closed, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
                     AlertDialog alert = builder.create();
                     alert.show();
-
-
                 }
             });
 
@@ -471,7 +451,7 @@ public class StoreListActivity extends AppCompatActivity {
     }
 
 
-    void showMyDialog(final String storeCd, final String storeName, final String status, final String visitDate, final String checkout_status,final String GeotagStatus,final StoreBean current) {
+    void showMyDialog(final String storeCd, final String storeName, final String status, final String visitDate, final String checkout_status, final String GeotagStatus, final StoreBean current) {
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialogbox);
@@ -485,7 +465,7 @@ public class StoreListActivity extends AppCompatActivity {
                 // find which radio button is selected
                 if (checkedId == R.id.yes) {
 
-                    if(!GeotagStatus.equalsIgnoreCase("N")){
+                    if (!GeotagStatus.equalsIgnoreCase("N")) {
 
                         editor = preferences.edit();
                         editor.putString(CommonString.KEY_STORE_ID, current.getSTORE_ID());
@@ -503,30 +483,29 @@ public class StoreListActivity extends AppCompatActivity {
                         editor.commit();
 
 
-                    boolean flag = true;
-                    if (coverage.size() > 0) {
-                        for (int i = 0; i < coverage.size(); i++) {
-                            if (store_id.equals(coverage.get(i).getStoreId())) {
-                                flag = false;
-                                break;
+                        boolean flag = true;
+                        if (coverage.size() > 0) {
+                            for (int i = 0; i < coverage.size(); i++) {
+                                if (store_id.equals(coverage.get(i).getStoreId())) {
+                                    flag = false;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    if (flag == true) {
+                        if (flag == true) {
 
-                         Intent in = new Intent(StoreListActivity.this, StoreimageActivity.class);
-                        startActivity(in);
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-                        dialog.cancel();
+                            Intent in = new Intent(StoreListActivity.this, StoreimageActivity.class);
+                            startActivity(in);
+                            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                            dialog.cancel();
+                        } else {
+                            Intent in = new Intent(StoreListActivity.this, StoreWisePerformanceActivity.class);
+                            startActivity(in);
+                            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                            dialog.cancel();
+                        }
+
                     } else {
-                        Intent in = new Intent(StoreListActivity.this, StoreWisePerformanceActivity.class);
-                        startActivity(in);
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-                        dialog.cancel();
-                    }
-
-                }
-                else{
                         dialog.cancel();
                         AlertDialog.Builder builder = new AlertDialog.Builder(StoreListActivity.this);
                         builder.setTitle(getResources().getString(R.string.dialog_title));
@@ -549,7 +528,7 @@ public class StoreListActivity extends AppCompatActivity {
                     }
 
 
-                }else if (checkedId == R.id.no) {
+                } else if (checkedId == R.id.no) {
 
                     dialog.cancel();
 
@@ -560,48 +539,47 @@ public class StoreListActivity extends AppCompatActivity {
 
                     if (coverage.size() > 0) {
 
-                    if (coverage.get(0).getStatus().equals(CommonString.KEY_INVALID) || coverage.get(0).getStatus().equals(CommonString.KEY_VALID)) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(StoreListActivity.this);
-                        builder.setMessage(R.string.DELETE_ALERT_MESSAGE)
-                                .setCancelable(false)
-                                .setPositiveButton(getResources().getString(R.string.yes),
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog,
-                                                                int id) {
+                        if (coverage.get(0).getStatus().equals(CommonString.KEY_INVALID) || coverage.get(0).getStatus().equals(CommonString.KEY_VALID)) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(StoreListActivity.this);
+                            builder.setMessage(R.string.DELETE_ALERT_MESSAGE)
+                                    .setCancelable(false)
+                                    .setPositiveButton(getResources().getString(R.string.yes),
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog,
+                                                                    int id) {
 
 
-                                                UpdateStore(store_id);
+                                                    UpdateStore(store_id);
 
 
-                                                Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
-                                                in.putExtra(CommonString.KEY_STORE_ID, current.getSTORE_ID());
-                                                startActivity(in);
+                                                    Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
+                                                    in.putExtra(CommonString.KEY_STORE_ID, current.getSTORE_ID());
+                                                    startActivity(in);
 
-                                            }
-                                        })
-                                .setNegativeButton(getResources().getString(R.string.no),
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog,
-                                                                int id) {
+                                                }
+                                            })
+                                    .setNegativeButton(getResources().getString(R.string.no),
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog,
+                                                                    int id) {
 
 
-                                                dialog.cancel();
-                                            }
-                                        });
-                        AlertDialog alert = builder.create();
+                                                    dialog.cancel();
+                                                }
+                                            });
+                            AlertDialog alert = builder.create();
 
-                        alert.show();
-                    }
-                        else{
+                            alert.show();
+                        } else {
+                            Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
+                            in.putExtra(CommonString.KEY_STORE_ID, current.getSTORE_ID());
+                            startActivity(in);
+                        }
+
+                    } else {
+
                         Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
-                        in.putExtra(CommonString.KEY_STORE_ID,current.getSTORE_ID());
-                        startActivity(in);
-                    }
-
-                }else {
-
-                        Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
-                        in.putExtra(CommonString.KEY_STORE_ID,current.getSTORE_ID());
+                        in.putExtra(CommonString.KEY_STORE_ID, current.getSTORE_ID());
                         startActivity(in);
                     }
 
@@ -656,7 +634,7 @@ public class StoreListActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 

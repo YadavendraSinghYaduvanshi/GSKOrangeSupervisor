@@ -296,5 +296,5 @@
 
     <!--Change 06-03-2017-->
     <string name="title_activity_store_checkout_image">Store Check out Image</string>
-
+    <string name="store_checkout">Click Store CheckOut Image</string>
 </resources>

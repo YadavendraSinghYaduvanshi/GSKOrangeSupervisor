@@ -630,22 +630,18 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
 
     public void updateCheckoutStatus(String id, String status) {
-
         ContentValues values = new ContentValues();
         ContentValues values1 = new ContentValues();
 
         try {
-
             values.put("CHECKOUT_STATUS", status);
             values1.put(CommonString.KEY_COVERAGE_STATUS, status);
+
             db.update(CommonString.TABLE_COVERAGE_DATA, values1, CommonString.KEY_STORE_ID + "='" + id + "'", null);
             db.update(CommonString.KEY_JOURNEY_PLAN, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
-
-
         } catch (Exception ex) {
-
+            Log.e("Exception", "checkOut Status" + ex.toString());
         }
-
     }
 
 
@@ -786,6 +782,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                         sb.setRemark((((dbcursor.getString(dbcursor
                                 .getColumnIndexOrThrow(CommonString.KEY_COVERAGE_REMARK))))));
                     }
+                    sb.setCheckOut_Image(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CHECKOUT_IMAGE)));
+
 
                     list.add(sb);
                     dbcursor.moveToNext();
@@ -1403,13 +1401,10 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
     public long InsertCoverageData(CoverageBean data) {
-
         //db.delete(CommonString1.TABLE_COVERAGE_DATA, "STORE_ID" + "='" + data.getStoreId() + "'", null);
-
         ContentValues values = new ContentValues();
 
         try {
-
             values.put(CommonString.KEY_STORE_ID, data.getStoreId());
             values.put(CommonString.KEY_USER_ID, data.getUserId());
             values.put(CommonString.KEY_IN_TIME, data.getInTime());
@@ -1425,6 +1420,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             values.put(CommonString.KEY_REASON_ID, data.getReasonid());
             values.put(CommonString.KEY_REASON, data.getReason());
             values.put(CommonString.KEY_GEO_TAG, data.getGEO_TAG());
+            values.put(CommonString.KEY_CHECKOUT_IMAGE, data.getCheckOut_Image());
 
             return db.insert(CommonString.TABLE_COVERAGE_DATA, null, values);
 
@@ -3182,21 +3178,18 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     }
 
     //update out time
-    public void updateCheckoutOuttime(String id, String out_time, String status) {
-
+    public void updateCheckoutOuttime(String id, String out_time, String status, String checkOutImagePath) {
         ContentValues values = new ContentValues();
 
         try {
-
             values.put(CommonString.KEY_OUT_TIME, out_time);
             values.put(CommonString.KEY_COVERAGE_STATUS, status);
+            values.put(CommonString.KEY_CHECKOUT_IMAGE, checkOutImagePath);
 
             db.update(CommonString.TABLE_COVERAGE_DATA, values, CommonString.KEY_STORE_ID + "='" + id + "'", null);
-
         } catch (Exception ex) {
-
+            Log.d("Exception in ", "checkOutTime! " + ex.toString());
         }
-
     }
 
 
@@ -4171,7 +4164,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     " INNER JOIN BRAND_MASTER BR ON SK.BRAND_ID = BR.BRAND_ID" +
                     " INNER JOIN SUB_CATEGORY_MASTER SB ON BR.SUB_CATEGORY_ID = SB.SUB_CATEGORY_ID" +
                     " INNER JOIN CATEGORY_MASTER CA ON SB.CATEGORY_ID = CA.CATEGORY_ID" +
-                    " INNER JOIN MAPPING_SUB_CATEGORY_IMAGE_ALLOW MIA ON SB.SUB_CATEGORY_ID=MIA.SUB_CATEGORY_ID "+
+                    " INNER JOIN MAPPING_SUB_CATEGORY_IMAGE_ALLOW MIA ON SB.SUB_CATEGORY_ID=MIA.SUB_CATEGORY_ID " +
                     " WHERE M.KEYACCOUNT_ID = '" + key_account_id + " 'AND M.STORETYPE_ID = '" + store_type_id + "' AND M.CLASS_ID = '" + class_id + "' AND CA.CATEGORY_ID = '" + categoryId + "'", null);
 
 
