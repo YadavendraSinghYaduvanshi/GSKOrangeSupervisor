@@ -182,10 +182,17 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".dailyentry.CategoryPicture"
-            android:label="@string/title_activity_category_picture"
             android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_activity_category_picture"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".dailyentry.StoreCheckoutImageActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_activity_store_checkout_image"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

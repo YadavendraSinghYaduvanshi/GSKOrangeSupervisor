@@ -59,11 +59,10 @@ import java.util.Locale;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import cpm.com.gskmtorange.R;
-import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
-import cpm.com.gskmtorange.gsk_dailyentry.CategoryListActivity;
+import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.gsk_dailyentry.StoreWisePerformanceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
@@ -71,7 +70,7 @@ import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
 /**
  * Created by ashishc on 31-05-2016.
  */
-public class StoreimageActivity extends AppCompatActivity implements View.OnClickListener,
+public class StoreCheckoutImageActivity extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     String gallery_package = "";
@@ -96,14 +95,16 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
     ArrayList<CoverageBean> coverage_list;
     Toolbar toolbar;
     boolean ResultFlag = true;
+    String checkOutStore_id = "";
     ArrayList<CoverageBean> coverage = new ArrayList<CoverageBean>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_storeimage);
+        setContentView(R.layout.activity_store_checkout_image);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -115,12 +116,13 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         btn_save = (Button) findViewById(R.id.btn_save_selfie);
 
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
-
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
         date = preferences.getString(CommonString.KEY_DATE, null);
         username = preferences.getString(CommonString.KEY_USERNAME, null);
         _UserId = preferences.getString(CommonString.KEY_USERNAME, "");
         intime = preferences.getString(CommonString.KEY_STORE_IN_TIME, "");
+
+        checkOutStore_id = getIntent().getStringExtra(CommonString.KEY_STORE_ID);
 
         str = CommonString.FILE_PATH;
 
@@ -176,28 +178,22 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-
         int id = v.getId();
 
         switch (id) {
-
             case R.id.img_cam_selfie:
 
-                _pathforcheck = store_id + "SI_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
-
+                _pathforcheck = checkOutStore_id + "CHK_SI_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
                 _path = CommonString.FILE_PATH + _pathforcheck;
-
                 intime = getCurrentTime();
 
                 startCameraActivity();
-
                 break;
 
             case R.id.btn_save_selfie:
 
                 if (img_str != null) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(StoreimageActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(StoreCheckoutImageActivity.this);
                     builder.setMessage(getResources().getString(R.string.title_activity_save_data))
                             .setCancelable(false)
                             .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -205,35 +201,11 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
                                     alert.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
-                                    CoverageBean cdata = new CoverageBean();
-                                    cdata.setStoreId(store_id);
-                                    cdata.setVisitDate(visit_date);
-                                    cdata.setUserId(username);
-                                    cdata.setInTime(intime);
-                                    cdata.setReason("");
-                                    cdata.setReasonid("0");
-                                    cdata.setLatitude(lat);
-                                    cdata.setLongitude(lon);
-                                    cdata.setImage(img_str);
-                                    cdata.setRemark("");
-                                    cdata.setStatus(CommonString.KEY_INVALID);
-                                    cdata.setCheckOut_Image("");
-
-                                    database.InsertCoverageData(cdata);
-
-                                    database.updateCheckoutStatus(store_id, CommonString.KEY_INVALID);
-                                            
-                                           /* SharedPreferences.Editor editor = preferences.edit();
-
-                                            editor.putString(CommonString.KEY_STOREVISITED_STATUS, "");
-                                            editor.putString(CommonString.KEY_STORE_IN_TIME, "");
-
-                                            editor.commit();*/
-
-
-                                    //Intent in = new Intent(StoreimageActivity.this, CategoryListActivity.class);
-                                    new StoreimageActivity.GeoTagUpload(StoreimageActivity.this).execute();
-
+                                    Intent i = new Intent(StoreCheckoutImageActivity.this, CheckoutActivity.class);
+                                    i.putExtra(CommonString.KEY_STORE_ID, checkOutStore_id);
+                                    i.putExtra(CommonString.KEY_CHECKOUT_IMAGE, img_str);
+                                    startActivity(i);
+                                    finish();
                                 }
                             })
                             .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -244,10 +216,10 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
                     alert = builder.create();
                     alert.show();
-
                 } else {
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.clickimage), Toast.LENGTH_SHORT).show();
                 }
+
                 break;
         }
     }
@@ -282,7 +254,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                         gallery_package = list.get(n).packageName;
                     }
 
-                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera") || packag.equalsIgnoreCase("الكاميرا")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
@@ -380,7 +352,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
     protected void onResume() {
         super.onResume();
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
-        toolbar.setTitle(R.string.title_activity_store_image);
+        toolbar.setTitle(R.string.title_activity_store_checkout_image);
     }
 
     protected void onStart() {
@@ -462,7 +434,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         @Override
         protected String doInBackground(Void... params) {
             try {
-                GSKOrangeDB db = new GSKOrangeDB(StoreimageActivity.this);
+                GSKOrangeDB db = new GSKOrangeDB(StoreCheckoutImageActivity.this);
                 db.open();
 
                 coverage = db.getCoverageWithStoreID_Data(store_id);
@@ -620,7 +592,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
             if (result.equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                 dialog.dismiss();
 
-                Intent in = new Intent(StoreimageActivity.this, StoreWisePerformanceActivity.class);
+                Intent in = new Intent(StoreCheckoutImageActivity.this, StoreWisePerformanceActivity.class);
                 startActivity(in);
                 finish();
 
@@ -628,7 +600,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                 //showAlert(getString(R.string.data_downloaded_successfully));
             } else {
 
-                GSKOrangeDB db = new GSKOrangeDB(StoreimageActivity.this);
+                GSKOrangeDB db = new GSKOrangeDB(StoreCheckoutImageActivity.this);
                 db.open();
 
                 dialog.dismiss();
@@ -642,7 +614,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
 
     public void showAlert(String str) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(StoreimageActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(StoreCheckoutImageActivity.this);
         builder.setTitle("Parinaam");
         builder.setMessage(str).setCancelable(false)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -656,7 +628,6 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         AlertDialog alert = builder.create();
         alert.show();
     }
-
 
     private static String arabicToenglish(String number) {
         char[] chars = new char[number.length()];

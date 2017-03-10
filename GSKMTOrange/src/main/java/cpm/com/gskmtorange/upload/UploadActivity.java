@@ -269,6 +269,7 @@ public class UploadActivity extends AppCompatActivity {
                                     + "[REASON_ID]" + coverageList.get(i).getReasonid() + "[/REASON_ID]"
                                     + "[REASON_REMARK]" + coverageList.get(i).getRemark() + "[/REASON_REMARK]"
                                     + "[CAMERA_ALLOWED]" + camera_allow + "[/CAMERA_ALLOWED]"
+                                    + "[CHECKOUT_IMAGE]" + coverageList.get(i).getCheckOut_Image() + "[/CHECKOUT_IMAGE]"
                                     + "[/USER_DATA]"
                                     + "[/DATA]";
 
@@ -1511,6 +1512,34 @@ public class UploadActivity extends AppCompatActivity {
 
                                             try {
                                                 result = UploadImage(coverageList.get(i1).getImage(), "StoreImages");
+
+                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "StoreImages";
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("StoreImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            //CheckOut Store Image
+                            if (coverageList.size() > 0) {
+                                for (int i1 = 0; i1 < coverageList.size(); i1++) {
+
+                                    if (coverageList.get(i1).getCheckOut_Image() != null && !coverageList.get(i1).getCheckOut_Image().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + coverageList.get(i1).getCheckOut_Image()).exists()) {
+
+                                            try {
+                                                result = UploadImage(coverageList.get(i1).getCheckOut_Image(), "StoreImages");
 
                                                 if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                     return "StoreImages";

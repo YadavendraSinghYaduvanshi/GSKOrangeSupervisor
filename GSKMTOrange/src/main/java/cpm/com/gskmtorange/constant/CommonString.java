@@ -50,6 +50,7 @@ public class CommonString {
     public static final String KEY_REASON_ID = "REASON_ID";
     public static final String KEY_REASON = "REASON";
     public static final String KEY_COVERAGE_REMARK = "REMARK";
+    public static final String KEY_CHECKOUT_IMAGE = "Checkout_Image";
     public static final String KEY_IMAGE = "IMAGE";
     public static final String KEY_IMAGE1 = "IMAGE1";
     public static final String KEY_IMAGE2 = "IMAGE2";
@@ -126,7 +127,6 @@ public class CommonString {
             + METHOD_UPLOAD_STOCK_XML_DATA;
 
 
-
     public static final String METHOD_UPLOAD_ASSET = "Upload_Stock_Availiablity_V1";
     public static final String METHOD_Get_DR_POSM_IMAGES = "GetImageNew";
     public static final String SOAP_ACTION_Get_DR_POSM_IMAGES = "http://tempuri.org/"
@@ -135,7 +135,7 @@ public class CommonString {
     public static final String SOAP_ACTION_DR_STORE_IMAGES_GEO = "http://tempuri.org/"
             + METHOD_Get_DR_STORE_IMAGES_GEO;
 
-    public static final String METHOD_UPLOAD_COVERAGE = "UPLOAD_COVERAGE";
+    public static final String METHOD_UPLOAD_COVERAGE = "UPLOAD_COVERAGENEW";
 
     public static final String METHOD_UPLOAD_COVERAGE_STATUS = "UploadCoverage_Status";
 
@@ -163,16 +163,23 @@ public class CommonString {
     public static final String TABLE_COVERAGE_DATA = "COVERAGE_DATA";
 
 
-    public static final String CREATE_TABLE_COVERAGE_DATA = "CREATE TABLE  IF NOT EXISTS "
-            + TABLE_COVERAGE_DATA + " (" + KEY_ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT ," + KEY_STORE_ID
-            + " VARCHAR,USER_ID VARCHAR, " + KEY_IN_TIME + " VARCHAR,"
-            + KEY_OUT_TIME + " VARCHAR," + KEY_VISIT_DATE + " VARCHAR,"
-            + KEY_LATITUDE + " VARCHAR," + KEY_LONGITUDE + " VARCHAR," + KEY_MERCHANDISER_ID + " VARCHAR,"
-            + KEY_COVERAGE_STATUS + " VARCHAR," + KEY_IMAGE + " VARCHAR,"
+    public static final String CREATE_TABLE_COVERAGE_DATA = "CREATE TABLE  IF NOT EXISTS " + TABLE_COVERAGE_DATA
+            + " ("
+            + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            + KEY_STORE_ID + " VARCHAR,USER_ID VARCHAR, "
+            + KEY_IN_TIME + " VARCHAR,"
+            + KEY_OUT_TIME + " VARCHAR,"
+            + KEY_VISIT_DATE + " VARCHAR,"
+            + KEY_LATITUDE + " VARCHAR,"
+            + KEY_LONGITUDE + " VARCHAR,"
+            + KEY_MERCHANDISER_ID + " VARCHAR,"
+            + KEY_COVERAGE_STATUS + " VARCHAR,"
+            + KEY_IMAGE + " VARCHAR,"
             + KEY_GEO_TAG + " VARCHAR,"
-            + KEY_REASON_ID + " VARCHAR," + KEY_COVERAGE_REMARK
-            + " VARCHAR," + KEY_REASON + " VARCHAR)";
+            + KEY_REASON_ID + " VARCHAR,"
+            + KEY_COVERAGE_REMARK + " VARCHAR,"
+            + KEY_CHECKOUT_IMAGE + " VARCHAR,"
+            + KEY_REASON + " VARCHAR)";
 
 
     public static final String CREATE_TABLE_STORE_GEOTAGGING = "CREATE TABLE IF NOT EXISTS "
@@ -661,24 +668,21 @@ public class CommonString {
     public static final String TABLE_INSERT_BRAND_AVAIBILITY_DATA = "Camera_Not_Allowed";
 
     public static final String CREATE_TABLE_INSERT_BRAND_AVAIBILITY_DATA = "CREATE TABLE IF NOT EXISTS "
-        + TABLE_INSERT_BRAND_AVAIBILITY_DATA
-        + "("
-        + "KEY_ID"
-        + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            + TABLE_INSERT_BRAND_AVAIBILITY_DATA
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
 
-        + "COMMON_ID"
-        + " INTEGER,"
+            + "COMMON_ID"
+            + " INTEGER,"
 
-        + "BRAND_NAME"
-        + " VARCHAR,"
+            + "BRAND_NAME"
+            + " VARCHAR,"
 
-        + "BRAND_ID"
-        + " INTEGER"
+            + "BRAND_ID"
+            + " INTEGER"
 
-        + ")";
-
-
-
+            + ")";
 
 
     public static final String TABLE_INSERT_CATEGORY_PICTURE = "Stock_CATEGORY_PICTURE";
@@ -709,7 +713,6 @@ public class CommonString {
             + " VARCHAR"
 
             + ")";
-
 
 
     public static final String TABLE_INSERT_CATEGORY_PICTURE_LIST = "Stock_CATEGORY_PICTURE_LIST";
