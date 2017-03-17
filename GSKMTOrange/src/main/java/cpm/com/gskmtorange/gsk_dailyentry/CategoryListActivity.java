@@ -122,6 +122,14 @@ public class CategoryListActivity extends AppCompatActivity {
                         }
                     }
 
+                    //New MSL_Availability_StockFacing
+                /*if (db.isMappingStockDataStockFacing(category_id, keyAccount_id, storeType_id, class_id)) {
+                    if (!db.checkMsl_Availability_StockFacingData(store_id, category_id)) {
+                        flag_filled = false;
+                        break;
+                    }
+                }*/
+
                     //Promo Compliance
                     if (flag) {
                         if (db.isMappingPromotionData(store_id, category_id)) {
@@ -279,7 +287,7 @@ public class CategoryListActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
@@ -332,6 +340,14 @@ public class CategoryListActivity extends AppCompatActivity {
                         break;
                     }
                 }
+
+                //New MSL_Availability_StockFacing
+                /*if (db.isMappingStockDataStockFacing(category_id, keyAccount_id, storeType_id, class_id)) {
+                    if (!db.checkMsl_Availability_StockFacingData(store_id, category_id)) {
+                        flag_filled = false;
+                        break;
+                    }
+                }*/
 
                 if (db.isMappingPromotionData(store_id, category_id)) {
                     if (!db.checkPromoComplianceData(store_id, category_id)) {

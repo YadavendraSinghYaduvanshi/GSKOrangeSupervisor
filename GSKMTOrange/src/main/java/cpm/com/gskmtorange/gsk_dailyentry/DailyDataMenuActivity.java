@@ -41,7 +41,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
 
     GSKOrangeDB db;
     String categoryName = "", categoryId;
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id,camera_allow;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
     private SharedPreferences preferences;
 
     @Override
@@ -118,6 +118,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             }
             categoryList.add(data);
 
+
             data = new DailyDataMenuGetterSetter();
             //data.setCategory_name("Stock & Facing");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_stock_facing));
@@ -145,10 +146,10 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             } else {
                 data.setCategory_img(R.mipmap.t2pcompliance_grey);
             }
-
             categoryList.add(data);
-            //T2p added
 
+
+            //T2p added
             data = new DailyDataMenuGetterSetter();
             //data.setCategory_name("Additional Visibility");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_additional_visibility));
@@ -157,8 +158,8 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             } else {
                 data.setCategory_img(R.mipmap.additional_visibility);
             }
-
             categoryList.add(data);
+
 
             data = new DailyDataMenuGetterSetter();
             //data.setCategory_name("Promo Compliance");
@@ -178,23 +179,35 @@ public class DailyDataMenuActivity extends AppCompatActivity {
 
 
             //Category Pictures
-
             data = new DailyDataMenuGetterSetter();
             //data.setCategory_name("Additional Visibility");
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_category_picture));
 
-            if(camera_allow.equalsIgnoreCase("1")){
+            if (camera_allow.equalsIgnoreCase("1")) {
 
-            if (db.isCategoryPictureData(store_id, categoryId)) {
-                data.setCategory_img(R.mipmap.picturecatogory_done);
+                if (db.isCategoryPictureData(store_id, categoryId)) {
+                    data.setCategory_img(R.mipmap.picturecatogory_done);
+                } else {
+                    data.setCategory_img(R.mipmap.picturecatogory);
+                }
             } else {
-                data.setCategory_img(R.mipmap.picturecatogory);
-            }
-            }
-            else{
                 data.setCategory_img(R.mipmap.picturecatogory_grey);
             }
+            categoryList.add(data);
 
+
+            //Temperory Add
+            data = new DailyDataMenuGetterSetter();
+            data.setCategory_name("MSL and Stock Facing");
+            if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {
+                if (db.checkMsl_Availability_StockFacingData(store_id, categoryId)) {
+                    data.setCategory_img(R.mipmap.msl_availability_done);
+                } else {
+                    data.setCategory_img(R.mipmap.msl_availability);
+                }
+            } else {
+                data.setCategory_img(R.mipmap.msl_availability_grey);
+            }
             categoryList.add(data);
 
 
@@ -295,10 +308,8 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
                 }
 
-            }
-
-            else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_category_picture)))) {
-                if(camera_allow.equalsIgnoreCase("1")){
+            } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_category_picture)))) {
+                if (camera_allow.equalsIgnoreCase("1")) {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 } else {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
@@ -317,6 +328,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                             intent.putExtra("categoryId", categoryId);
                             startActivity(intent);
                         }
+
                     } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_stock_facing))) {
                         if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {
                             Intent intent = new Intent(DailyDataMenuActivity.this, Stock_FacingActivity.class);
@@ -324,14 +336,15 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                             intent.putExtra("categoryId", categoryId);
                             startActivity(intent);
                         }
-                    } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_promo_compliance))) {
 
+                    } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_promo_compliance))) {
                         if (db.isMappingPromotionData(store_id, categoryId) || db.isMappingAdditionalPromotionData(store_id, categoryId)) {
                             Intent intent = new Intent(DailyDataMenuActivity.this, PromoComplianceActivity.class);
                             intent.putExtra("categoryName", dailyData.getCategory_name());
                             intent.putExtra("categoryId", categoryId);
                             startActivity(intent);
                         }
+
                     } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_t2p)))) {
                         if (db.isMappingT2PData(store_id, categoryId)) {
                             Intent intent = new Intent(DailyDataMenuActivity.this, T2PComplianceActivity.class);
@@ -340,6 +353,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                             startActivity(intent);
                             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
                         }
+
                     } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.title_activity_Additional_visibility)))) {
                         Intent intent = new Intent(DailyDataMenuActivity.this, AdditionalVisibility.class);
                         intent.putExtra("categoryName", dailyData.getCategory_name());
@@ -347,22 +361,23 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                         startActivity(intent);
                         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
-                    }
-                    else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_category_picture)))) {
-
-                        if(camera_allow.equalsIgnoreCase("1")){
-
+                    } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_category_picture)))) {
+                        if (camera_allow.equalsIgnoreCase("1")) {
                             Intent intent = new Intent(DailyDataMenuActivity.this, CategoryPicture.class);
                             intent.putExtra("categoryName", dailyData.getCategory_name());
                             intent.putExtra("categoryId", categoryId);
                             startActivity(intent);
                             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                        } /*else {
+                        }*/
 
+                    } else if (dailyData.getCategory_name().equalsIgnoreCase("MSL and Stock Facing")) {
+                        if (db.isMappingStockDataMSL_Availability(categoryId, keyAccount_id, storeType_id, class_id)) {
+                            Intent intent = new Intent(DailyDataMenuActivity.this, MSL_Availability_StockFacingActivity.class);
+                            intent.putExtra("categoryName", dailyData.getCategory_name());
+                            intent.putExtra("categoryId", categoryId);
+                            startActivity(intent);
                         }
-                       else{
-
-                        }
-
 
                     }
 
@@ -414,7 +429,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 

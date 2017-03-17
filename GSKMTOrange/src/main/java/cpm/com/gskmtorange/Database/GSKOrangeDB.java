@@ -1,5 +1,6 @@
 package cpm.com.gskmtorange.Database;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.BrandAvabilityGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CategoryPictureGetterSetter;
@@ -20,35 +22,34 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.GeotaggingBeans;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
-import cpm.com.gskmtorange.xmlGetterSetter.ADDITIONAL_DISPLAY_MASTERGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
-import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
-
-import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.xmlGetterSetter.ADDITIONAL_DISPLAY_MASTERGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.JourneyPlanGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityStockFacingGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
-import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.ShelfMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.StoreWisePerformaceGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Store_wise_camera_DataGetterSetter;
@@ -149,6 +150,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             db.execSQL(CommonString.CREATE_TABLE_INSERT_CATEGORY_PICTURE);
 
             db.execSQL(TableBean.getMappingSubCategoryImageAllow());
+
+            //15-03-2017
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -4716,5 +4720,302 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         } catch (Exception ex) {
             Log.d("Exception ", " in MAPPING_SUB_CATEGORY_IMAGE_ALLOW " + ex.toString());
         }
+    }
+
+
+    //14-03-2017
+    //MSL_Availability_StockFacing
+    public ArrayList<MSL_AvailabilityStockFacingGetterSetter> getMSL_Availability_StockFacingHeaderData(
+            String category_id, String keyAccount_id, String storeType_id, String class_id) {
+
+        ArrayList<MSL_AvailabilityStockFacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("Select DISTINCT SB.SUB_CATEGORY_ID,SB.SUB_CATEGORY,BR.BRAND_ID,BR.BRAND,BR.COMPANY_ID ," +
+                    " (SELECT SUM(SOS_TARGET) FROM MAPPING_SOS_TARGET WHERE STORE_ID = 1 AND BRAND_ID = BR.BRAND_ID)AS SOS_TARGET " +
+                    "from MAPPING_STOCK M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where CA.CATEGORY_ID='" + category_id + "' AND M.KEYACCOUNT_ID = '" + keyAccount_id +
+                    "' AND M.STORETYPE_ID = '" + storeType_id + "' AND M.CLASS_ID = '" + class_id + "'" +
+                    "order by SB.SUB_CATEGORY,BR.COMPANY_ID,BR.BRAND", null);
+
+            /*dbcursor = db.rawQuery("Select DISTINCT SB.SUB_CATEGORY_ID,SB.SUB_CATEGORY,BR.BRAND_ID,BR.BRAND " +
+                    "from MAPPING_STOCK M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where   M.MUST_HAVE=1 AND CA.CATEGORY_ID='" + category_id +
+                    "' AND M.KEYACCOUNT_ID = '" + keyAccount_id +
+                    "' AND M.STORETYPE_ID = '" + storeType_id + "' AND M.CLASS_ID = '" + class_id + "'" +
+                    "order by SB.SUB_CATEGORY,BR.BRAND", null);*/
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    MSL_AvailabilityStockFacingGetterSetter cd = new MSL_AvailabilityStockFacingGetterSetter();
+
+                    cd.setSub_category_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
+                    cd.setSub_category(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
+                    cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
+                    cd.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND")));
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public ArrayList<MSL_AvailabilityStockFacingGetterSetter> getMSL_Availability_StockFacingSKUData(
+            String category_id, String brand_id, String keyAccount_id, String storeType_id, String class_id) {
+
+        ArrayList<MSL_AvailabilityStockFacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select DISTINCT SK.SKU_ID,SK.SKU,SK.MRP,SK.SKU_SEQUENCE,M.MBQ,BR.COMPANY_ID  " +
+                    "from MAPPING_STOCK M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where CA.CATEGORY_ID='" + category_id + "' AND BR.BRAND_ID='" + brand_id +
+                    "' AND M.KEYACCOUNT_ID = '" + keyAccount_id + "' AND M.STORETYPE_ID = '" + storeType_id +
+                    "' AND M.CLASS_ID = '" + class_id + "'", null);
+
+            /*dbcursor = db.rawQuery("Select DISTINCT SK.SKU_ID,SK.SKU,SK.MRP,SK.SKU_SEQUENCE,M.MBQ " +
+                    "from MAPPING_STOCK M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where M.MUST_HAVE=1 AND " +
+                    "CA.CATEGORY_ID='" + category_id + "' AND BR.BRAND_ID='" + brand_id +
+                    "' AND M.KEYACCOUNT_ID = '" + keyAccount_id + "' AND M.STORETYPE_ID = '" + storeType_id +
+                    "' AND M.CLASS_ID = '" + class_id + "'", null);*/
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    MSL_AvailabilityStockFacingGetterSetter cd = new MSL_AvailabilityStockFacingGetterSetter();
+
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setMrp(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MRP")));
+                    cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
+                    cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+                    cd.setToggleValue("1");
+                    cd.setFacing("");
+                    cd.setStock("");
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public ArrayList<MSL_AvailabilityStockFacingGetterSetter> getMSL_Availability_StockFacingSKU_AfterSaveData(
+            String category_id, String brand_id, String store_id) {
+
+        ArrayList<MSL_AvailabilityStockFacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Msl_Availability_Stock_Facing_Data " +
+                    "where category_id='" + category_id + "' and Brand_Id='" + brand_id + "' AND Store_Id='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    MSL_AvailabilityStockFacingGetterSetter cd = new MSL_AvailabilityStockFacingGetterSetter();
+
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
+                    cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
+                    cd.setToggleValue(dbcursor.getString(dbcursor.getColumnIndexOrThrow("TOGGLE_VALUE")));
+                    cd.setFacing(dbcursor.getString(dbcursor.getColumnIndexOrThrow("FACING")));
+                    cd.setStock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STOCK")));
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_Availability Sku After Save Data!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    public void InsertMSL_Availability_StockFacing(
+            String storeId, String categoryId, List<MSL_AvailabilityStockFacingGetterSetter> hashMapListHeaderData,
+            HashMap<MSL_AvailabilityStockFacingGetterSetter, List<MSL_AvailabilityStockFacingGetterSetter>> hashMapListChildData) {
+        ContentValues values = new ContentValues();
+
+        try {
+            db.beginTransaction();
+            for (int i = 0; i < hashMapListHeaderData.size(); i++) {
+
+                for (int j = 0; j < hashMapListChildData.get(hashMapListHeaderData.get(i)).size(); j++) {
+                    MSL_AvailabilityStockFacingGetterSetter data = hashMapListChildData.get(hashMapListHeaderData.get(i)).get(j);
+
+                    values.put("Store_Id", storeId);
+                    values.put("Category_Id", categoryId);
+                    values.put("Brand_Id", hashMapListHeaderData.get(i).getBrand_id());
+                    values.put("SKU_ID", data.getSku_id());
+                    values.put("SKU", data.getSku());
+                    values.put("SKU_SEQUENCE", data.getSku_sequence());
+                    values.put("MBQ", data.getMbq());
+                    values.put("TOGGLE_VALUE", data.getToggleValue());
+                    values.put("FACING", data.getFacing());
+                    values.put("STOCK", data.getStock());
+                    values.put("COMPANY_ID", data.getCompany_id());
+
+                    db.insert(CommonString.TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING, null, values);
+                }
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        } catch (Exception ex) {
+            Log.d("Exception ", " in Insert MSL_Availability_StockFacing " + ex.toString());
+        }
+    }
+
+    public void updateMSL_Availability_StockFacing(
+            String storeId, String categoryId, List<MSL_AvailabilityStockFacingGetterSetter> hashMapListHeaderData,
+            HashMap<MSL_AvailabilityStockFacingGetterSetter, List<MSL_AvailabilityStockFacingGetterSetter>> hashMapListChildData) {
+
+        ContentValues values = new ContentValues();
+
+        try {
+            db.beginTransaction();
+            for (int i = 0; i < hashMapListHeaderData.size(); i++) {
+
+                for (int j = 0; j < hashMapListChildData.get(hashMapListHeaderData.get(i)).size(); j++) {
+                    MSL_AvailabilityStockFacingGetterSetter data = hashMapListChildData.get(hashMapListHeaderData.get(i)).get(j);
+
+                    values.put("TOGGLE_VALUE", data.getToggleValue());
+                    values.put("FACING", data.getFacing());
+                    values.put("STOCK", data.getStock());
+
+                    db.update(CommonString.TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING, values,
+                            "Brand_Id ='" + hashMapListHeaderData.get(i).getBrand_id() + "' AND SKU_ID ='" + data.getSku_id() +
+                                    "' AND Category_Id='" + categoryId + "' AND Store_Id='" + storeId + "'", null);
+                }
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        } catch (Exception ex) {
+            Log.d("Exception ", " in Insert MSL_Availability_StockFacing " + ex.toString());
+        }
+    }
+
+    @SuppressLint("LongLogTag")
+    public boolean checkMsl_Availability_StockFacingData(String store_id, String category_id) {
+        Log.d("MSL_Availability ", "Stock data--------------->Start<------------");
+        ArrayList<MSL_AvailabilityStockFacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Msl_Availability_Stock_Facing_Data " +
+                    "where category_id='" + category_id + "' and Store_Id='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                if (dbcursor.moveToFirst()) {
+                    do {
+                        MSL_AvailabilityStockFacingGetterSetter sb = new MSL_AvailabilityStockFacingGetterSetter();
+
+                        sb.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                        list.add(sb);
+                    } while (dbcursor.moveToNext());
+                }
+                dbcursor.close();
+
+                return list.size() > 0;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "when fetching Records!!!!!!!!!!!!!!!!!!!!!" + e.toString());
+            return false;
+        }
+
+        Log.d("MSL_Availability_StockFacing ", "midday---------------------->Stop<-----------");
+        return false;
+    }
+
+    //MSL_Availability_StockFacing  Server Upload Data
+    public ArrayList<MSL_AvailabilityStockFacingGetterSetter> getMSL_Availability_StockFacing_UploadServerData(String store_id) {
+        ArrayList<MSL_AvailabilityStockFacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+            dbcursor = db.rawQuery("Select * from Msl_Availability_Stock_Facing_Data " +
+                    "where Store_Id='" + store_id + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    MSL_AvailabilityStockFacingGetterSetter cd = new MSL_AvailabilityStockFacingGetterSetter();
+
+                    cd.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Category_Id")));
+                    cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("Brand_Id")));
+                    cd.setSku_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_ID")));
+                    cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
+                    cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
+                    cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
+                    cd.setToggleValue(dbcursor.getString(dbcursor.getColumnIndexOrThrow("TOGGLE_VALUE")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_Availability server upload Data!" + e.toString());
+            return list;
+        }
+        return list;
     }
 }

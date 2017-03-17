@@ -759,4 +759,46 @@ public class CommonString {
     public static final String KEY_LANGUAGE_OMAN = "English";
     public static final String KEY_RETURE_LANGUAGE_OMAN = "EN";
 
+    public static final String TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING = "Msl_Availability_Stock_Facing_Data";
+
+    public static final String CREATE_TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING
+            + "("
+            + "KEY_ID"
+            + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+
+            + "Store_Id"
+            + " VARCHAR,"
+
+            + "Category_Id"
+            + " VARCHAR,"
+
+            + "Brand_Id"
+            + " VARCHAR,"
+
+            + "SKU_ID"
+            + " VARCHAR,"
+
+            + "SKU"
+            + " VARCHAR,"
+
+            + "SKU_SEQUENCE"
+            + " VARCHAR,"
+
+            + "MBQ"
+            + " VARCHAR,"
+
+            + "COMPANY_ID"
+            + " VARCHAR,"
+
+            + "FACING"
+            + " VARCHAR,"
+
+            + "STOCK"
+            + " VARCHAR,"
+
+            + "TOGGLE_VALUE"
+            + " VARCHAR"
+
+            + ")";
 }
