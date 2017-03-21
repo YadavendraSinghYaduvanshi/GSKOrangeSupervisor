@@ -228,6 +228,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE, null, null);
         db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE_LIST, null, null);
+        db.delete(CommonString.TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING, null, null);
     }
 
     public void InsertJCP(JourneyPlanGetterSetter data) {
@@ -5005,6 +5006,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
                     cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
                     cd.setToggleValue(dbcursor.getString(dbcursor.getColumnIndexOrThrow("TOGGLE_VALUE")));
+                    cd.setFacing(dbcursor.getString(dbcursor.getColumnIndexOrThrow("FACING")));
+                    cd.setStock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STOCK")));
 
                     list.add(cd);
                     dbcursor.moveToNext();

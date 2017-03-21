@@ -1,8 +1,10 @@
 package cpm.com.gskmtorange.gsk_dailyentry;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -14,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +42,7 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityStockFacingGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
 
 public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
     ExpandableListView expandableListView;
@@ -53,13 +57,19 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
     boolean checkflag = true;
 
     ExpandableListAdapter adapter;
+    ImageView camera1, camera2, camera3, camera4;
+    LinearLayout lin_camera1, lin_camera2, lin_camera3, lin_camera4;
 
     GSKOrangeDB db;
 
     String categoryName, categoryId, storeId, Error_Message = "";
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
     boolean isDialogOpen = true;
     private SharedPreferences preferences;
+
+    ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> planogramShelfHeaderDataList = new ArrayList<>();
+    ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> planogramSkuChildDataList;
+    HashMap<StockFacing_PlanogramTrackerDataGetterSetter, ArrayList<StockFacing_PlanogramTrackerDataGetterSetter>> planogramHashMapListChildData = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +81,16 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
 
             expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
             txt_mslAvailabilityName = (TextView) findViewById(R.id.txt_mslAvailabilityName);
+
+            camera1 = (ImageView) findViewById(R.id.img_camera1);
+            camera2 = (ImageView) findViewById(R.id.img_camera2);
+            camera3 = (ImageView) findViewById(R.id.img_camera3);
+            camera4 = (ImageView) findViewById(R.id.img_camera4);
+
+            lin_camera1 = (LinearLayout) findViewById(R.id.lin_camera1);
+            lin_camera2 = (LinearLayout) findViewById(R.id.lin_camera2);
+            lin_camera3 = (LinearLayout) findViewById(R.id.lin_camera3);
+            lin_camera4 = (LinearLayout) findViewById(R.id.lin_camera4);
 
             db = new GSKOrangeDB(this);
             db.open();
@@ -87,6 +107,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
             class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
             storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+            camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
 
             //Intent data
             categoryName = getIntent().getStringExtra("categoryName");
@@ -99,6 +120,11 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             prepareList();
+
+            //Camera
+            prepareDefaultList();
+
+            cameraMethod();
 
             final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +159,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                         alert.show();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
-                        builder.setMessage("Fill the value or fill 0 ")
+                        builder.setMessage(Error_Message)
                                 .setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
@@ -221,6 +247,154 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
         }
     }
 
+    private void cameraMethod() {
+        /*cameraData = new Store_wise_camera_DataGetterSetter();
+
+        if (db.isStorewiseCameraSave(store_id, categoryId)) {
+            cameraData = db.getStore_wise_camera(store_id, categoryId);
+        } else {
+            cameraData.setStore_id(store_id);
+            cameraData.setCategory_id(categoryId);
+            cameraData.setCamera1("");
+            cameraData.setCamera2("");
+            cameraData.setCamera3("");
+            cameraData.setCamera4("");
+            cameraData.setCheckSaveStatus("0");
+        }
+
+
+        if (camera_allow.equals("1")) {
+
+            findViewById(R.id.view_camera2).setVisibility(View.VISIBLE);
+            findViewById(R.id.view_camera3).setVisibility(View.VISIBLE);
+
+            if (cameraData.getCamera1().equals("")) {
+                camera1.setBackgroundResource(R.mipmap.camera_orange);
+            } else {
+                camera1.setBackgroundResource(R.mipmap.camera_green);
+            }
+
+            if (cameraData.getCamera2().equals("")) {
+                camera2.setBackgroundResource(R.mipmap.camera_orange);
+            } else {
+                camera2.setBackgroundResource(R.mipmap.camera_green);
+            }
+
+            if (cameraData.getCamera3().equals("")) {
+                camera3.setBackgroundResource(R.mipmap.camera_orange);
+            } else {
+                camera3.setBackgroundResource(R.mipmap.camera_green);
+            }
+
+            if (cameraData.getCamera4().equals("")) {
+                camera4.setBackgroundResource(R.mipmap.camera_orange);
+            } else {
+                camera4.setBackgroundResource(R.mipmap.camera_green);
+            }
+
+
+            lin_camera1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    _pathforcheck = "Stock_Camera1_" + store_id + "_" + categoryId
+                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    path = str + _pathforcheck;
+
+                    startCameraActivity(3);
+                }
+            });
+
+            lin_camera2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    _pathforcheck = "Stock_Camera2_" + store_id + "_" + categoryId
+                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    path = str + _pathforcheck;
+
+                    startCameraActivity(4);
+                }
+            });
+
+            lin_camera3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    _pathforcheck = "Stock_Camera3_" + store_id + "_" + categoryId
+                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    path = str + _pathforcheck;
+
+                    startCameraActivity(5);
+                }
+            });
+
+            lin_camera4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    _pathforcheck = "Stock_Camera4_" + store_id + "_" + categoryId
+                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                    path = str + _pathforcheck;
+
+                    startCameraActivity(6);
+                }
+            });
+
+        } else {*/
+
+        if (!camera_allow.equals("1")) {
+            findViewById(R.id.lin_camera).setVisibility(View.VISIBLE);
+
+            findViewById(R.id.view_camera2).setVisibility(View.GONE);
+            findViewById(R.id.view_camera3).setVisibility(View.GONE);
+
+            lin_camera2.setVisibility(View.GONE);
+            lin_camera3.setVisibility(View.GONE);
+            lin_camera4.setVisibility(View.GONE);
+
+            if (db.isPlanogramAddShelfSaveData(store_id, categoryId)) {
+                camera1.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
+            } else {
+                camera1.setBackgroundResource(R.mipmap.new_no_camera);
+            }
+
+            lin_camera1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MSL_Availability_StockFacingActivity.this,
+                            StockFacing_PlanogramTrackerActivity.class);
+
+                    intent.putExtra("storeId", store_id);
+                    intent.putExtra("keyAccount_id", keyAccount_id);
+                    intent.putExtra("class_id", class_id);
+                    intent.putExtra("storeType_id", storeType_id);
+                    intent.putExtra("categoryId", categoryId);
+                    intent.putExtra("categoryName", categoryName);
+
+                    startActivityForResult(intent, 100);
+                }
+
+            });
+        } else {
+            findViewById(R.id.lin_camera).setVisibility(View.GONE);
+        }
+    }
+
+    //Planogram List for check and delete on backPress
+    private void prepareDefaultList() {
+        // Planogram After save shelf header data
+        planogramShelfHeaderDataList = db.getPlanogramAddShelfHeaderAfterSaveData(store_id, categoryId);
+
+        if (planogramShelfHeaderDataList.size() > 0) {
+
+            for (int i = 0; i < planogramShelfHeaderDataList.size(); i++) {
+                planogramSkuChildDataList = db.getStockAndFacingPlanogramAfterSKUData(planogramShelfHeaderDataList.get(i).getKey_id());
+
+                //After save sku child data
+                if (planogramSkuChildDataList.size() > 0) {
+                    planogramHashMapListChildData.put(planogramShelfHeaderDataList.get(i), planogramSkuChildDataList);
+                }
+            }
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -271,6 +445,15 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
 
                 //Company_id
                 if (listDataChild.get(listDataHeader.get(i)).get(j).getCompany_id().equals("1")) {
+
+                    if (!camera_allow.equalsIgnoreCase("1")) {
+                        if (!(planogramShelfHeaderDataList.size() > 0)) {
+                            flag = false;
+                            Error_Message = getResources().getString(R.string.stock_planogram_data_noCamera_data);
+                            break;
+                        }
+                    }
+
                     if (faceup.equals("")) {
                         if (!checkHeaderArray.contains(i)) {
                             checkHeaderArray.add(i);
@@ -330,6 +513,13 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
                     .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+
+                            if (!validateData(hashMapListHeaderData, hashMapListChildData)) {
+                                if (!camera_allow.equals("1")) {
+                                    db.deletePlanogramListStoreAndCategorywise(store_id, categoryId,
+                                            planogramShelfHeaderDataList, planogramHashMapListChildData);
+                                }
+                            }
                             finish();
                         }
                     })
@@ -361,6 +551,13 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
         builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
                 .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        if (!validateData(hashMapListHeaderData, hashMapListChildData)) {
+
+                            if (!camera_allow.equals("1")) {
+                                db.deletePlanogramListStoreAndCategorywise(store_id, categoryId,
+                                        planogramShelfHeaderDataList, planogramHashMapListChildData);
+                            }
+                        }
                         finish();
                     }
                 })
@@ -703,4 +900,23 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("LongLogTag")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("MSL_AVailability_StockFacing", "resultCode: " + resultCode);
+
+        switch (requestCode) {
+            case 100:
+                //Planogram List for check and delete on backPress
+                prepareDefaultList();
+                if (db.isPlanogramAddShelfSaveData(store_id, categoryId)) {
+                    camera1.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
+                } else {
+                    camera1.setBackgroundResource(R.mipmap.new_no_camera);
+                }
+
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

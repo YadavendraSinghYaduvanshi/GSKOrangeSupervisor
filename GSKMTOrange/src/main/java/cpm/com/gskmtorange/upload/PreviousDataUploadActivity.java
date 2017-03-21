@@ -359,7 +359,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
 
                             //MSL_Availability_StockFacing
-                            /*String mslAvailability_stockFacing_xml = "";
+                            String mslAvailability_stockFacing_xml = "";
                             onXML = "";
                             msl_availabilityStockFacingList = db.getMSL_Availability_StockFacing_UploadServerData(coverageList.get(i).getStoreId());
 
@@ -367,17 +367,23 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                 for (int j = 0; j < msl_availabilityStockFacingList.size(); j++) {
                                     if (!msl_availabilityStockFacingList.get(j).getSku_id().equals("0")) {
 
+                                        String stock;
+                                        if (!msl_availabilityStockFacingList.get(j).getStock().equals("")) {
+                                            stock = msl_availabilityStockFacingList.get(j).getStock();
+                                        } else {
+                                            stock = "0";
+                                        }
                                         onXML = "[MSL_AVAILABILITY_STOCK_FACING_DATA]"
                                                 + "[MID]" + mid + "[/MID]"
                                                 + "[USER_ID]" + userId + "[/USER_ID]"
-                                                + "[CATEGORY_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getCategory_id()) + "[/CATEGORY_ID]"
-                                                + "[BRAND_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getBrand_id()) + "[/BRAND_ID]"
+                                                //+ "[CATEGORY_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getCategory_id()) + "[/CATEGORY_ID]"
+                                                //+ "[BRAND_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getBrand_id()) + "[/BRAND_ID]"
                                                 + "[SKU_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getSku_id()) + "[/SKU_ID]"
                                                 + "[MBQ]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMbq()) + "[/MBQ]"
-                                                + "[TOGGLE_VALUE]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getToggleValue()) + "[/TOGGLE_VALUE]"
+                                                + "[AVAILABILITY]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getToggleValue()) + "[/AVAILABILITY]"
                                                 + "[FACING]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getFacing()) + "[/FACING]"
-                                                + "[STOCK]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getStock()) + "[/STOCK]"
-                                                + "[/MSL_AVAILABILITY_STOCK_FACING_DATA]";
+                                                + "[STOCK]" + Integer.parseInt(stock) + "[/STOCK]" +
+                                                "[/MSL_AVAILABILITY_STOCK_FACING_DATA]";
 
                                         mslAvailability_stockFacing_xml = mslAvailability_stockFacing_xml + onXML;
                                     }
@@ -414,7 +420,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                             }
                             data.value = 15;
                             data.name = getString(R.string.availability_data_uploading);
-                            publishProgress(data);*/
+                            publishProgress(data);
 
 
 
