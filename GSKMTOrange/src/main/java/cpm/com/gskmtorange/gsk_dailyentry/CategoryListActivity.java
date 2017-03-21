@@ -126,7 +126,6 @@ public class CategoryListActivity extends AppCompatActivity {
                     if (db.isMappingStockDataStockFacing(category_id, keyAccount_id, storeType_id, class_id)) {
                         if (!db.checkMsl_Availability_StockFacingData(store_id, category_id)) {
                             flag = false;
-                            break;
                         }
                     }
 
