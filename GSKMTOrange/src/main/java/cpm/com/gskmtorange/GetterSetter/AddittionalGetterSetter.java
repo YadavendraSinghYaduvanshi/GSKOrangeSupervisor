@@ -1,10 +1,13 @@
 package cpm.com.gskmtorange.GetterSetter;
 
+import java.util.ArrayList;
+
 /**
  * Created by ashishc on 09-01-2017.
  */
 
 public class AddittionalGetterSetter {
+
 
     public String getBrand() {
         return Brand;
@@ -107,4 +110,13 @@ public class AddittionalGetterSetter {
 
     String categoryId;
 
+    ArrayList<AdditionalDialogGetterSetter> skuDialogList = new ArrayList<>();
+
+    public ArrayList<AdditionalDialogGetterSetter> getSkuDialogList() {
+        return skuDialogList;
+    }
+
+    public void setSkuDialogList(ArrayList<AdditionalDialogGetterSetter> skuDialogList) {
+        this.skuDialogList = skuDialogList;
+    }
 }

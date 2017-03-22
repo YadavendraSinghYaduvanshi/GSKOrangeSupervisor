@@ -675,7 +675,6 @@ public class UploadActivity extends AppCompatActivity {
                             String additional_visibility_dialog_xml = "";
                             onXML = "";
                             String onXMLdIALOG = "";
-
                             String imageV1, imageV2, imageV3;
 
                             additionalVisibilityList = db.getAdditionalStockUpload(coverageList.get(i).getStoreId());
@@ -701,71 +700,52 @@ public class UploadActivity extends AppCompatActivity {
                                         imageV3 = additionalVisibilityList.get(J).getImage3();
                                     }
 
-
                                     String KeyID = additionalVisibilityList.get(J).getKey_id();
 
                                     additionalVisibilitySkuList = db.getDialogStockUpload(KeyID);
 
                                     if (additionalVisibilitySkuList.size() > 0) {
-
                                         for (int k = 0; k < additionalVisibilitySkuList.size(); k++) {
+
+                                            /*String sku_id = "";
+                                            if (!additionalVisibilitySkuList.get(k).getSku_id().equals("")) {
+                                                sku_id = additionalVisibilitySkuList.get(k).getSku_id();
+                                            }
 
                                             onXMLdIALOG = "[VISIBILITY_DAILOG]"
                                                     + "[MID]" + mid + "[/MID]"
-                                                    + "[USER_ID]"
-                                                    + userId
-                                                    + "[/USER_ID]"
-                                                    + "[KEY_ID]"
-                                                    + additionalVisibilitySkuList.get(k).getCOMMON_ID()
-                                                    + "[/KEY_ID]"
-                                                    + "[CATEGORY_ID]"
-                                                    + additionalVisibilitySkuList.get(k).getCategoryId()
-                                                    + "[/CATEGORY_ID]"
-                                                    + "[SKU_ID]"
-                                                    + additionalVisibilitySkuList.get(k).getSku_id()
-                                                    + "[/SKU_ID]"
-                                                    + "[QUANTITY]"
-                                                    + additionalVisibilitySkuList.get(k).getQuantity()
-                                                    + "[/QUANTITY]"
+                                                    + "[USER_ID]" + userId + "[/USER_ID]"
+                                                    + "[KEY_ID]" + additionalVisibilitySkuList.get(k).getCOMMON_ID() + "[/KEY_ID]"
+                                                    + "[CATEGORY_ID]" + additionalVisibilitySkuList.get(k).getCategoryId() + "[/CATEGORY_ID]"
+                                                    + "[SKU_ID]" + sku_id + "[/SKU_ID]"
+                                                    + "[QUANTITY]" + additionalVisibilitySkuList.get(k).getQuantity() + "[/QUANTITY]"
+                                                    + "[/VISIBILITY_DAILOG]";*/
+
+                                            onXMLdIALOG = "[VISIBILITY_DAILOG]"
+                                                    + "[MID]" + mid + "[/MID]"
+                                                    + "[USER_ID]" + userId + "[/USER_ID]"
+                                                    + "[KEY_ID]" + additionalVisibilitySkuList.get(k).getCOMMON_ID() + "[/KEY_ID]"
+                                                    + "[CATEGORY_ID]" + additionalVisibilitySkuList.get(k).getCategoryId() + "[/CATEGORY_ID]"
+                                                    + "[SKU_ID]" + additionalVisibilitySkuList.get(k).getSku_id() + "[/SKU_ID]"
+                                                    + "[QUANTITY]" + additionalVisibilitySkuList.get(k).getQuantity() + "[/QUANTITY]"
                                                     + "[/VISIBILITY_DAILOG]";
 
                                             additional_visibility_dialog_xml = additional_visibility_dialog_xml + onXMLdIALOG;
-
                                         }
                                     }
 
                                     onXML = "[ADDITIONAL_VISIBILITY_NEW]"
                                             + "[MID]" + mid + "[/MID]"
-                                            + "[USER_ID]"
-                                            + userId
-                                            + "[/USER_ID]"
-                                            + "[KEY_ID]"
-                                            + additionalVisibilityList.get(J).getKey_id()
-                                            + "[/KEY_ID]"
-                                            + "[CATEGORY_ID]"
-                                            + additionalVisibilityList.get(J).getCategoryId()
-                                            + "[/CATEGORY_ID]"
-                                            + "[ADDITIONAL_DISPLAY]"
-                                            + additionalVisibilityList.get(J).getBtn_toogle()
-                                            + "[/ADDITIONAL_DISPLAY]"
-                                            /* + "[BRAND_ID]"
-                                            + additionalVisibilityList.get(J).getBrand_id()
-                                            + "[/BRAND_ID]"*/
-                                            + "[IMAGE_URL]"
-                                            + imageV1 /*additionalVisibilityList.get(J).getImage()*/
-                                            + "[/IMAGE_URL]"
-                                            + "[IMAGE_URL1]"
-                                            + imageV2 /*additionalVisibilityList.get(J).getImage2()*/
-                                            + "[/IMAGE_URL1]"
-                                            + "[IMAGE_URL2]"
-                                            + imageV3 /*additionalVisibilityList.get(J).getImage3()*/
-                                            + "[/IMAGE_URL2]"
-                                            + "[DISPLAY_ID]"
-                                            + additionalVisibilityList.get(J).getSku_id()
-                                            + "[/DISPLAY_ID]"
-                                            + "[SKU_LIST]"
-                                            + additional_visibility_dialog_xml
-                                            + "[/SKU_LIST]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
+                                            + "[KEY_ID]" + additionalVisibilityList.get(J).getKey_id() + "[/KEY_ID]"
+                                            + "[CATEGORY_ID]" + additionalVisibilityList.get(J).getCategoryId() + "[/CATEGORY_ID]"
+                                            + "[ADDITIONAL_DISPLAY]" + additionalVisibilityList.get(J).getBtn_toogle() + "[/ADDITIONAL_DISPLAY]"
+                                            /* + "[BRAND_ID]"+ additionalVisibilityList.get(J).getBrand_id()+ "[/BRAND_ID]"*/
+                                            + "[IMAGE_URL]" + imageV1 /*additionalVisibilityList.get(J).getImage()*/ + "[/IMAGE_URL]"
+                                            + "[IMAGE_URL1]" + imageV2 /*additionalVisibilityList.get(J).getImage2()*/ + "[/IMAGE_URL1]"
+                                            + "[IMAGE_URL2]" + imageV3 /*additionalVisibilityList.get(J).getImage3()*/ + "[/IMAGE_URL2]"
+                                            + "[DISPLAY_ID]" + additionalVisibilityList.get(J).getSku_id() + "[/DISPLAY_ID]"
+                                            + "[SKU_LIST]" + additional_visibility_dialog_xml + "[/SKU_LIST]"
                                             + "[/ADDITIONAL_VISIBILITY_NEW]";
 
 
@@ -774,11 +754,9 @@ public class UploadActivity extends AppCompatActivity {
                                     additionalVisibilitySkuList.clear();
 
                                     additional_visibility_dialog_xml = "";
-
                                 }
 
                                 final String sos_xml = "[DATA]" + additional_visibility_data_xml + "[/DATA]";
-
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
                                 request.addProperty("KEYS", "ADDITIONAL_VISIBILITY_NEW");

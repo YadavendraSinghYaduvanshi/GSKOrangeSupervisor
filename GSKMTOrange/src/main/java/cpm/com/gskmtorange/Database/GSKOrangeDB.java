@@ -2387,9 +2387,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     public void deleteStockEntryall(String storeid, String categoryid) {
         try {
 
-            db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
+         /*   db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
             db.delete(CommonString.TABLE_INSERT_STOCK_DIALOG, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
-
+*/
             db.delete(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_MAIN, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
 
             db.delete(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, "Store_Id" + "='" + storeid + "'AND categoryId" + "='" + categoryid + "'", null);
@@ -2544,7 +2544,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         try {
 
             // cursordata = db.rawQuery("SELECT * FROM Stock_Additional_visibility WHERE Store_Id = '"+store_id + "'categoryId = '"+categoryId + "'", null);
-            cursordata = db.rawQuery("Select * from Stock_Additional_visibility " + "where categoryId='" + categoryId + "' and Store_Id='" + store_id + "'", null);
+            cursordata = db.rawQuery("Select * from Stock_Additional_visibility_Main " + "where categoryId='" + categoryId + "' and Store_Id='" + store_id + "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
@@ -2783,7 +2783,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
     }
 
-    public void InsertMainListAdditionalData(AddittionalGetterSetter Mainlist, ArrayList<AdditionalDialogGetterSetter> skulist, String categoryId) {
+    /*public void InsertMainListAdditionalData(AddittionalGetterSetter Mainlist, ArrayList<AdditionalDialogGetterSetter> skulist, String categoryId) {
         ContentValues values = new ContentValues();
         ContentValues values1 = new ContentValues();
         try {
@@ -2814,6 +2814,50 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     values1.put(CommonString.KEY_SKUNAME, skulist.get(j).getSku_name());
 
                     db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, null, values1);
+                }
+            }
+
+        } catch (Exception ex) {
+            Log.d("Database Exception ", ex.getMessage());
+        }
+
+    }*/
+
+    public void InsertMainListAdditionalData(ArrayList<AddittionalGetterSetter> Mainlist, String categoryId) {
+        ContentValues values = new ContentValues();
+        ContentValues values1 = new ContentValues();
+        try {
+            for (int i = 0; i < Mainlist.size(); i++) {
+                AddittionalGetterSetter data = Mainlist.get(i);
+
+                values.put("Store_Id", data.getStore_id());
+                values.put("categoryId", categoryId);
+                values.put("brand_name", data.getBrand());
+                values.put("brand_id", data.getBrand_id());
+                values.put("image_url", data.getImage());
+                values.put("image_url2", data.getImage2());
+                values.put("image_url3", data.getImage3());
+                values.put("sku_id", data.getSku_id());
+                values.put("sku_name", data.getSku());
+                values.put("toggle_value", data.getBtn_toogle());
+
+                long key_id = db.insert(CommonString.TABLE_INSERT_STOCK_ADDITIONAL_MAIN, null, values);
+
+                ArrayList<AdditionalDialogGetterSetter> skulist = data.getSkuDialogList();
+                if (skulist != null) {
+
+                    for (int j = 0; j < skulist.size(); j++) {
+                        values1.put(CommonString.KEY_Common_ID, key_id);
+                        values1.put(CommonString.KEY_STORE_ID, skulist.get(j).getStore_id());
+                        values1.put("categoryId", categoryId);
+                        values1.put(CommonString.KEY_BRAND, skulist.get(j).getBrand());
+                        values1.put(CommonString.KEY_BRAND_ID, skulist.get(j).getBrand_id());
+                        values1.put(CommonString.KEY_QUANTITY, skulist.get(j).getQuantity());
+                        values1.put(CommonString.KEY_SKU_ID, skulist.get(j).getSku_id());
+                        values1.put(CommonString.KEY_SKUNAME, skulist.get(j).getSku_name());
+
+                        db.insert(CommonString.TABLE_INSERT_STOCK_DIALOG_MAIN, null, values1);
+                    }
                 }
             }
 

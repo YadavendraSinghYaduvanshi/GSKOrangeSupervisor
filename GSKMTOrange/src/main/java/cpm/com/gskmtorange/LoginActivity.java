@@ -242,8 +242,8 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        userid = museridView.getText().toString();
-        password = mPasswordView.getText().toString();
+        userid = museridView.getText().toString().trim();
+        password = mPasswordView.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
