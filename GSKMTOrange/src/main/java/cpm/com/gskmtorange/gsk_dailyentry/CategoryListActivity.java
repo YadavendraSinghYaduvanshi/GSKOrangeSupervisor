@@ -107,7 +107,7 @@ public class CategoryListActivity extends AppCompatActivity {
                     boolean flag = true;
 
                     //MSL_Availability
-                    if (db.isMappingStockDataMSL_Availability(category_id, keyAccount_id, storeType_id, class_id)) {
+                    /*if (db.isMappingStockDataMSL_Availability(category_id, keyAccount_id, storeType_id, class_id)) {
                         if (!db.checkMsl_AvailabilityData(store_id, category_id)) {
                             flag = false;
                         }
@@ -119,6 +119,13 @@ public class CategoryListActivity extends AppCompatActivity {
                             if (!db.checkStockAndFacingData(store_id, category_id)) {
                                 flag = false;
                             }
+                        }
+                    }*/
+
+                    //New MSL_Availability_StockFacing
+                    if (db.isMappingStockDataStockFacing(category_id, keyAccount_id, storeType_id, class_id)) {
+                        if (!db.checkMsl_Availability_StockFacingData(store_id, category_id)) {
+                            flag = false;
                         }
                     }
 
@@ -279,7 +286,7 @@ public class CategoryListActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
@@ -318,7 +325,7 @@ public class CategoryListActivity extends AppCompatActivity {
             if (db.additionalVisibilitydata(store_id, category_id)) {
                 //boolean flag = true;
 
-                if (db.isMappingStockDataMSL_Availability(category_id, keyAccount_id, storeType_id, class_id)) {
+                /*if (db.isMappingStockDataMSL_Availability(category_id, keyAccount_id, storeType_id, class_id)) {
                     if (!db.checkMsl_AvailabilityData(store_id, category_id)) {
                         flag_filled = false;
                         break;
@@ -328,6 +335,14 @@ public class CategoryListActivity extends AppCompatActivity {
                 //Stock_Facing
                 if (db.isMappingStockDataStockFacing(category_id, keyAccount_id, storeType_id, class_id)) {
                     if (!db.checkStockAndFacingData(store_id, category_id)) {
+                        flag_filled = false;
+                        break;
+                    }
+                }*/
+
+                //New MSL_Availability_StockFacing
+                if (db.isMappingStockDataStockFacing(category_id, keyAccount_id, storeType_id, class_id)) {
+                    if (!db.checkMsl_Availability_StockFacingData(store_id, category_id)) {
                         flag_filled = false;
                         break;
                     }

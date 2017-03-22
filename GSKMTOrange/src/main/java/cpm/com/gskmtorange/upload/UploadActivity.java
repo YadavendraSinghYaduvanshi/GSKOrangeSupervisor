@@ -10,9 +10,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -46,10 +46,10 @@ import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
-import cpm.com.gskmtorange.download.DownloadActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityStockFacingGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
@@ -76,6 +76,8 @@ public class UploadActivity extends AppCompatActivity {
     ArrayList<T2PGetterSetter> t2PGetterSetters;
     ArrayList<AddittionalGetterSetter> additionalVisibilityList;
     ArrayList<AdditionalDialogGetterSetter> additionalVisibilitySkuList;
+    ArrayList<MSL_AvailabilityStockFacingGetterSetter> msl_availabilityStockFacingList;
+
     private Dialog dialog;
     private ProgressBar pb;
     private TextView percentage, message;
@@ -358,6 +360,71 @@ public class UploadActivity extends AppCompatActivity {
                             publishProgress(data);
 
 
+                            //MSL_Availability_StockFacing
+                            String mslAvailability_stockFacing_xml = "";
+                            onXML = "";
+                            msl_availabilityStockFacingList = db.getMSL_Availability_StockFacing_UploadServerData(coverageList.get(i).getStoreId());
+
+                            if (msl_availabilityStockFacingList.size() > 0) {
+                                for (int j = 0; j < msl_availabilityStockFacingList.size(); j++) {
+                                    if (!msl_availabilityStockFacingList.get(j).getSku_id().equals("0")) {
+
+                                        String stock;
+                                        if (!msl_availabilityStockFacingList.get(j).getStock().equals("")) {
+                                            stock = msl_availabilityStockFacingList.get(j).getStock();
+                                        } else {
+                                            stock = "0";
+                                        }
+                                        onXML = "[MSL_AVAILABILITY_STOCK_FACING_DATA]"
+                                                + "[MID]" + mid + "[/MID]"
+                                                + "[USER_ID]" + userId + "[/USER_ID]"
+                                                //+ "[CATEGORY_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getCategory_id()) + "[/CATEGORY_ID]"
+                                                //+ "[BRAND_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getBrand_id()) + "[/BRAND_ID]"
+                                                + "[SKU_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getSku_id()) + "[/SKU_ID]"
+                                                + "[MBQ]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMbq()) + "[/MBQ]"
+                                                + "[AVAILABILITY]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getToggleValue()) + "[/AVAILABILITY]"
+                                                + "[FACING]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getFacing()) + "[/FACING]"
+                                                + "[STOCK]" + Integer.parseInt(stock) + "[/STOCK]" +
+                                                "[/MSL_AVAILABILITY_STOCK_FACING_DATA]";
+
+                                        mslAvailability_stockFacing_xml = mslAvailability_stockFacing_xml + onXML;
+                                    }
+                                }
+
+                                final String sos_xml = "[DATA]" + mslAvailability_stockFacing_xml + "[/DATA]";
+
+                                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                                request.addProperty("XMLDATA", sos_xml);
+                                request.addProperty("KEYS", "MSL_AVAILABILITY_STOCK_FACING_DATA");
+                                request.addProperty("USERNAME", userId);
+                                request.addProperty("MID", mid);
+
+                                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                                envelope.dotNet = true;
+                                envelope.setOutputSoapObject(request);
+
+                                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                                androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                                result = envelope.getResponse();
+
+                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+
+                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }
+                            }
+                            data.value = 15;
+                            data.name = getString(R.string.availability_data_uploading);
+                            publishProgress(data);
+
+
                             //Stock and Facing
                             /*String stock_facing_xml = "";
                             onXML = "";
@@ -608,7 +675,6 @@ public class UploadActivity extends AppCompatActivity {
                             String additional_visibility_dialog_xml = "";
                             onXML = "";
                             String onXMLdIALOG = "";
-
                             String imageV1, imageV2, imageV3;
 
                             additionalVisibilityList = db.getAdditionalStockUpload(coverageList.get(i).getStoreId());
@@ -634,71 +700,52 @@ public class UploadActivity extends AppCompatActivity {
                                         imageV3 = additionalVisibilityList.get(J).getImage3();
                                     }
 
-
                                     String KeyID = additionalVisibilityList.get(J).getKey_id();
 
                                     additionalVisibilitySkuList = db.getDialogStockUpload(KeyID);
 
                                     if (additionalVisibilitySkuList.size() > 0) {
-
                                         for (int k = 0; k < additionalVisibilitySkuList.size(); k++) {
+
+                                            /*String sku_id = "";
+                                            if (!additionalVisibilitySkuList.get(k).getSku_id().equals("")) {
+                                                sku_id = additionalVisibilitySkuList.get(k).getSku_id();
+                                            }
 
                                             onXMLdIALOG = "[VISIBILITY_DAILOG]"
                                                     + "[MID]" + mid + "[/MID]"
-                                                    + "[USER_ID]"
-                                                    + userId
-                                                    + "[/USER_ID]"
-                                                    + "[KEY_ID]"
-                                                    + additionalVisibilitySkuList.get(k).getCOMMON_ID()
-                                                    + "[/KEY_ID]"
-                                                    + "[CATEGORY_ID]"
-                                                    + additionalVisibilitySkuList.get(k).getCategoryId()
-                                                    + "[/CATEGORY_ID]"
-                                                    + "[SKU_ID]"
-                                                    + additionalVisibilitySkuList.get(k).getSku_id()
-                                                    + "[/SKU_ID]"
-                                                    + "[QUANTITY]"
-                                                    + additionalVisibilitySkuList.get(k).getQuantity()
-                                                    + "[/QUANTITY]"
+                                                    + "[USER_ID]" + userId + "[/USER_ID]"
+                                                    + "[KEY_ID]" + additionalVisibilitySkuList.get(k).getCOMMON_ID() + "[/KEY_ID]"
+                                                    + "[CATEGORY_ID]" + additionalVisibilitySkuList.get(k).getCategoryId() + "[/CATEGORY_ID]"
+                                                    + "[SKU_ID]" + sku_id + "[/SKU_ID]"
+                                                    + "[QUANTITY]" + additionalVisibilitySkuList.get(k).getQuantity() + "[/QUANTITY]"
+                                                    + "[/VISIBILITY_DAILOG]";*/
+
+                                            onXMLdIALOG = "[VISIBILITY_DAILOG]"
+                                                    + "[MID]" + mid + "[/MID]"
+                                                    + "[USER_ID]" + userId + "[/USER_ID]"
+                                                    + "[KEY_ID]" + additionalVisibilitySkuList.get(k).getCOMMON_ID() + "[/KEY_ID]"
+                                                    + "[CATEGORY_ID]" + additionalVisibilitySkuList.get(k).getCategoryId() + "[/CATEGORY_ID]"
+                                                    + "[SKU_ID]" + additionalVisibilitySkuList.get(k).getSku_id() + "[/SKU_ID]"
+                                                    + "[QUANTITY]" + additionalVisibilitySkuList.get(k).getQuantity() + "[/QUANTITY]"
                                                     + "[/VISIBILITY_DAILOG]";
 
                                             additional_visibility_dialog_xml = additional_visibility_dialog_xml + onXMLdIALOG;
-
                                         }
                                     }
 
                                     onXML = "[ADDITIONAL_VISIBILITY_NEW]"
                                             + "[MID]" + mid + "[/MID]"
-                                            + "[USER_ID]"
-                                            + userId
-                                            + "[/USER_ID]"
-                                            + "[KEY_ID]"
-                                            + additionalVisibilityList.get(J).getKey_id()
-                                            + "[/KEY_ID]"
-                                            + "[CATEGORY_ID]"
-                                            + additionalVisibilityList.get(J).getCategoryId()
-                                            + "[/CATEGORY_ID]"
-                                            + "[ADDITIONAL_DISPLAY]"
-                                            + additionalVisibilityList.get(J).getBtn_toogle()
-                                            + "[/ADDITIONAL_DISPLAY]"
-                                            /* + "[BRAND_ID]"
-                                            + additionalVisibilityList.get(J).getBrand_id()
-                                            + "[/BRAND_ID]"*/
-                                            + "[IMAGE_URL]"
-                                            + imageV1 /*additionalVisibilityList.get(J).getImage()*/
-                                            + "[/IMAGE_URL]"
-                                            + "[IMAGE_URL1]"
-                                            + imageV2 /*additionalVisibilityList.get(J).getImage2()*/
-                                            + "[/IMAGE_URL1]"
-                                            + "[IMAGE_URL2]"
-                                            + imageV3 /*additionalVisibilityList.get(J).getImage3()*/
-                                            + "[/IMAGE_URL2]"
-                                            + "[DISPLAY_ID]"
-                                            + additionalVisibilityList.get(J).getSku_id()
-                                            + "[/DISPLAY_ID]"
-                                            + "[SKU_LIST]"
-                                            + additional_visibility_dialog_xml
-                                            + "[/SKU_LIST]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
+                                            + "[KEY_ID]" + additionalVisibilityList.get(J).getKey_id() + "[/KEY_ID]"
+                                            + "[CATEGORY_ID]" + additionalVisibilityList.get(J).getCategoryId() + "[/CATEGORY_ID]"
+                                            + "[ADDITIONAL_DISPLAY]" + additionalVisibilityList.get(J).getBtn_toogle() + "[/ADDITIONAL_DISPLAY]"
+                                            /* + "[BRAND_ID]"+ additionalVisibilityList.get(J).getBrand_id()+ "[/BRAND_ID]"*/
+                                            + "[IMAGE_URL]" + imageV1 /*additionalVisibilityList.get(J).getImage()*/ + "[/IMAGE_URL]"
+                                            + "[IMAGE_URL1]" + imageV2 /*additionalVisibilityList.get(J).getImage2()*/ + "[/IMAGE_URL1]"
+                                            + "[IMAGE_URL2]" + imageV3 /*additionalVisibilityList.get(J).getImage3()*/ + "[/IMAGE_URL2]"
+                                            + "[DISPLAY_ID]" + additionalVisibilityList.get(J).getSku_id() + "[/DISPLAY_ID]"
+                                            + "[SKU_LIST]" + additional_visibility_dialog_xml + "[/SKU_LIST]"
                                             + "[/ADDITIONAL_VISIBILITY_NEW]";
 
 
@@ -707,11 +754,9 @@ public class UploadActivity extends AppCompatActivity {
                                     additionalVisibilitySkuList.clear();
 
                                     additional_visibility_dialog_xml = "";
-
                                 }
 
                                 final String sos_xml = "[DATA]" + additional_visibility_data_xml + "[/DATA]";
-
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
                                 request.addProperty("KEYS", "ADDITIONAL_VISIBILITY_NEW");
@@ -1708,7 +1753,6 @@ public class UploadActivity extends AppCompatActivity {
 
         }
     }
-
 
     @Override
     protected void onResume() {

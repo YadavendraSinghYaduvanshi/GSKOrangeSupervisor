@@ -297,4 +297,7 @@
     <!--Change 06-03-2017-->
     <string name="title_activity_store_checkout_image">Store Check out Image</string>
     <string name="store_checkout">Click Store CheckOut Image</string>
+    <string name="faceup_value">Please fill faceup value or fill 0 </string>
+    <string name="stock_value">Please fill stock value or fill 0 </string>
+    <string name="check_stock">Stock can not be greater equal than MBQ value</string>
 </resources>
