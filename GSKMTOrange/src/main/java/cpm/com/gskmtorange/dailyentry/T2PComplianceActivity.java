@@ -24,7 +24,6 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -57,8 +56,6 @@ import java.util.List;
 import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
-import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
-import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.BrandAvabilityGetterSetter;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
@@ -87,13 +84,14 @@ public class T2PComplianceActivity extends AppCompatActivity {
     String error_msg;
     private SharedPreferences preferences;
     Spinner spinner_brand;
-    Button btn_add,btn_close;
+    Button btn_add, btn_close;
     ListView listview;
     LinearLayout linearlay;
     //CardView cardlay;
-    String brand_name="",brand_id="";
-    ArrayList<BrandAvabilityGetterSetter> brand_new_list=new ArrayList<BrandAvabilityGetterSetter>();
+    String brand_name = "", brand_id = "";
+    ArrayList<BrandAvabilityGetterSetter> brand_new_list = new ArrayList<BrandAvabilityGetterSetter>();
     ArrayList<BrandAvabilityGetterSetter> brandList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -247,7 +245,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
 */
 
 
-
             holder.btn_gaps.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -284,8 +281,53 @@ public class T2PComplianceActivity extends AppCompatActivity {
                             mItem.setImage2("");
                         }
 
-                    }
 
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(T2PComplianceActivity.this);
+                        alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
+
+                        // set dialog message
+                        alertDialogBuilder
+                                .setMessage(getResources().getString(R.string.data_will_be_lost))
+                                .setCancelable(false)
+                                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        mItem.setPresent(false);
+                                        mItem.getGapsChecklist().clear();
+                                        mItem.getSkulist().clear();
+
+                                        //Camera
+                                        if (!mItem.getImage().equals("")) {
+                                            new File(str + mItem.getImage()).delete();
+                                            mItem.setImage("");
+                                        }
+
+                                        //Camera 1
+                                        if (!mItem.getImage1().equals("")) {
+                                            new File(str + mItem.getImage1()).delete();
+                                            mItem.setImage1("");
+                                        }
+
+                                        //Camera 2
+                                        if (!mItem.getImage2().equals("")) {
+                                            new File(str + mItem.getImage2()).delete();
+                                            mItem.setImage2("");
+                                        }
+
+                                        t2PAdapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        dialog.cancel();
+                                        mItem.setPresent(true);
+                                        t2PAdapter.notifyDataSetChanged();
+                                    }
+                                });
+
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                    }
                     t2PAdapter.notifyDataSetChanged();
                 }
             });
@@ -336,7 +378,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 holder.img_cam.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _pathforcheck = "T2P_Image_" + store_id+ categoryId+ "_" + mItem.getBrand_id() +
+                        _pathforcheck = "T2P_Image_" + store_id + categoryId + "_" + mItem.getBrand_id() +
                                 mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
                                 getCurrentTime().replace(":", "") + ".jpg";
                         child_position = position;
@@ -347,7 +389,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 });
 
                 if (mItem.getImage().equals("")) {
-
 
 
                     if (mItem.isPresent()) {
@@ -366,7 +407,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 holder.img_cam1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _pathforcheck1 = "T2P_Image1_" + store_id+categoryId + "_" + mItem.getBrand_id() +
+                        _pathforcheck1 = "T2P_Image1_" + store_id + categoryId + "_" + mItem.getBrand_id() +
                                 mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
                                 getCurrentTime().replace(":", "") + ".jpg";
                         child_position1 = position;
@@ -394,7 +435,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 holder.img_cam2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _pathforcheck2 = "T2P_Image2_" + store_id + categoryId+"_" + mItem.getBrand_id() +
+                        _pathforcheck2 = "T2P_Image2_" + store_id + categoryId + "_" + mItem.getBrand_id() +
                                 mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
                                 getCurrentTime().replace(":", "") + ".jpg";
                         child_position2 = position;
@@ -418,53 +459,41 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     holder.img_cam2.setBackgroundResource(R.mipmap.camera_green);
                 }
             } else {
-               // holder.img_cam.setBackgroundResource(R.mipmap.camera_grey);
-               // holder.img_cam1.setBackgroundResource(R.mipmap.camera_grey);
-               // holder.img_cam2.setBackgroundResource(R.mipmap.camera_grey);
+                // holder.img_cam.setBackgroundResource(R.mipmap.camera_grey);
+                // holder.img_cam1.setBackgroundResource(R.mipmap.camera_grey);
+                // holder.img_cam2.setBackgroundResource(R.mipmap.camera_grey);
                 holder.img_cam1.setVisibility(View.INVISIBLE);
                 holder.img_cam2.setVisibility(View.INVISIBLE);
 
                 holder.img_cam.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                    /* Intent in =new Intent(T2PComplianceActivity.this,T2pBrand_Avaibility.class);
                         in.putExtra("categoryName", categoryName);
                         in.putExtra("categoryId", categoryId);
                         startActivity(in);*/
 
                         showBrandAvabilitydialog(mItem.getBrandlist());
-
-
-
                     }
                 });
 
-
-
-                if(mItem.getBrandlist().size()>0)
-                {
-
+                if (mItem.getBrandlist().size() > 0) {
                     holder.img_cam.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
-                }else{
+                } else {
 
                     if (mItem.isPresent()) {
-
                         holder.img_cam.setBackgroundResource(R.mipmap.new_no_camera_edit);
                     } else {
                         //if not present camera disabled
                         holder.img_cam.setBackgroundResource(R.mipmap.no_camera);
                     }
-
                 }
-
             }
-
 
             boolean is_enabled = mItem.isPresent();
 
             holder.toggle_btn.setChecked(is_enabled);
-             holder.img_cam.setEnabled(is_enabled);
+            holder.img_cam.setEnabled(is_enabled);
             holder.img_cam1.setEnabled(is_enabled);
             holder.img_cam2.setEnabled(is_enabled);
             holder.btn_gaps.setEnabled(is_enabled);
@@ -490,7 +519,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.grey_background));
                 }
             }
-
         }
 
         @Override
@@ -508,12 +536,10 @@ public class T2PComplianceActivity extends AppCompatActivity {
             public final Button btn_gaps, btn_sku, btn_ref_img;
             public final ToggleButton toggle_btn;
 
-
             public ViewHolder(View view) {
                 super(view);
 
                 mView = view;
-
                 tv_brand = (TextView) mView.findViewById(R.id.tv_brand);
                 tv_display = (TextView) mView.findViewById(R.id.tv_display);
                 img_cam = (ImageView) mView.findViewById(R.id.img_cam);
@@ -525,9 +551,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 btn_ref_img = (Button) mView.findViewById(R.id.btn_ref_image);
                 parentLayout = (LinearLayout) mView.findViewById(R.id.parent_layout);
                 toggle_btn = (ToggleButton) mView.findViewById(R.id.toggle_btn);
-
             }
-
         }
     }
 
@@ -805,18 +829,18 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
                     //temp value in case camera is gallery app above jellybean
                     String packag = list.get(n).loadLabel(packageManager).toString();
-                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri") ||packag.equalsIgnoreCase("الاستوديو") ) {
+                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri") || packag.equalsIgnoreCase("الاستوديو")) {
                         gallery_package = list.get(n).packageName;
                     }
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")|| packag.equalsIgnoreCase("الكاميرا")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera") || packag.equalsIgnoreCase("الكاميرا")) {
                             defaultCameraPackage = list.get(n).packageName;
                             break;
                         }
                     } else {
 
-                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera")|| packag.equalsIgnoreCase("الكاميرا")) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera") || packag.equalsIgnoreCase("الكاميرا")) {
 
                             defaultCameraPackage = list.get(n).packageName;
                             break;
@@ -932,8 +956,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     flag = false;
                     error_msg = getResources().getString(R.string.click_image);
                     break;
-                }
-                else if (camera_allow.equals("0") && t2PGetterSetters.get(i).getBrandlist().size() == 0) {
+                } else if (camera_allow.equals("0") && t2PGetterSetters.get(i).getBrandlist().size() == 0) {
                     flag = false;
                     error_msg = getResources().getString(R.string.title_activity_fill_brand);
                     break;
@@ -1230,7 +1253,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
@@ -1311,10 +1334,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
     //// new <code></code>
 
 
+    public void showBrandAvabilitydialog(final ArrayList<BrandAvabilityGetterSetter> brandGetdata) {
 
-    public void showBrandAvabilitydialog(final ArrayList<BrandAvabilityGetterSetter> brandGetdata)  {
-
-        final ArrayList<BrandAvabilityGetterSetter> brandList = db.getBrandAvailbilitydata(store_id, categoryId,keyAccount_id,class_id,storeType_id);
+        final ArrayList<BrandAvabilityGetterSetter> brandList = db.getBrandAvailbilitydata(store_id, categoryId, keyAccount_id, class_id, storeType_id);
 
         BrandAvabilityGetterSetter brand = new BrandAvabilityGetterSetter();
         brand.setBRAND(getResources().getString(R.string.select));
@@ -1334,7 +1356,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         listview = (ListView) dialog.findViewById(R.id.lv);
         linearlay = (LinearLayout) dialog.findViewById(R.id.list_layout);
-       // cardlay = (CardView) dialog.findViewById(R.id.cardId);
+        // cardlay = (CardView) dialog.findViewById(R.id.cardId);
 
         // Create custom adapter object ( see below CustomAdapter.java )
         T2PComplianceActivity.CustomBRANDAdapter adapter = new T2PComplianceActivity.CustomBRANDAdapter(T2PComplianceActivity.this, R.layout.custom_spinner_item, brandList);
@@ -1343,13 +1365,13 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         if (brandGetdata.size() > 0) {
             linearlay.setVisibility(View.VISIBLE);
-           // cardlay.setVisibility(View.VISIBLE);
+            // cardlay.setVisibility(View.VISIBLE);
             adapterData = new T2PComplianceActivity.MyAdaptorStock(T2PComplianceActivity.this, brandGetdata);
             listview.setAdapter(adapterData);
             listview.invalidateViews();
         } else {
             linearlay.setVisibility(View.GONE);
-           // cardlay.setVisibility(View.GONE);
+            // cardlay.setVisibility(View.GONE);
         }
 
         spinner_brand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1386,7 +1408,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
             public void onClick(View v) {
                 BrandAvabilityGetterSetter ab = new BrandAvabilityGetterSetter();
 
-                if (!brand_name.equalsIgnoreCase("") && brand_name!=null){
+                if (!brand_name.equalsIgnoreCase("") && brand_name != null) {
 
                     BrandAvabilityGetterSetter brand = new BrandAvabilityGetterSetter();
 
@@ -1399,15 +1421,13 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     listview.setAdapter(adapterData);
                     listview.invalidateViews();
 
-                   // cardlay.setVisibility(View.VISIBLE);
+                    // cardlay.setVisibility(View.VISIBLE);
                     linearlay.setVisibility(View.VISIBLE);
                     spinner_brand.setSelection(0);
-                    brand_name="";
-                    brand_id="";
+                    brand_name = "";
+                    brand_id = "";
 
-                }
-                else
-                {
+                } else {
                     Snackbar.make(v, "Please select dropdown", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }

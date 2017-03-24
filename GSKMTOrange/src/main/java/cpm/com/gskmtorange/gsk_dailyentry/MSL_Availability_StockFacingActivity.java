@@ -733,23 +733,6 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 finalHolder.stock.setVisibility(View.VISIBLE);
             }
 
-            holder.facing.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    final EditText caption = (EditText) v;
-                    final String edFaceup = caption.getText().toString().replaceFirst("^0+(?!$)", "");
-
-                    if (!edFaceup.equals("")) {
-                        String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
-                        childData.setFacing(faceup);
-                    } else {
-                        childData.setFacing("");
-                    }
-                }
-            });
-
-            holder.facing.setText(childData.getFacing());
-
 
             holder.stock.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -783,8 +766,69 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                     }
                 }
             });
-
             holder.stock.setText(childData.getStock());
+
+
+            final ViewHolder finalHolder1 = holder;
+            holder.facing.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    final EditText caption = (EditText) v;
+                    final String edFaceup = caption.getText().toString().replaceFirst("^0+(?!$)", "");
+
+                    //Toggle is no selected
+                    if (childData.getToggleValue().equals("0")) {
+
+                        //if stock is emplty
+                        if (childData.getStock().equals("")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
+                            builder.setMessage(getString(R.string.msl_availability_new_stock_value))
+                                    .setCancelable(false)
+                                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        } else {
+                            if (edFaceup != null && !edFaceup.equals("")) {
+
+                                String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
+                                if (Integer.parseInt(faceup) <= Integer.parseInt(childData.getStock())) {
+
+                                    if (!edFaceup.equals("")) {
+                                        childData.setFacing(faceup);
+                                    } else {
+                                        childData.setFacing("");
+                                    }
+                                } else {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
+                                    builder.setMessage(getString(R.string.check_faceup))
+                                            .setCancelable(false)
+                                            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.dismiss();
+                                                    finalHolder1.facing.setText("");
+                                                }
+                                            });
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                }
+                            }
+                        }
+                    } else {
+                        if (!edFaceup.equals("")) {
+                            String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
+                            childData.setFacing(faceup);
+                        } else {
+                            childData.setFacing("");
+                        }
+                    }
+                }
+            });
+
+            holder.facing.setText(childData.getFacing());
 
 
             //empty check color change
