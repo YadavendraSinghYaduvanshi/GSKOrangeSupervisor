@@ -222,4 +222,12 @@
     <string name="stock_planogram_planogram_tracker">صورة مقطعية المقتفي</string>
     <string name="stock_planogram_position_on_shelf">موقف بشأن الجرف</string>
 
+    <!--Change 06-03-2017-->
+    <string name="title_activity_store_checkout_image"> صوره الخروج من المتجر</string>
+    <string name="store_checkout">انقر فوق الصورة الامامية لمخزن الصورة</string>
+    <string name="faceup_value"> -برجاء تعبئه عدد الكميات المواجهه بقيمه عدد او صفر</string>
+    <string name="stock_value"> -برجاء تعبئه المخزون بقيمه عدد او صفر</string>
+    <string name="msl_availability_new_stock_value">أول تعبئة لقيمة المخزون</string>
+    <string name="check_stock"> المخزون لا يمكن ان يكون مساوي او اكثر من الكميات التي يجب توافرها من الصنف MBQ</string>
+
 </resources>
