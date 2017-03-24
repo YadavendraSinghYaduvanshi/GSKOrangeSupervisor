@@ -716,9 +716,21 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                         childData.setToggleValue("1");
                         finalHolder.stock.setVisibility(View.GONE);
                         childData.setStock("");
+                        childData.setFacing("");
                     } else {
+                        childData.setStock("");
+                        childData.setFacing("");
+
                         childData.setToggleValue("0");
                         finalHolder.stock.setVisibility(View.VISIBLE);
+
+                        if (Integer.parseInt(childData.getMbq()) == 0) {
+                            childData.setStock("0");
+                            childData.setFacing("0");
+
+                            /*finalHolder.stock.setText("0");
+                            finalHolder.facing.setText("0");*/
+                        }
                     }
 
                     expandableListView.invalidateViews();
@@ -734,6 +746,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             }
 
 
+            final ViewHolder finalHolder2 = holder;
             holder.stock.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {

@@ -447,7 +447,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 adGt.setBtn_toogle(togglevalue);
                 adGt.setCategoryId(categoryId);
 
-                adGt.setSkuDialogList(defdata);
+                ArrayList<AdditionalDialogGetterSetter> listdataTemp = new ArrayList<>();
+                listdataTemp.addAll(defdata);
+                adGt.setSkuDialogList(listdataTemp);
 
                 if (validateData(adGt)) {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(

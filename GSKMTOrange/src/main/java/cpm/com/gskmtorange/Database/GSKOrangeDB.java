@@ -198,6 +198,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE_LIST, "Store_Id='" + storeid + "'", null);
 
+        db.delete(CommonString.TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING, "Store_Id='" + storeid + "'", null);
     }
 
     public void deleteAllTables() {

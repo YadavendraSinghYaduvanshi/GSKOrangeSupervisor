@@ -259,7 +259,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     if (((ToggleButton) v).getText().toString().equalsIgnoreCase(getResources().getString(R.string.yes))) {
                         mItem.setPresent(true);
                     } else {
-                        mItem.setPresent(false);
+                      /*  mItem.setPresent(false);
                         mItem.getGapsChecklist().clear();
                         mItem.getSkulist().clear();
 
@@ -280,7 +280,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                             new File(str + mItem.getImage2()).delete();
                             mItem.setImage2("");
                         }
-
+*/
 
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(T2PComplianceActivity.this);
                         alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
