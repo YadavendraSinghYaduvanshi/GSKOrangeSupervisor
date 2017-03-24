@@ -263,6 +263,15 @@
 
     <string name="prompt_userid">Username/Kullanıcı Adı/اسم المستخدم</string>
     <string name="prompt_password">Password/Şifre/كلمة المرور</string>
+
+    <!--Change 06-03-2017-->
+    <string name="title_activity_store_checkout_image">Mağaza Kontrolü Resmi</string>
+    <string name="store_checkout">Mağazayı Denetle Çık Görüntüsü'nü tıklayın.</string>
+    <string name="faceup_value">Lütfen yüzü üstü değeri doldurun veya 0 doldurun</string>
+    <string name="stock_value">Lütfen stok değerini doldurun veya 0 doldurun</string>
+    <string name="check_stock">Stok, MBQ değerinden daha büyük olamaz</string>
+    <string name="msl_availability_new_stock_value">Lütfen önce stok değerini doldurun</string>
+
 </resources>
 
 
