@@ -113,6 +113,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.additionalvisibilitylayout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -446,7 +447,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 adGt.setBtn_toogle(togglevalue);
                 adGt.setCategoryId(categoryId);
 
-                adGt.setSkuDialogList(defdata);
+                ArrayList<AdditionalDialogGetterSetter> listdataTemp = new ArrayList<>();
+                listdataTemp.addAll(defdata);
+                adGt.setSkuDialogList(listdataTemp);
 
                 if (validateData(adGt)) {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -703,9 +706,19 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                                     public void onClick(DialogInterface dialog, int id) {
                                         // if this button is clicked, just close
                                         // the dialog box and do nothing
-                                        btntoggle.setChecked(true);
-
+                                        //btntoggle.setChecked(true);
                                         dialog.cancel();
+
+                                        togglevalue = "1";
+                                        btntoggle.setChecked(true);
+                                        brandlayout.setVisibility(View.GONE);
+                                        diaplylayout.setVisibility(View.VISIBLE);
+                                        cameralayout.setVisibility(View.VISIBLE);
+                                        btnsku.setVisibility(View.VISIBLE);
+                                        btnaddlayout.setVisibility(View.VISIBLE);
+                                        cardvew.setVisibility(View.VISIBLE);
+                                        listviewlay.setVisibility(View.INVISIBLE);
+                                        maincard.setVisibility(View.INVISIBLE);
                                     }
                                 });
 
@@ -823,7 +836,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
 
     public class CustomAdapter extends ArrayAdapter<String> {
 
@@ -949,7 +961,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         }
     }
 
-
     public class CustomSkuMasterAdpter extends ArrayAdapter<String> {
 
         private Activity activity;
@@ -1011,7 +1022,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             return row;
         }
     }
-
 
     protected void startCameraActivity() {
         try {
@@ -1115,7 +1125,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
     public void showSkuDialog() {
 
@@ -1311,7 +1320,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
     }
 
-
     @Override
     public void onClick(View arg0) {
         // TODO Auto-generated method stub
@@ -1336,7 +1344,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
         return super.onOptionsItemSelected(item);
     }
-
 
     public class MyAdaptorStock extends BaseAdapter {
 
@@ -1451,7 +1458,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         }
     }
 
-
     public class MyAdaptorAdditionalStock extends BaseAdapter {
 
         private LayoutInflater mInflater;
@@ -1491,21 +1497,15 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
         @Override
         public View getView(final int position1, View convertView, ViewGroup parent) {
-
             final ViewHolder holder;
 
             if (convertView == null) {
-
-                convertView = mInflater
-                        .inflate(R.layout.additionallistlayout, null);
+                convertView = mInflater.inflate(R.layout.additionallistlayout, null);
                 holder = new ViewHolder();
 
                 holder.brand = (TextView) convertView.findViewById(R.id.brand_name);
-
                 holder.display = (TextView) convertView.findViewById(R.id.display_name);
                 holder.qty_bought = (TextView) convertView.findViewById(R.id.qty_bought);
-
-
                 holder.delete = (Button) convertView.findViewById(R.id.delete_btn);
 
                 convertView.setTag(holder);
@@ -1517,7 +1517,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
                 @Override
                 public void onClick(View v) {
-
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AdditionalVisibility.this);
                     alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
 
@@ -1670,7 +1669,6 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
 
 
     }
-
 
     private static boolean updateResources(Context context, String language) {
 

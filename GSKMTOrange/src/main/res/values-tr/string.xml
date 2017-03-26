@@ -263,6 +263,14 @@
 
     <string name="prompt_userid">Username/Kullanıcı Adı/اسم المستخدم</string>
     <string name="prompt_password">Password/Şifre/كلمة المرور</string>
+
+    <string name="title_activity_store_checkout_image"> Mağazadan çıkş resmi</string>
+    <string name="store_checkout"> Mağazadan çıkış resmine tıklayın </string>
+    <string name="faceup_value"> Lütfen ön yüz sayısını girin veya ürün yoksa 0 girin</string>
+    <string name="stock_value"> Lütfen stok miktarını girin veya stok yoksa 0 girin</string>
+    <string name="check_stock"> Stok miktarı minimum stok miktarından daha fazla veya eşit olamaz</string>
+    <string name="msl_availability_new_stock_value">  Lütfen önce stok değerini giriniz</string>
+
 </resources>
 
 
