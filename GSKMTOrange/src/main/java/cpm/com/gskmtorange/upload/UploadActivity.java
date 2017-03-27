@@ -680,9 +680,9 @@ public class UploadActivity extends AppCompatActivity {
                             if (t2PGetterSetters.size() > 0) {
                                 for (int i1 = 0; i1 < t2PGetterSetters.size(); i1++) {
 
-                                    ArrayList<GapsChecklistGetterSetter> gapsList = db.getGapsData(t2PGetterSetters.get(i).getKey_id());
-                                    ArrayList<SkuGetterSetter> skuList = db.getT2PSKUData(t2PGetterSetters.get(i).getKey_id());
-                                    ArrayList<BrandAvabilityGetterSetter> brandList = db.getT2BrandData(t2PGetterSetters.get(i).getKey_id());
+                                    ArrayList<GapsChecklistGetterSetter> gapsList = db.getGapsData(t2PGetterSetters.get(i1).getKey_id());
+                                    ArrayList<SkuGetterSetter> skuList = db.getT2PSKUData(t2PGetterSetters.get(i1).getKey_id());
+                                    ArrayList<BrandAvabilityGetterSetter> brandList = db.getT2BrandData(t2PGetterSetters.get(i1).getKey_id());
                                     String gaps_xml = "";
                                     String gaps_child;
 
