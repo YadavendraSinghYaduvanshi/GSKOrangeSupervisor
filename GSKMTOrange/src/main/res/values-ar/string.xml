@@ -230,4 +230,5 @@
     <string name="msl_availability_new_stock_value">أول تعبئة لقيمة المخزون</string>
     <string name="check_stock"> المخزون لا يمكن ان يكون مساوي او اكثر من الكميات التي يجب توافرها من الصنف MBQ</string>
 
+    <string name="check_faceing">المواجهه لا يمكن ان تكون اكثر من او مساويه للكميه الواجب توافرها MBQ</string>
 </resources>

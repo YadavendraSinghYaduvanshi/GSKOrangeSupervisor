@@ -272,6 +272,7 @@
     <string name="check_stock"> Stok miktarı minimum stok miktarından daha fazla veya eşit olamaz</string>
     <string name="msl_availability_new_stock_value">  Lütfen önce stok değerini giriniz</string>
 
+    <string name="check_faceing">Önyüz miktarı minimum stok miktarından daha fazla veya eşit olamaz</string>
 </resources>
 
 

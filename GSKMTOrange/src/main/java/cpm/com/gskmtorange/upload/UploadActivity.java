@@ -606,6 +606,7 @@ public class UploadActivity extends AppCompatActivity {
                                     String KeyID = additionalVisibilityList.get(J).getKey_id();
 
                                     additionalVisibilitySkuList = db.getDialogStockUpload(KeyID);
+                                    //additionalVisibilitySkuList = additionalVisibilityList.get(J).getSkuDialogList();
 
                                     if (additionalVisibilitySkuList.size() > 0) {
                                         for (int k = 0; k < additionalVisibilitySkuList.size(); k++) {
