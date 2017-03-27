@@ -264,6 +264,7 @@
     <string name="prompt_userid">Username/Kullanıcı Adı/اسم المستخدم</string>
     <string name="prompt_password">Password/Şifre/كلمة المرور</string>
 
+    <!--Change 06-03-2017-->
     <string name="title_activity_store_checkout_image"> Mağazadan çıkş resmi</string>
     <string name="store_checkout"> Mağazadan çıkış resmine tıklayın </string>
     <string name="faceup_value"> Lütfen ön yüz sayısını girin veya ürün yoksa 0 girin</string>
