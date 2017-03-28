@@ -103,8 +103,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:inputType="number" />
-
+                    android:inputType="number"
+                    android:maxLength="5" />
             </LinearLayout>
 
             <RelativeLayout
@@ -122,26 +122,27 @@
                     <Button
                         android:id="@+id/btn_add"
                         android:layout_width="wrap_content"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="@string/add"/>
+                        android:layout_weight="1"
+                        android:text="@string/add" />
+
                     <Button
                         android:id="@+id/btn_cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/closed"/>
+                        android:text="@string/closed" />
 
                 </LinearLayout>
 
 
             </RelativeLayout>
 
-           <!-- <android.support.v7.widget.RecyclerView
-                android:background="@color/grey_background"
-                android:id="@+id/rec_sku"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>-->
+            <!-- <android.support.v7.widget.RecyclerView
+                 android:background="@color/grey_background"
+                 android:id="@+id/rec_sku"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>-->
 
         </LinearLayout>
 
@@ -153,18 +154,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:padding="10dp"
+        android:visibility="gone"
         card_view:cardBackgroundColor="@color/colorOrange"
         card_view:cardCornerRadius="20dp"
-        android:visibility="gone"
 
         >
+
         <LinearLayout
             android:id="@+id/list_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="95"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <ListView
                 android:id="@+id/lv"

@@ -131,6 +131,8 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(final View view) {
 
+                    expandableListView.clearFocus();
+
                     if (validateData(hashMapListHeaderData, hashMapListChildData)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
                         builder.setMessage(getResources().getString(R.string.check_save_message))
@@ -708,6 +710,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 holder.stock.setVisibility(View.GONE);
             }
 
+
             final ViewHolder finalHolder = holder;
             holder.toggle_available.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -715,24 +718,30 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                     if (isChecked) {
                         childData.setToggleValue("1");
                         finalHolder.stock.setVisibility(View.GONE);
-                        childData.setStock("");
-                        childData.setFacing("");
+                        /*childData.setStock("");
+                        childData.setFacing("");*/
                     } else {
-                        childData.setStock("");
-                        childData.setFacing("");
-
+                        /*childData.setStock("");
+                        childData.setFacing("");*/
                         childData.setToggleValue("0");
                         finalHolder.stock.setVisibility(View.VISIBLE);
 
+                        //If MBQ Value is 0
                         if (Integer.parseInt(childData.getMbq()) == 0) {
                             childData.setStock("0");
                             childData.setFacing("0");
-
-                            /*finalHolder.stock.setText("0");
-                            finalHolder.facing.setText("0");*/
-                        }
+                        }/* else {
+                            if (finalHolder.facing.getText().toString() != null && !finalHolder.facing.getText().toString().equals("")) {
+                                if (Integer.parseInt(finalHolder.facing.getText().toString()) >= 0
+                                        && Integer.parseInt(finalHolder.facing.getText().toString()) >= Integer.parseInt(childData.getMbq())) {
+                                    childData.setFacing("");
+                                    finalHolder.facing.setText("");
+                                }
+                            }
+                        }*/
                     }
 
+                    expandableListView.clearFocus();
                     expandableListView.invalidateViews();
                 }
             });
@@ -740,24 +749,49 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             if (childData.getToggleValue().equals("1")) {
                 holder.toggle_available.setChecked(true);
                 finalHolder.stock.setVisibility(View.GONE);
+                childData.setStock("");
             } else {
                 holder.toggle_available.setChecked(false);
                 finalHolder.stock.setVisibility(View.VISIBLE);
             }
 
 
-            final ViewHolder finalHolder2 = holder;
             holder.stock.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     final EditText caption = (EditText) v;
                     String edStock = caption.getText().toString();
 
+                    /*if (!childData.getFacing().equals("") && Integer.parseInt(stock) >= 0 && Integer.parseInt(childData.getFacing()) < Integer.parseInt(stock)) {
+
+                    }*/
+
                     if (!edStock.equals("")) {
                         String stock = edStock.replaceFirst("^0+(?!$)", "");
 
                         if (Integer.parseInt(stock) >= 0 && Integer.parseInt(stock) < Integer.parseInt(childData.getMbq())) {
-                            childData.setStock(stock);
+
+                            if (!childData.getFacing().equals("")) {
+                                if (Integer.parseInt(stock) >= 0 && Integer.parseInt(childData.getFacing()) <= Integer.parseInt(stock)) {
+
+                                    childData.setStock(stock);
+                                } else {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
+                                    builder.setMessage(getString(R.string.check_faceup))
+                                            .setCancelable(false)
+                                            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    finalHolder.stock.setText("");
+                                                    dialog.dismiss();
+
+                                                }
+                                            });
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                }
+                            } else {
+                                childData.setStock(stock);
+                            }
                         } else {
                             if (isDialogOpen) {
                                 isDialogOpen = !isDialogOpen;
@@ -766,6 +800,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                                         .setCancelable(false)
                                         .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
+                                                finalHolder.stock.setText("");
                                                 dialog.dismiss();
                                                 isDialogOpen = !isDialogOpen;
                                             }
@@ -789,11 +824,13 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                     final EditText caption = (EditText) v;
                     final String edFaceup = caption.getText().toString().replaceFirst("^0+(?!$)", "");
 
+                    boolean isFill = false;
+
                     //Toggle is no selected
                     if (childData.getToggleValue().equals("0")) {
 
                         //if stock is emplty
-                        if (childData.getStock().equals("")) {
+                        /*if (childData.getStock().equals("")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
                             builder.setMessage(getString(R.string.msl_availability_new_stock_value))
                                     .setCancelable(false)
@@ -804,25 +841,54 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                                     });
                             AlertDialog alert = builder.create();
                             alert.show();
-                        } else {
-                            if (edFaceup != null && !edFaceup.equals("")) {
+                        } else {*/
+                        if (edFaceup != null && !edFaceup.equals("")) {
 
-                                String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
-                                if (Integer.parseInt(faceup) <= Integer.parseInt(childData.getStock())) {
+                            if (Integer.parseInt(edFaceup) >= 0 && Integer.parseInt(edFaceup) < Integer.parseInt(childData.getMbq())) {
+                                if (!childData.getStock().equals("")) {
 
-                                    if (!edFaceup.equals("")) {
+                                    //if (edFaceup != null && !edFaceup.equals("")) {
+
+                                    String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
+
+
+                                    if (Integer.parseInt(faceup) <= Integer.parseInt(childData.getStock())) {
+
+                                        isFill = true;
+
+                          /*          if (!edFaceup.equals("")) {
                                         childData.setFacing(faceup);
                                     } else {
                                         childData.setFacing("");
+                                    }*/
+                                    } else {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
+                                        builder.setMessage(getString(R.string.check_faceup))
+                                                .setCancelable(false)
+                                                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        finalHolder1.facing.setText("");
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
                                     }
+                                    //  }
                                 } else {
+                                    isFill = true;
+                                }
+                            } else {
+                                if (isDialogOpen) {
+                                    isDialogOpen = !isDialogOpen;
                                     AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
-                                    builder.setMessage(getString(R.string.check_faceup))
+                                    builder.setMessage(getString(R.string.check_faceing))
                                             .setCancelable(false)
                                             .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
+                                                    finalHolder.facing.setText("");
                                                     dialog.dismiss();
-                                                    finalHolder1.facing.setText("");
+                                                    isDialogOpen = !isDialogOpen;
                                                 }
                                             });
                                     AlertDialog alert = builder.create();
@@ -830,7 +896,19 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                                 }
                             }
                         }
+                        //}
                     } else {
+                        isFill = true;
+
+                        /*if (!edFaceup.equals("")) {
+                            String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
+                            childData.setFacing(faceup);
+                        } else {
+                            childData.setFacing("");
+                        }*/
+                    }
+
+                    if (isFill) {
                         if (!edFaceup.equals("")) {
                             String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
                             childData.setFacing(faceup);
