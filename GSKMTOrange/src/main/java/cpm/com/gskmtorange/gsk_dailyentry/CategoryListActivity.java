@@ -40,7 +40,7 @@ public class CategoryListActivity extends AppCompatActivity {
     CategoryListAdapter adapter;
 
     GSKOrangeDB db;
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id,camera_allow;
     private SharedPreferences preferences;
 
     @Override
@@ -65,6 +65,7 @@ public class CategoryListActivity extends AppCompatActivity {
         keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
         class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
         storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+        camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
 
 
         /*txt_categoryName = (TextView) findViewById(R.id.txt_categoryName);
@@ -144,6 +145,15 @@ public class CategoryListActivity extends AppCompatActivity {
                             if (!db.isFilledT2P(store_id, category_id)) {
                                 flag = false;
                             }
+                        }
+                    }
+
+                    //Category image
+                    if (camera_allow.equalsIgnoreCase("1")) {
+                        //if (category_camera_list.size()>0) {
+                        if (!db.isCategoryPictureData(store_id, category_id)) {
+                            flag = false;
+
                         }
                     }
 
@@ -362,6 +372,14 @@ public class CategoryListActivity extends AppCompatActivity {
                         break;
                     }
 
+                }
+
+                if (camera_allow.equalsIgnoreCase("1")) {
+                    //if (category_camera_list.size()>0) {
+                    if (!db.isCategoryPictureData(store_id, category_id)) {
+                        flag_filled = false;
+                        break;
+                    }
                 }
 
                 flag_filled = true;

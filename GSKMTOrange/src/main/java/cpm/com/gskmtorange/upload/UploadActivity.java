@@ -637,7 +637,7 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[DISPLAY_ID]" + additionalVisibilityList.get(J).getSku_id() + "[/DISPLAY_ID]"
                                             + "[SKU_LIST]" + additional_visibility_dialog_xml + "[/SKU_LIST]"
                                             + "[/ADDITIONAL_VISIBILITY_NEW]";
-
+                                            //Here getSku_id gives display_id
 
                                     additional_visibility_data_xml = additional_visibility_data_xml + onXML;
                                     KeyID = "";
@@ -720,7 +720,7 @@ public class UploadActivity extends AppCompatActivity {
                                     }
 
 
-                                    /*String brandxml = "";
+                                   String brandxml = "";
                                     String brandchild;
 
                                     if (brandList.size() > 0) {
@@ -735,7 +735,7 @@ public class UploadActivity extends AppCompatActivity {
                                                     + "[/BRAND]";
                                             brandxml = brandxml + brandchild;
                                         }
-                                    }*/
+                                    }
 
                                     String present = "";
                                     if (t2PGetterSetters.get(i1).isPresent()) {
@@ -757,7 +757,7 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[PRESENT]" + present + "[/PRESENT]"
                                             + "[GAPS_DATA]" + gaps_xml + "[/GAPS_DATA]"
                                             + "[SKU_DATA]" + sku_xml + "[/SKU_DATA]"
-                                            //+ "[BRAND_DATA]" + brandxml + "[/BRAND_DATA]"
+                                            + "[BRAND_DATA]" + brandxml + "[/BRAND_DATA]"
                                             + "[/T2P_DATA]";
 
                                     t2p_data_xml = t2p_data_xml + onXML;

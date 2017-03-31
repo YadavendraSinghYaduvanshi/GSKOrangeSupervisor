@@ -170,14 +170,6 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         geocoder = new Geocoder(this);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-
-        if (checkPlayServices()) {
-
-            // Building the GoogleApi client
-            buildGoogleApiClient();
-        }
-
-
         if (checkPlayServices()) {
 
             // Building the GoogleApi client

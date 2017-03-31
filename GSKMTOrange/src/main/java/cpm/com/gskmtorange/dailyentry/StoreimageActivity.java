@@ -1,5 +1,6 @@
 package cpm.com.gskmtorange.dailyentry;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -13,13 +14,16 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,9 +36,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -59,6 +72,7 @@ import java.util.Locale;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import cpm.com.gskmtorange.GeoTag.GeoTagActivity;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
@@ -72,7 +86,7 @@ import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
  * Created by ashishc on 31-05-2016.
  */
 public class StoreimageActivity extends AppCompatActivity implements View.OnClickListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     String gallery_package = "";
     Uri outputFileUri;
@@ -91,12 +105,24 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
     String img_str, strflag;
     private GSKOrangeDB database;
 
-    String lat, lon;
+    double lat, lon;
     GoogleApiClient mGoogleApiClient;
     ArrayList<CoverageBean> coverage_list;
     Toolbar toolbar;
     boolean ResultFlag = true;
     ArrayList<CoverageBean> coverage = new ArrayList<CoverageBean>();
+
+    LocationManager locationManager;
+    boolean enabled;
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+
+    private LocationRequest mLocationRequest;
+    private static int UPDATE_INTERVAL = 500; // 5 sec
+    private static int FATEST_INTERVAL = 100; // 1 sec
+    private static int DISPLACEMENT = 5; // 10 meters
+    private Location mLastLocation;
+
+    private static final String TAG = StoreimageActivity.class.getSimpleName();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +159,53 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         img_clicked.setOnClickListener(this);
         btn_save.setOnClickListener(this);
 
+        if (checkPlayServices()) {
+
+            // Building the GoogleApi client
+            buildGoogleApiClient();
+
+            createLocationRequest();
+        }
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if (!enabled) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                    StoreimageActivity.this);
+
+            // Setting Dialog Title
+            alertDialog.setTitle(getResources().getString(R.string.gps));
+
+            // Setting Dialog Message
+            alertDialog.setMessage(getResources().getString(R.string.gpsebale));
+
+            // Setting Positive "Yes" Button
+            alertDialog.setPositiveButton(getResources().getString(R.string.yes),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            Intent intent = new Intent(
+                                    Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    });
+
+            // Setting Negative "NO" Button
+            alertDialog.setNegativeButton(getResources().getString(R.string.no),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Write your code here to invoke NO event
+
+                            dialog.cancel();
+                        }
+                    });
+
+            // Showing Alert Message
+            alertDialog.show();
+
+        }
+
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -163,6 +236,125 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.notsuppoted)
+                        , Toast.LENGTH_LONG)
+                        .show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
+    }
+
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
+    }
+
+    protected void startLocationUpdates() {
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+        }
+
+    }
+
+    /**
+     * Stopping location updates
+     */
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (mLastLocation != null) {
+                lat = mLastLocation.getLatitude();
+                lon = mLastLocation.getLongitude();
+
+            }
+        }
+
+
+        // if (mRequestingLocationUpdates) {
+        startLocationUpdates();
+        // }
+
+        // startLocationUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
+    }
+
+
+    protected void onStart() {
+        super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+        //client.connect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+       // AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+       // AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        //client.disconnect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
     }
 
     @Override
@@ -212,8 +404,8 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
                                     cdata.setInTime(intime);
                                     cdata.setReason("");
                                     cdata.setReasonid("0");
-                                    cdata.setLatitude(lat);
-                                    cdata.setLongitude(lon);
+                                    cdata.setLatitude(lat+"");
+                                    cdata.setLongitude(lon+"");
                                     cdata.setImage(img_str);
                                     cdata.setRemark("");
                                     cdata.setStatus(CommonString.KEY_INVALID);
@@ -357,33 +549,22 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         return cdate;
     }
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            lat = String.valueOf(mLastLocation.getLatitude());
-            lon = String.valueOf(mLastLocation.getLongitude());
-        }
-    }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(R.string.title_activity_store_image);
+
+        // Resuming the periodic location updates
+        if (mGoogleApiClient.isConnected() ) {
+            startLocationUpdates();
+        }
+
     }
 
-    protected void onStart() {
+    /*protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
     }
@@ -391,7 +572,7 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
-    }
+    }*/
 
     private static boolean updateResources(Context context, String language) {
 
@@ -433,6 +614,11 @@ public class StoreimageActivity extends AppCompatActivity implements View.OnClic
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 
         return true;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
     }
 
 
