@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GSKMTOrange/GSKMTOrange.iml" filepath="$PROJECT_DIR$/GSKMTOrange/GSKMTOrange.iml" />
-      <module fileurl="file://$PROJECT_DIR$/GSKORANGEV1.iml" filepath="$PROJECT_DIR$/GSKORANGEV1.iml" />
       <module fileurl="file://$PROJECT_DIR$/GSKORANGEV2.iml" filepath="$PROJECT_DIR$/GSKORANGEV2.iml" />
     </modules>
   </component>
