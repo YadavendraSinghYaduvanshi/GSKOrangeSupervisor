@@ -2,12 +2,16 @@ package cpm.com.gskmtorange.gsk_dailyentry;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,10 +22,15 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CompoundButton;
@@ -33,6 +42,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +51,7 @@ import java.util.Locale;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityStockFacingGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
 
@@ -66,6 +77,8 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
     boolean isDialogOpen = true;
     private SharedPreferences preferences;
+
+    String str = "", _pathforcheck = "";
 
     ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> planogramShelfHeaderDataList = new ArrayList<>();
     ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> planogramSkuChildDataList;
@@ -118,6 +131,8 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            str = CommonString.FILE_PATH ;
 
             prepareList();
 
@@ -246,6 +261,125 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             });
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.planogram, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
+            builder.setTitle(getResources().getString(R.string.dialog_title));
+            builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            if (!validateData(hashMapListHeaderData, hashMapListChildData)) {
+                                if (!camera_allow.equals("1")) {
+                                    db.deletePlanogramListStoreAndCategorywise(store_id, categoryId,
+                                            planogramShelfHeaderDataList, planogramHashMapListChildData);
+                                }
+                            }
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+            //finish();
+        }
+
+        //Planogram Dialog
+        if (id == R.id.action_planogram) {
+            expandableListView.clearFocus();
+
+            //final Dialog dialog = new Dialog(Stock_FacingActivity.this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+            final Dialog dialog = new Dialog(MSL_Availability_StockFacingActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.setContentView(R.layout.planogram_dialog_layout);
+            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+            dialog.setCancelable(false);
+
+            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mappingPlanogramList = db.getMappingPlanogramData(categoryId);
+
+            //ImageView img_planogram = (ImageView) dialog.findViewById(R.id.img_planogram);
+            WebView webView = (WebView) dialog.findViewById(R.id.webview);
+            webView.setWebViewClient(new MyWebViewClient());
+
+            webView.getSettings().setAllowFileAccess(true);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setBuiltInZoomControls(true);
+
+            String planogram_image = "";
+            if (mappingPlanogramList.size() > 0) {
+                planogram_image = mappingPlanogramList.get(0).getPLANOGRAM_IMAGE();
+            }
+            if (!planogram_image.equals("")) {
+                if (new File(str + planogram_image).exists()) {
+                    Bitmap bmp = BitmapFactory.decodeFile(str + planogram_image);
+                    // img_planogram.setRotation(90);
+                    //img_planogram.setImageBitmap(bmp);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+                    String imagePath = "file://" + CommonString.FILE_PATH + "/" + planogram_image;
+                    String html = "<html><head></head><body><img src=\"" + imagePath + "\"></body></html>";
+                    webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
+
+                    dialog.show();
+                } /*else {
+                //webView.loadUrl(String.valueOf(R.drawable.sad_cloud));
+
+                //img_planogram.setBackgroundResource(R.drawable.sad_cloud);
+            }*/
+            }
+
+
+            ImageView cancel = (ImageView) dialog.findViewById(R.id.img_cancel);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    dialog.dismiss();
+                }
+            });
+
+            //dialog.show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            view.clearCache(true);
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
         }
     }
 
@@ -502,47 +636,6 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
         return checkflag;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
-            builder.setTitle(getResources().getString(R.string.dialog_title));
-            builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
-                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-
-                            if (!validateData(hashMapListHeaderData, hashMapListChildData)) {
-                                if (!camera_allow.equals("1")) {
-                                    db.deletePlanogramListStoreAndCategorywise(store_id, categoryId,
-                                            planogramShelfHeaderDataList, planogramHashMapListChildData);
-                                }
-                            }
-                            finish();
-                        }
-                    })
-                    .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-            //finish();
-        }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onBackPressed() {

@@ -1294,6 +1294,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         if (new File(str + planogram_image).exists()) {
 
             String imagePath = "file://" + CommonString.FILE_PATH + "/" + planogram_image;
+            //String imagePath = "file://" + CommonString.FILE_PATH + "/" + "image_ref.png";
             String html = "<html><head></head><body><img src=\"" + imagePath + "\"></body></html>";
             webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
 

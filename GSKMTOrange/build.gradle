@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion '25.0.0'
 
     useLibrary 'org.apache.http.legacy'
 
@@ -15,8 +15,8 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
 
-        versionCode 6
-        versionName "1.5"
+        versionCode 8
+        versionName "2.1"
         
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

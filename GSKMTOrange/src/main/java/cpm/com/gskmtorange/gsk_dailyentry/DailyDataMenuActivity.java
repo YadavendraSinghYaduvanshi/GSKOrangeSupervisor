@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
+import cpm.com.gskmtorange.GetterSetter.CategoryPictureGetterSetter;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.AdditionalVisibility;
@@ -43,6 +44,8 @@ public class DailyDataMenuActivity extends AppCompatActivity {
     String categoryName = "", categoryId;
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
     private SharedPreferences preferences;
+
+    ArrayList<CategoryPictureGetterSetter> category_camera_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,11 +189,12 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             }
             categoryList.add(data);
 
-
             //Category Pictures
             data = new DailyDataMenuGetterSetter();
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_category_picture));
+            //category_camera_list = db.getCategoryPicturedata(categoryId, keyAccount_id, storeType_id, class_id);
             if (camera_allow.equalsIgnoreCase("1")) {
+           //if (category_camera_list.size()>0) {
                 if (db.isCategoryPictureData(store_id, categoryId)) {
                     data.setCategory_img(R.mipmap.picturecatogory_done);
                 } else {

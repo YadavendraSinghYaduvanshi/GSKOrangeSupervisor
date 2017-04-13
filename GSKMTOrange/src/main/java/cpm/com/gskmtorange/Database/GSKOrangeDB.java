@@ -2316,7 +2316,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            cursordata = db.rawQuery("SELECT * FROM STOCK_DIALOG WHERE COMMON_ID = '" + keyid + "'", null);
+            cursordata = db.rawQuery("SELECT * FROM STOCK_DIALOG_MAIN WHERE COMMON_ID = '" + keyid + "'", null);
 
             if (cursordata != null) {
                 cursordata.moveToFirst();
