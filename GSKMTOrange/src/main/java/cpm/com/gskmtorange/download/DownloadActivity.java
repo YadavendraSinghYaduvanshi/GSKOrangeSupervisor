@@ -1029,7 +1029,6 @@ public class DownloadActivity extends AppCompatActivity {
             } else {
                 return str;
             }
-
         }
 
         @Override

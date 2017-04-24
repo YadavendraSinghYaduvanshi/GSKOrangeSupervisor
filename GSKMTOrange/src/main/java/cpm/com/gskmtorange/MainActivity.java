@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity
 
         storelist = db.getStoreData(date);
 
-
     }
 
     @Override

@@ -116,7 +116,6 @@ public class AutoUpdateActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-
             try {
                 data = new Data();
                 data.name = "Downloading Application";
