@@ -5065,6 +5065,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setToggleValue(dbcursor.getString(dbcursor.getColumnIndexOrThrow("TOGGLE_VALUE")));
                     cd.setFacing(dbcursor.getString(dbcursor.getColumnIndexOrThrow("FACING")));
                     cd.setStock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STOCK")));
+                    cd.setMust_have(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MUST_HAVE")));
 
                     list.add(cd);
                     dbcursor.moveToNext();
