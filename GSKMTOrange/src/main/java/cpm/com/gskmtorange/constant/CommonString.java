@@ -798,6 +798,9 @@ public class CommonString {
             + " VARCHAR,"
 
             + "TOGGLE_VALUE"
+            + " VARCHAR,"
+
+            + "MUST_HAVE"
             + " VARCHAR"
 
             + ")";
