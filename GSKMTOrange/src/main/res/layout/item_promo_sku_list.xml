@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -88,9 +88,9 @@
                             android:id="@+id/toggle_inStock"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/toggle_selector_background"
                             android:textOff="@string/no"
-                            android:textOn="@string/yes"
-                            android:background="@drawable/toggle_selector_background" />
+                            android:textOn="@string/yes" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -127,18 +127,20 @@
                             android:id="@+id/toggle_promoAnnouncer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/toggle_selector_background"
                             android:textOff="@string/no"
-                            android:textOn="@string/yes"
-                            android:background="@drawable/toggle_selector_background"/>
+                            android:textOn="@string/yes" />
                     </LinearLayout>
                 </LinearLayout>
 
+                <!--Running on Pos-->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     android:weightSum="5">
 
                     <LinearLayout
@@ -166,9 +168,9 @@
                             android:id="@+id/toggle_runningPos"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/toggle_selector_background"
                             android:textOff="@string/no"
-                            android:textOn="@string/yes"
-                            android:background="@drawable/toggle_selector_background"/>
+                            android:textOn="@string/yes" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

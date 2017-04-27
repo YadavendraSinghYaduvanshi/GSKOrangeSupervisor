@@ -1037,6 +1037,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 boolean tempflag = false;
 
                 if (childData.getCompany_id().equals("1")) {
+
                     if (childData.getToggleValue().equals("0")) {
                         if (holder.stock.getText().toString().equals("")) {
                             holder.stock.setBackgroundColor(getResources().getColor(R.color.white));
@@ -1052,11 +1053,13 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                             tempflag = true;
                         }
                     } else {
-                        if (holder.facing.getText().toString().equals("")) {
-                            holder.facing.setBackgroundColor(getResources().getColor(R.color.white));
-                            holder.facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                            holder.facing.setHint(getString(R.string.empty));
-                            tempflag = true;
+                        if (childData.getMust_have().equals("1")) {
+                            if (holder.facing.getText().toString().equals("")) {
+                                holder.facing.setBackgroundColor(getResources().getColor(R.color.white));
+                                holder.facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                                holder.facing.setHint(getString(R.string.empty));
+                                tempflag = true;
+                            }
                         }
                     }
 
