@@ -4841,7 +4841,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
 
         try {
-            dbcursor = db.rawQuery("Select DISTINCT SK.SKU_ID,SK.SKU,SK.MRP,SK.SKU_SEQUENCE,M.MBQ,BR.COMPANY_ID  " +
+            dbcursor = db.rawQuery("Select DISTINCT SK.SKU_ID,SK.SKU,SK.MRP,SK.SKU_SEQUENCE,M.MBQ,BR.COMPANY_ID,M.MUST_HAVE " +
                     "from MAPPING_STOCK M " +
                     "inner join SKU_MASTER SK " +
                     "on M.SKU_ID=SK.SKU_ID " +
@@ -4853,7 +4853,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
                     "where CA.CATEGORY_ID='" + category_id + "' AND BR.BRAND_ID='" + brand_id +
                     "' AND M.KEYACCOUNT_ID = '" + keyAccount_id + "' AND M.STORETYPE_ID = '" + storeType_id +
-                    "' AND M.CLASS_ID = '" + class_id + "'", null);
+                    "' AND M.CLASS_ID = '" + class_id + "' order by M.MUST_HAVE DESC", null);
 
             /*dbcursor = db.rawQuery("Select DISTINCT SK.SKU_ID,SK.SKU,SK.MRP,SK.SKU_SEQUENCE,M.MBQ " +
                     "from MAPPING_STOCK M " +
@@ -4881,6 +4881,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setSku_sequence(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_SEQUENCE")));
                     cd.setMbq(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MBQ")));
                     cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+                    cd.setMust_have(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MUST_HAVE")));
                     cd.setToggleValue("1");
                     cd.setFacing("");
                     cd.setStock("");
@@ -4921,6 +4922,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setFacing(dbcursor.getString(dbcursor.getColumnIndexOrThrow("FACING")));
                     cd.setStock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STOCK")));
                     cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+                    cd.setMust_have(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MUST_HAVE")));
 
                     list.add(cd);
                     dbcursor.moveToNext();
@@ -4955,9 +4957,14 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     values.put("SKU_SEQUENCE", data.getSku_sequence());
                     values.put("MBQ", data.getMbq());
                     values.put("TOGGLE_VALUE", data.getToggleValue());
-                    values.put("FACING", data.getFacing());
+                    if (data.getFacing().equals("")) {
+                        values.put("FACING", "0");
+                    } else {
+                        values.put("FACING", data.getFacing());
+                    }
                     values.put("STOCK", data.getStock());
                     values.put("COMPANY_ID", data.getCompany_id());
+                    values.put("MUST_HAVE", data.getMust_have());
 
                     db.insert(CommonString.TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING, null, values);
                 }
@@ -4983,8 +4990,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     MSL_AvailabilityStockFacingGetterSetter data = hashMapListChildData.get(hashMapListHeaderData.get(i)).get(j);
 
                     values.put("TOGGLE_VALUE", data.getToggleValue());
-                    values.put("FACING", data.getFacing());
                     values.put("STOCK", data.getStock());
+
+                    if (data.getFacing().equals("")) {
+                        values.put("FACING", "0");
+                    } else {
+                        values.put("FACING", data.getFacing());
+                    }
 
                     db.update(CommonString.TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING, values,
                             "Brand_Id ='" + hashMapListHeaderData.get(i).getBrand_id() + "' AND SKU_ID ='" + data.getSku_id() +
@@ -5053,6 +5065,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setToggleValue(dbcursor.getString(dbcursor.getColumnIndexOrThrow("TOGGLE_VALUE")));
                     cd.setFacing(dbcursor.getString(dbcursor.getColumnIndexOrThrow("FACING")));
                     cd.setStock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("STOCK")));
+                    cd.setMust_have(dbcursor.getString(dbcursor.getColumnIndexOrThrow("MUST_HAVE")));
 
                     list.add(cd);
                     dbcursor.moveToNext();

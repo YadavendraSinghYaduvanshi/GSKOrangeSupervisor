@@ -132,7 +132,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            str = CommonString.FILE_PATH ;
+            str = CommonString.FILE_PATH;
 
             prepareList();
 
@@ -581,35 +581,38 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
 
                 //Company_id
                 if (listDataChild.get(listDataHeader.get(i)).get(j).getCompany_id().equals("1")) {
-
-                    if (!camera_allow.equalsIgnoreCase("1")) {
-                        if (!(planogramShelfHeaderDataList.size() > 0)) {
-                            flag = false;
-                            Error_Message = getResources().getString(R.string.stock_planogram_data_noCamera_data);
-                            break;
-                        }
-                    }
-
-                    if (faceup.equals("")) {
-                        if (!checkHeaderArray.contains(i)) {
-                            checkHeaderArray.add(i);
-                        }
-
-                        flag = false;
-                        Error_Message = getResources().getString(R.string.faceup_value);
-                        break;
-                    } else {
-                        if (data.getToggleValue().equals("0")) {
-
-                            if (stock.equals("")) {
-                                if (!checkHeaderArray.contains(i)) {
-                                    checkHeaderArray.add(i);
-                                }
+                    if (data.getMust_have().equals("1")) {
+                        if (!camera_allow.equalsIgnoreCase("1")) {
+                            if (!(planogramShelfHeaderDataList.size() > 0)) {
                                 flag = false;
-                                Error_Message = getResources().getString(R.string.stock_value);
+                                Error_Message = getResources().getString(R.string.stock_planogram_data_noCamera_data);
                                 break;
                             }
                         }
+
+                        if (faceup.equals("")) {
+                            if (!checkHeaderArray.contains(i)) {
+                                checkHeaderArray.add(i);
+                            }
+
+                            flag = false;
+                            Error_Message = getResources().getString(R.string.faceup_value);
+                            break;
+                        } else {
+                            if (data.getToggleValue().equals("0")) {
+
+                                if (stock.equals("")) {
+                                    if (!checkHeaderArray.contains(i)) {
+                                        checkHeaderArray.add(i);
+                                    }
+                                    flag = false;
+                                    Error_Message = getResources().getString(R.string.stock_value);
+                                    break;
+                                }
+                            }
+                        }
+
+
                     }
                 } else {
                     if (faceup.equals("")) {
@@ -784,8 +787,10 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             holder.txt_skuName.setText(childData.getSku());
             holder.txt_mbq.setText(childData.getMbq());
 
-            if (childData.getCompany_id().equals("1")) {
+            if (childData.getCompany_id().equals("1") && childData.getMust_have().equals("1")) {
+                holder.lin_category.setBackgroundColor(getResources().getColor(R.color.colorOrange));
                 holder.txt_skuName.setTextColor(getResources().getColor(R.color.colorPrimary));
+
                 holder.txt_mbq.setVisibility(View.VISIBLE);
                 holder.toggle_available.setVisibility(View.VISIBLE);
                 holder.facing.setVisibility(View.VISIBLE);
@@ -796,12 +801,24 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                     holder.stock.setVisibility(View.VISIBLE);
                 }
             } else {
+                holder.lin_category.setBackgroundColor(getResources().getColor(R.color.white));
                 holder.txt_skuName.setTextColor(getResources().getColor(R.color.black));
+
                 holder.txt_mbq.setVisibility(View.GONE);
                 holder.toggle_available.setVisibility(View.GONE);
                 holder.facing.setVisibility(View.VISIBLE);
                 holder.stock.setVisibility(View.GONE);
             }
+
+           /* if (childData.getCompany_id().equals("1") && childData.getMust_have().equals("1")) {
+                holder.lin_category.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+            } else {
+                holder.lin_category.setBackgroundColor(getResources().getColor(R.color.white));
+                    *//*holder.txt_mbq.setVisibility(View.GONE);
+                    holder.toggle_available.setVisibility(View.GONE);
+                    holder.facing.setVisibility(View.VISIBLE);
+                    holder.stock.setVisibility(View.GONE);*//*
+            }*/
 
 
             final ViewHolder finalHolder = holder;
@@ -1020,6 +1037,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 boolean tempflag = false;
 
                 if (childData.getCompany_id().equals("1")) {
+
                     if (childData.getToggleValue().equals("0")) {
                         if (holder.stock.getText().toString().equals("")) {
                             holder.stock.setBackgroundColor(getResources().getColor(R.color.white));
@@ -1035,11 +1053,13 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                             tempflag = true;
                         }
                     } else {
-                        if (holder.facing.getText().toString().equals("")) {
-                            holder.facing.setBackgroundColor(getResources().getColor(R.color.white));
-                            holder.facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                            holder.facing.setHint(getString(R.string.empty));
-                            tempflag = true;
+                        if (childData.getMust_have().equals("1")) {
+                            if (holder.facing.getText().toString().equals("")) {
+                                holder.facing.setBackgroundColor(getResources().getColor(R.color.white));
+                                holder.facing.setHintTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                                holder.facing.setHint(getString(R.string.empty));
+                                tempflag = true;
+                            }
                         }
                     }
 

@@ -6,7 +6,7 @@ package cpm.com.gskmtorange.xmlGetterSetter;
 
 public class MSL_AvailabilityStockFacingGetterSetter {
     String sub_category_id, sub_category, brand_id, brand,
-            sku_id, sku, mrp, sku_sequence, toggleValue, mbq, category_id, facing, stock,company_id;
+            sku_id, sku, mrp, sku_sequence, toggleValue, mbq, category_id, facing, stock,company_id,must_have;
 
     public String getSub_category_id() {
         return sub_category_id;
@@ -118,5 +118,13 @@ public class MSL_AvailabilityStockFacingGetterSetter {
 
     public void setCompany_id(String company_id) {
         this.company_id = company_id;
+    }
+
+    public String getMust_have() {
+        return must_have;
+    }
+
+    public void setMust_have(String must_have) {
+        this.must_have = must_have;
     }
 }

@@ -431,15 +431,16 @@ public class UploadActivity extends AppCompatActivity {
                                         } else {
                                             stock = "0";
                                         }
-                                        onXML = "[MSL_AVAILABILITY_STOCK_FACING_DATA]"
+                                        onXML = "[MSL_AVAILABILITY_STOCK_FACING_DATA_NEW]"
                                                 + "[MID]" + mid + "[/MID]"
                                                 + "[USER_ID]" + userId + "[/USER_ID]"
                                                 + "[SKU_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getSku_id()) + "[/SKU_ID]"
                                                 + "[MBQ]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMbq()) + "[/MBQ]"
                                                 + "[AVAILABILITY]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getToggleValue()) + "[/AVAILABILITY]"
                                                 + "[FACING]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getFacing()) + "[/FACING]"
-                                                + "[STOCK]" + Integer.parseInt(stock) + "[/STOCK]" +
-                                                "[/MSL_AVAILABILITY_STOCK_FACING_DATA]";
+                                                + "[STOCK]" + Integer.parseInt(stock) + "[/STOCK]"
+                                                + "[MUST_HAVE]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMust_have()) + "[/MUST_HAVE]" +
+                                                "[/MSL_AVAILABILITY_STOCK_FACING_DATA_NEW]";
 
                                         mslAvailability_stockFacing_xml = mslAvailability_stockFacing_xml + onXML;
                                     }
@@ -449,7 +450,7 @@ public class UploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "MSL_AVAILABILITY_STOCK_FACING_DATA");
+                                request.addProperty("KEYS", "MSL_AVAILABILITY_STOCK_FACING_DATA_NEW");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
@@ -637,7 +638,7 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[DISPLAY_ID]" + additionalVisibilityList.get(J).getSku_id() + "[/DISPLAY_ID]"
                                             + "[SKU_LIST]" + additional_visibility_dialog_xml + "[/SKU_LIST]"
                                             + "[/ADDITIONAL_VISIBILITY_NEW]";
-                                            //Here getSku_id gives display_id
+                                    //Here getSku_id gives display_id
 
                                     additional_visibility_data_xml = additional_visibility_data_xml + onXML;
                                     KeyID = "";
@@ -720,7 +721,7 @@ public class UploadActivity extends AppCompatActivity {
                                     }
 
 
-                                   String brandxml = "";
+                                    String brandxml = "";
                                     String brandchild;
 
                                     if (brandList.size() > 0) {
