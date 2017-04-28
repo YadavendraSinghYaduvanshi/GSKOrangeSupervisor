@@ -758,6 +758,9 @@ public class CommonString {
 
     public static final String KEY_LANGUAGE_OMAN = "English";
     public static final String KEY_RETURE_LANGUAGE_OMAN = "EN";
+    public static final String KEY_LANGUAGE_ARABIC_UAE = "ARABIC-UAE";
+
+    public static final String KEY_RETURE_LANGUAGE_UAE_ARABIC = "AR";
 
     public static final String TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING = "Msl_Availability_Stock_Facing_Data";
 

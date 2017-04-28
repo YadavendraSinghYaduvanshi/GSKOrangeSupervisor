@@ -310,7 +310,9 @@ public class GeoTagStoreList extends AppCompatActivity implements View.OnClickLi
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
 
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
+        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
         }else{
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;

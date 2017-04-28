@@ -291,7 +291,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String u_id = preferences.getString(CommonString.KEY_USERNAME, "");
 
-        if (!u_id.equals("") && !userid.equals(u_id)) {
+        if (!u_id.equals("") && !userid.equalsIgnoreCase(u_id)) {
             flag = false;
         }
 
@@ -704,6 +704,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
             cdate = arabicToenglish(cdate);
+        }else if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
+            cdate = arabicToenglish(cdate);
         }
 
         return cdate;
@@ -734,10 +736,12 @@ public class LoginActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
+        }
+        else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
         }else{
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
-
 
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
