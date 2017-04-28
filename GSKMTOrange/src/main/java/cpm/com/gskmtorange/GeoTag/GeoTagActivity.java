@@ -336,7 +336,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 mMap.setMyLocationEnabled(true);
 
-                if(markerflag=true)
+                if(markerflag)
                 {
                     // Add a marker of latest location and move the camera
                     LatLng latLng = new LatLng(latitude, longitude);
@@ -457,6 +457,8 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         String cdate = formatter.format(m_cal.getTime());
 
         if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
+            cdate = arabicToenglish(cdate);
+        }else if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
             cdate = arabicToenglish(cdate);
         }
 
@@ -1097,7 +1099,9 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
 
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
+            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
+        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
         }else{
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
