@@ -61,10 +61,10 @@
     <string name="title_activity_category_list">Kategoriler</string>
     <string name="title_activity_category_wise_performance">Kategori Performansı</string>
     <string name="title_activity_daily_main_menu">Günlük Veri Menüsü</string>
-    <string name="title_activity_msl__availability">Bulunurluk</string>
+    <string name="title_activity_msl__availability">SKU bulunurluğu</string>
     <string name="title_activity_stock_facing">Raf Payı</string>
 
-    <string name="daily_data_menu_msl_availability">Bulunurluk</string>
+    <string name="daily_data_menu_msl_availability">SKU bulunurluğu</string>
     <string name="daily_data_menu_stock_facing">Raf Payı</string>
     <string name="daily_data_menu_t2p">Kalıcı Teşhir</string>
     <string name="daily_data_menu_additional_visibility">Ek Teşhir</string>

@@ -89,9 +89,9 @@
     <string name="category_performance_ltm">LTM ( آخر ثلاثة شهور)</string>
     <string name="msl_availability_mbq">MBQ (أقل كمية أساسية )</string>
     <string name="category_performance_msl_availability"> MSL (قائمة المخزون الأساسية)</string>
-    <string name="daily_data_menu_msl_availability"> MSL (قائمة المخزون الأساسية)</string>
+    <string name="daily_data_menu_msl_availability">تواجد الصنف</string>
     <string name="category_performance_mtd"> MTD (المبيعات الشهرية حتى اليوم)</string>
-    <string name="title_activity_msl__availability">المخزون الواجب توافره</string>
+    <string name="title_activity_msl__availability">تواجد الصنف</string>
     <string name="NetworkError">خطأ في شبكة الاتصال</string>
     <string name="new_update_available">تحديث جديد متوفر</string>
     <string name="no">لا</string>

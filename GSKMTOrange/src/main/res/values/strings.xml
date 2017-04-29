@@ -71,10 +71,10 @@
     <string name="title_activity_category_list">Category List</string>
     <string name="title_activity_category_wise_performance">Categorywise Performance</string>
     <string name="title_activity_daily_main_menu">Daily Data Menu</string>
-    <string name="title_activity_msl__availability">Must Stock Availability</string>
+    <string name="title_activity_msl__availability">SKU Availability</string>
     <string name="title_activity_stock_facing">Stock and Facing</string>
 
-    <string name="daily_data_menu_msl_availability">MSL Availability</string>
+    <string name="daily_data_menu_msl_availability">SKU Availability</string>
     <string name="daily_data_menu_stock_facing">Stock and Facing</string>
     <string name="daily_data_menu_t2p">T2P Compliance</string>
     <string name="daily_data_menu_additional_visibility">Additional Visibility</string>
