@@ -412,7 +412,10 @@ public class CommonString {
             + " INTEGER,"
 
             + "RUNNING_POS_VALUE"
-            + " INTEGER"
+            + " INTEGER,"
+
+            + "ADD_PROMO_IMAGE"
+            + " VARCHAR"
 
             + ")";
 
@@ -449,7 +452,10 @@ public class CommonString {
             + " INTEGER,"
 
             + "RUNNING_POS_VALUE"
-            + " INTEGER"
+            + " INTEGER,"
+
+            + "PROMO_IMAGE"
+            + " VARCHAR"
 
             + ")";
 

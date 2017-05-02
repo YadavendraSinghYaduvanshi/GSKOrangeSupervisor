@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -293,14 +294,14 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 db.updateStoreStatusOnLeave(coverageList.get(i).getStoreId(), date, CommonString.KEY_P);
                             } else {
-                                return CommonString.METHOD_UPLOAD_COVERAGE;
+                                continue;
+                                //return CommonString.METHOD_UPLOAD_COVERAGE;
                             }
-
                             mid = Integer.parseInt((words[1]));
 
 
                             //MSL_Availability
-                            String mslAvailability_xml = "";
+                            /*String mslAvailability_xml = "";
                             onXML = "";
                             msl_availabilityList = db.getMSL_AvailabilityUploadServerData(coverageList.get(i).getStoreId());
 
@@ -354,147 +355,11 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                             }
                             data.value = 10;
                             data.name = getString(R.string.availability_data_uploading);
-                            publishProgress(data);
-
-
-
-                            //MSL_Availability_StockFacing
-                            String mslAvailability_stockFacing_xml = "";
-                            onXML = "";
-                            msl_availabilityStockFacingList = db.getMSL_Availability_StockFacing_UploadServerData(coverageList.get(i).getStoreId());
-
-                            if (msl_availabilityStockFacingList.size() > 0) {
-                                for (int j = 0; j < msl_availabilityStockFacingList.size(); j++) {
-                                    if (!msl_availabilityStockFacingList.get(j).getSku_id().equals("0")) {
-
-                                        String stock;
-                                        if (!msl_availabilityStockFacingList.get(j).getStock().equals("")) {
-                                            stock = msl_availabilityStockFacingList.get(j).getStock();
-                                        } else {
-                                            stock = "0";
-                                        }
-                                        onXML = "[MSL_AVAILABILITY_STOCK_FACING_DATA]"
-                                                + "[MID]" + mid + "[/MID]"
-                                                + "[USER_ID]" + userId + "[/USER_ID]"
-                                                //+ "[CATEGORY_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getCategory_id()) + "[/CATEGORY_ID]"
-                                                //+ "[BRAND_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getBrand_id()) + "[/BRAND_ID]"
-                                                + "[SKU_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getSku_id()) + "[/SKU_ID]"
-                                                + "[MBQ]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMbq()) + "[/MBQ]"
-                                                + "[AVAILABILITY]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getToggleValue()) + "[/AVAILABILITY]"
-                                                + "[FACING]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getFacing()) + "[/FACING]"
-                                                + "[STOCK]" + Integer.parseInt(stock) + "[/STOCK]" +
-                                                "[/MSL_AVAILABILITY_STOCK_FACING_DATA]";
-
-                                        mslAvailability_stockFacing_xml = mslAvailability_stockFacing_xml + onXML;
-                                    }
-                                }
-
-                                final String sos_xml = "[DATA]" + mslAvailability_stockFacing_xml + "[/DATA]";
-
-                                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
-                                request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "MSL_AVAILABILITY_STOCK_FACING_DATA");
-                                request.addProperty("USERNAME", userId);
-                                request.addProperty("MID", mid);
-
-                                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                                envelope.dotNet = true;
-                                envelope.setOutputSoapObject(request);
-
-                                androidHttpTransport = new HttpTransportSE(CommonString.URL);
-                                androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
-
-                                result = envelope.getResponse();
-
-                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-                            }
-                            data.value = 15;
-                            data.name = getString(R.string.availability_data_uploading);
-                            publishProgress(data);
-
+                            publishProgress(data);*/
 
 
                             //Stock and Facing
                             /*String stock_facing_xml = "";
-                            onXML = "";
-                            stock_facingHeaderList = db.getStockAndFacingHeaderServerUploadData(coverageList.get(i).getStoreId());
-
-                            if (stock_facingHeaderList.size() > 0) {
-                                for (int i1 = 0; i1 < stock_facingHeaderList.size(); i1++) {
-                                    String stockChildXML = "";
-
-                                    if (!stock_facingHeaderList.get(i1).getCategory_id().equals("0")) {
-
-                                        stock_facingChildList = db.getStockAndFacingSKUServerUploadData(
-                                                stock_facingHeaderList.get(i1).getCategory_id(), stock_facingHeaderList.get(i1).getBrand_id());
-
-                                        String onXML1 = "";
-                                        for (int j = 0; j < stock_facingChildList.size(); j++) {
-
-                                            onXML1 = "[STOCK_FACING_DATA]"
-                                                    + "[MID]" + mid + "[/MID]"
-                                                    + "[USER_ID]" + userId + "[/USER_ID]"
-                                                    + "[CATEGORY_ID]" + Integer.parseInt(stock_facingHeaderList.get(i1).getCategory_id()) + "[/CATEGORY_ID]"
-                                                    + "[SUB_CATEGORY_ID]" + Integer.parseInt(stock_facingHeaderList.get(i1).getSub_category_id()) + "[/SUB_CATEGORY_ID]"
-                                                    + "[BRAND_ID]" + Integer.parseInt(stock_facingHeaderList.get(i1).getBrand_id()) + "[/BRAND_ID]"
-                                                    + "[IAMGE1]" + stock_facingHeaderList.get(i1).getImage1() + "[/IAMGE1]"
-                                                    + "[IAMGE2]" + stock_facingHeaderList.get(i1).getImage2() + "[/IAMGE2]"
-                                                    + "[SKU_ID]" + Integer.parseInt(stock_facingChildList.get(j).getSku_id()) + "[/SKU_ID]"
-                                                    //+ "[SKU]" + stock_facingChildList.get(j).getSku() + "[/SKU]"
-                                                    + "[STOCK]" + Integer.parseInt(stock_facingChildList.get(j).getStock()) + "[/STOCK]"
-                                                    + "[FACEUP]" + Integer.parseInt(stock_facingChildList.get(j).getFacing()) + "[/FACEUP]"
-                                                    + "[/STOCK_FACING_DATA]";
-
-                                            stockChildXML = stockChildXML + onXML1;
-                                        }
-                                    }
-                                    stock_facing_xml = stock_facing_xml + stockChildXML;
-                                }
-
-                                final String sos_xml = "[DATA]" + stock_facing_xml + "[/DATA]";
-
-                                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
-                                request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "STOCK_FACING_DATA");
-                                request.addProperty("USERNAME", userId);
-                                request.addProperty("MID", mid);
-
-                                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                                envelope.dotNet = true;
-                                envelope.setOutputSoapObject(request);
-
-                                androidHttpTransport = new HttpTransportSE(CommonString.URL);
-                                androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
-
-                                result = envelope.getResponse();
-
-                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-                            }
-                            data.value = 20;
-                            data.name = "Stock Facing Uploading";
-                            publishProgress(data);*/
-
-                            String stock_facing_xml = "";
                             onXML = "";
                             stock_facingHeaderList = db.getStockAndFacingHeaderServerUploadData(coverageList.get(i).getStoreId());
 
@@ -546,39 +411,44 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                             }
                             data.value = 20;
                             data.name = getString(R.string.stock_data_uploading);
-                            publishProgress(data);
+                            publishProgress(data);*/
 
 
-                            //Promo Compliance - Promotion Data
-                            String promoition_data_xml = "";
+                            //MSL_Availability_StockFacing
+                            String mslAvailability_stockFacing_xml = "";
                             onXML = "";
-                            promotionSkuList = db.getPromoComplianceSkuServerUploadData(coverageList.get(i).getStoreId());
+                            msl_availabilityStockFacingList = db.getMSL_Availability_StockFacing_UploadServerData(coverageList.get(i).getStoreId());
 
-                            if (promotionSkuList.size() > 0) {
-                                for (int i1 = 0; i1 < promotionSkuList.size(); i1++) {
-                                    if (!promotionSkuList.get(i1).getCategory_id().equals("0")) {
+                            if (msl_availabilityStockFacingList.size() > 0) {
+                                for (int j = 0; j < msl_availabilityStockFacingList.size(); j++) {
+                                    if (!msl_availabilityStockFacingList.get(j).getSku_id().equals("0")) {
 
-                                        onXML = "[PROMOTION_DATA]"
+                                        String stock;
+                                        if (!msl_availabilityStockFacingList.get(j).getStock().equals("")) {
+                                            stock = msl_availabilityStockFacingList.get(j).getStock();
+                                        } else {
+                                            stock = "0";
+                                        }
+                                        onXML = "[MSL_AVAILABILITY_STOCK_FACING_DATA_NEW]"
                                                 + "[MID]" + mid + "[/MID]"
                                                 + "[USER_ID]" + userId + "[/USER_ID]"
-                                                + "[CATEGORY_ID]" + Integer.parseInt(promotionSkuList.get(i1).getCategory_id()) + "[/CATEGORY_ID]"
-                                                + "[PROMO_ID]" + Integer.parseInt(promotionSkuList.get(i1).getPromo_id()) + "[/PROMO_ID]"
-                                                //+ "[SKU]" + promotionSkuList.get(i1).getSku() + "[/SKU]"
-                                                + "[SKU_ID]" + Integer.parseInt(promotionSkuList.get(i1).getSku_id()) + "[/SKU_ID]"
-                                                + "[IN_STOCK]" + Integer.parseInt(promotionSkuList.get(i1).getIn_stock()) + "[/IN_STOCK]"
-                                                + "[PROMO_ANNOUNCER]" + Integer.parseInt(promotionSkuList.get(i1).getPromo_announcer()) + "[/PROMO_ANNOUNCER]"
-                                                + "[RUNNING_POS]" + Integer.parseInt(promotionSkuList.get(i1).getRunning_pos()) + "[/RUNNING_POS]"
-                                                + "[/PROMOTION_DATA]";
+                                                + "[SKU_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getSku_id()) + "[/SKU_ID]"
+                                                + "[MBQ]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMbq()) + "[/MBQ]"
+                                                + "[AVAILABILITY]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getToggleValue()) + "[/AVAILABILITY]"
+                                                + "[FACING]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getFacing()) + "[/FACING]"
+                                                + "[STOCK]" + Integer.parseInt(stock) + "[/STOCK]"
+                                                + "[MUST_HAVE]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMust_have()) + "[/MUST_HAVE]" +
+                                                "[/MSL_AVAILABILITY_STOCK_FACING_DATA_NEW]";
 
-                                        promoition_data_xml = promoition_data_xml + onXML;
+                                        mslAvailability_stockFacing_xml = mslAvailability_stockFacing_xml + onXML;
                                     }
                                 }
 
-                                final String sos_xml = "[DATA]" + promoition_data_xml + "[/DATA]";
+                                final String sos_xml = "[DATA]" + mslAvailability_stockFacing_xml + "[/DATA]";
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "PROMOTION_DATA");
+                                request.addProperty("KEYS", "MSL_AVAILABILITY_STOCK_FACING_DATA_NEW");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
@@ -591,17 +461,61 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 result = envelope.getResponse();
 
-                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                     return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
+                                }*/
+                            }
+                            data.value = 15;
+                            data.name = getString(R.string.availability_data_uploading);
+                            publishProgress(data);
+
+
+                            //Promo Compliance - Promotion Data
+                            String promoition_data_xml = "";
+                            onXML = "";
+                            promotionSkuList = db.getPromoComplianceSkuServerUploadData(coverageList.get(i).getStoreId());
+
+                            if (promotionSkuList.size() > 0) {
+                                for (int i1 = 0; i1 < promotionSkuList.size(); i1++) {
+                                    if (!promotionSkuList.get(i1).getCategory_id().equals("0")) {
+
+                                        onXML = "[PROMOTION_DATA_NEW]"
+                                                + "[MID]" + mid + "[/MID]"
+                                                + "[USER_ID]" + userId + "[/USER_ID]"
+                                                + "[CATEGORY_ID]" + Integer.parseInt(promotionSkuList.get(i1).getCategory_id()) + "[/CATEGORY_ID]"
+                                                + "[PROMO_ID]" + Integer.parseInt(promotionSkuList.get(i1).getPromo_id()) + "[/PROMO_ID]"
+                                                //+ "[SKU]" + promotionSkuList.get(i1).getSku() + "[/SKU]"
+                                                + "[SKU_ID]" + Integer.parseInt(promotionSkuList.get(i1).getSku_id()) + "[/SKU_ID]"
+                                                + "[IN_STOCK]" + Integer.parseInt(promotionSkuList.get(i1).getIn_stock()) + "[/IN_STOCK]"
+                                                + "[PROMO_ANNOUNCER]" + Integer.parseInt(promotionSkuList.get(i1).getPromo_announcer()) + "[/PROMO_ANNOUNCER]"
+                                                + "[RUNNING_POS]" + Integer.parseInt(promotionSkuList.get(i1).getRunning_pos()) + "[/RUNNING_POS]"
+                                                + "[PROMO_IMAGE]" + promotionSkuList.get(i1).getImage_promotion() + "[/PROMO_IMAGE]"
+                                                + "[/PROMOTION_DATA_NEW]";
+
+                                        promoition_data_xml = promoition_data_xml + onXML;
+                                    }
                                 }
 
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
+                                final String sos_xml = "[DATA]" + promoition_data_xml + "[/DATA]";
 
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
+                                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                                request.addProperty("XMLDATA", sos_xml);
+                                request.addProperty("KEYS", "PROMOTION_DATA_NEW");
+                                request.addProperty("USERNAME", userId);
+                                request.addProperty("MID", mid);
+
+                                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                                envelope.dotNet = true;
+                                envelope.setOutputSoapObject(request);
+
+                                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                                androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                                result = envelope.getResponse();
+
+                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                     return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
+                                }*/
                             }
                             data.value = 30;
                             data.name = getString(R.string.promo_data_uploading);
@@ -617,7 +531,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                 for (int i1 = 0; i1 < additionalPromotionList.size(); i1++) {
                                     if (!additionalPromotionList.get(i1).getCategory_id().equals("0")) {
 
-                                        onXML = "[ADDITIONAL_PROMOTION_DATA]"
+                                        onXML = "[ADDITIONAL_PROMOTION_DATA_NEW]"
                                                 + "[MID]" + mid + "[/MID]"
                                                 + "[USER_ID]" + userId + "[/USER_ID]"
                                                 + "[CATEGORY_ID]" + Integer.parseInt(additionalPromotionList.get(i1).getCategory_id()) + "[/CATEGORY_ID]"
@@ -627,7 +541,8 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                                 + "[IN_STOCK]" + Integer.parseInt(additionalPromotionList.get(i1).getIn_stock()) + "[/IN_STOCK]"
                                                 + "[PROMO_ANNOUNCER]" + Integer.parseInt(additionalPromotionList.get(i1).getPromo_announcer()) + "[/PROMO_ANNOUNCER]"
                                                 + "[RUNNING_POS]" + Integer.parseInt(additionalPromotionList.get(i1).getRunning_pos()) + "[/RUNNING_POS]"
-                                                + "[/ADDITIONAL_PROMOTION_DATA]";
+                                                + "[ADD_PROMO_IMAGE]" + additionalPromotionList.get(i1).getImage_promotion() + "[/ADD_PROMO_IMAGE]"
+                                                + "[/ADDITIONAL_PROMOTION_DATA_NEW]";
 
                                         additional_promoition_data_xml = additional_promoition_data_xml + onXML;
                                     }
@@ -637,7 +552,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "ADDITIONAL_PROMOTION_DATA");
+                                request.addProperty("KEYS", "ADDITIONAL_PROMOTION_DATA_NEW");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
@@ -650,139 +565,86 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 result = envelope.getResponse();
 
-                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                     return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
+                                }*/
                             }
                             data.value = 35;
                             data.name = getString(R.string.additional_data_uploading);
                             publishProgress(data);
 
 
-                            ////ashish open
-
                             //Additional Visibility  Data
                             String additional_visibility_data_xml = "";
                             String additional_visibility_dialog_xml = "";
                             onXML = "";
                             String onXMLdIALOG = "";
-
-                            String imageV1,imageV2,imageV3;
+                            String imageV1, imageV2, imageV3;
 
                             additionalVisibilityList = db.getAdditionalStockUpload(coverageList.get(i).getStoreId());
 
                             if (additionalVisibilityList.size() > 0) {
                                 for (int J = 0; J < additionalVisibilityList.size(); J++) {
 
-                                    if(additionalVisibilityList.get(J).getImage()==null)
-                                    {
-                                        imageV1="";
-                                    }
-                                    else{
-                                        imageV1=additionalVisibilityList.get(J).getImage();
+                                    if (additionalVisibilityList.get(J).getImage() == null) {
+                                        imageV1 = "";
+                                    } else {
+                                        imageV1 = additionalVisibilityList.get(J).getImage();
                                     }
 
-                                    if(additionalVisibilityList.get(J).getImage2()==null)
-                                    {
-                                        imageV2="";
-                                    }
-                                    else{
-                                        imageV2=additionalVisibilityList.get(J).getImage2();
+                                    if (additionalVisibilityList.get(J).getImage2() == null) {
+                                        imageV2 = "";
+                                    } else {
+                                        imageV2 = additionalVisibilityList.get(J).getImage2();
                                     }
 
-                                    if(additionalVisibilityList.get(J).getImage3()==null)
-                                    {
-                                        imageV3="";
+                                    if (additionalVisibilityList.get(J).getImage3() == null) {
+                                        imageV3 = "";
+                                    } else {
+                                        imageV3 = additionalVisibilityList.get(J).getImage3();
                                     }
-                                    else{
-                                        imageV3=additionalVisibilityList.get(J).getImage3();
-                                    }
-
-
-
-
 
                                     String KeyID = additionalVisibilityList.get(J).getKey_id();
 
                                     additionalVisibilitySkuList = db.getDialogStockUpload(KeyID);
+                                    //additionalVisibilitySkuList = additionalVisibilityList.get(J).getSkuDialogList();
 
                                     if (additionalVisibilitySkuList.size() > 0) {
-
                                         for (int k = 0; k < additionalVisibilitySkuList.size(); k++) {
 
                                             onXMLdIALOG = "[VISIBILITY_DAILOG]"
                                                     + "[MID]" + mid + "[/MID]"
-                                                    + "[USER_ID]"
-                                                    + userId
-                                                    + "[/USER_ID]"
-                                                    + "[KEY_ID]"
-                                                    + additionalVisibilitySkuList.get(k).getCOMMON_ID()
-                                                    + "[/KEY_ID]"
-                                                    + "[CATEGORY_ID]"
-                                                    + additionalVisibilitySkuList.get(k).getCategoryId()
-                                                    + "[/CATEGORY_ID]"
-                                                    + "[SKU_ID]"
-                                                    + additionalVisibilitySkuList.get(k).getSku_id()
-                                                    + "[/SKU_ID]"
-                                                    + "[QUANTITY]"
-                                                    + additionalVisibilitySkuList.get(k).getQuantity()
-                                                    + "[/QUANTITY]"
+                                                    + "[USER_ID]" + userId + "[/USER_ID]"
+                                                    + "[KEY_ID]" + additionalVisibilitySkuList.get(k).getCOMMON_ID() + "[/KEY_ID]"
+                                                    + "[CATEGORY_ID]" + additionalVisibilitySkuList.get(k).getCategoryId() + "[/CATEGORY_ID]"
+                                                    + "[SKU_ID]" + additionalVisibilitySkuList.get(k).getSku_id() + "[/SKU_ID]"
+                                                    + "[QUANTITY]" + additionalVisibilitySkuList.get(k).getQuantity() + "[/QUANTITY]"
                                                     + "[/VISIBILITY_DAILOG]";
 
                                             additional_visibility_dialog_xml = additional_visibility_dialog_xml + onXMLdIALOG;
-
                                         }
                                     }
 
                                     onXML = "[ADDITIONAL_VISIBILITY_NEW]"
                                             + "[MID]" + mid + "[/MID]"
-                                            + "[USER_ID]"
-                                            + userId
-                                            + "[/USER_ID]"
-                                            + "[KEY_ID]"
-                                            + additionalVisibilityList.get(J).getKey_id()
-                                            + "[/KEY_ID]"
-                                            + "[CATEGORY_ID]"
-                                            + additionalVisibilityList.get(J).getCategoryId()
-                                            + "[/CATEGORY_ID]"
-                                            + "[ADDITIONAL_DISPLAY]"
-                                            + additionalVisibilityList.get(J).getBtn_toogle()
-                                            + "[/ADDITIONAL_DISPLAY]"
-                                            /* + "[BRAND_ID]"
-                                            + additionalVisibilityList.get(J).getBrand_id()
-                                            + "[/BRAND_ID]"*/
-                                            + "[IMAGE_URL]"
-                                            + imageV1 /*additionalVisibilityList.get(J).getImage()*/
-                                            + "[/IMAGE_URL]"
-                                            + "[IMAGE_URL1]"
-                                            + imageV2 /*additionalVisibilityList.get(J).getImage2()*/
-                                            + "[/IMAGE_URL1]"
-                                            + "[IMAGE_URL2]"
-                                            + imageV3 /*additionalVisibilityList.get(J).getImage3()*/
-                                            + "[/IMAGE_URL2]"
-                                            + "[DISPLAY_ID]"
-                                            + additionalVisibilityList.get(J).getSku_id()
-                                            + "[/DISPLAY_ID]"
-                                            + "[SKU_LIST]"
-                                            + additional_visibility_dialog_xml
-                                            + "[/SKU_LIST]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
+                                            + "[KEY_ID]" + additionalVisibilityList.get(J).getKey_id() + "[/KEY_ID]"
+                                            + "[CATEGORY_ID]" + additionalVisibilityList.get(J).getCategoryId() + "[/CATEGORY_ID]"
+                                            + "[ADDITIONAL_DISPLAY]" + additionalVisibilityList.get(J).getBtn_toogle() + "[/ADDITIONAL_DISPLAY]"
+                                            //+ "[BRAND_ID]"+ additionalVisibilityList.get(J).getBrand_id()+ "[/BRAND_ID]"
+                                            + "[IMAGE_URL]" + imageV1 /*additionalVisibilityList.get(J).getImage()*/ + "[/IMAGE_URL]"
+                                            + "[IMAGE_URL1]" + imageV2 /*additionalVisibilityList.get(J).getImage2()*/ + "[/IMAGE_URL1]"
+                                            + "[IMAGE_URL2]" + imageV3 /*additionalVisibilityList.get(J).getImage3()*/ + "[/IMAGE_URL2]"
+                                            + "[DISPLAY_ID]" + additionalVisibilityList.get(J).getSku_id() + "[/DISPLAY_ID]"
+                                            + "[SKU_LIST]" + additional_visibility_dialog_xml + "[/SKU_LIST]"
                                             + "[/ADDITIONAL_VISIBILITY_NEW]";
-
+                                    //Here getSku_id gives display_id
 
                                     additional_visibility_data_xml = additional_visibility_data_xml + onXML;
                                     KeyID = "";
                                     additionalVisibilitySkuList.clear();
 
                                     additional_visibility_dialog_xml = "";
-
                                 }
 
                                 final String sos_xml = "[DATA]" + additional_visibility_data_xml + "[/DATA]";
@@ -802,27 +664,16 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 result = envelope.getResponse();
 
-                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                     return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
+                                }*/
                             }
-
-                            data.value = 35;
+                            data.value = 45;
                             data.name = getString(R.string.additional_data_uploading);
                             publishProgress(data);
 
-                            /////ashish close
 
                             //T2p Upload Data
-
                             String t2p_data_xml = "";
                             onXML = "";
                             t2PGetterSetters = db.getT2pComplianceData(coverageList.get(i).getStoreId(), null);
@@ -830,21 +681,19 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                             if (t2PGetterSetters.size() > 0) {
                                 for (int i1 = 0; i1 < t2PGetterSetters.size(); i1++) {
 
-                                    ArrayList<GapsChecklistGetterSetter> gapsList = db.getGapsData(t2PGetterSetters.get(i).getKey_id());
-                                    ArrayList<SkuGetterSetter> skuList = db.getT2PSKUData(t2PGetterSetters.get(i).getKey_id());
-                                    ArrayList<BrandAvabilityGetterSetter> brandList = db.getT2BrandData(t2PGetterSetters.get(i).getKey_id());
+                                    ArrayList<GapsChecklistGetterSetter> gapsList = db.getGapsData(t2PGetterSetters.get(i1).getKey_id());
+                                    ArrayList<SkuGetterSetter> skuList = db.getT2PSKUData(t2PGetterSetters.get(i1).getKey_id());
+                                    ArrayList<BrandAvabilityGetterSetter> brandList = db.getT2BrandData(t2PGetterSetters.get(i1).getKey_id());
                                     String gaps_xml = "";
                                     String gaps_child;
 
                                     for (int l = 0; l < gapsList.size(); l++) {
-
                                         String present = "";
                                         if (gapsList.get(l).isPresent()) {
                                             present = "1";
                                         } else {
                                             present = "0";
                                         }
-
                                         gaps_child = "[GAPS]"
                                                 + "[MID]" + mid + "[/MID]"
                                                 + "[USER_ID]" + userId + "[/USER_ID]"
@@ -860,7 +709,6 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                     String sku_child;
 
                                     for (int k = 0; k < skuList.size(); k++) {
-
                                         sku_child = "[SKU]"
                                                 + "[MID]" + mid + "[/MID]"
                                                 + "[USER_ID]" + userId + "[/USER_ID]"
@@ -879,17 +727,17 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                     if (brandList.size() > 0) {
 
                                         for (int M = 0; M < brandList.size(); M++) {
-
                                             brandchild = "[BRAND]"
                                                     + "[MID]" + mid + "[/MID]"
                                                     + "[USER_ID]" + userId + "[/USER_ID]"
                                                     + "[BRAND_ID]" + brandList.get(M).getBRAND_ID() + "[/BRAND_ID]"
-                                               /* + "[BRAND]" + brandList.get(M).getBRAND() + "[/BRAND]"*/
+                                                    // + "[BRAND]" + brandList.get(M).getBRAND() + "[/BRAND]"
                                                     + "[COMMON_ID]" + Integer.parseInt(t2PGetterSetters.get(i1).getKey_id()) + "[/COMMON_ID]"
                                                     + "[/BRAND]";
                                             brandxml = brandxml + brandchild;
                                         }
                                     }
+
                                     String present = "";
                                     if (t2PGetterSetters.get(i1).isPresent()) {
                                         present = "1";
@@ -911,11 +759,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                             + "[GAPS_DATA]" + gaps_xml + "[/GAPS_DATA]"
                                             + "[SKU_DATA]" + sku_xml + "[/SKU_DATA]"
                                             + "[BRAND_DATA]" + brandxml + "[/BRAND_DATA]"
-
                                             + "[/T2P_DATA]";
 
                                     t2p_data_xml = t2p_data_xml + onXML;
-
                                 }
 
                                 final String t2p_final_xml = "[DATA]" + t2p_data_xml + "[/DATA]";
@@ -935,20 +781,11 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 result = envelope.getResponse();
 
-                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                     return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
+                                }*/
                             }
-
-                            data.value = 40;
+                            data.value = 50;
                             data.name = getString(R.string.t2p_data_uploading);
                             publishProgress(data);
 
@@ -994,338 +831,84 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 result = envelope.getResponse();
 
-                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                     return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
+                                }*/
                             }
-                            data.value = 50;
+                            data.value = 55;
                             data.name = getString(R.string.stock_planogram_data_uploading);
                             publishProgress(data);
 
 
-                            //Store Wise Camera
-                            /*String store_wise_camera_xml = "";
-                            onXML = "";
-                            storeWiseCameraDataGetterSetters = db.getStoreWiseCameraServerUploadData(coverageList.get(i).getStoreId());
-
-                            if (storeWiseCameraDataGetterSetters.size() > 0) {
-
-                                for (int i1 = 0; i1 < storeWiseCameraDataGetterSetters.size(); i1++) {
-                                    onXML = "[STORE_WISE_CAMERA_DATA]"
-                                            + "[MID]" + mid + "[/MID]"
-                                            + "[USER_ID]" + userId + "[/USER_ID]"
-                                            + "[CAMERA1]" + storeWiseCameraDataGetterSetters.get(i).getCamera1() + "[/CAMERA1]"
-                                            + "[CAMERA2]" + storeWiseCameraDataGetterSetters.get(i).getCamera2() + "[/CAMERA2]"
-                                            + "[CAMERA3]" + storeWiseCameraDataGetterSetters.get(i).getCamera3() + "[/CAMERA3]"
-                                            + "[CAMERA4]" + storeWiseCameraDataGetterSetters.get(i).getCamera4() + "[/CAMERA4]"
-                                            + "[/STORE_WISE_CAMERA_DATA]";
-
-                                    store_wise_camera_xml = store_wise_camera_xml + onXML;
-                                }
-
-                                final String sos_xml = "[DATA]" + store_wise_camera_xml + "[/DATA]";
-
-                                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
-                                request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "STORE_WISE_CAMERA_DATA");
-                                request.addProperty("USERNAME", userId);
-                                request.addProperty("MID", mid);
-
-                                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                                envelope.dotNet = true;
-                                envelope.setOutputSoapObject(request);
-
-                                androidHttpTransport = new HttpTransportSE(CommonString.URL);
-                                androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
-
-                                result = envelope.getResponse();
-
-                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-                            }
-                            data.value = 55;
-                            data.name = getString(R.string.stock_planogram_data_uploading);
-                            publishProgress(data);*/
-
-
-                            //Image Upload
-
-                            //Store Wise Camera Images Upload
-                            /*if (storeWiseCameraDataGetterSetters.size() > 0) {
-                                for (int i1 = 0; i1 < storeWiseCameraDataGetterSetters.size(); i1++) {
-
-                                    if (storeWiseCameraDataGetterSetters.get(i1).getCamera1() != null && !storeWiseCameraDataGetterSetters.get(i1).getCamera1().equals("")) {
-                                        if (new File(CommonString.FILE_PATH + storeWiseCameraDataGetterSetters.get(i1).getCamera1()).exists()) {
-
-                                            try {
-                                                result = UploadImage(storeWiseCameraDataGetterSetters.get(i1).getCamera1(), "StockCameraImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                    return "StockCameraImages";
-                                                }
-
-                                                runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        message.setText("StockFacing Images Uploaded");
-                                                    }
-                                                });
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-
-                                    if (storeWiseCameraDataGetterSetters.get(i1).getCamera2() != null && !storeWiseCameraDataGetterSetters.get(i1).getCamera2().equals("")) {
-                                        if (new File(CommonString.FILE_PATH + storeWiseCameraDataGetterSetters.get(i1).getCamera2()).exists()) {
-
-                                            try {
-                                                result = UploadImage(storeWiseCameraDataGetterSetters.get(i1).getCamera2(), "StockCameraImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                    return "StockCameraImages";
-                                                }
-
-                                                runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        message.setText("StockFacing Images Uploaded");
-                                                    }
-                                                });
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-
-                                    if (storeWiseCameraDataGetterSetters.get(i1).getCamera3() != null && !storeWiseCameraDataGetterSetters.get(i1).getCamera3().equals("")) {
-                                        if (new File(CommonString.FILE_PATH + storeWiseCameraDataGetterSetters.get(i1).getCamera3()).exists()) {
-
-                                            try {
-                                                result = UploadImage(storeWiseCameraDataGetterSetters.get(i1).getCamera3(), "StockCameraImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                    return "StockCameraImages";
-                                                }
-
-                                                runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        message.setText("StockFacing Images Uploaded");
-                                                    }
-                                                });
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-
-                                    if (storeWiseCameraDataGetterSetters.get(i1).getCamera4() != null && !storeWiseCameraDataGetterSetters.get(i1).getCamera4().equals("")) {
-                                        if (new File(CommonString.FILE_PATH + storeWiseCameraDataGetterSetters.get(i1).getCamera4()).exists()) {
-
-                                            try {
-                                                result = UploadImage(storeWiseCameraDataGetterSetters.get(i1).getCamera4(), "StockCameraImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                    return "StockCameraImages";
-                                                }
-
-                                                runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        message.setText("StockFacing Images Uploaded");
-                                                    }
-                                                });
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                }
-                            }*/
-
-                            //Stock Facing Images Upload
-                            /*if (stock_facingHeaderList.size() > 0) {
-                                for (int i1 = 0; i1 < stock_facingHeaderList.size(); i1++) {
-
-                                    if (stock_facingHeaderList.get(i1).getImage1() != null && !stock_facingHeaderList.get(i1).getImage1().equals("")) {
-                                        if (new File(CommonString.FILE_PATH + stock_facingHeaderList.get(i1).getImage1()).exists()) {
-
-                                            try {
-                                                result = UploadImage(stock_facingHeaderList.get(i1).getImage1(), "StockImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                    return "StockImages";
-                                                }
-
-                                                runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        message.setText("StockFacing Images Uploaded");
-                                                    }
-                                                });
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-
-                                    if (stock_facingHeaderList.get(i1).getImage2() != null && !stock_facingHeaderList.get(i1).getImage2().equals("")) {
-                                        if (new File(CommonString.FILE_PATH + stock_facingHeaderList.get(i1).getImage2()).exists()) {
-
-                                            try {
-                                                result = UploadImage(stock_facingHeaderList.get(i1).getImage2(), "StockImages");
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                    return "StockImages";
-                                                }
-
-                                                runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        message.setText("StockFacing Images Uploaded");
-                                                    }
-                                                });
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                }
-                            }*/
-
-
-
                             //Category Picture  Data
                             String Category_xml = "";
-
                             onXML = "";
                             String onCategoryList = "";
                             String CategoryLISTDATA = "";
-                            String image1,image2,image3,image4;
-
+                            String image1, image2, image3, image4;
 
                             adddata = db.getCategoryPictureUpload(coverageList.get(i).getStoreId());
 
                             if (adddata.size() > 0) {
                                 for (int J = 0; J < adddata.size(); J++) {
-
-
-                                    if(adddata.get(J).getCategoryImage1()==null)
-                                    {
-                                        image1="";
-                                    }
-                                    else{
-                                        image1=adddata.get(J).getCategoryImage1();
+                                    if (adddata.get(J).getCategoryImage1() == null) {
+                                        image1 = "";
+                                    } else {
+                                        image1 = adddata.get(J).getCategoryImage1();
                                     }
 
-                                    if(adddata.get(J).getCategoryImage2()==null)
-                                    {
-                                        image2="";
-                                    }
-                                    else{
-                                        image2=adddata.get(J).getCategoryImage2();
+                                    if (adddata.get(J).getCategoryImage2() == null) {
+                                        image2 = "";
+                                    } else {
+                                        image2 = adddata.get(J).getCategoryImage2();
                                     }
 
-                                    if(adddata.get(J).getCategoryImage3()==null)
-                                    {
-                                        image3="";
-                                    }
-                                    else{
-                                        image3=adddata.get(J).getCategoryImage3();
+                                    if (adddata.get(J).getCategoryImage3() == null) {
+                                        image3 = "";
+                                    } else {
+                                        image3 = adddata.get(J).getCategoryImage3();
                                     }
 
-                                    if(adddata.get(J).getCategoryImage4()==null)
-                                    {
-                                        image4="";
+                                    if (adddata.get(J).getCategoryImage4() == null) {
+                                        image4 = "";
+                                    } else {
+                                        image4 = adddata.get(J).getCategoryImage4();
                                     }
-                                    else{
-                                        image4=adddata.get(J).getCategoryImage4();
-                                    }
-
-
 
                                     String KeyID = adddata.get(J).getKEY_ID();
-
-
 
                                     listdat = db.getCategoryPictureListUploaded(KeyID);
 
                                     if (listdat.size() > 0) {
-
                                         for (int k = 0; k < listdat.size(); k++) {
-
                                             onCategoryList = "[SUB_CATEGORY_LIST]"
                                                     + "[MID]" + mid + "[/MID]"
-                                                    + "[USER_ID]"
-                                                    + userId
-                                                    + "[/USER_ID]"
-                                                    + "[KEY_ID]"
-                                                    + listdat.get(k).getCOMMON_ID()
-                                                    + "[/KEY_ID]"
-                                                    + "[SUB_CATEGORY_ID]"
-                                                    + listdat.get(k).getSUB_CATEGORY_ID()
-                                                    + "[/SUB_CATEGORY_ID]"
-                                                    + "[SUB_CategoryImage1]"
-                                                    + listdat.get(k).getSubCategoryCamera1()
-                                                    + "[/SUB_CategoryImage1]"
-                                                    + "[SUB_CategoryImage2]"
-                                                    + listdat.get(k).getSubCategoryCamera2()
-                                                    + "[/SUB_CategoryImage2]"
+                                                    + "[USER_ID]" + userId + "[/USER_ID]"
+                                                    + "[KEY_ID]" + listdat.get(k).getCOMMON_ID() + "[/KEY_ID]"
+                                                    + "[SUB_CATEGORY_ID]" + listdat.get(k).getSUB_CATEGORY_ID() + "[/SUB_CATEGORY_ID]"
+                                                    + "[SUB_CategoryImage1]" + listdat.get(k).getSubCategoryCamera1() + "[/SUB_CategoryImage1]"
+                                                    + "[SUB_CategoryImage2]" + listdat.get(k).getSubCategoryCamera2() + "[/SUB_CategoryImage2]"
                                                     + "[/SUB_CATEGORY_LIST]";
 
                                             CategoryLISTDATA = CategoryLISTDATA + onCategoryList;
-
                                         }
                                     }
 
                                     onXML = "[CATEGORY_LIST]"
                                             + "[MID]" + mid + "[/MID]"
-                                            + "[USER_ID]"
-                                            + userId
-                                            + "[/USER_ID]"
-                                            + "[KEY_ID]"
-                                            + adddata.get(J).getKEY_ID()
-                                            + "[/KEY_ID]"
-                                            + "[CATEGORY_ID]"
-                                            + adddata.get(J).getCategoryId()
-                                            + "[/CATEGORY_ID]"
-                                            + "[CAMERA_ALLOW]"
-                                            + adddata.get(J).getCamera_allow()
-                                            + "[/CAMERA_ALLOW]"
-
-                                            + "[IMAGE_URL_1]"
-                                            + image1 /*adddata.get(J).getCategoryImage1()*/
-                                            + "[/IMAGE_URL_1]"
-                                            + "[IMAGE_URL_2]"
-                                            +  image2 /*adddata.get(J).getCategoryImage2()*/
-                                            + "[/IMAGE_URL_2]"
-                                            + "[IMAGE_URL_3]"
-                                            + image3 /*adddata.get(J).getCategoryImage3()*/
-                                            + "[/IMAGE_URL_3]"
-                                            + "[IMAGE_URL_4]"
-                                            + image4 /*adddata.get(J).getCategoryImage4()*/
-                                            + "[/IMAGE_URL_4]"
-                                            + "[SUB_LIST]"
-                                            + CategoryLISTDATA
-                                            + "[/SUB_LIST]"
+                                            + "[USER_ID]" + userId + "[/USER_ID]"
+                                            + "[KEY_ID]" + adddata.get(J).getKEY_ID() + "[/KEY_ID]"
+                                            + "[CATEGORY_ID]" + adddata.get(J).getCategoryId() + "[/CATEGORY_ID]"
+                                            + "[CAMERA_ALLOW]" + adddata.get(J).getCamera_allow() + "[/CAMERA_ALLOW]"
+                                            + "[IMAGE_URL_1]" + image1 /*adddata.get(J).getCategoryImage1()*/ + "[/IMAGE_URL_1]"
+                                            + "[IMAGE_URL_2]" + image2 /*adddata.get(J).getCategoryImage2()*/ + "[/IMAGE_URL_2]"
+                                            + "[IMAGE_URL_3]" + image3 /*adddata.get(J).getCategoryImage3()*/ + "[/IMAGE_URL_3]"
+                                            + "[IMAGE_URL_4]" + image4 /*adddata.get(J).getCategoryImage4()*/ + "[/IMAGE_URL_4]"
+                                            + "[SUB_LIST]" + CategoryLISTDATA + "[/SUB_LIST]"
                                             + "[/CATEGORY_LIST]";
 
-
                                     Category_xml = Category_xml + onXML;
-
                                     CategoryLISTDATA = "";
-
                                 }
 
                                 final String sos_xml = "[DATA]" + Category_xml + "[/DATA]";
@@ -1345,24 +928,16 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 result = envelope.getResponse();
 
-                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                     return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
-
-                                if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
-                                    return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
-                                }
+                                }*/
                             }
-
-                            data.value = 35;
+                            data.value = 60;
                             data.name = getString(R.string.additional_data_uploading);
                             publishProgress(data);
 
 
+                            // Images Upload
 
                             // ashish visibility image start
                             if (additionalVisibilityList.size() > 0) {
@@ -1373,10 +948,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                             try {
                                                 result = UploadImage(additionalVisibilityList.get(i1).getImage(), "AdditionalVisibilityImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                     return "AdditionalVisibilityImages";
-                                                }
+                                                }*/
 
                                                 runOnUiThread(new Runnable() {
                                                     public void run() {
@@ -1394,10 +968,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                             try {
                                                 result = UploadImage(additionalVisibilityList.get(i1).getImage2(), "AdditionalVisibilityImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                     return "AdditionalVisibilityImages";
-                                                }
+                                                }*/
 
                                                 runOnUiThread(new Runnable() {
                                                     public void run() {
@@ -1416,10 +989,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                             try {
                                                 result = UploadImage(additionalVisibilityList.get(i1).getImage3(), "AdditionalVisibilityImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                     return "AdditionalVisibilityImages";
-                                                }
+                                                }*/
 
                                                 runOnUiThread(new Runnable() {
                                                     public void run() {
@@ -1434,61 +1006,68 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 }
                             }
-
-
-                            //// ashish close image
-
+                            data.value = 60;
+                            publishProgress(data);
+                            // ashish close image
 
 
                             // ashish SUB_CATEGORY_PICTURE start
-                            if (listdat.size() > 0) {
-                                for (int i1 = 0; i1 < listdat.size(); i1++) {
+                            if (adddata.size() > 0) {
+                                for (int J = 0; J < adddata.size(); J++) {
 
-                                    if (listdat.get(i1).getSubCategoryCamera1() != null && !listdat.get(i1).getSubCategoryCamera1().equals("")) {
-                                        if (new File(CommonString.FILE_PATH + listdat.get(i1).getSubCategoryCamera1()).exists()) {
+                                    String KeyID = adddata.get(J).getKEY_ID();
 
-                                            try {
-                                                result = UploadImage(listdat.get(i1).getSubCategoryCamera1(), "CategoryImages");
+                                    listdat = db.getCategoryPictureListUploaded(KeyID);
 
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                    return "CategoryImages";
-                                                }
+                                    if (listdat.size() > 0) {
+                                        for (int i1 = 0; i1 < listdat.size(); i1++) {
 
-                                                runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        message.setText("CategoryImages Uploaded");
+                                            if (listdat.get(i1).getSubCategoryCamera1() != null && !listdat.get(i1).getSubCategoryCamera1().equals("")) {
+                                                if (new File(CommonString.FILE_PATH + listdat.get(i1).getSubCategoryCamera1()).exists()) {
+
+                                                    try {
+                                                        result = UploadImage(listdat.get(i1).getSubCategoryCamera1(), "CategoryImages");
+                                                        /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                            return "CategoryImages";
+                                                        }*/
+
+                                                        runOnUiThread(new Runnable() {
+                                                            public void run() {
+                                                                message.setText("CategoryImages Uploaded");
+                                                            }
+                                                        });
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
                                                     }
-                                                });
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
+                                                }
                                             }
+
+                                            if (listdat.get(i1).getSubCategoryCamera2() != null && !listdat.get(i1).getSubCategoryCamera2().equals("")) {
+                                                if (new File(CommonString.FILE_PATH + listdat.get(i1).getSubCategoryCamera2()).exists()) {
+
+                                                    try {
+                                                        result = UploadImage(listdat.get(i1).getSubCategoryCamera2(), "CategoryImages");
+                                                        /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                            return "CategoryImages";
+                                                        }*/
+
+                                                        runOnUiThread(new Runnable() {
+                                                            public void run() {
+                                                                message.setText("CategoryImages Uploaded");
+                                                            }
+                                                        });
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+
                                         }
                                     }
-
-                                    if (listdat.get(i1).getSubCategoryCamera2() != null && !listdat.get(i1).getSubCategoryCamera2().equals("")) {
-                                        if (new File(CommonString.FILE_PATH + listdat.get(i1).getSubCategoryCamera2()).exists()) {
-
-                                            try {
-                                                result = UploadImage(listdat.get(i1).getSubCategoryCamera2(), "CategoryImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                                    return "CategoryImages";
-                                                }
-
-                                                runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        message.setText("CategoryImages Uploaded");
-                                                    }
-                                                });
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-
                                 }
                             }
-
+                            data.value = 70;
+                            publishProgress(data);
 
 
                             // ashish CATEGORY_PICTURE start
@@ -1500,10 +1079,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                             try {
                                                 result = UploadImage(adddata.get(i1).getCategoryImage1(), "CategoryImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                     return "CategoryImages";
-                                                }
+                                                }*/
 
                                                 runOnUiThread(new Runnable() {
                                                     public void run() {
@@ -1521,10 +1099,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                             try {
                                                 result = UploadImage(adddata.get(i1).getCategoryImage2(), "CategoryImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                     return "CategoryImages";
-                                                }
+                                                }*/
 
                                                 runOnUiThread(new Runnable() {
                                                     public void run() {
@@ -1542,10 +1119,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                             try {
                                                 result = UploadImage(adddata.get(i1).getCategoryImage3(), "CategoryImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                     return "CategoryImages";
-                                                }
+                                                }*/
 
                                                 runOnUiThread(new Runnable() {
                                                     public void run() {
@@ -1562,10 +1138,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                             try {
                                                 result = UploadImage(adddata.get(i1).getCategoryImage4(), "CategoryImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                     return "CategoryImages";
-                                                }
+                                                }*/
 
                                                 runOnUiThread(new Runnable() {
                                                     public void run() {
@@ -1580,11 +1155,10 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 }
                             }
+                            data.value = 75;
+                            publishProgress(data);
 
-
-
-                            ///////Start store images
-
+                            //Start store images
                             if (coverageList.size() > 0) {
                                 for (int i1 = 0; i1 < coverageList.size(); i1++) {
 
@@ -1593,10 +1167,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                             try {
                                                 result = UploadImage(coverageList.get(i1).getImage(), "StoreImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                     return "StoreImages";
-                                                }
+                                                }*/
 
                                                 runOnUiThread(new Runnable() {
                                                     public void run() {
@@ -1610,7 +1183,66 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                     }
                                 }
                             }
+                            data.value = 80;
+                            publishProgress(data);
 
+
+                            //PromoCompliance Image
+                            if (promotionSkuList.size() > 0) {
+                                for (int i1 = 0; i1 < promotionSkuList.size(); i1++) {
+
+                                    if (promotionSkuList.get(i1).getImage_promotion() != null && !promotionSkuList.get(i1).getImage_promotion().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + promotionSkuList.get(i1).getImage_promotion()).exists()) {
+
+                                            try {
+                                                result = UploadImage(promotionSkuList.get(i1).getImage_promotion(), "PromotionImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "StoreImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("PromotionImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            data.value = 85;
+                            publishProgress(data);
+
+
+                            //Additional PromoCompliance Image
+                            if (additionalPromotionList.size() > 0) {
+                                for (int i1 = 0; i1 < additionalPromotionList.size(); i1++) {
+
+                                    if (additionalPromotionList.get(i1).getImage_promotion() != null && !additionalPromotionList.get(i1).getImage_promotion().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + additionalPromotionList.get(i1).getImage_promotion()).exists()) {
+
+                                            try {
+                                                result = UploadImage(additionalPromotionList.get(i1).getImage_promotion(), "AdditionalPromotionImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "StoreImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("AdditionalPromotionImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            data.value = 88;
+                            publishProgress(data);
 
                             //CheckOut Store Image
                             if (coverageList.size() > 0) {
@@ -1621,10 +1253,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                             try {
                                                 result = UploadImage(coverageList.get(i1).getCheckOut_Image(), "StoreImages");
-
-                                                if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                     return "StoreImages";
-                                                }
+                                                }*/
 
                                                 runOnUiThread(new Runnable() {
                                                     public void run() {
@@ -1638,9 +1269,11 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                     }
                                 }
                             }
+                            data.value = 85;
+                            publishProgress(data);
+
 
                             //T2p Images
-
                             for (int m = 0; m < t2PGetterSetters.size(); m++) {
 
                                 if (t2PGetterSetters.get(m).getImage() != null && !t2PGetterSetters.get(m).getImage().equals("")) {
@@ -1648,9 +1281,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                         try {
                                             result = UploadImage(t2PGetterSetters.get(m).getImage(), "T2PImages");
-                                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                            /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                 return "T2PImages";
-                                            }
+                                            }*/
 
                                             runOnUiThread(new Runnable() {
                                                 public void run() {
@@ -1668,9 +1301,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                         try {
                                             result = UploadImage(t2PGetterSetters.get(m).getImage1(), "T2PImages");
-                                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                            /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                 return "T2PImages";
-                                            }
+                                            }*/
 
                                             runOnUiThread(new Runnable() {
                                                 public void run() {
@@ -1688,9 +1321,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                         try {
                                             result = UploadImage(t2PGetterSetters.get(m).getImage2(), "T2PImages");
-                                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                            /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                                 return "T2PImages";
-                                            }
+                                            }*/
 
                                             runOnUiThread(new Runnable() {
                                                 public void run() {
@@ -1702,8 +1335,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
-
                             }
+                            data.value = 90;
+                            publishProgress(data);
 
 
                             // SET COVERAGE STATUS
@@ -1732,31 +1366,34 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                             result = envelope.getResponse();
 
-                            if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
-                                return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
-                            }
-                            if (result.toString().equalsIgnoreCase(CommonString.KEY_NO_DATA)) {
-                                return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
-                            }
-                            if (result.toString().equalsIgnoreCase(CommonString.KEY_FAILURE)) {
-                                return CommonString.METHOD_UPLOAD_COVERAGE_STATUS;
-                            }
+                            //If Result is success then status of that store is update
+                            if (result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                k = k + factor;
+                                data.value = k;
+                                data.name = "Uploading";
+                                publishProgress(data);
 
-                            k = k + factor;
-                            data.value = k;
-                            data.name = "Uploading";
+                                db.open();
+                                db.updateCoverageStatus(coverageList.get(i).getStoreId(), CommonString.KEY_U);
+                                db.updateStoreStatusOnLeave(coverageList.get(i).getStoreId(), coverageList.get(i)
+                                        .getVisitDate(), CommonString.KEY_U);
+
+                                db.deleteTableWithStoreID(coverageList.get(i).getStoreId());
+                            }
+                            data.value = 100;
                             publishProgress(data);
-
-                            db.open();
-                            db.updateCoverageStatus(coverageList.get(i).getStoreId(), CommonString.KEY_U);
-                            db.updateStoreStatusOnLeave(coverageList.get(i).getStoreId(), coverageList.get(i)
-                                    .getVisitDate(), CommonString.KEY_U);
                         }
                     }
                 }
+                return result.toString();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -1767,12 +1404,19 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            dialog.dismiss();
+            /*dialog.dismiss();
             db.deleteAllTables();
             if (result.equals("")) {
-
                 showAlert(getString(R.string.menu_upload_data));
+            }*/
 
+            dialog.dismiss();
+            if (result.contains(CommonString.KEY_SUCCESS)) {
+                //db.deleteAllTables();
+                showAlert(getString(R.string.menu_upload_data));
+                //showAlert(getString(R.string.menu_upload_data));
+            } else {
+                showAlert(getString(R.string.error) + result.toString());
             }
         }
     }
@@ -1808,9 +1452,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
