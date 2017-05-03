@@ -203,6 +203,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                         }
                     } else {
                         cd.setIn_stock("0");
+                        img_addPromotion.setClickable(false);
                         img_addPromotion.setBackgroundResource(R.mipmap.camera_grey);
                     }
                 }
@@ -271,7 +272,6 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
                 }
             });
-
             for (int i = 0; i < promoSpinnerListData.size(); i++) {
                 if (cd.getSp_promo() == promoSpinnerListData.get(i).getPromo_id()) {
                     sp_promo.setSelection(i);
@@ -414,6 +414,8 @@ public class PromoComplianceActivity extends AppCompatActivity {
             for (int i = 0; i < promoSpinnerListData.size(); i++) {
                 sp_promo_adapter.add(promoSpinnerListData.get(i).getPromo());
             }
+            sp_promo_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //sp_promo_adapter.setDropDownViewResource(R.layout.spinner_text_view);
             sp_promo.setAdapter(sp_promo_adapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -467,6 +469,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                             }
                         } else {
                             data.setIn_stock("0");
+                            img_promotion.setClickable(false);
                             img_promotion.setBackgroundResource(R.mipmap.camera_grey);
                             data.setImage_promotion("");
                         }
@@ -564,7 +567,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 TextView txt_inStock = (TextView) view.findViewById(R.id.txt_inStock);
                 TextView txt_promoAnnouncer = (TextView) view.findViewById(R.id.txt_promoAnnouncer);
                 TextView txt_runningPos = (TextView) view.findViewById(R.id.txt_runningPos);
-                ImageView img_add_promotion_view= (ImageView) view.findViewById(R.id.img_add_promotion_view);
+                ImageView img_add_promotion_view = (ImageView) view.findViewById(R.id.img_add_promotion_view);
 
                 txt_promoName.setText(data.getPromo());
 
@@ -590,9 +593,9 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 }
 
                 //Camera Image
-                if(!data.getImage_promotion().equals("")){
+                if (!data.getImage_promotion().equals("")) {
                     img_add_promotion_view.setBackgroundResource(R.mipmap.camera_green);
-                }else{
+                } else {
                     img_add_promotion_view.setBackgroundResource(R.mipmap.camera_orange);
                 }
 
