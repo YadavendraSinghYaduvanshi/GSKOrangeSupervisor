@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.StreamHandler;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
@@ -413,9 +414,9 @@ public class PromoComplianceActivity extends AppCompatActivity {
             ArrayAdapter<String> sp_promo_adapter = new ArrayAdapter<>(PromoComplianceActivity.this, android.R.layout.simple_list_item_1);
             for (int i = 0; i < promoSpinnerListData.size(); i++) {
                 sp_promo_adapter.add(promoSpinnerListData.get(i).getPromo());
+
             }
-            sp_promo_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            //sp_promo_adapter.setDropDownViewResource(R.layout.spinner_text_view);
+            sp_promo_adapter.setDropDownViewResource(R.layout.spinner_text_view);
             sp_promo.setAdapter(sp_promo_adapter);
         } catch (Exception e) {
             e.printStackTrace();

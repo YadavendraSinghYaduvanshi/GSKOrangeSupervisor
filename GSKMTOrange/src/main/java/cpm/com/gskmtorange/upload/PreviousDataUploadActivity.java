@@ -1378,7 +1378,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                 db.updateStoreStatusOnLeave(coverageList.get(i).getStoreId(), coverageList.get(i)
                                         .getVisitDate(), CommonString.KEY_U);
 
-                                db.deleteTableWithStoreID(coverageList.get(i).getStoreId());
+                                //db.deleteTableWithStoreID(coverageList.get(i).getStoreId());
                             }
                             data.value = 100;
                             publishProgress(data);
@@ -1411,6 +1411,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
             }*/
 
             dialog.dismiss();
+            db.deleteAllTables();
             if (result.contains(CommonString.KEY_SUCCESS)) {
                 //db.deleteAllTables();
                 showAlert(getString(R.string.menu_upload_data));
