@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:weightSum="5">
@@ -90,6 +91,8 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight=".25"
                         android:gravity="center_vertical"
                         android:orientation="vertical">
@@ -98,17 +101,26 @@
                             android:id="@+id/ed_facing"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@null"
                             android:gravity="center"
                             android:inputType="number"
                             android:maxLength="5"
+                            android:paddingBottom="5dp"
+                            android:paddingTop="5dp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#222"
                             android:textColorHint="#666" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/black" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
                         android:layout_weight=".25"
                         android:gravity="center_vertical"
                         android:orientation="vertical">
@@ -117,13 +129,22 @@
                             android:id="@+id/ed_stock"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@null"
                             android:gravity="center"
                             android:inputType="number"
                             android:maxLength="5"
+                            android:paddingBottom="5dp"
+                            android:paddingTop="5dp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#222"
                             android:textColorHint="#666"
                             android:visibility="gone" />
+
+                        <View
+                            android:id="@+id/stock_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/black" />
                     </LinearLayout>
 
                 </LinearLayout>
