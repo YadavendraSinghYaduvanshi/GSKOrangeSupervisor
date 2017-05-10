@@ -77,6 +77,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
     String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
     boolean isDialogOpen = true;
     private SharedPreferences preferences;
+    int scrollPosition = 0;
 
     String str = "", _pathforcheck = "";
 
@@ -180,6 +181,11 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                                 .setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
+                                        expandableListView.smoothScrollToPosition(scrollPosition);
+
+                                        if (!expandableListView.isGroupExpanded(scrollPosition)) {
+                                            expandableListView.expandGroup(scrollPosition);
+                                        }
                                         dialog.dismiss();
                                     }
                                 });
@@ -594,6 +600,8 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                             if (!checkHeaderArray.contains(i)) {
                                 checkHeaderArray.add(i);
                             }
+                            //expandableListView.smoothScrollToPosition(i);
+                            scrollPosition = i;
 
                             flag = false;
                             Error_Message = getResources().getString(R.string.faceup_value);
@@ -605,20 +613,24 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                                     if (!checkHeaderArray.contains(i)) {
                                         checkHeaderArray.add(i);
                                     }
+                                    //expandableListView.smoothScrollToPosition(i);
+                                    scrollPosition = i;
+
                                     flag = false;
                                     Error_Message = getResources().getString(R.string.stock_value);
                                     break;
                                 }
                             }
                         }
-
-
                     }
                 } else {
                     if (faceup.equals("")) {
                         if (!checkHeaderArray.contains(i)) {
                             checkHeaderArray.add(i);
                         }
+                        //expandableListView.smoothScrollToPosition(i);
+                        scrollPosition = i;
+
                         flag = false;
                         Error_Message = getResources().getString(R.string.faceup_value);
                         break;
@@ -708,6 +720,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             TextView txt_categoryHeader = (TextView) convertView.findViewById(R.id.txt_categoryHeader);
             RelativeLayout rel_header = (RelativeLayout) convertView.findViewById(R.id.rel_categoryHeader);
             ImageView img_camera = (ImageView) convertView.findViewById(R.id.img_camera);
+            CardView card_view = (CardView) convertView.findViewById(R.id.card_view);
 
             txt_categoryHeader.setTypeface(null, Typeface.BOLD);
 
@@ -719,10 +732,19 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             txt_categoryHeader.setText(headerTitle.getSub_category() + "-" + headerTitle.getBrand());
 
 
+            if (!checkflag) {
+                if (checkHeaderArray.contains(groupPosition)) {
+                    card_view.setCardBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                } else {
+                    card_view.setCardBackgroundColor(getResources().getColor(R.color.grey_background));
+                }
+            }
+
             //empty check color change
-            if (headerTitle.getCompany_id().equals("1")) {
+            /*if (headerTitle.getCompany_id().equals("1")) {
                 if (!checkflag) {
                     if (checkHeaderArray.contains(groupPosition)) {
+                        //card_view.setCardBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
                         txt_categoryHeader.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
                     } else {
                         txt_categoryHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -736,7 +758,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                         txt_categoryHeader.setTextColor(getResources().getColor(R.color.black));
                     }
                 }
-            }
+            }*/
 
             return convertView;
         }
