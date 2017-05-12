@@ -62,7 +62,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
  */
 
 public class GSKOrangeDB extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "GSK_ORANGE_DB3";
+    public static final String DATABASE_NAME = "GSK_ORANGE_DB4";
     public static final int DATABASE_VERSION = 13;
     TableBean tableBean;
     private SQLiteDatabase db;
@@ -1579,6 +1579,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setIn_stock("0");
                     cd.setPromo_announcer("0");
                     cd.setRunning_pos("0");
+                    cd.setImage_promotion("");
 
                     list.add(cd);
                     dbcursor.moveToNext();
@@ -1655,6 +1656,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             values.put("IN_STOCK_VALUE", Integer.parseInt(data.getIn_stock()));
             values.put("PROMO_ANNOUNCER_VALUE", Integer.parseInt(data.getPromo_announcer()));
             values.put("RUNNING_POS_VALUE", Integer.parseInt(data.getRunning_pos()));
+            values.put("ADD_PROMO_IMAGE", data.getImage_promotion());
 
             db.insert(CommonString.TABLE_INSERT_ADDITIONAL_PROMO_COMPLIANCE, null, values);
         } catch (Exception ex) {
@@ -1683,6 +1685,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setIn_stock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IN_STOCK_VALUE")));
                     cd.setPromo_announcer(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ANNOUNCER_VALUE")));
                     cd.setRunning_pos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("RUNNING_POS_VALUE")));
+                    cd.setImage_promotion(dbcursor.getString(dbcursor.getColumnIndexOrThrow("ADD_PROMO_IMAGE")));
+
                     list.add(cd);
                     dbcursor.moveToNext();
                 }
@@ -1712,6 +1716,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put("IN_STOCK_VALUE", Integer.parseInt(data.getIn_stock()));
                 values.put("PROMO_ANNOUNCER_VALUE", Integer.parseInt(data.getPromo_announcer()));
                 values.put("RUNNING_POS_VALUE", Integer.parseInt(data.getRunning_pos()));
+                values.put("PROMO_IMAGE", data.getImage_promotion());
 
                 db.insert(CommonString.TABLE_INSERT_PROMO_SKU, null, values);
             }
@@ -1945,6 +1950,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put("IN_STOCK_VALUE", Integer.parseInt(data.getIn_stock()));
                 values.put("PROMO_ANNOUNCER_VALUE", Integer.parseInt(data.getPromo_announcer()));
                 values.put("RUNNING_POS_VALUE", Integer.parseInt(data.getRunning_pos()));
+                values.put("PROMO_IMAGE", data.getImage_promotion());
 
                 db.update(CommonString.TABLE_INSERT_PROMO_SKU, values,
                         "CATEGORY_ID='" + categoryId + "' AND STORE_ID='" + storeId +
@@ -1979,6 +1985,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setIn_stock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IN_STOCK_VALUE")));
                     cd.setPromo_announcer(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ANNOUNCER_VALUE")));
                     cd.setRunning_pos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("RUNNING_POS_VALUE")));
+                    cd.setImage_promotion(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_IMAGE")));
 
                     list.add(cd);
                     dbcursor.moveToNext();
@@ -2124,6 +2131,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setIn_stock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IN_STOCK_VALUE")));
                     cd.setPromo_announcer(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ANNOUNCER_VALUE")));
                     cd.setRunning_pos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("RUNNING_POS_VALUE")));
+                    cd.setImage_promotion(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_IMAGE")));
 
                     list.add(cd);
                     dbcursor.moveToNext();
@@ -2160,6 +2168,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setIn_stock(dbcursor.getString(dbcursor.getColumnIndexOrThrow("IN_STOCK_VALUE")));
                     cd.setPromo_announcer(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ANNOUNCER_VALUE")));
                     cd.setRunning_pos(dbcursor.getString(dbcursor.getColumnIndexOrThrow("RUNNING_POS_VALUE")));
+                    cd.setImage_promotion(dbcursor.getString(dbcursor.getColumnIndexOrThrow("ADD_PROMO_IMAGE")));
 
                     list.add(cd);
                     dbcursor.moveToNext();

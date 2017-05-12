@@ -481,7 +481,7 @@ public class UploadActivity extends AppCompatActivity {
                                 for (int i1 = 0; i1 < promotionSkuList.size(); i1++) {
                                     if (!promotionSkuList.get(i1).getCategory_id().equals("0")) {
 
-                                        onXML = "[PROMOTION_DATA]"
+                                        onXML = "[PROMOTION_DATA_NEW]"
                                                 + "[MID]" + mid + "[/MID]"
                                                 + "[USER_ID]" + userId + "[/USER_ID]"
                                                 + "[CATEGORY_ID]" + Integer.parseInt(promotionSkuList.get(i1).getCategory_id()) + "[/CATEGORY_ID]"
@@ -491,7 +491,8 @@ public class UploadActivity extends AppCompatActivity {
                                                 + "[IN_STOCK]" + Integer.parseInt(promotionSkuList.get(i1).getIn_stock()) + "[/IN_STOCK]"
                                                 + "[PROMO_ANNOUNCER]" + Integer.parseInt(promotionSkuList.get(i1).getPromo_announcer()) + "[/PROMO_ANNOUNCER]"
                                                 + "[RUNNING_POS]" + Integer.parseInt(promotionSkuList.get(i1).getRunning_pos()) + "[/RUNNING_POS]"
-                                                + "[/PROMOTION_DATA]";
+                                                + "[PROMO_IMAGE]" + promotionSkuList.get(i1).getImage_promotion() + "[/PROMO_IMAGE]"
+                                                + "[/PROMOTION_DATA_NEW]";
 
                                         promoition_data_xml = promoition_data_xml + onXML;
                                     }
@@ -501,7 +502,7 @@ public class UploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "PROMOTION_DATA");
+                                request.addProperty("KEYS", "PROMOTION_DATA_NEW");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
@@ -532,7 +533,7 @@ public class UploadActivity extends AppCompatActivity {
                                 for (int i1 = 0; i1 < additionalPromotionList.size(); i1++) {
                                     if (!additionalPromotionList.get(i1).getCategory_id().equals("0")) {
 
-                                        onXML = "[ADDITIONAL_PROMOTION_DATA]"
+                                        onXML = "[ADDITIONAL_PROMOTION_DATA_NEW]"
                                                 + "[MID]" + mid + "[/MID]"
                                                 + "[USER_ID]" + userId + "[/USER_ID]"
                                                 + "[CATEGORY_ID]" + Integer.parseInt(additionalPromotionList.get(i1).getCategory_id()) + "[/CATEGORY_ID]"
@@ -542,7 +543,8 @@ public class UploadActivity extends AppCompatActivity {
                                                 + "[IN_STOCK]" + Integer.parseInt(additionalPromotionList.get(i1).getIn_stock()) + "[/IN_STOCK]"
                                                 + "[PROMO_ANNOUNCER]" + Integer.parseInt(additionalPromotionList.get(i1).getPromo_announcer()) + "[/PROMO_ANNOUNCER]"
                                                 + "[RUNNING_POS]" + Integer.parseInt(additionalPromotionList.get(i1).getRunning_pos()) + "[/RUNNING_POS]"
-                                                + "[/ADDITIONAL_PROMOTION_DATA]";
+                                                + "[ADD_PROMO_IMAGE]" + additionalPromotionList.get(i1).getImage_promotion() + "[/ADD_PROMO_IMAGE]"
+                                                + "[/ADDITIONAL_PROMOTION_DATA_NEW]";
 
                                         additional_promoition_data_xml = additional_promoition_data_xml + onXML;
                                     }
@@ -552,7 +554,7 @@ public class UploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "ADDITIONAL_PROMOTION_DATA");
+                                request.addProperty("KEYS", "ADDITIONAL_PROMOTION_DATA_NEW");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
@@ -1158,6 +1160,94 @@ public class UploadActivity extends AppCompatActivity {
                             data.value = 75;
                             publishProgress(data);
 
+
+                            if (adddata.size() > 0) {
+                                for (int i1 = 0; i1 < adddata.size(); i1++) {
+
+                                    if (adddata.get(i1).getCategoryImage1() != null && !adddata.get(i1).getCategoryImage1().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage1()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage1(), "CategoryImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    if (adddata.get(i1).getCategoryImage2() != null && !adddata.get(i1).getCategoryImage2().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage2()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage2(), "CategoryImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    if (adddata.get(i1).getCategoryImage3() != null && !adddata.get(i1).getCategoryImage3().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage3()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage3(), "CategoryImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                    if (adddata.get(i1).getCategoryImage4() != null && !adddata.get(i1).getCategoryImage4().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage4()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage4(), "CategoryImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                            data.value = 75;
+                            publishProgress(data);
+
                             //Start store images
                             if (coverageList.size() > 0) {
                                 for (int i1 = 0; i1 < coverageList.size(); i1++) {
@@ -1184,6 +1274,64 @@ public class UploadActivity extends AppCompatActivity {
                                 }
                             }
                             data.value = 80;
+                            publishProgress(data);
+
+
+                            //PromoCompliance Image
+                            if (promotionSkuList.size() > 0) {
+                                for (int i1 = 0; i1 < promotionSkuList.size(); i1++) {
+
+                                    if (promotionSkuList.get(i1).getImage_promotion() != null && !promotionSkuList.get(i1).getImage_promotion().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + promotionSkuList.get(i1).getImage_promotion()).exists()) {
+
+                                            try {
+                                                result = UploadImage(promotionSkuList.get(i1).getImage_promotion(), "PromotionImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "StoreImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("PromotionImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            data.value = 85;
+                            publishProgress(data);
+
+
+                            //Additional PromoCompliance Image
+                            if (additionalPromotionList.size() > 0) {
+                                for (int i1 = 0; i1 < additionalPromotionList.size(); i1++) {
+
+                                    if (additionalPromotionList.get(i1).getImage_promotion() != null && !additionalPromotionList.get(i1).getImage_promotion().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + additionalPromotionList.get(i1).getImage_promotion()).exists()) {
+
+                                            try {
+                                                result = UploadImage(additionalPromotionList.get(i1).getImage_promotion(), "AdditionalPromotionImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "StoreImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("AdditionalPromotionImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            data.value = 88;
                             publishProgress(data);
 
 

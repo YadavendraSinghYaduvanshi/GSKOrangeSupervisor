@@ -1,17 +1,25 @@
 package cpm.com.gskmtorange.gsk_dailyentry;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,13 +27,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.logging.StreamHandler;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
@@ -38,6 +52,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
     Spinner sp_promo;
     ToggleButton toggle_add_InStock, toggle_add_promoAnnouncer, toggle_add_runningPos;
     Button btn_add;
+    ImageView img_addPromotion;
 
     ArrayList<Promo_Compliance_DataGetterSetter> promoSkuListData;
     ArrayList<Promo_Compliance_DataGetterSetter> promoSpinnerListData;
@@ -45,8 +60,16 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
     GSKOrangeDB db;
     String categoryName, categoryId;
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
     private SharedPreferences preferences;
+
+    String str = CommonString.FILE_PATH,
+            path = "", _pathforcheck = "", img = "";
+    int child_position = -1;
+    Uri outputFileUri;
+    String gallery_package = "";
+    String error_msg;
+    Promo_Compliance_DataGetterSetter cd;
 
     private static boolean updateResources(Context context, String language) {
 
@@ -73,9 +96,9 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 
@@ -115,6 +138,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
             toggle_add_promoAnnouncer = (ToggleButton) findViewById(R.id.toggle_add_promoAnnouncer);
             toggle_add_runningPos = (ToggleButton) findViewById(R.id.toggle_add_runningPos);
             btn_add = (Button) findViewById(R.id.btn_add);
+            img_addPromotion = (ImageView) findViewById(R.id.img_addPromotion);
 
             db = new GSKOrangeDB(this);
             db.open();
@@ -130,6 +154,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
             keyAccount_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
             class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
             storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
+            camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
 
             //Intent data
             categoryName = getIntent().getStringExtra("categoryName");
@@ -141,7 +166,8 @@ public class PromoComplianceActivity extends AppCompatActivity {
             additionalPromoListData = new ArrayList<>();
             AdditionalPromoListView();
 
-            final Promo_Compliance_DataGetterSetter cd = new Promo_Compliance_DataGetterSetter();
+            cd = new Promo_Compliance_DataGetterSetter();
+
             cd.setStore_id(store_id);
             cd.setPromo_id("");
             cd.setPromo("");
@@ -151,14 +177,35 @@ public class PromoComplianceActivity extends AppCompatActivity {
             cd.setPromo_announcer("0");
             cd.setRunning_pos("0");
             cd.setSp_promo("0");
+            cd.setImage_promotion("");
+
+            img_addPromotion.setBackgroundResource(R.mipmap.camera_grey);
 
             toggle_add_InStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
                         cd.setIn_stock("1");
+
+                        img_addPromotion.setBackgroundResource(R.mipmap.camera_orange);
+
+                        if (camera_allow.equals("1")) {
+                            img_addPromotion.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    _pathforcheck = "AddPromo_Image_" + store_id + categoryId + "_"
+                                            + visit_date.replace("/", "") + "_" +
+                                            getCurrentTime().replace(":", "") + ".jpg";
+                                    path = str + _pathforcheck;
+
+                                    startCameraActivity(2);
+                                }
+                            });
+                        }
                     } else {
                         cd.setIn_stock("0");
+                        img_addPromotion.setClickable(false);
+                        img_addPromotion.setBackgroundResource(R.mipmap.camera_grey);
                     }
                 }
             });
@@ -226,7 +273,6 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
                 }
             });
-
             for (int i = 0; i < promoSpinnerListData.size(); i++) {
                 if (cd.getSp_promo() == promoSpinnerListData.get(i).getPromo_id()) {
                     sp_promo.setSelection(i);
@@ -273,6 +319,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 @Override
                 public void onClick(final View view) {
 
+                    //if (isValid()) {
                     boolean flag = true;
                     if (promoSkuListData.size() <= 0) {
                         if (additionalPromoListData.size() <= 0) {
@@ -308,7 +355,10 @@ public class PromoComplianceActivity extends AppCompatActivity {
                         AlertDialog alert = builder.create();
                         alert.show();
                     }
-
+                    /*} else {
+                        Snackbar.make(view, error_msg, Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }*/
                 }
             });
 
@@ -324,6 +374,24 @@ public class PromoComplianceActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    public boolean isValid() {
+        boolean flag = true;
+
+        for (int i = 0; i < promoSkuListData.size(); i++) {
+
+            if (promoSkuListData.get(i).getIn_stock().equals("1")) {
+                if (promoSkuListData.get(i).getImage_promotion().equals("")) {
+                    flag = false;
+                    error_msg = getResources().getString(R.string.click_image);
+                    break;
+                }
+            }
+
+        }
+
+        return flag;
     }
 
     @Override
@@ -346,7 +414,9 @@ public class PromoComplianceActivity extends AppCompatActivity {
             ArrayAdapter<String> sp_promo_adapter = new ArrayAdapter<>(PromoComplianceActivity.this, android.R.layout.simple_list_item_1);
             for (int i = 0; i < promoSpinnerListData.size(); i++) {
                 sp_promo_adapter.add(promoSpinnerListData.get(i).getPromo());
+
             }
+            sp_promo_adapter.setDropDownViewResource(R.layout.spinner_text_view);
             sp_promo.setAdapter(sp_promo_adapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -355,7 +425,11 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
     private void promoSkuListView() {
         try {
-            View view;
+            View view = null;
+
+            if (lin_promo_sku != null) {
+                lin_promo_sku.removeAllViews();
+            }
 
             for (int i = 0; i < promoSkuListData.size(); i++) {
                 view = getLayoutInflater().inflate(R.layout.item_promo_sku_list, null, false);
@@ -366,17 +440,39 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 ToggleButton toggle_inStock = (ToggleButton) view.findViewById(R.id.toggle_inStock);
                 ToggleButton toggle_promoAnnouncer = (ToggleButton) view.findViewById(R.id.toggle_promoAnnouncer);
                 ToggleButton toggle_runningPos = (ToggleButton) view.findViewById(R.id.toggle_runningPos);
+                final ImageView img_promotion = (ImageView) view.findViewById(R.id.img_promotion);
 
                 txt_promoSkuName.setText(data.getPromo());
 
                 //In Stock
+                final int finalI = i;
                 toggle_inStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
                             data.setIn_stock("1");
+                            img_promotion.setBackgroundResource(R.mipmap.camera_orange);
+
+                            if (camera_allow.equals("1")) {
+                                img_promotion.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        _pathforcheck = "Promo_Image_" + store_id + categoryId + "_" + data.getSku_id() +
+                                                data.getPromo_id() + visit_date.replace("/", "") + "_" +
+                                                getCurrentTime().replace(":", "") + ".jpg";
+                                        //child_position = position;
+                                        child_position = finalI;
+                                        path = str + _pathforcheck;
+
+                                        startCameraActivity(1);
+                                    }
+                                });
+                            }
                         } else {
                             data.setIn_stock("0");
+                            img_promotion.setClickable(false);
+                            img_promotion.setBackgroundResource(R.mipmap.camera_grey);
+                            data.setImage_promotion("");
                         }
                     }
                 });
@@ -423,6 +519,29 @@ public class PromoComplianceActivity extends AppCompatActivity {
                     toggle_runningPos.setChecked(false);
                 }
 
+
+                if (!img.equalsIgnoreCase("")) {
+                    if (i == child_position) {
+                        data.setImage_promotion(img);
+                        img = "";
+                    }
+                }
+
+                if (camera_allow.equals("1")) {
+                    //Camera
+                    if (data.getIn_stock().equals("1")) {
+                        if (data.getImage_promotion().equals("")) {
+                            img_promotion.setBackgroundResource(R.mipmap.camera_orange);
+                        } else {
+                            img_promotion.setBackgroundResource(R.mipmap.camera_green);
+                        }
+                    } else {
+                        img_promotion.setBackgroundResource(R.mipmap.camera_grey);
+                    }
+                } else {
+                    img_promotion.setBackgroundResource(R.mipmap.camera_grey);
+                }
+
                 lin_promo_sku.addView(view);
             }
         } catch (Exception e) {
@@ -449,6 +568,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 TextView txt_inStock = (TextView) view.findViewById(R.id.txt_inStock);
                 TextView txt_promoAnnouncer = (TextView) view.findViewById(R.id.txt_promoAnnouncer);
                 TextView txt_runningPos = (TextView) view.findViewById(R.id.txt_runningPos);
+                ImageView img_add_promotion_view = (ImageView) view.findViewById(R.id.img_add_promotion_view);
 
                 txt_promoName.setText(data.getPromo());
 
@@ -471,6 +591,13 @@ public class PromoComplianceActivity extends AppCompatActivity {
                     txt_runningPos.setText(getResources().getString(R.string.yes));
                 } else {
                     txt_runningPos.setText(getResources().getString(R.string.no));
+                }
+
+                //Camera Image
+                if (!data.getImage_promotion().equals("")) {
+                    img_add_promotion_view.setBackgroundResource(R.mipmap.camera_green);
+                } else {
+                    img_add_promotion_view.setBackgroundResource(R.mipmap.camera_orange);
                 }
 
                 lin_addtional_promo.addView(view);
@@ -542,5 +669,122 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 });
         android.app.AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void startCameraActivity(int pos) {
+        try {
+
+            Log.i("Stock & Facing ", "startCameraActivity()");
+            File file = new File(path);
+            outputFileUri = Uri.fromFile(file);
+
+            String defaultCameraPackage = "";
+            final PackageManager packageManager = getPackageManager();
+            List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+            for (int n = 0; n < list.size(); n++) {
+                if ((list.get(n).flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                    //temp value in case camera is gallery app above jellybean
+                    String packag = list.get(n).loadLabel(packageManager).toString();
+                    if (packag.equalsIgnoreCase("Gallery") || packag.equalsIgnoreCase("Galeri") || packag.equalsIgnoreCase("الاستوديو")) {
+                        gallery_package = list.get(n).packageName;
+                    }
+
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera") || packag.equalsIgnoreCase("الكاميرا")) {
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    } else {
+
+                        if (packag.equalsIgnoreCase("Camera") || packag.equalsIgnoreCase("Kamera") || packag.equalsIgnoreCase("الكاميرا")) {
+
+                            defaultCameraPackage = list.get(n).packageName;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(defaultCameraPackage);
+            startActivityForResult(intent, pos);
+
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            intent.setPackage(gallery_package);
+            startActivityForResult(intent, pos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("Stock & Facing", "resultCode: " + resultCode + " requestCode: " + requestCode);
+
+        switch (requestCode) {
+            case 1:
+                if (resultCode == 0) {
+                    Log.e("Stock & Facing", "User cancelled");
+                } else if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            img = _pathforcheck;
+                            promoSkuListView();
+                            //t2PAdapter.notifyDataSetChanged();
+                            _pathforcheck = "";
+                        }
+                    }
+                }
+                break;
+
+            case 2:
+                if (resultCode == 0) {
+                    Log.e("Stock & Facing", "User cancelled");
+                } else if (resultCode == -1) {
+                    if (_pathforcheck != null && !_pathforcheck.equals("")) {
+                        if (new File(str + _pathforcheck).exists()) {
+                            //img = _pathforcheck;
+                            cd.setImage_promotion(_pathforcheck);
+                            _pathforcheck = "";
+                        }
+                    }
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private static String arabicToenglish(String number) {
+        char[] chars = new char[number.length()];
+        for (int i = 0; i < number.length(); i++) {
+            char ch = number.charAt(i);
+            if (ch >= 0x0660 && ch <= 0x0669)
+                ch -= 0x0660 - '0';
+            else if (ch >= 0x06f0 && ch <= 0x06F9)
+                ch -= 0x06f0 - '0';
+            chars[i] = ch;
+        }
+        return new String(chars);
+    }
+
+    public String getCurrentTime() {
+        Calendar m_cal = Calendar.getInstance();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");
+        String cdate = formatter.format(m_cal.getTime());
+
+        if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
+            cdate = arabicToenglish(cdate);
+        } else if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
+            cdate = arabicToenglish(cdate);
+        }
+
+        return cdate;
     }
 }
