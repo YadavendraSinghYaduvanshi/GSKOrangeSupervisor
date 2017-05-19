@@ -548,9 +548,7 @@ public class StoreListActivity extends AppCompatActivity {
                                                 public void onClick(DialogInterface dialog,
                                                                     int id) {
 
-
                                                     UpdateStore(store_id);
-
 
                                                     Intent in = new Intent(StoreListActivity.this, NonWorkingReason.class);
                                                     in.putExtra(CommonString.KEY_STORE_ID, current.getSTORE_ID());

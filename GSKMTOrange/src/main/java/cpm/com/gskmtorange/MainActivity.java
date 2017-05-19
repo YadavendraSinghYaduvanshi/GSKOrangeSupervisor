@@ -36,6 +36,7 @@ import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.dailyentry.FutureJCPActivity;
 import cpm.com.gskmtorange.dailyentry.ServiceActivity;
 import cpm.com.gskmtorange.dailyentry.SettingsActivity;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
@@ -297,6 +298,11 @@ public class MainActivity extends AppCompatActivity
 
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
+        }else if(id == R.id.nav_future_jcp){
+            Intent startDownload = new Intent(this, FutureJCPActivity.class);
+            startActivity(startDownload);
+
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

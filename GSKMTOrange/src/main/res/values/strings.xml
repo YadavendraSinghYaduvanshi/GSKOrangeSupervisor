@@ -303,4 +303,11 @@
     <string name="msl_availability_new_stock_value">Please first fill the stock value </string>
 
     <string name="check_faceing">Faceup can not be greater than or equal to MBQ value</string>
+    <string name="title_activity_future_jcp">FutureJ CP</string>
+
+    <string name="future_route_plan"> Route Plan Lookup</string>
+
+    <string name="select_date">Select Date</string>
+    <string name="no_route_plan_for_day">No Route Plan for the day</string>
+
 </resources>

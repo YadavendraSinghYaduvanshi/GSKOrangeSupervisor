@@ -10,7 +10,7 @@ import cpm.com.gskmtorange.GetterSetter.BrandAvabilityGetterSetter;
 
 public class T2PGetterSetter {
 
-    String brand_id, display_id, brand, display, image, remark, key_id, category_id, ref_image_url, ref_image_path, image1, image2;
+    String brand_id, display_id, brand, display, image, remark, key_id, category_id, ref_image_url, ref_image_path, image1, image2, category_fixture;
     boolean isPresent;
 
     ArrayList<GapsChecklistGetterSetter> gapsChecklist = new ArrayList<>();
@@ -144,5 +144,13 @@ public class T2PGetterSetter {
 
     public void setImage2(String image2) {
         this.image2 = image2;
+    }
+
+    public String getCategory_fixture() {
+        return category_fixture;
+    }
+
+    public void setCategory_fixture(String category_fixture) {
+        this.category_fixture = category_fixture;
     }
 }

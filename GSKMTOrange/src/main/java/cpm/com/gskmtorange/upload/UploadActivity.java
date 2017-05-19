@@ -437,7 +437,7 @@ public class UploadActivity extends AppCompatActivity {
                                                 + "[SKU_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getSku_id()) + "[/SKU_ID]"
                                                 + "[MBQ]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMbq()) + "[/MBQ]"
                                                 + "[AVAILABILITY]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getToggleValue()) + "[/AVAILABILITY]"
-                                                + "[FACING]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getFacing()) + "[/FACING]"
+                                                + "[FACING]" + Double.parseDouble(msl_availabilityStockFacingList.get(j).getFacing()) + "[/FACING]"
                                                 + "[STOCK]" + Integer.parseInt(stock) + "[/STOCK]"
                                                 + "[MUST_HAVE]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMust_have()) + "[/MUST_HAVE]" +
                                                 "[/MSL_AVAILABILITY_STOCK_FACING_DATA_NEW]";

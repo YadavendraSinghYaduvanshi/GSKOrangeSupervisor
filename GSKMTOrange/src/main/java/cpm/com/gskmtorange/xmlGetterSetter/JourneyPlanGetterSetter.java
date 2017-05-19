@@ -23,6 +23,8 @@ public class JourneyPlanGetterSetter {
 	ArrayList<String> STORETYPE_ID  = new ArrayList<String>();
 	ArrayList<String> CLASS_ID  = new ArrayList<String>();
 	ArrayList<String> CAMERA_ALLOW  = new ArrayList<String>();
+	ArrayList<String> VISIT_ORDER  = new ArrayList<String>();
+
 
 	public ArrayList<String> getCHANNEL_ID() {
 		return CHANNEL_ID;
@@ -153,5 +155,13 @@ public class JourneyPlanGetterSetter {
 
 	public void setGEO_TAG(String GEO_TAG) {
 		this.GEO_TAG.add(GEO_TAG);
+	}
+
+	public ArrayList<String> getVISIT_ORDER() {
+		return VISIT_ORDER;
+	}
+
+	public void setVISIT_ORDER(String VISIT_ORDER) {
+		this.VISIT_ORDER.add(VISIT_ORDER);
 	}
 }

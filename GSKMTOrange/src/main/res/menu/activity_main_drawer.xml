@@ -20,6 +20,11 @@
             android:title="@string/menu_geotag" />
 
         <item
+            android:id="@+id/nav_future_jcp"
+            android:icon="@drawable/ic_date_range_black"
+            android:title="@string/future_route_plan" />
+
+        <item
             android:id="@+id/nav_exit"
             android:icon="@mipmap/exit_grey"
             android:title="@string/menu_exit" />

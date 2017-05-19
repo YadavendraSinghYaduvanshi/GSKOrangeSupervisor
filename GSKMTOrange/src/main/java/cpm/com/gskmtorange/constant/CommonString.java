@@ -80,6 +80,7 @@ public class CommonString {
     public static final String UNIQUE_KEY_ID = "UNIQUE_KEY_ID";
     public static final String KEY_CATEGORY_ID = "CATEGORY_ID";
     public static final String KEY_PROCESS_ID = "PROCESS_ID";
+    public static final String KEY_CATEGORY_FIXTURE = "CATEGORY_FIXTURE";
 
     public static final String KEY_JOURNEY_PLAN = "JOURNEY_PLAN";
     public static final String TABLE_INSERT_STOCK_DIALOG = "STOCK_DIALOG";
@@ -540,8 +541,8 @@ public class CommonString {
             + KEY_IMAGE1 + " VARCHAR,"
             + KEY_IMAGE2 + " VARCHAR,"
             + KEY_REMARK + " VARCHAR,"
-            + KEY_PRESENT + " VARCHAR"
-
+            + KEY_PRESENT + " VARCHAR,"
+            + KEY_CATEGORY_FIXTURE + " INTEGER"
             + ")";
 
 
@@ -777,16 +778,16 @@ public class CommonString {
             + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
 
             + "Store_Id"
-            + " VARCHAR,"
+            + " INTEGER,"
 
             + "Category_Id"
-            + " VARCHAR,"
+            + " INTEGER,"
 
             + "Brand_Id"
             + " VARCHAR,"
 
             + "SKU_ID"
-            + " VARCHAR,"
+            + " INTEGER,"
 
             + "SKU"
             + " VARCHAR,"
@@ -798,13 +799,13 @@ public class CommonString {
             + " VARCHAR,"
 
             + "COMPANY_ID"
-            + " VARCHAR,"
+            + " INTEGER,"
 
             + "FACING"
-            + " VARCHAR,"
+            + " REAL,"
 
             + "STOCK"
-            + " VARCHAR,"
+            + " INTEGER,"
 
             + "TOGGLE_VALUE"
             + " VARCHAR,"

@@ -62,7 +62,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
  */
 
 public class GSKOrangeDB extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "GSK_ORANGE_DB4";
+    public static final String DATABASE_NAME = "GSK_ORANGE_DB5";
     public static final int DATABASE_VERSION = 13;
     TableBean tableBean;
     private SQLiteDatabase db;
@@ -270,6 +270,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put("CAMERA_ALLOW", data.getCAMERA_ALLOW().get(i));
                 values.put("GEO_TAG", data.getGEO_TAG().get(i));
 
+                values.put("VISIT_ORDER", data.getVISIT_ORDER().get(i));
 
                 db.insert("JOURNEY_PLAN", null, values);
 
@@ -287,7 +288,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
 
-            dbcursor = db.rawQuery("Select  BM.BRAND As BRAND, BM.BRAND_ID As BRAND_ID, DM.DISPLAY As DISPLAY, DM.DISPLAY_ID As DISPLAY_ID, DM.IMAGE_URL As IMAGE_URL, DM.IMAGE_PATH As IMAGE_PATH from BRAND_MASTER BM INNER JOIN MAPPING_T2P T ON BM.BRAND_ID = T.BRAND_ID INNER JOIN  DISPLAY_MASTER DM  ON T.DISPLAY_ID= DM.DISPLAY_ID WHERE T.STORE_ID = '" + store_id + "'", null);
+            dbcursor = db.rawQuery("Select  BM.BRAND As BRAND, BM.BRAND_ID As BRAND_ID, DM.DISPLAY As DISPLAY, DM.DISPLAY_ID As DISPLAY_ID, DM.IMAGE_URL As IMAGE_URL, DM.IMAGE_PATH As IMAGE_PATH, T.CATEGORY_FIXTURE As CATEGORY_FIXTURE from BRAND_MASTER BM INNER JOIN MAPPING_T2P T ON BM.BRAND_ID = T.BRAND_ID INNER JOIN  DISPLAY_MASTER DM  ON T.DISPLAY_ID= DM.DISPLAY_ID WHERE T.STORE_ID = '" + store_id + "'", null);
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
@@ -311,6 +312,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
                     t2p.setRef_image_path(dbcursor.getString(dbcursor
                             .getColumnIndexOrThrow("IMAGE_PATH")));
+
+                    t2p.setCategory_fixture(dbcursor.getString(dbcursor
+                            .getColumnIndexOrThrow("CATEGORY_FIXTURE")));
 
                     t2p.setImage("");
                     t2p.setImage1("");
@@ -469,7 +473,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
 
         try {
             dbcursor = db.rawQuery("SELECT  * from JOURNEY_PLAN  " +
-                    "where VISIT_DATE ='" + date + "'", null);
+                    "where VISIT_DATE ='" + date + "' ORDER BY VISIT_ORDER", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -914,6 +918,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put("STORE_ID", data.getSTORE_ID().get(i));
                 values.put("BRAND_ID", data.getBRAND_ID().get(i));
                 values.put("DISPLAY_ID", data.getDISPLAY_ID().get(i));
+                values.put("CATEGORY_FIXTURE", data.getCATEGORY_FIXTURE().get(i));
 
                 db.insert("MAPPING_T2P", null, values);
             }
@@ -2647,6 +2652,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put(CommonString.KEY_IMAGE2, data.get(i).getImage2());
                 values.put(CommonString.KEY_REMARK, data.get(i).getRemark());
                 values.put(CommonString.KEY_PRESENT, data.get(i).isPresent());
+                values.put(CommonString.KEY_CATEGORY_FIXTURE, data.get(i).getCategory_fixture());
 
                 l = db.insert(CommonString.TABLE_INSERT_T2P_COMPLIANCE, null, values);
 
@@ -2967,6 +2973,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     tp.setRemark(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_REMARK)));
                     tp.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
                     tp.setPresent((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PRESENT)).equalsIgnoreCase("1")));
+                    tp.setCategory_fixture(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CATEGORY_FIXTURE)));
 
                     list.add(tp);
                     dbcursor.moveToNext();

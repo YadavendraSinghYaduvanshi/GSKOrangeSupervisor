@@ -184,6 +184,11 @@ public class XMLHandlers {
                         jcpGetterSetter.setCHANNEL_ID(xpp.nextText());
                     }
 
+                    if (xpp.getName().equals("VISIT_ORDER")) {
+                        jcpGetterSetter.setVISIT_ORDER(xpp.nextText());
+                    }
+
+
 
                 }
                 xpp.next();
@@ -444,6 +449,9 @@ public class XMLHandlers {
                     }
                     if (xpp.getName().equals("DISPLAY_ID")) {
                         t2p.setDISPLAY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CATEGORY_FIXTURE")) {
+                        t2p.setCATEGORY_FIXTURE(xpp.nextText());
                     }
                 }
                 xpp.next();
