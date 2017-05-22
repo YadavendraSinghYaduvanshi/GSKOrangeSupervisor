@@ -973,7 +973,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                         int num = (int)faceup;
                         //int faceint = (int)(faceup - Math.floor( faceup ));
                         int faceint = (int)((faceup%1.0)*10);
-                        if((faceup%1.0)*10>5){
+                        if((faceup%1.0)*10!=5){
                             faceint = 5;
                             edFaceup =String.valueOf(num + faceint/10.0);
                             finalHolder2.facing.setText(edFaceup);
