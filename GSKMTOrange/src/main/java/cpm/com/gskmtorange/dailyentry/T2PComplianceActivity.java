@@ -497,7 +497,14 @@ public class T2PComplianceActivity extends AppCompatActivity {
             holder.img_cam1.setEnabled(is_enabled);
             holder.img_cam2.setEnabled(is_enabled);
             holder.btn_gaps.setEnabled(is_enabled);
-            holder.btn_sku.setEnabled(is_enabled);
+
+            if(is_enabled && mItem.getCategory_fixture().equals("0")){
+                holder.btn_sku.setEnabled(true);
+            }
+            else{
+                holder.btn_sku.setEnabled(false);
+            }
+
 
 
             if (mItem.getGapsChecklist().size() > 0) {
@@ -513,7 +520,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
             if (mItem.getSkulist().size() > 0) {
                 holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.green));
             } else {
-                if (mItem.isPresent()) {
+                if (mItem.isPresent() && mItem.getCategory_fixture().equals("0")) {
                     holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 } else {
                     holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.grey_background));
@@ -948,10 +955,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     flag = false;
                     error_msg = getResources().getString(R.string.fill_gaps_data);
                     break;
-                } else if (t2PGetterSetters.get(i).getSkulist().size() == 0) {
-                    flag = false;
-                    error_msg = getResources().getString(R.string.title_activity_fill_sku);
-                    break;
                 } else if (camera_allow.equals("1") && (t2PGetterSetters.get(i).getImage().equals("") &&
                         t2PGetterSetters.get(i).getImage1().equals("") &&
                         t2PGetterSetters.get(i).getImage2().equals(""))) {
@@ -961,6 +964,10 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 } else if (camera_allow.equals("0") && t2PGetterSetters.get(i).getBrandlist().size() == 0) {
                     flag = false;
                     error_msg = getResources().getString(R.string.title_activity_fill_brand);
+                    break;
+                }else if (t2PGetterSetters.get(i).getCategory_fixture().equals("0") && t2PGetterSetters.get(i).getSkulist().size() == 0) {
+                    flag = false;
+                    error_msg = getResources().getString(R.string.title_activity_fill_sku);
                     break;
                 }
 

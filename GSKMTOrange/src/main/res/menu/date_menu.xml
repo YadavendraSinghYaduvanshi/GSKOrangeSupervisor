@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="cpm.com.gskmtorange.dailyentry.FutureJCPActivity">
+    <item
+        android:id="@+id/iconCalender"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        android:icon="@drawable/ic_date_range_white"
+        app:showAsAction="always" />
+</menu>

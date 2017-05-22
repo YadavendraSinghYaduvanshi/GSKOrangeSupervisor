@@ -13,6 +13,7 @@ public class MAPPINGT2PGetterSetter {
     ArrayList<String> STORE_ID = new ArrayList<>();
     ArrayList<String> BRAND_ID = new ArrayList<>();
     ArrayList<String> DISPLAY_ID = new ArrayList<>();
+    ArrayList<String> CATEGORY_FIXTURE = new ArrayList<>();
 
     public String getTable_MAPPING_T2P() {
         return table_MAPPING_T2P;
@@ -44,5 +45,13 @@ public class MAPPINGT2PGetterSetter {
 
     public void setDISPLAY_ID(String DISPLAY_ID) {
         this.DISPLAY_ID.add(DISPLAY_ID);
+    }
+
+    public ArrayList<String> getCATEGORY_FIXTURE() {
+        return CATEGORY_FIXTURE;
+    }
+
+    public void setCATEGORY_FIXTURE(String CATEGORY_FIXTURE) {
+        this.CATEGORY_FIXTURE.add(CATEGORY_FIXTURE);
     }
 }

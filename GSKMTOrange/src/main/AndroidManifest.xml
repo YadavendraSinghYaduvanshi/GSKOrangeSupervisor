@@ -186,20 +186,23 @@
             android:label="@string/title_activity_category_picture"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".dailyentry.StoreCheckoutImageActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_store_checkout_image"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".gsk_dailyentry.MSL_Availability_StockFacingActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".dailyentry.FutureJCPActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

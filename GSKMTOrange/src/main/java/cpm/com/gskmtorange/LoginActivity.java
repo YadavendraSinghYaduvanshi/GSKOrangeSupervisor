@@ -424,7 +424,6 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-
             try {
 
                 versionCode = getPackageManager().getPackageInfo(

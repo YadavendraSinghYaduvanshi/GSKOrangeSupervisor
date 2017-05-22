@@ -20,6 +20,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,10 +45,13 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
@@ -799,6 +804,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 holder.toggle_available = (ToggleButton) convertView.findViewById(R.id.toggle_available);
 
                 holder.facing = (EditText) convertView.findViewById(R.id.ed_facing);
+                holder.facing.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(6,1)});
                 holder.stock = (EditText) convertView.findViewById(R.id.ed_stock);
 
                 holder.stock_view = convertView.findViewById(R.id.stock_view);
@@ -908,7 +914,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                         if (Integer.parseInt(stock) >= 0 && Integer.parseInt(stock) < Integer.parseInt(childData.getMbq())) {
 
                             if (!childData.getFacing().equals("")) {
-                                if (Integer.parseInt(stock) >= 0 && Integer.parseInt(childData.getFacing()) <= Integer.parseInt(stock)) {
+                                if (Integer.parseInt(stock) >= 0 && Double.parseDouble(childData.getFacing()) <= Integer.parseInt(stock)) {
 
                                     childData.setStock(stock);
                                 } else {
@@ -954,11 +960,30 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
 
 
             final ViewHolder finalHolder1 = holder;
+            final ViewHolder finalHolder2 = holder;
             holder.facing.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     final EditText caption = (EditText) v;
-                    final String edFaceup = caption.getText().toString().replaceFirst("^0+(?!$)", "");
+                    String edFaceup = caption.getText().toString().replaceFirst("^0+(?!$)", "");
+
+                    if (edFaceup != null && !edFaceup.equals("")){
+                        //int num = Integer.parseInt(edFaceup);
+                        double faceup = Double.parseDouble(edFaceup);
+                        int num = (int)faceup;
+                        //int faceint = (int)(faceup - Math.floor( faceup ));
+                        int faceint = (int)((faceup%1.0)*10);
+                        if((faceup%1.0)*10>5){
+                            faceint = 5;
+                            edFaceup =String.valueOf(num + faceint/10.0);
+                            finalHolder2.facing.setText(edFaceup);
+                        }
+
+                        /*Double faceup = Double.parseDouble(edFaceup);
+                        DecimalFormat twoDForm = new DecimalFormat(".#");
+                        faceup=  Double.valueOf(twoDForm.format(faceup));*/
+                    }
+
 
                     boolean isFill = false;
 
@@ -980,15 +1005,14 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                         } else {*/
                         if (edFaceup != null && !edFaceup.equals("")) {
 
-                            if (Integer.parseInt(edFaceup) >= 0 && Integer.parseInt(edFaceup) < Integer.parseInt(childData.getMbq())) {
+                            if (Double.parseDouble(edFaceup)>= 0 && Double.parseDouble(edFaceup) < Integer.parseInt(childData.getMbq())) {
                                 if (!childData.getStock().equals("")) {
 
                                     //if (edFaceup != null && !edFaceup.equals("")) {
 
                                     String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
 
-
-                                    if (Integer.parseInt(faceup) <= Integer.parseInt(childData.getStock())) {
+                                    if (Double.parseDouble(faceup) <= Integer.parseInt(childData.getStock())) {
 
                                         isFill = true;
 
@@ -1047,6 +1071,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                     if (isFill) {
                         if (!edFaceup.equals("")) {
                             String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
+                           // String str2 = PerfectDecimal(faceup, 3, 1);
                             childData.setFacing(faceup);
                         } else {
                             childData.setFacing("");
@@ -1056,7 +1081,6 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             });
 
             holder.facing.setText(childData.getFacing());
-
 
             //empty check color change
             if (!checkflag) {
@@ -1217,5 +1241,48 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public String PerfectDecimal(String str, int MAX_BEFORE_POINT, int MAX_DECIMAL){
+        if(str.charAt(0) == '.') str = "0"+str;
+        int max = str.length();
+
+        String rFinal = "";
+        boolean after = false;
+        int i = 0, up = 0, decimal = 0; char t;
+        while(i < max){
+            t = str.charAt(i);
+            if(t != '.' && after == false){
+                up++;
+                if(up > MAX_BEFORE_POINT) return rFinal;
+            }else if(t == '.'){
+                after = true;
+            }else{
+                decimal++;
+                if(decimal > MAX_DECIMAL)
+                    return rFinal;
+            }
+            rFinal = rFinal + t;
+            i++;
+        }return rFinal;
+    }
+
+    public class DecimalDigitsInputFilter implements InputFilter {
+
+        Pattern mPattern;
+
+        public DecimalDigitsInputFilter(int digitsBeforeZero,int digitsAfterZero) {
+            mPattern=Pattern.compile("[0-9]{0," + (digitsBeforeZero-1) + "}+((\\.[0-9]{0," + (digitsAfterZero-1) + "})?)||(\\.)?");
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            Matcher matcher=mPattern.matcher(dest);
+            if(!matcher.matches())
+                return "";
+            return null;
+        }
+
     }
 }

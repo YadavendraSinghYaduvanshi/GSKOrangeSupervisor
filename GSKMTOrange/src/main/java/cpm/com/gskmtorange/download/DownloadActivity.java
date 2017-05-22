@@ -983,8 +983,6 @@ public class DownloadActivity extends AppCompatActivity {
 
                 db.insertNonWorkingData(nonWorkingReasonGetterSetter);
 
-                db.insertNonWorkingData(nonWorkingReasonGetterSetter);
-
                 db.InsertSTORE_PERFORMANCE(store_performance_masterGetterSetter);
                 db.InsertMAPPING_PLANOGRAM(mapping_planogram_masterGetterSetter);
                 db.InsertADDITIONAL_DISPLAY(additional_display_getter_setter);

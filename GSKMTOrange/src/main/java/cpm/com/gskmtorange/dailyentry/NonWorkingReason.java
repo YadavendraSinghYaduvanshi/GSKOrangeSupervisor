@@ -160,7 +160,6 @@ public class NonWorkingReason extends AppCompatActivity implements
 
         }
 
-
         if (nonflag) {
             reasondata = database.getNonWorkingEntryAllowData();
 
