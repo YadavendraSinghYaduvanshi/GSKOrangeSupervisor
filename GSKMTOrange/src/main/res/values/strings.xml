@@ -65,7 +65,7 @@
     <string name="menu_setting">Settings</string>
     <string name="menu_services">Services</string>
 
-    <string name="title_activity_t2_pcompliance">Monthly Availability</string>
+    <string name="title_activity_t2_pcompliance">Monthly Visibility</string>
 
     <!--Gagan start code-->
     <string name="title_activity_category_list">Category List</string>
@@ -76,7 +76,7 @@
 
     <string name="daily_data_menu_msl_availability">SKU Availability</string>
     <string name="daily_data_menu_stock_facing">Stock and Facing</string>
-    <string name="daily_data_menu_t2p">Monthly Availability</string>
+    <string name="daily_data_menu_t2p">Monthly Visibility</string>
     <string name="daily_data_menu_additional_visibility">Additional Visibility</string>
     <string name="daily_data_menu_promo_compliance">Promo Compliance</string>
     <string name="daily_data_menu_competition_tracking">Competition Visibility</string>
