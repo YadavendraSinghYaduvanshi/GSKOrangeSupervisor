@@ -435,7 +435,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                                 + "[SKU_ID]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getSku_id()) + "[/SKU_ID]"
                                                 + "[MBQ]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMbq()) + "[/MBQ]"
                                                 + "[AVAILABILITY]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getToggleValue()) + "[/AVAILABILITY]"
-                                                + "[FACING]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getFacing()) + "[/FACING]"
+                                                + "[FACING]" + Double.parseDouble(msl_availabilityStockFacingList.get(j).getFacing()) + "[/FACING]"
                                                 + "[STOCK]" + Integer.parseInt(stock) + "[/STOCK]"
                                                 + "[MUST_HAVE]" + Integer.parseInt(msl_availabilityStockFacingList.get(j).getMust_have()) + "[/MUST_HAVE]" +
                                                 "[/MSL_AVAILABILITY_STOCK_FACING_DATA_NEW]";
@@ -448,7 +448,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "MSL_AVAILABILITY_STOCK_FACING_DATA_NEW");
+                                request.addProperty("KEYS", "STOCK_AVAILABILITY_POINT");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
@@ -1158,6 +1158,94 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                             data.value = 75;
                             publishProgress(data);
 
+
+                            if (adddata.size() > 0) {
+                                for (int i1 = 0; i1 < adddata.size(); i1++) {
+
+                                    if (adddata.get(i1).getCategoryImage1() != null && !adddata.get(i1).getCategoryImage1().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage1()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage1(), "CategoryImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    if (adddata.get(i1).getCategoryImage2() != null && !adddata.get(i1).getCategoryImage2().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage2()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage2(), "CategoryImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    if (adddata.get(i1).getCategoryImage3() != null && !adddata.get(i1).getCategoryImage3().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage3()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage3(), "CategoryImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                    if (adddata.get(i1).getCategoryImage4() != null && !adddata.get(i1).getCategoryImage4().equals("")) {
+                                        if (new File(CommonString.FILE_PATH + adddata.get(i1).getCategoryImage4()).exists()) {
+
+                                            try {
+                                                result = UploadImage(adddata.get(i1).getCategoryImage4(), "CategoryImages");
+                                                /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+                                                    return "CategoryImages";
+                                                }*/
+
+                                                runOnUiThread(new Runnable() {
+                                                    public void run() {
+                                                        message.setText("CategoryImages Uploaded");
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                            data.value = 75;
+                            publishProgress(data);
+
                             //Start store images
                             if (coverageList.size() > 0) {
                                 for (int i1 = 0; i1 < coverageList.size(); i1++) {
@@ -1243,6 +1331,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                             }
                             data.value = 88;
                             publishProgress(data);
+
 
                             //CheckOut Store Image
                             if (coverageList.size() > 0) {
@@ -1378,7 +1467,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
                                 db.updateStoreStatusOnLeave(coverageList.get(i).getStoreId(), coverageList.get(i)
                                         .getVisitDate(), CommonString.KEY_U);
 
-                                //db.deleteTableWithStoreID(coverageList.get(i).getStoreId());
+                                db.deleteTableWithStoreID(coverageList.get(i).getStoreId());
                             }
                             data.value = 100;
                             publishProgress(data);
