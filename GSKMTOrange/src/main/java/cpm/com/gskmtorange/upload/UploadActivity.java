@@ -450,7 +450,7 @@ public class UploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", sos_xml);
-                                request.addProperty("KEYS", "MSL_AVAILABILITY_STOCK_FACING_DATA_NEW");
+                                request.addProperty("KEYS", "STOCK_AVAILABILITY_POINT");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
