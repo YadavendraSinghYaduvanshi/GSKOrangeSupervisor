@@ -760,6 +760,7 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[PRESENT]" + present + "[/PRESENT]"
                                             + "[GAPS_DATA]" + gaps_xml + "[/GAPS_DATA]"
                                             + "[SKU_DATA]" + sku_xml + "[/SKU_DATA]"
+                                            + "[CATEGORY_FIXTURE]" + t2PGetterSetters.get(i1).getCategory_fixture() + "[/CATEGORY_FIXTURE]"
                                             + "[BRAND_DATA]" + brandxml + "[/BRAND_DATA]"
                                             + "[/T2P_DATA]";
 
@@ -770,7 +771,7 @@ public class UploadActivity extends AppCompatActivity {
 
                                 request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
                                 request.addProperty("XMLDATA", t2p_final_xml);
-                                request.addProperty("KEYS", "T2P_DATA_NEW");
+                                request.addProperty("KEYS", "T2P_DATA_FIXTURE");
                                 request.addProperty("USERNAME", userId);
                                 request.addProperty("MID", mid);
 
