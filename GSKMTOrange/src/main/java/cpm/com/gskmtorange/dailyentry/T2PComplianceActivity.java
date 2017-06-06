@@ -30,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -61,6 +62,7 @@ import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.SelectGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.T2PGetterSetter;
 
@@ -91,6 +93,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
     String brand_name = "", brand_id = "";
     ArrayList<BrandAvabilityGetterSetter> brand_new_list = new ArrayList<BrandAvabilityGetterSetter>();
     ArrayList<BrandAvabilityGetterSetter> brandList;
+    ArrayList<SelectGetterSetter> select = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,6 +212,8 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
     }
 
+    
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -234,16 +239,147 @@ public class T2PComplianceActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
 
+            final boolean[] userSelect = {false};
             final T2PGetterSetter mItem = list.get(position);
             holder.tv_brand.setText(mItem.getBrand());
             holder.tv_display.setText(mItem.getDisplay().trim());
+
+            ArrayList<SelectGetterSetter> ans_list = new ArrayList<>();
+            SelectGetterSetter select = new SelectGetterSetter();
+            select.setAns(getString(R.string.select));
+            select.setAns_id(0);
+            ans_list.clear();
+            ans_list.add(select);
+
+            select = new SelectGetterSetter();
+            select.setAns(getString(R.string.yes));
+            select.setAns_id(1);
+            ans_list.add(select);
+
+            select = new SelectGetterSetter();
+            select.setAns(getString(R.string.no));
+            select.setAns_id(2);
+            ans_list.add(select);
+
+            CustomSpinnerAdapter skuadapter = new CustomSpinnerAdapter(T2PComplianceActivity.this, R.layout.custom_t2p_spinner_item, ans_list);
+            holder.spinner.setAdapter(skuadapter);
+
+            holder.spinner.setSelection(0);
 
             //holder.tv_display.setTypeface(FontManager.getTypeface(getApplicationContext(),FontManager.FONTAWESOME));
 
            /* Typeface iconFont = FontManager.getTypeface(getApplicationContext(), FontManager.FONTAWESOME);
             FontManager.markAsIconContainer(findViewById(R.id.icons_container), iconFont);
-*/
+*/        holder.spinner.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    userSelect[0] = true;
+                    return false;
+                }
+            });
+            holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
+                    if(userSelect[0]){
+                        userSelect[0] = false;
+
+                        boolean flag_clear = false;
+                        int present =-1;
+
+                        switch (position) {
+
+                            case 0:
+                                if(mItem.getPresent()==1){
+                                    flag_clear = true;
+                                }
+                                else{
+                                    mItem.setPresent(-1);
+                                    t2PAdapter.notifyDataSetChanged();
+                                }
+
+
+                                break;
+                            case 1:
+                                mItem.setPresent(1);
+                                t2PAdapter.notifyDataSetChanged();
+                                break;
+                            case 2:
+
+                                if(mItem.getPresent()==1){
+                                    flag_clear = true;
+                                    present = 0;
+                                }
+                                else{
+                                    mItem.setPresent(0);
+                                    t2PAdapter.notifyDataSetChanged();
+                                }
+
+                                if(mItem.getPresent()==1)
+
+
+                                break;
+                        }
+
+                        if(flag_clear){
+
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(T2PComplianceActivity.this);
+                            alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
+
+                            // set dialog message
+                            final int finalPresent = present;
+                            alertDialogBuilder
+                                    .setMessage(getResources().getString(R.string.data_will_be_lost))
+                                    .setCancelable(false)
+                                    .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            //mItem.setPresent(false);
+                                            mItem.setPresent(finalPresent);
+                                            mItem.getGapsChecklist().clear();
+                                            mItem.getSkulist().clear();
+
+                                            //Camera
+                                            if (!mItem.getImage().equals("")) {
+                                                new File(str + mItem.getImage()).delete();
+                                                mItem.setImage("");
+                                            }
+
+                                            //Camera 1
+                                            if (!mItem.getImage1().equals("")) {
+                                                new File(str + mItem.getImage1()).delete();
+                                                mItem.setImage1("");
+                                            }
+
+                                            //Camera 2
+                                            if (!mItem.getImage2().equals("")) {
+                                                new File(str + mItem.getImage2()).delete();
+                                                mItem.setImage2("");
+                                            }
+
+                                            t2PAdapter.notifyDataSetChanged();
+                                        }
+                                    })
+                                    .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+
+                                            dialog.cancel();
+                                            //mItem.setPresent(true);
+                                            t2PAdapter.notifyDataSetChanged();
+                                        }
+                                    });
+
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            alertDialog.show();
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
 
             holder.btn_gaps.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -252,14 +388,14 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 }
             });
 
-            holder.toggle_btn.setOnClickListener(new View.OnClickListener() {
+   /*         holder.toggle_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     if (((ToggleButton) v).getText().toString().equalsIgnoreCase(getResources().getString(R.string.yes))) {
                         mItem.setPresent(true);
                     } else {
-                      /*  mItem.setPresent(false);
+                      *//*  mItem.setPresent(false);
                         mItem.getGapsChecklist().clear();
                         mItem.getSkulist().clear();
 
@@ -280,7 +416,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                             new File(str + mItem.getImage2()).delete();
                             mItem.setImage2("");
                         }
-*/
+*//*
 
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(T2PComplianceActivity.this);
                         alertDialogBuilder.setTitle(getResources().getString(R.string.dialog_title));
@@ -330,7 +466,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     }
                     t2PAdapter.notifyDataSetChanged();
                 }
-            });
+            });*/
 
 
             holder.btn_sku.setOnClickListener(new View.OnClickListener() {
@@ -391,8 +527,8 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 if (mItem.getImage().equals("")) {
 
 
-                    if (mItem.isPresent()) {
-
+                    //if (mItem.isPresent()) {
+                    if (mItem.getPresent()==1) {
                         holder.img_cam.setBackgroundResource(R.mipmap.camera_orange);
                     } else {
                         //if not present camera disabled
@@ -418,7 +554,8 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 });
 
                 if (mItem.getImage1().equals("")) {
-                    if (mItem.isPresent()) {
+                    //if (mItem.isPresent()) {
+                    if (mItem.getPresent()==1) {
 
                         holder.img_cam1.setVisibility(View.VISIBLE);
                         holder.img_cam1.setBackgroundResource(R.mipmap.camera_orange);
@@ -446,7 +583,8 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 });
 
                 if (mItem.getImage2().equals("")) {
-                    if (mItem.isPresent()) {
+                    //if (mItem.isPresent()) {
+                    if (mItem.getPresent()==1) {
 
                         holder.img_cam2.setVisibility(View.VISIBLE);
                         holder.img_cam2.setBackgroundResource(R.mipmap.camera_orange);
@@ -481,7 +619,8 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     holder.img_cam.setBackgroundResource(R.mipmap.new_no_camera_done_edit);
                 } else {
 
-                    if (mItem.isPresent()) {
+                    //if (mItem.isPresent()) {
+                    if (mItem.getPresent()==1) {
                         holder.img_cam.setBackgroundResource(R.mipmap.new_no_camera_edit);
                     } else {
                         //if not present camera disabled
@@ -490,7 +629,14 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 }
             }
 
-            boolean is_enabled = mItem.isPresent();
+            boolean is_enabled;
+            //if (mItem.isPresent()) {
+            if (mItem.getPresent()==1) {
+                is_enabled = true;
+            }
+            else {
+                is_enabled = false;
+            }
 
             holder.toggle_btn.setChecked(is_enabled);
             holder.img_cam.setEnabled(is_enabled);
@@ -498,19 +644,17 @@ public class T2PComplianceActivity extends AppCompatActivity {
             holder.img_cam2.setEnabled(is_enabled);
             holder.btn_gaps.setEnabled(is_enabled);
 
-            if(is_enabled && mItem.getCategory_fixture().equals("0")){
+            if (is_enabled && mItem.getCategory_fixture().equals("0")) {
                 holder.btn_sku.setEnabled(true);
-            }
-            else{
+            } else {
                 holder.btn_sku.setEnabled(false);
             }
-
 
 
             if (mItem.getGapsChecklist().size() > 0) {
                 holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.green));
             } else {
-                if (mItem.isPresent()) {
+                if (mItem.getPresent()==1) {
                     holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 } else {
                     holder.btn_gaps.setBackgroundColor(getResources().getColor(R.color.grey_background));
@@ -520,12 +664,24 @@ public class T2PComplianceActivity extends AppCompatActivity {
             if (mItem.getSkulist().size() > 0) {
                 holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.green));
             } else {
-                if (mItem.isPresent() && mItem.getCategory_fixture().equals("0")) {
+                if (mItem.getPresent()==1 && mItem.getCategory_fixture().equals("0")) {
                     holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 } else {
                     holder.btn_sku.setBackgroundColor(getResources().getColor(R.color.grey_background));
                 }
             }
+
+           switch (mItem.getPresent()){
+               case -1:
+                   holder.spinner.setSelection(0);
+                   break;
+               case 0:
+                   holder.spinner.setSelection(2);
+                   break;
+               case 1:
+                   holder.spinner.setSelection(1);
+                   break;
+           }
         }
 
         @Override
@@ -542,6 +698,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
             //public ImageView img_remark;
             public final Button btn_gaps, btn_sku, btn_ref_img;
             public final ToggleButton toggle_btn;
+            public final Spinner spinner;
 
             public ViewHolder(View view) {
                 super(view);
@@ -558,6 +715,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 btn_ref_img = (Button) mView.findViewById(R.id.btn_ref_image);
                 parentLayout = (LinearLayout) mView.findViewById(R.id.parent_layout);
                 toggle_btn = (ToggleButton) mView.findViewById(R.id.toggle_btn);
+                spinner = (Spinner) mView.findViewById(R.id.spinner);
             }
         }
     }
@@ -814,7 +972,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
             cdate = arabicToenglish(cdate);
-        }else if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
+        } else if (preferences.getString(CommonString.KEY_LANGUAGE, "").equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
             cdate = arabicToenglish(cdate);
         }
 
@@ -949,7 +1107,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         for (int i = 0; i < t2PGetterSetters.size(); i++) {
 
-            if (t2PGetterSetters.get(i).isPresent()) {
+            if (t2PGetterSetters.get(i).getPresent()==1) {
                 //if (camera_allow.equals("1") && t2PGetterSetters.get(i).getImage().equals("")) {
                 if (t2PGetterSetters.get(i).getGapsChecklist().size() == 0) {
                     flag = false;
@@ -965,12 +1123,17 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     flag = false;
                     error_msg = getResources().getString(R.string.title_activity_fill_brand);
                     break;
-                }else if (t2PGetterSetters.get(i).getCategory_fixture().equals("0") && t2PGetterSetters.get(i).getSkulist().size() == 0) {
+                } else if (t2PGetterSetters.get(i).getCategory_fixture().equals("0") && t2PGetterSetters.get(i).getSkulist().size() == 0) {
                     flag = false;
                     error_msg = getResources().getString(R.string.title_activity_fill_sku);
                     break;
                 }
 
+            }
+            else if(t2PGetterSetters.get(i).getPresent()==-1){
+                flag = false;
+                error_msg = getResources().getString(R.string.msg_select_present);
+                break;
             }
 
         }
@@ -1125,6 +1288,68 @@ public class T2PComplianceActivity extends AppCompatActivity {
         }
     }
 
+    public class CustomSpinnerAdapter extends ArrayAdapter<String> {
+
+        SelectGetterSetter tempValues = null;
+        LayoutInflater inflater;
+        private Activity activity;
+        private ArrayList data;
+
+        /*************
+         * CustomAdapter Constructor
+         *****************/
+        public CustomSpinnerAdapter(
+                T2PComplianceActivity activitySpinner,
+                int textViewResourceId,
+                ArrayList objects
+
+        ) {
+            super(activitySpinner, textViewResourceId, objects);
+
+            /********** Take passed values **********/
+            activity = activitySpinner;
+            data = objects;
+            /***********  Layout inflator to call external xml layout () **********************/
+            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        // This funtion called for each row ( Called data.size() times )
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+
+            /********** Inflate spinner_rows.xml file for each row ( Defined below ) ************/
+            View row = inflater.inflate(R.layout.custom_spinner_item, parent, false);
+
+            /***** Get each Model object from Arraylist ********/
+            tempValues = null;
+            tempValues = (SelectGetterSetter) data.get(position);
+
+            TextView label = (TextView) row.findViewById(R.id.tv_text);
+
+            if (position == 0) {
+
+                // Default selected Spinner item
+                label.setText(getString(R.string.select));
+                //sub.setText("");
+            } else {
+                // Set values for spinner each row
+                label.setText(tempValues.getAns());
+            }
+
+            return row;
+        }
+    }
+
     public class CustomSkuAdapter extends ArrayAdapter<String> {
 
         SkuGetterSetter tempValues = null;
@@ -1139,7 +1364,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
                 T2PComplianceActivity activitySpinner,
                 int textViewResourceId,
                 ArrayList objects
-
         ) {
             super(activitySpinner, textViewResourceId, objects);
 
@@ -1262,9 +1486,9 @@ public class T2PComplianceActivity extends AppCompatActivity {
 
         } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
+        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
             lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
+        } else {
             lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
         }
 

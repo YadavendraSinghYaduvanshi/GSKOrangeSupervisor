@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -65,7 +66,7 @@ public class CategoryPicture extends AppCompatActivity {
         setContentView(R.layout.activity_category_picture);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
@@ -595,5 +596,64 @@ public class CategoryPicture extends AppCompatActivity {
         return flag;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
+        if (id == android.R.id.home) {
+
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(CategoryPicture.this);
+            builder.setTitle("Parinaam");
+            builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            finish();
+                            overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            android.app.AlertDialog alert = builder.create();
+            alert.show();
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(CategoryPicture.this);
+        builder.setTitle("Parinaam");
+        builder.setMessage(getResources().getString(R.string.data_will_be_lost)).setCancelable(false)
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        finish();
+                        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+    }
 }

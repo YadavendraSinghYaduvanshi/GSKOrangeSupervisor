@@ -12,6 +12,8 @@ public class T2PGetterSetter {
 
     String brand_id, display_id, brand, display, image, remark, key_id, category_id, ref_image_url, ref_image_path, image1, image2, category_fixture;
     boolean isPresent;
+    int present = -1;
+
 
     ArrayList<GapsChecklistGetterSetter> gapsChecklist = new ArrayList<>();
     ArrayList<SkuGetterSetter> skulist = new ArrayList<>();
@@ -152,5 +154,13 @@ public class T2PGetterSetter {
 
     public void setCategory_fixture(String category_fixture) {
         this.category_fixture = category_fixture;
+    }
+
+    public int getPresent() {
+        return present;
+    }
+
+    public void setPresent(int present) {
+        this.present = present;
     }
 }

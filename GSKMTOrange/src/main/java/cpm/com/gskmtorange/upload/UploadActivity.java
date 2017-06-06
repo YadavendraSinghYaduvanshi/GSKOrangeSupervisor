@@ -740,12 +740,12 @@ public class UploadActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    String present = "";
+                                   /* String present = "";
                                     if (t2PGetterSetters.get(i1).isPresent()) {
                                         present = "1";
                                     } else {
                                         present = "0";
-                                    }
+                                    }*/
 
                                     onXML = "[T2P_DATA]"
                                             + "[MID]" + mid + "[/MID]"
@@ -757,7 +757,7 @@ public class UploadActivity extends AppCompatActivity {
                                             + "[IMAGE]" + t2PGetterSetters.get(i1).getImage() + "[/IMAGE]"
                                             + "[IMAGE1]" + t2PGetterSetters.get(i1).getImage1() + "[/IMAGE1]"
                                             + "[IMAGE2]" + t2PGetterSetters.get(i1).getImage2() + "[/IMAGE2]"
-                                            + "[PRESENT]" + present + "[/PRESENT]"
+                                            + "[PRESENT]" + t2PGetterSetters.get(i1).getPresent() + "[/PRESENT]"
                                             + "[GAPS_DATA]" + gaps_xml + "[/GAPS_DATA]"
                                             + "[SKU_DATA]" + sku_xml + "[/SKU_DATA]"
                                             + "[CATEGORY_FIXTURE]" + t2PGetterSetters.get(i1).getCategory_fixture() + "[/CATEGORY_FIXTURE]"

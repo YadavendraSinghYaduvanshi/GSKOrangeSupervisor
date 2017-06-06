@@ -1,5 +1,6 @@
 package cpm.com.gskmtorange.gsk_dailyentry;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -20,9 +21,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -44,7 +48,9 @@ import java.util.logging.StreamHandler;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.SelectGetterSetter;
 
 public class PromoComplianceActivity extends AppCompatActivity {
     LinearLayout lin_promo_sku, lin_addtional_promo;
@@ -432,11 +438,17 @@ public class PromoComplianceActivity extends AppCompatActivity {
             }
 
             for (int i = 0; i < promoSkuListData.size(); i++) {
+
+                final boolean[] userSelect = {false};
+                final boolean[] userSelect2 = {false};
+
                 view = getLayoutInflater().inflate(R.layout.item_promo_sku_list, null, false);
 
                 final Promo_Compliance_DataGetterSetter data = promoSkuListData.get(i);
 
                 TextView txt_promoSkuName = (TextView) view.findViewById(R.id.txt_promoSkuName);
+                Spinner spinner_inStock = (Spinner) view.findViewById(R.id.spinner_inStock);
+                Spinner spinner_promoAnnouncer = (Spinner) view.findViewById(R.id.spinner_promoAnnouncer);
                 ToggleButton toggle_inStock = (ToggleButton) view.findViewById(R.id.toggle_inStock);
                 ToggleButton toggle_promoAnnouncer = (ToggleButton) view.findViewById(R.id.toggle_promoAnnouncer);
                 ToggleButton toggle_runningPos = (ToggleButton) view.findViewById(R.id.toggle_runningPos);
@@ -444,9 +456,129 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
                 txt_promoSkuName.setText(data.getPromo());
 
+                ArrayList<SelectGetterSetter> ans_list = new ArrayList<>();
+                SelectGetterSetter select = new SelectGetterSetter();
+                select.setAns(getString(R.string.select));
+                select.setAns_id(0);
+                ans_list.clear();
+                ans_list.add(select);
+
+                select = new SelectGetterSetter();
+                select.setAns(getString(R.string.yes));
+                select.setAns_id(1);
+                ans_list.add(select);
+
+                select = new SelectGetterSetter();
+                select.setAns(getString(R.string.no));
+                select.setAns_id(2);
+                ans_list.add(select);
+
+                CustomSpinnerAdapter skuadapter = new CustomSpinnerAdapter(PromoComplianceActivity.this, R.layout.custom_t2p_spinner_item, ans_list);
+                spinner_inStock.setAdapter(skuadapter);
+
+                spinner_inStock.setSelection(0);
+
+                ArrayList<SelectGetterSetter> ans_list2 = new ArrayList<>();
+                SelectGetterSetter select2 = new SelectGetterSetter();
+                select2.setAns(getString(R.string.select));
+                select2.setAns_id(0);
+                ans_list2.clear();
+                ans_list2.add(select2);
+
+                select2 = new SelectGetterSetter();
+                select2.setAns(getString(R.string.yes));
+                select2.setAns_id(1);
+                ans_list2.add(select2);
+
+                select2 = new SelectGetterSetter();
+                select2.setAns(getString(R.string.no));
+                select2.setAns_id(2);
+                ans_list2.add(select2);
+
+                CustomSpinnerAdapter skuadapter2 = new CustomSpinnerAdapter(PromoComplianceActivity.this, R.layout.custom_t2p_spinner_item, ans_list2);
+                spinner_promoAnnouncer.setAdapter(skuadapter2);
+
+                spinner_promoAnnouncer.setSelection(0);
+
+                spinner_inStock.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        userSelect[0] = true;
+                        return false;
+                    }
+                });
+
                 //In Stock
                 final int finalI = i;
-                toggle_inStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                spinner_inStock.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                        if(userSelect[0]){
+                            userSelect[0] = false;
+
+                            switch (position) {
+
+                                case 0:
+                                    data.setIn_stock("-1");
+                                    img_promotion.setClickable(false);
+                                    img_promotion.setBackgroundResource(R.mipmap.camera_grey);
+
+                                    //Camera
+                                    if (!data.getImage_promotion().equals("")) {
+                                        new File(str + data.getImage_promotion()).delete();
+                                        data.setImage_promotion("");
+                                    }
+
+
+                                    break;
+                                case 1:
+                                    img_promotion.setBackgroundResource(R.mipmap.camera_orange);
+
+                                    if (camera_allow.equals("1")) {
+                                        img_promotion.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                _pathforcheck = "Promo_Image_" + store_id + categoryId + "_" + data.getSku_id() +
+                                                        data.getPromo_id() + visit_date.replace("/", "") + "_" +
+                                                        getCurrentTime().replace(":", "") + ".jpg";
+                                                //child_position = position;
+                                                child_position = finalI;
+                                                path = str + _pathforcheck;
+
+                                                startCameraActivity(1);
+                                            }
+                                        });
+                                    }
+                                    break;
+                                case 2:
+
+                                    data.setIn_stock("0");
+                                    img_promotion.setClickable(false);
+                                    img_promotion.setBackgroundResource(R.mipmap.camera_grey);
+
+                                    //Camera
+                                    if (!data.getImage_promotion().equals("")) {
+                                        new File(str + data.getImage_promotion()).delete();
+                                        data.setImage_promotion("");
+                                    }
+
+                                        break;
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
+
+               /* toggle_inStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
@@ -472,18 +604,79 @@ public class PromoComplianceActivity extends AppCompatActivity {
                             data.setIn_stock("0");
                             img_promotion.setClickable(false);
                             img_promotion.setBackgroundResource(R.mipmap.camera_grey);
-                            data.setImage_promotion("");
+
+                            //Camera
+                            if (!data.getImage_promotion().equals("")) {
+                                new File(str + data.getImage_promotion()).delete();
+                                data.setImage_promotion("");
+                            }
                         }
                     }
-                });
+                });*/
 
-                if (data.getIn_stock().equals("1")) {
+             /*   if (data.getIn_stock().equals("1")) {
                     toggle_inStock.setChecked(true);
                 } else {
                     toggle_inStock.setChecked(false);
+                }*/
+
+                switch (data.getIn_stock()){
+                    case "-1":
+                        spinner_inStock.setSelection(0);
+                        break;
+                    case "0":
+                        spinner_inStock.setSelection(2);
+                        break;
+                    case "1":
+                        spinner_inStock.setSelection(1);
+                        break;
                 }
 
-                //Promo Announcer
+
+                spinner_promoAnnouncer.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        userSelect2[0] = true;
+                        return false;
+                    }
+                });
+
+
+                spinner_promoAnnouncer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                        if(userSelect2[0]){
+                            userSelect2[0] = false;
+
+                            switch (position) {
+
+                                case 0:
+                                    data.setPromo_announcer("-1");
+
+                                    break;
+                                case 1:
+                                    data.setPromo_announcer("1");
+                                    break;
+                                case 2:
+
+                                    data.setPromo_announcer("0");
+
+                                    break;
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
+
+              /*  //Promo Announcer
                 toggle_promoAnnouncer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -499,10 +692,10 @@ public class PromoComplianceActivity extends AppCompatActivity {
                     toggle_promoAnnouncer.setChecked(true);
                 } else {
                     toggle_promoAnnouncer.setChecked(false);
-                }
+                }*/
 
                 //Running on POS
-                toggle_runningPos.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+              /*  toggle_runningPos.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
@@ -517,6 +710,18 @@ public class PromoComplianceActivity extends AppCompatActivity {
                     toggle_runningPos.setChecked(true);
                 } else {
                     toggle_runningPos.setChecked(false);
+                }*/
+
+                switch (data.getPromo_announcer()){
+                    case "-1":
+                        spinner_promoAnnouncer.setSelection(0);
+                        break;
+                    case "0":
+                        spinner_promoAnnouncer.setSelection(2);
+                        break;
+                    case "1":
+                        spinner_promoAnnouncer.setSelection(1);
+                        break;
                 }
 
 
@@ -786,5 +991,67 @@ public class PromoComplianceActivity extends AppCompatActivity {
         }
 
         return cdate;
+    }
+
+    public class CustomSpinnerAdapter extends ArrayAdapter<String> {
+
+        SelectGetterSetter tempValues = null;
+        LayoutInflater inflater;
+        private Activity activity;
+        private ArrayList data;
+
+        /*************
+         * CustomAdapter Constructor
+         *****************/
+        public CustomSpinnerAdapter(
+                PromoComplianceActivity activitySpinner,
+                int textViewResourceId,
+                ArrayList objects
+
+        ) {
+            super(activitySpinner, textViewResourceId, objects);
+
+            /********** Take passed values **********/
+            activity = activitySpinner;
+            data = objects;
+            /***********  Layout inflator to call external xml layout () **********************/
+            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        // This funtion called for each row ( Called data.size() times )
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+
+            /********** Inflate spinner_rows.xml file for each row ( Defined below ) ************/
+            View row = inflater.inflate(R.layout.custom_spinner_item, parent, false);
+
+            /***** Get each Model object from Arraylist ********/
+            tempValues = null;
+            tempValues = (SelectGetterSetter) data.get(position);
+
+            TextView label = (TextView) row.findViewById(R.id.tv_text);
+
+            if (position == 0) {
+
+                // Default selected Spinner item
+                label.setText(getString(R.string.select));
+                //sub.setText("");
+            } else {
+                // Set values for spinner each row
+                label.setText(tempValues.getAns());
+            }
+
+            return row;
+        }
     }
 }
