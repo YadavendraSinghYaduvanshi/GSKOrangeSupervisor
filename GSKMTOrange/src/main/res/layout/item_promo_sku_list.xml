@@ -115,7 +115,17 @@
                         android:gravity="center_horizontal"
                         android:orientation="vertical">
 
+                        <Spinner
+                            android:id="@+id/spinner_inStock"
+                            android:background="@drawable/spinner_bg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            />
+
+
                         <ToggleButton
+                            android:visibility="gone"
                             android:id="@+id/toggle_inStock"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -154,7 +164,16 @@
                         android:gravity="center_horizontal"
                         android:orientation="vertical">
 
+                        <Spinner
+                            android:id="@+id/spinner_promoAnnouncer"
+                            android:background="@drawable/spinner_bg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            />
+
                         <ToggleButton
+                            android:visibility="gone"
                             android:id="@+id/toggle_promoAnnouncer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

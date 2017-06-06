@@ -309,5 +309,7 @@
 
     <string name="select_date">Select Date</string>
     <string name="no_route_plan_for_day">No Route Plan for the day</string>
+    <string name="msg_select_present">Please select present </string>
+
 
 </resources>

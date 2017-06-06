@@ -77,7 +77,7 @@
                     android:text="@string/present"
                     android:textStyle="bold" />
 
-                <RelativeLayout
+              <!--  <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
@@ -90,7 +90,32 @@
                         android:background="@drawable/toggle_selector_background"
                         android:textOff="@string/no"
                         android:textOn="@string/yes" />
+                </RelativeLayout>-->
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:background="@drawable/spinner_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        />
+
+
+                    <ToggleButton
+                        android:visibility="gone"
+                        android:id="@+id/toggle_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        />
+
                 </RelativeLayout>
+
             </LinearLayout>
 
             <LinearLayout

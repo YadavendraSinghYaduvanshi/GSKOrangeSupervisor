@@ -1581,8 +1581,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     cd.setSku(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU")));
                     cd.setPromo_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO_ID")));
                     cd.setPromo(dbcursor.getString(dbcursor.getColumnIndexOrThrow("PROMO")));
-                    cd.setIn_stock("0");
-                    cd.setPromo_announcer("0");
+                    cd.setIn_stock("-1");
+                    cd.setPromo_announcer("-1");
                     cd.setRunning_pos("0");
                     cd.setImage_promotion("");
 
@@ -2651,7 +2651,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                 values.put(CommonString.KEY_IMAGE1, data.get(i).getImage1());
                 values.put(CommonString.KEY_IMAGE2, data.get(i).getImage2());
                 values.put(CommonString.KEY_REMARK, data.get(i).getRemark());
-                values.put(CommonString.KEY_PRESENT, data.get(i).isPresent());
+                values.put(CommonString.KEY_PRESENT, data.get(i).getPresent());
                 values.put(CommonString.KEY_CATEGORY_FIXTURE, data.get(i).getCategory_fixture());
 
                 l = db.insert(CommonString.TABLE_INSERT_T2P_COMPLIANCE, null, values);
@@ -2972,7 +2972,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
                     tp.setImage2(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_IMAGE2)));
                     tp.setRemark(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_REMARK)));
                     tp.setCategory_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
-                    tp.setPresent((dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PRESENT)).equalsIgnoreCase("1")));
+                    tp.setPresent(Integer.parseInt(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_PRESENT))));
                     tp.setCategory_fixture(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CATEGORY_FIXTURE)));
 
                     list.add(tp);
