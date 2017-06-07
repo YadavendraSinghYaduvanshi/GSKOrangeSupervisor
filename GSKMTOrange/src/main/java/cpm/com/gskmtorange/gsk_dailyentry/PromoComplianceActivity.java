@@ -56,7 +56,8 @@ public class PromoComplianceActivity extends AppCompatActivity {
     LinearLayout lin_promo_sku, lin_addtional_promo;
     View view_promo_sku, view_additional_promo;
     Spinner sp_promo;
-    ToggleButton toggle_add_InStock, toggle_add_promoAnnouncer, toggle_add_runningPos;
+    Spinner toggle_add_InStock, toggle_add_promoAnnouncer;
+    ToggleButton toggle_add_runningPos;
     Button btn_add;
     ImageView img_addPromotion;
 
@@ -140,8 +141,8 @@ public class PromoComplianceActivity extends AppCompatActivity {
             view_additional_promo = findViewById(R.id.view_additional_promo);
 
             sp_promo = (Spinner) findViewById(R.id.sp_promo);
-            toggle_add_InStock = (ToggleButton) findViewById(R.id.toggle_add_InStock);
-            toggle_add_promoAnnouncer = (ToggleButton) findViewById(R.id.toggle_add_promoAnnouncer);
+            toggle_add_InStock = (Spinner) findViewById(R.id.toggle_add_InStock);
+            toggle_add_promoAnnouncer = (Spinner) findViewById(R.id.toggle_add_promoAnnouncer);
             toggle_add_runningPos = (ToggleButton) findViewById(R.id.toggle_add_runningPos);
             btn_add = (Button) findViewById(R.id.btn_add);
             img_addPromotion = (ImageView) findViewById(R.id.img_addPromotion);
@@ -168,6 +169,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
             prepareList();
             promoSkuListView();
+            adiitionalAnswerList();
 
             additionalPromoListData = new ArrayList<>();
             AdditionalPromoListView();
@@ -179,20 +181,19 @@ public class PromoComplianceActivity extends AppCompatActivity {
             cd.setPromo("");
             cd.setSku_id("");
             cd.setSku("");
-            cd.setIn_stock("0");
-            cd.setPromo_announcer("0");
+            cd.setIn_stock("-1");
+            cd.setPromo_announcer("-1");
             cd.setRunning_pos("0");
             cd.setSp_promo("0");
             cd.setImage_promotion("");
 
             img_addPromotion.setBackgroundResource(R.mipmap.camera_grey);
 
-            toggle_add_InStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            toggle_add_InStock.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (i == 1) {
                         cd.setIn_stock("1");
-
                         img_addPromotion.setBackgroundResource(R.mipmap.camera_orange);
 
                         if (camera_allow.equals("1")) {
@@ -208,35 +209,74 @@ public class PromoComplianceActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    } else {
+                    } else if (i == 2) {
                         cd.setIn_stock("0");
                         img_addPromotion.setClickable(false);
                         img_addPromotion.setBackgroundResource(R.mipmap.camera_grey);
+
+                        if(!cd.getImage_promotion().equalsIgnoreCase(""))
+                        {
+                            if (new File(str + cd.getImage_promotion()).exists()) {
+                                //img = _pathforcheck;
+                                new File(str + cd.getImage_promotion()).delete();
+                                cd.setImage_promotion("");
+                            }
+                        }
+
+
+                    } else {
+                        cd.setIn_stock("-1");
+                        img_addPromotion.setClickable(false);
+                        img_addPromotion.setBackgroundResource(R.mipmap.camera_grey);
+                        if(!cd.getImage_promotion().equalsIgnoreCase(""))
+                        {
+                            if (new File(str + cd.getImage_promotion()).exists()) {
+                                //img = _pathforcheck;
+                                new File(str + cd.getImage_promotion()).delete();
+                                cd.setImage_promotion("");
+                            }
+                        }
                     }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
                 }
             });
 
             if (cd.getIn_stock().equals("1")) {
-                toggle_add_InStock.setChecked(true);
+                toggle_add_InStock.setSelection(1);
+            } else if (cd.getIn_stock().equals("0")) {
+                toggle_add_InStock.setSelection(2);
             } else {
-                toggle_add_InStock.setChecked(false);
+                toggle_add_InStock.setSelection(0);
             }
 
-            toggle_add_promoAnnouncer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            toggle_add_promoAnnouncer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (i == 1) {
                         cd.setPromo_announcer("1");
-                    } else {
+                    } else if (i == 2) {
                         cd.setPromo_announcer("0");
+                    } else {
+                        cd.setPromo_announcer("-1");
                     }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
                 }
             });
 
             if (cd.getPromo_announcer().equals("1")) {
-                toggle_add_promoAnnouncer.setChecked(true);
+                toggle_add_promoAnnouncer.setSelection(1);
+            } else if (cd.getPromo_announcer().equals("0")) {
+                toggle_add_promoAnnouncer.setSelection(2);
             } else {
-                toggle_add_promoAnnouncer.setChecked(false);
+                toggle_add_promoAnnouncer.setSelection(0);
             }
 
             toggle_add_runningPos.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -289,31 +329,43 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 @Override
                 public void onClick(final View v) {
                     if (!cd.getSp_promo().equals("0")) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(PromoComplianceActivity.this);
-                        builder.setMessage(getResources().getString(R.string.want_add))
-                                .setCancelable(false)
-                                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
+                        boolean flag = true;
 
-                                        db.InsertAdditionalPromoData(cd, categoryId);
-                                        AdditionalPromoListView();
+                        if (cd.getIn_stock().equalsIgnoreCase("-1") || cd.getPromo_announcer().equalsIgnoreCase("-1")) {
+                            flag = false;
+                        }
 
-                                        sp_promo.setSelection(0);
-                                        toggle_add_InStock.setChecked(false);
-                                        toggle_add_promoAnnouncer.setChecked(false);
-                                        toggle_add_runningPos.setChecked(false);
+                        if (flag) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PromoComplianceActivity.this);
+                            builder.setMessage(getResources().getString(R.string.want_add))
+                                    .setCancelable(false)
+                                    .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
 
-                                        Snackbar.make(v, getResources().getString(R.string.promo_add), Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                                        //Toast.makeText(getApplicationContext(), "promo is add", Toast.LENGTH_LONG).show();
-                                    }
-                                })
-                                .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
+                                            db.InsertAdditionalPromoData(cd, categoryId);
+                                            AdditionalPromoListView();
+
+                                            sp_promo.setSelection(0);
+                                            toggle_add_InStock.setSelection(0);
+                                            toggle_add_promoAnnouncer.setSelection(0);
+                                            toggle_add_runningPos.setChecked(false);
+                                            img_addPromotion.setBackgroundResource(R.mipmap.camera_grey);
+
+                                            Snackbar.make(v, getResources().getString(R.string.promo_add), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                            //Toast.makeText(getApplicationContext(), "promo is add", Toast.LENGTH_LONG).show();
+                                        }
+                                    })
+                                    .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        } else {
+                            Snackbar.make(v, getResources().getString(R.string.please_select_answer), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        }
+
                     } else {
                         Snackbar.make(v, getResources().getString(R.string.select_promo_value), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
@@ -331,6 +383,16 @@ public class PromoComplianceActivity extends AppCompatActivity {
                         if (additionalPromoListData.size() <= 0) {
                             flag = false;
                             Snackbar.make(view, getResources().getString(R.string.fill_data), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        }
+                    } else {
+                        for (int i = 0; i < promoSkuListData.size(); i++) {
+                            if (promoSkuListData.get(i).getIn_stock().equalsIgnoreCase("-1") || promoSkuListData.get(i).getPromo_announcer().equalsIgnoreCase("-1")) {
+                                flag = false;
+                            }
+                        }
+                        if (!flag) {
+                            Snackbar.make(view, getResources().getString(R.string.please_select_answer), Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
                         }
                     }
 
@@ -475,7 +537,6 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
                 CustomSpinnerAdapter skuadapter = new CustomSpinnerAdapter(PromoComplianceActivity.this, R.layout.custom_t2p_spinner_item, ans_list);
                 spinner_inStock.setAdapter(skuadapter);
-
                 spinner_inStock.setSelection(0);
 
                 ArrayList<SelectGetterSetter> ans_list2 = new ArrayList<>();
@@ -497,7 +558,6 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
                 CustomSpinnerAdapter skuadapter2 = new CustomSpinnerAdapter(PromoComplianceActivity.this, R.layout.custom_t2p_spinner_item, ans_list2);
                 spinner_promoAnnouncer.setAdapter(skuadapter2);
-
                 spinner_promoAnnouncer.setSelection(0);
 
                 spinner_inStock.setOnTouchListener(new View.OnTouchListener() {
@@ -515,7 +575,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
-                        if(userSelect[0]){
+                        if (userSelect[0]) {
                             userSelect[0] = false;
 
                             switch (position) {
@@ -534,8 +594,9 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
                                     break;
                                 case 1:
+                                    data.setIn_stock("1");
+                                    img_promotion.setClickable(true);
                                     img_promotion.setBackgroundResource(R.mipmap.camera_orange);
-
                                     if (camera_allow.equals("1")) {
                                         img_promotion.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -564,7 +625,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                                         data.setImage_promotion("");
                                     }
 
-                                        break;
+                                    break;
                             }
 
                         }
@@ -620,7 +681,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                     toggle_inStock.setChecked(false);
                 }*/
 
-                switch (data.getIn_stock()){
+                switch (data.getIn_stock()) {
                     case "-1":
                         spinner_inStock.setSelection(0);
                         break;
@@ -646,7 +707,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
-                        if(userSelect2[0]){
+                        if (userSelect2[0]) {
                             userSelect2[0] = false;
 
                             switch (position) {
@@ -712,7 +773,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                     toggle_runningPos.setChecked(false);
                 }*/
 
-                switch (data.getPromo_announcer()){
+                switch (data.getPromo_announcer()) {
                     case "-1":
                         spinner_promoAnnouncer.setSelection(0);
                         break;
@@ -752,6 +813,51 @@ public class PromoComplianceActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    void adiitionalAnswerList() {
+
+        ArrayList<SelectGetterSetter> ans_list = new ArrayList<>();
+        SelectGetterSetter select = new SelectGetterSetter();
+        select.setAns(getString(R.string.select));
+        select.setAns_id(0);
+        ans_list.clear();
+        ans_list.add(select);
+
+        select = new SelectGetterSetter();
+        select.setAns(getString(R.string.yes));
+        select.setAns_id(1);
+        ans_list.add(select);
+
+        select = new SelectGetterSetter();
+        select.setAns(getString(R.string.no));
+        select.setAns_id(2);
+        ans_list.add(select);
+
+        CustomSpinnerAdapter skuadapter = new CustomSpinnerAdapter(PromoComplianceActivity.this, R.layout.custom_t2p_spinner_item, ans_list);
+        toggle_add_InStock.setAdapter(skuadapter);
+        toggle_add_InStock.setSelection(0);
+
+        ArrayList<SelectGetterSetter> ans_list2 = new ArrayList<>();
+        SelectGetterSetter select2 = new SelectGetterSetter();
+        select2.setAns(getString(R.string.select));
+        select2.setAns_id(0);
+        ans_list2.clear();
+        ans_list2.add(select2);
+
+        select2 = new SelectGetterSetter();
+        select2.setAns(getString(R.string.yes));
+        select2.setAns_id(1);
+        ans_list2.add(select2);
+
+        select2 = new SelectGetterSetter();
+        select2.setAns(getString(R.string.no));
+        select2.setAns_id(2);
+        ans_list2.add(select2);
+
+        CustomSpinnerAdapter skuadapter2 = new CustomSpinnerAdapter(PromoComplianceActivity.this, R.layout.custom_t2p_spinner_item, ans_list2);
+        toggle_add_promoAnnouncer.setAdapter(skuadapter2);
+        toggle_add_promoAnnouncer.setSelection(0);
     }
 
     private void AdditionalPromoListView() {
@@ -954,6 +1060,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                     if (_pathforcheck != null && !_pathforcheck.equals("")) {
                         if (new File(str + _pathforcheck).exists()) {
                             //img = _pathforcheck;
+                            img_addPromotion.setBackgroundResource(R.mipmap.camera_green);
                             cd.setImage_promotion(_pathforcheck);
                             _pathforcheck = "";
                         }
