@@ -156,13 +156,11 @@
                                     android:gravity="center_horizontal"
                                     android:orientation="vertical">
 
-                                    <ToggleButton
+                                    <Spinner
                                         android:id="@+id/toggle_add_InStock"
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="fill_parent"
                                         android:layout_height="wrap_content"
-                                        android:background="@drawable/toggle_selector_background"
-                                        android:textOff="@string/no"
-                                        android:textOn="@string/yes" />
+                                        />
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -195,13 +193,11 @@
                                     android:gravity="center_horizontal"
                                     android:orientation="vertical">
 
-                                    <ToggleButton
+                                    <Spinner
                                         android:id="@+id/toggle_add_promoAnnouncer"
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:background="@drawable/toggle_selector_background"
-                                        android:textOff="@string/no"
-                                        android:textOn="@string/yes" />
+                                        />
                                 </LinearLayout>
                             </LinearLayout>
 
