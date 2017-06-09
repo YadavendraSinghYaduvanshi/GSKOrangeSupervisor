@@ -133,12 +133,11 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="vertical"
-                                android:weightSum="5">
+                                >
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="2"
+                                    android:layout_height="wrap_content"
                                     android:orientation="vertical">
 
                                     <TextView
@@ -151,16 +150,14 @@
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="3"
+                                    android:layout_height="wrap_content"
                                     android:gravity="center_horizontal"
                                     android:orientation="vertical">
 
                                     <Spinner
                                         android:id="@+id/toggle_add_InStock"
                                         android:layout_width="fill_parent"
-                                        android:layout_height="wrap_content"
-                                        />
+                                        android:layout_height="match_parent" />
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -169,13 +166,11 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:orientation="vertical"
-                                android:weightSum="5">
+                                android:orientation="vertical">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="2"
+                                    android:layout_height="wrap_content"
                                     android:orientation="vertical">
 
                                     <TextView
@@ -188,16 +183,14 @@
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="3"
+                                    android:layout_height="wrap_content"
                                     android:gravity="center_horizontal"
                                     android:orientation="vertical">
 
                                     <Spinner
                                         android:id="@+id/toggle_add_promoAnnouncer"
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        />
+                                        android:layout_height="wrap_content" />
                                 </LinearLayout>
                             </LinearLayout>
 
