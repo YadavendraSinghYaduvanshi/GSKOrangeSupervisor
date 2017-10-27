@@ -50,6 +50,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityStockFacingGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.NoCameraDataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
@@ -87,7 +88,7 @@ public class UploadActivity extends AppCompatActivity {
     Object result = "";
     Toolbar toolbar;
     ArrayList<CategoryPictureGetterSetter> adddata = new ArrayList<CategoryPictureGetterSetter>();
-    ArrayList<CategoryPictureGetterSetter> listdat = new ArrayList<CategoryPictureGetterSetter>();
+    ArrayList<CategoryPictureGetterSetter> listdat = new ArrayList<>();
     ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> stockFacingPlanogramDataList;
 
     ArrayList<Store_wise_camera_DataGetterSetter> storeWiseCameraDataGetterSetters;
@@ -934,6 +935,50 @@ public class UploadActivity extends AppCompatActivity {
                                 /*if (!result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
                                     return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
                                 }*/
+                            }
+                            else{
+
+                                ArrayList<NoCameraDataGetterSetter> nocamera_data_list = db.getNoCameraCategoryStoreWiseDataInserted(coverageList.get(i).getStoreId());
+
+                                if(nocamera_data_list.size()>0){
+
+                                    String onXml_nodata="", No_camera_data="";
+                                    for(int n=0; n<nocamera_data_list.size(); n++){
+
+                                        onXml_nodata = "[NO_CAMERA_POG_DATA]"
+                                                + "[MID]" + mid + "[/MID]"
+                                                + "[USER_ID]" + userId + "[/USER_ID]"
+                                                + "[CATEGORY_ID]" + nocamera_data_list.get(n).getCATEGORY_ID() + "[/CATEGORY_ID]"
+                                                + "[SUB_CATEGORY_ID]" + nocamera_data_list.get(n).getSUB_CATEGORY_ID() + "[/SUB_CATEGORY_ID]"
+                                                + "[SKU_GROUP_ID]" + nocamera_data_list.get(n).getSKUGROUP_ID() + "[/SKU_GROUP_ID]"
+                                                + "[ROW_NO]" + nocamera_data_list.get(n).getRow_no() + "[/ROW_NO]"
+                                                + "[COLUMN_NO]" + nocamera_data_list.get(n).getColumn_no() + "[/COLUMN_NO]"
+                                                + "[FACING]" + nocamera_data_list.get(n).getFacing() + "[/FACING]"
+                                                + "[/NO_CAMERA_POG_DATA]";
+
+                                        No_camera_data = No_camera_data + onXml_nodata;
+                                    }
+
+                                    final String sos_xml = "[DATA]" + No_camera_data + "[/DATA]";
+
+                                    request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                                    request.addProperty("XMLDATA", sos_xml);
+                                    request.addProperty("KEYS", "NO_CAMERA_POG");
+                                    request.addProperty("USERNAME", userId);
+                                    request.addProperty("MID", mid);
+
+                                    envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                                    envelope.dotNet = true;
+                                    envelope.setOutputSoapObject(request);
+
+                                    androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                                    androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                                    result = envelope.getResponse();
+                                }
+
+
+
                             }
                             data.value = 60;
                             data.name = getString(R.string.additional_data_uploading);

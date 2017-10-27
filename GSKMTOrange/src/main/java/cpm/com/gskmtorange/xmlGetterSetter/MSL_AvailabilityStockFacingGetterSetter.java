@@ -1,10 +1,12 @@
 package cpm.com.gskmtorange.xmlGetterSetter;
 
+import java.io.Serializable;
+
 /**
  * Created by gagang on 23-12-2016.
  */
 
-public class MSL_AvailabilityStockFacingGetterSetter {
+public class MSL_AvailabilityStockFacingGetterSetter implements Serializable{
     String sub_category_id, sub_category, brand_id, brand,
             sku_id, sku, mrp, sku_sequence, toggleValue, mbq, category_id, facing, stock,company_id,must_have;
 

@@ -31,6 +31,7 @@ import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.AdditionalVisibility;
 import cpm.com.gskmtorange.dailyentry.CategoryPicture;
+import cpm.com.gskmtorange.dailyentry.CreateSelfActivity;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.DailyDataMenuGetterSetter;
 
@@ -194,14 +195,24 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_category_picture));
             //category_camera_list = db.getCategoryPicturedata(categoryId, keyAccount_id, storeType_id, class_id);
             if (camera_allow.equalsIgnoreCase("1")) {
-           //if (category_camera_list.size()>0) {
+                //if (category_camera_list.size()>0) {
                 if (db.isCategoryPictureData(store_id, categoryId)) {
                     data.setCategory_img(R.mipmap.picturecatogory_done);
                 } else {
                     data.setCategory_img(R.mipmap.picturecatogory);
-                }
-            } else {
+                    //   }
+                } /*else {
                 data.setCategory_img(R.mipmap.picturecatogory_grey);
+            }*/
+
+            }
+            else {
+                if (db.getNoCameraCategoryDataInserted(store_id, categoryId, null).size()>0) {
+                    data.setCategory_img(R.mipmap.picturecatogory_done);
+                } else {
+                    data.setCategory_img(R.mipmap.picturecatogory);
+                    //   }
+                }
             }
             categoryList.add(data);
 
@@ -308,9 +319,9 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_category_picture)))) {
                 if (camera_allow.equalsIgnoreCase("1")) {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                } else {
+                } /*else {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
-                }
+                }*/
             }else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_msl_availability))) {
                 if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -371,8 +382,13 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                             intent.putExtra("categoryId", categoryId);
                             startActivity(intent);
                             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-                        } /*else {
-                        }*/
+                        } else {
+                            Intent intent = new Intent(DailyDataMenuActivity.this, CreateSelfActivity.class);
+                            intent.putExtra("categoryName", dailyData.getCategory_name());
+                            intent.putExtra("categoryId", categoryId);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                        }
 
                     } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_msl_availability))) {
                         if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {

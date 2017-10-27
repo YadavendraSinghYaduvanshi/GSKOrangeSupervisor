@@ -26,6 +26,7 @@ public class TableBean {
     public static String MAPPING_SOS_TARGET;
     public static String SHELF_MASTER;
     public static String MAPPING_SUB_CATEGORY_IMAGE_ALLOW;
+    public static String SKUGROUP_MASTER;
 
 
     public static String getAdditionalDisplay() {
@@ -187,5 +188,13 @@ public class TableBean {
 
     public static void setMappingSubCategoryImageAllow(String mappingSubCategoryImageAllow) {
         MAPPING_SUB_CATEGORY_IMAGE_ALLOW = mappingSubCategoryImageAllow;
+    }
+
+    public static String getSkugroupMaster() {
+        return SKUGROUP_MASTER;
+    }
+
+    public static void setSkugroupMaster(String skugroupMaster) {
+        SKUGROUP_MASTER = skugroupMaster;
     }
 }

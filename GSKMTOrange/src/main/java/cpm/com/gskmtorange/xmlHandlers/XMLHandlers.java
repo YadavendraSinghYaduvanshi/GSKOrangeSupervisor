@@ -24,6 +24,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSet
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.ShelfMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.SkuGroupMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 
@@ -855,4 +856,41 @@ public class XMLHandlers {
         return st;
     }
 
+    //SKUGROUP_MASTER
+    public static SkuGroupMasterGetterSetter skuGroupMasterXMLHandler(XmlPullParser xpp, int eventType) {
+        SkuGroupMasterGetterSetter st = new SkuGroupMasterGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+
+                    if (xpp.getName().equals("META_DATA")) {
+                        st.setTable_SKUGROUP_MASTER(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SKUGROUP_ID")) {
+                        st.setSKUGROUP_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SKUGROUP_NAME")) {
+                        st.setSKUGROUP_NAME(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CATEGORY_ID")) {
+                        st.setCATEGORY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SUB_CATEGORY_ID")) {
+                        st.setSUB_CATEGORY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("SKUGROUP_SEQUENCE")) {
+                        st.setSKUGROUP_SEQUENCE(xpp.nextText());
+                    }
+
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return st;
+    }
 }

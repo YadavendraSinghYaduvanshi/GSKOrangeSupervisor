@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context="cpm.com.gskmtorange.dailyentry.CreateSelfActivity"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -21,7 +22,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_daily_main_menu" />
+    <include layout="@layout/content_create_self" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -29,7 +30,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:visibility="gone"
-        app:srcCompat="@drawable/save_icon" />
+        app:srcCompat="@mipmap/ic_create_white_48dp" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -61,6 +61,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSet
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.ShelfMasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.SkuGroupMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SubCategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
@@ -91,6 +92,7 @@ public class DownloadActivity extends AppCompatActivity {
     MAPPING_PLANOGRAM_MasterGetterSetter mapping_planogram_masterGetterSetter;
     ShelfMasterGetterSetter shelfMasterGetterSetter;
     MappingSubCategoryImageAllowGetterSetter mappingSubCategoryImageAllowGetterSetter;
+    SkuGroupMasterGetterSetter skuGroupMasterGetterSetter;
 
     private Dialog dialog;
     private ProgressBar pb;
@@ -850,6 +852,43 @@ public class DownloadActivity extends AppCompatActivity {
                 publishProgress(data);
 
 
+                //SKUGROUP_MASTER
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "SKUGROUP_MASTER");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = envelope.getResponse();
+
+                if (result.toString() != null) {
+                   xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    skuGroupMasterGetterSetter = XMLHandlers.skuGroupMasterXMLHandler(xpp, eventType);
+
+                    String table_skuGrpMaster = skuGroupMasterGetterSetter.getTable_SKUGROUP_MASTER();
+                    if (table_skuGrpMaster != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setSkugroupMaster(table_skuGrpMaster);
+                    }
+
+                    if (skuGroupMasterGetterSetter.getSUB_CATEGORY_ID().size() > 0) {
+                        data.value = 97;
+                        data.name = "SKUGROUP_MASTER " + getResources().getString(R.string.download_data);
+                    }
+                }
+                publishProgress(data);
+
+
+
+
 
                 //Images DownLoads
 
@@ -990,6 +1029,7 @@ public class DownloadActivity extends AppCompatActivity {
                 db.InsertSHELF_MASTER(shelfMasterGetterSetter);
 
                 db.InsertMappingSubCategoryImageAllow(mappingSubCategoryImageAllowGetterSetter);
+                db.InsertSkuGroupMaster(skuGroupMasterGetterSetter);
 
             } catch (MalformedURLException e) {
 

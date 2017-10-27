@@ -177,7 +177,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         t2PGetterSetters = db.getT2pComplianceData(store_id, categoryId);
 
         if (t2PGetterSetters.size() == 0) {
-            t2PGetterSetters = db.getT2PDefaultData(store_id);
+            t2PGetterSetters = db.getT2PDefaultData(store_id, categoryId);
         } else {
             for (int i = 0; i < t2PGetterSetters.size(); i++) {
 

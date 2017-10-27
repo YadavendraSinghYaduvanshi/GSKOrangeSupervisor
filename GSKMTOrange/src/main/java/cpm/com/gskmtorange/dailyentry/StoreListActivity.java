@@ -444,7 +444,6 @@ public class StoreListActivity extends AppCompatActivity {
                 chkbtn = (Button) itemView.findViewById(R.id.chkout);
                 Cardbtn = (CardView) itemView.findViewById(R.id.card_view);
 
-
             }
         }
 

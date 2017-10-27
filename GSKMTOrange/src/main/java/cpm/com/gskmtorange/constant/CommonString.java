@@ -76,6 +76,7 @@ public class CommonString {
     public static final String KEY_DISPLAY_ID = "DISPLAY_ID";
     public static final String KEY_QUANTITY = "QUANTITY";
     public static final String KEY_SKU_ID = "SKU_ID";
+    public static final String KEY_SKU_GROUP_ID = "SKU_GROUP_ID";
     public static final String KEY_SKUNAME = "SKUNAME";
     public static final String UNIQUE_KEY_ID = "UNIQUE_KEY_ID";
     public static final String KEY_CATEGORY_ID = "CATEGORY_ID";
@@ -104,6 +105,10 @@ public class CommonString {
     public static final String KEY_FAILURE = "Failure";
     public static final String KEY_FALSE = "False";
     public static final String KEY_CHANGED = "Changed";
+
+    public static final String KEY_NUMBER_OF_ROWS = "NUMBER_OF_ROWS";
+    public static final String KEY_SUB_CATEGORY = "SUB_CATEGORY";
+    public static final String KEY_SUB_CATEGORY_ID = "SUB_CATEGORY_ID";
 
     public static final String KEY_NO_DATA = "NODATA";
 
@@ -771,6 +776,8 @@ public class CommonString {
 
     public static final String TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING = "Msl_Availability_Stock_Facing_Data";
 
+    public static final String TABLE_INSERT_NO_CAMERA_FACING_DATA = "NO_CAMERA_FACING_DATA";
+
     public static final String CREATE_TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING = "CREATE TABLE IF NOT EXISTS "
             + TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING
             + "("
@@ -814,4 +821,19 @@ public class CommonString {
             + " VARCHAR"
 
             + ")";
+
+    public static final String KEY_ROW_NO = "ROW_NO";
+    public static final String KEY_COLUMN_NO = "COLUMN_NO";
+    public static final String KEY_FACING = "FACING";
+
+    public static final String CREATE_TABLE_INSERT_NO_CAMERA_FACING_DATA = "CREATE TABLE  IF NOT EXISTS " + TABLE_INSERT_NO_CAMERA_FACING_DATA
+            + " ("
+            + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            + KEY_STORE_ID + " INTEGER, "
+            + KEY_CATEGORY_ID + " INTEGER,"
+            + KEY_SUB_CATEGORY_ID + " INTEGER,"
+            + KEY_SKU_GROUP_ID + " INTEGER,"
+            + KEY_ROW_NO + " INTEGER,"
+            + KEY_COLUMN_NO + " INTEGER,"
+            + KEY_FACING + " INTEGER)";
 }

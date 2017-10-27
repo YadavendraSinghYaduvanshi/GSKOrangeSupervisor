@@ -92,7 +92,6 @@ import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
 public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     String result, errormsg = "";
-    ;
     private ProgressBar pb;
     private GoogleMap mMap;
     double latitude = 0.0;
