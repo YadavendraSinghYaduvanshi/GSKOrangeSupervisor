@@ -10,6 +10,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 public class CommonString {
 
+    public static final String BACKUP_PATH =  Environment.getExternalStorageDirectory().getPath()+ "/gsk_orange_backup";
+   // String path = Environment.getExternalStorageDirectory().getPath()+ "/gsk_orange_backup";
+
     // webservice constants
 
     // preferenec keys
@@ -109,6 +112,7 @@ public class CommonString {
     public static final String KEY_NUMBER_OF_ROWS = "NUMBER_OF_ROWS";
     public static final String KEY_SUB_CATEGORY = "SUB_CATEGORY";
     public static final String KEY_SUB_CATEGORY_ID = "SUB_CATEGORY_ID";
+    public static final String KEY_FROM = "FROM";
 
     public static final String KEY_NO_DATA = "NODATA";
 
@@ -216,6 +220,7 @@ public class CommonString {
 
     //File Path
     public static final String FILE_PATH = Environment.getExternalStorageDirectory() + "/GSK_MT_ORANGE_IMAGES/";
+    public static final String FILE_PATH_PDF = Environment.getExternalStorageDirectory() + "/GSK_MT_ORANGE_Planogram/";
 
 
     //Table
@@ -770,7 +775,9 @@ public class CommonString {
 
     public static final String KEY_LANGUAGE_OMAN = "English";
     public static final String KEY_RETURE_LANGUAGE_OMAN = "EN";
+    public static final String KEY_RETURN_LANGUAGE_EGYPT = "AR";
     public static final String KEY_LANGUAGE_ARABIC_UAE = "ARABIC-UAE";
+    public static final String KEY_LANGUAGE_ARABIC_EGYPT = "ARABIC-EGYPT";
 
     public static final String KEY_RETURE_LANGUAGE_UAE_ARABIC = "AR";
 

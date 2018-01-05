@@ -27,12 +27,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     List<NoCameraDataGetterSetter> data = Collections.emptyList();
     private Listener listener;
+    RecyclerView rec;
 
-    public MyAdapter(Context context, List<NoCameraDataGetterSetter> data, Listener listener) {
+    public MyAdapter(Context context, List<NoCameraDataGetterSetter> data, Listener listener, RecyclerView rec) {
 
         inflator = LayoutInflater.from(context);
         this.data = data;
         this.listener = listener;
+        this.rec = rec;
 
     }
 
@@ -46,7 +48,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
 
         final NoCameraDataGetterSetter current = data.get(position);
 
@@ -59,6 +61,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         //holder.linear_parent.getLayoutParams().width = 100;
         //holder.linear_parent.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         holder.linear_parent.setOnDragListener(new DragListener(listener));
+
+        holder.linear_parent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                listener.deleteItem(view, position, rec);
+                return false;
+            }
+
+        });
 
     }
 

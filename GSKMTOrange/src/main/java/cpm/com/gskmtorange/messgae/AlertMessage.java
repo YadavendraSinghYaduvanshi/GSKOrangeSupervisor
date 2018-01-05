@@ -20,6 +20,10 @@ public class AlertMessage {
 
     public static final String MESSAGE_DATA_NOT = "Data Not Uploaded , ";
 
+    public static final String MESSAGE_SOCKETEXCEPTION = "Network Communication Failure. Check Your Network Connection";
+
+
+
     private Exception exception;
     String value;
     private String data, condition,exceptionString;

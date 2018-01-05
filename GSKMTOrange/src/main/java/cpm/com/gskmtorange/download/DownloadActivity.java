@@ -43,6 +43,7 @@ import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.ADDITIONAL_DISPLAY_MASTERGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
@@ -54,7 +55,9 @@ import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingCategoryImageAllowGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingPlanogramCountrywiseGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSetter;
@@ -90,8 +93,10 @@ public class DownloadActivity extends AppCompatActivity {
     ADDITIONAL_DISPLAY_MASTERGetterSetter additional_display_getter_setter;
     MAPPING_SOS_TARGET_MasterGetterSetter mapping_sos_target_masterGetterSetter;
     MAPPING_PLANOGRAM_MasterGetterSetter mapping_planogram_masterGetterSetter;
+    MappingPlanogramCountrywiseGetterSetter mappingPlanogramCountrywiseGetterSetter;
     ShelfMasterGetterSetter shelfMasterGetterSetter;
     MappingSubCategoryImageAllowGetterSetter mappingSubCategoryImageAllowGetterSetter;
+    MappingCategoryImageAllowGetterSetter mappingCategoryImageAllowGetterSetter;
     SkuGroupMasterGetterSetter skuGroupMasterGetterSetter;
 
     private Dialog dialog;
@@ -114,7 +119,7 @@ public class DownloadActivity extends AppCompatActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
         culture_id = preferences.getString(CommonString.KEY_CULTURE_ID, "");
@@ -887,8 +892,74 @@ public class DownloadActivity extends AppCompatActivity {
                 publishProgress(data);
 
 
+                //MAPPING_CATEGORY_IMAGE_ALLOW
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_CATEGORY_IMAGE_ALLOW");
+                request.addProperty("cultureid", culture_id);
 
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
 
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = envelope.getResponse();
+
+                if (result.toString() != null) {
+                  xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mappingCategoryImageAllowGetterSetter = XMLHandlers.mappingCategoryImageAllowXMLHandler(xpp, eventType);
+
+                    String table_category_img_allow = mappingCategoryImageAllowGetterSetter.getTable_MAPPING_CATEGORY_IMAGE_ALLOW();
+                    if (table_category_img_allow != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setMappingCategoryImageAllow(table_category_img_allow);
+                    }
+
+                    if (mappingCategoryImageAllowGetterSetter.getCATEGORY_ID().size() > 0) {
+                        data.value = 97;
+                        data.name = "MAPPING_CATEGORY_IMAGE_ALLOW " + getResources().getString(R.string.download_data);
+                    }
+                }
+                publishProgress(data);
+
+              /*  //MAPPING_COUNTRYWISE_PLANOGRAM
+                request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_NAME_UNIVERSAL_DOWNLOAD);
+                request.addProperty("UserName", userId);
+                request.addProperty("Type", "MAPPING_COUNTRYWISE_PLANOGRAM");
+                request.addProperty("cultureid", culture_id);
+
+                envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                androidHttpTransport.call(CommonString.SOAP_ACTION_UNIVERSAL, envelope);
+
+                result = envelope.getResponse();
+
+                if (result.toString() != null) {
+                    xpp.setInput(new StringReader(result.toString()));
+                    xpp.next();
+                    eventType = xpp.getEventType();
+                    mappingPlanogramCountrywiseGetterSetter = XMLHandlers.MAPPING_COUNTRYWISE_PLANOGRAM_XMLHandler(xpp, eventType);
+
+                    String table_mapping_planogram = mappingPlanogramCountrywiseGetterSetter.getTable_MAPPING_COUNTRYWISE_PLANOGRAM();
+                    if (table_mapping_planogram != null) {
+                        resultHttp = CommonString.KEY_SUCCESS;
+                        TableBean.setMappingCountrywisePlanogram(table_mapping_planogram);
+                    }
+                    if (mappingPlanogramCountrywiseGetterSetter.getCOUNTRY_ID().size() > 0) {
+                        data.value = 92;
+                        data.name = "MAPPING_COUNTRYWISE_PLANOGRAM Data Download";
+                    } else {
+                        //return "MAPPING_COUNTRYWISE_PLANOGRAM";
+                    }
+                }
+                publishProgress(data);*/
 
                 //Images DownLoads
 
@@ -897,8 +968,9 @@ public class DownloadActivity extends AppCompatActivity {
 
                     for (int i = 0; i < mapping_planogram_masterGetterSetter.getIMAGE_PATH().size(); i++) {
                         //publishing image download
-                        data.value = data.value + 1;
+
                         if (data.value < 100) {
+                            data.value = data.value + 1;
                             publishProgress(data);
                         }
 
@@ -955,8 +1027,9 @@ public class DownloadActivity extends AppCompatActivity {
 
                     for (int i = 0; i < displayMasterGetterSetter.getIMAGE_URL().size(); i++) {
                         //publishing image download
-                        data.value = data.value + 1;
+
                         if (data.value < 100) {
+                            data.value = data.value + 1;
                             publishProgress(data);
                         }
 
@@ -1006,6 +1079,120 @@ public class DownloadActivity extends AppCompatActivity {
                     }
                 }
 
+                //MAPPING_PLANOGRAM Image save into folder
+                if (mapping_planogram_masterGetterSetter != null) {
+
+                    for (int i = 0; i < mapping_planogram_masterGetterSetter.getIMAGE_PATH().size(); i++) {
+                        //publishing image download
+
+                        if (data.value < 100) {
+                            data.value = data.value + 1;
+                            publishProgress(data);
+                        }
+
+                        String image_name = mapping_planogram_masterGetterSetter.getPLANOGRAM_IMAGE().get(i);
+                        String path = mapping_planogram_masterGetterSetter.getIMAGE_PATH().get(i);
+
+                        if (!image_name.equalsIgnoreCase("NA") && !image_name.equalsIgnoreCase("")) {
+                            URL url = new URL(path + "/" + image_name);
+                            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                            c.setRequestMethod("GET");
+                            c.getResponseCode();
+                            c.connect();
+
+                            if (c.getResponseCode() == 200) {
+                                int length = c.getContentLength();
+
+                                String size = new DecimalFormat("##.##").format((double) length / 1024) + " KB";
+
+                                //String PATH = Environment.getExternalStorageDirectory() + "/Download/GT_GSK_Images/";
+                                String PATH = CommonString.FILE_PATH;
+                                File file = new File(PATH);
+                                if (!file.isDirectory()) {
+                                    file.mkdir();
+                                }
+
+                                //  Environment.getExternalStorageDirectory() + "/GT_GSK_Images/" + _pathforcheck1;
+                                if (!new File(PATH + image_name).exists() && !size.equalsIgnoreCase("0 KB")) {
+                                    File outputFile = new File(file, image_name);
+                                    FileOutputStream fos = new FileOutputStream(outputFile);
+                                    InputStream is1 = c.getInputStream();
+
+                                    int bytes = 0;
+                                    byte[] buffer = new byte[1024];
+                                    int len1 = 0;
+
+                                    while ((len1 = is1.read(buffer)) != -1) {
+                                        bytes = (bytes + len1);
+                                        // data.value = (int) ((double) (((double)
+                                        // bytes) / length) * 100);
+                                        fos.write(buffer, 0, len1);
+                                    }
+                                    fos.close();
+                                    is1.close();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //MAPPING_COUNTRYWISE_PLANOGRAM file save into folder
+                /*if (mappingPlanogramCountrywiseGetterSetter != null) {
+
+                    for (int i = 0; i < mappingPlanogramCountrywiseGetterSetter.getFILE_PATH().size(); i++) {
+                        //publishing image download
+
+                        if (data.value < 100) {
+                            data.value = data.value + 1;
+                            publishProgress(data);
+                        }
+
+                        String file_name = mappingPlanogramCountrywiseGetterSetter.getPLANOGRAM_URL().get(i);
+                        String path = mappingPlanogramCountrywiseGetterSetter.getFILE_PATH().get(i);
+
+                        if (!file_name.equalsIgnoreCase("NA") && !file_name.equalsIgnoreCase("")) {
+                            URL url = new URL(path + "/" + file_name);
+                            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                            c.setRequestMethod("GET");
+                            c.getResponseCode();
+                            c.connect();
+
+                            if (c.getResponseCode() == 200) {
+                                int length = c.getContentLength();
+
+                                String size = new DecimalFormat("##.##").format((double) length / 1024) + " KB";
+
+                                //String PATH = Environment.getExternalStorageDirectory() + "/Download/GT_GSK_Images/";
+                                String PATH = CommonString.FILE_PATH_PDF;
+                                File file = new File(PATH);
+                                if (!file.isDirectory()) {
+                                    file.mkdir();
+                                }
+
+                                //  Environment.getExternalStorageDirectory() + "/GT_GSK_Images/" + _pathforcheck1;
+                                if (!new File(PATH + file_name).exists() && !size.equalsIgnoreCase("0 KB")) {
+                                    File outputFile = new File(file, file_name);
+                                    FileOutputStream fos = new FileOutputStream(outputFile);
+                                    InputStream is1 = c.getInputStream();
+
+                                    int bytes = 0;
+                                    byte[] buffer = new byte[1024];
+                                    int len1 = 0;
+
+                                    while ((len1 = is1.read(buffer)) != -1) {
+                                        bytes = (bytes + len1);
+                                        // data.value = (int) ((double) (((double)
+                                        // bytes) / length) * 100);
+                                        fos.write(buffer, 0, len1);
+                                    }
+                                    fos.close();
+                                    is1.close();
+                                }
+                            }
+                        }
+                    }
+                }*/
+
                 db.open();
                 db.InsertJCP(jcpgettersetter);
                 db.InsertCategory(categoryMasterGetterSetter);
@@ -1029,6 +1216,8 @@ public class DownloadActivity extends AppCompatActivity {
                 db.InsertSHELF_MASTER(shelfMasterGetterSetter);
 
                 db.InsertMappingSubCategoryImageAllow(mappingSubCategoryImageAllowGetterSetter);
+                db.InsertMappingCategoryImageAllow(mappingCategoryImageAllowGetterSetter);
+              //  db.InsertMappingCountrywisePlanogram(mappingPlanogramCountrywiseGetterSetter);
                 db.InsertSkuGroupMaster(skuGroupMasterGetterSetter);
 
             } catch (MalformedURLException e) {
@@ -1118,52 +1307,8 @@ public class DownloadActivity extends AppCompatActivity {
         super.onResume();
 
         toolbar.setTitle(getString(R.string.main_menu_activity_name));
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
-
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
 }

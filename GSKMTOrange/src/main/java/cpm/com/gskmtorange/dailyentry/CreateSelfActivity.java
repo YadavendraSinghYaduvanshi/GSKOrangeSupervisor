@@ -50,6 +50,10 @@ public class CreateSelfActivity extends AppCompatActivity {
     MSL_AvailabilityStockFacingGetterSetter brand_selected;
     int number_of_rows=0;
     RecyclerView rec_sub_category;
+    static int FROM_DIALOG = 0;
+    static int FROM_CLICK = 1;
+
+    ArrayList<MSL_AvailabilityStockFacingGetterSetter> added_sub_category_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,15 +101,18 @@ public class CreateSelfActivity extends AppCompatActivity {
 
         db.open();
 
-        ArrayList<String> added_sub_category_list = new ArrayList<>();
+        added_sub_category_list = new ArrayList<>();
 
         ArrayList<MSL_AvailabilityStockFacingGetterSetter> sub_category_list = db.getSubCategoryMaster(categoryId);
 
-        for(int i=0;i<sub_category_list.size();i++){
+        for(int i=0; i<sub_category_list.size(); i++){
 
             if(db.getNoCameraCategoryDataInserted(store_id, categoryId, sub_category_list.get(i).getSub_category_id()).size()>0){
 
-                added_sub_category_list.add(sub_category_list.get(i).getSub_category());
+                MSL_AvailabilityStockFacingGetterSetter subCategory = new MSL_AvailabilityStockFacingGetterSetter();
+                subCategory.setSub_category(sub_category_list.get(i).getSub_category());
+                subCategory.setSub_category_id(sub_category_list.get(i).getSub_category_id());
+                added_sub_category_list.add(subCategory);
             }
         }
 
@@ -116,6 +123,13 @@ public class CreateSelfActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        finish();
+        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
 
     public void showSkuDialog() {
@@ -148,14 +162,33 @@ public class CreateSelfActivity extends AppCompatActivity {
                     Snackbar.make(btn_create,"Please select number of rows",Snackbar.LENGTH_SHORT).show();
                 }
                 else {
-                    Intent in = new Intent(getApplicationContext(), NoCameraActivity.class);
-                    in.putExtra("categoryName", categoryName);
-                    in.putExtra("categoryId", categoryId);
-                    in.putExtra(CommonString.KEY_NUMBER_OF_ROWS, number_of_rows);
-                    in.putExtra(CommonString.KEY_SUB_CATEGORY, brand_selected);
-                    startActivity(in);
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-                    dialog.cancel();
+
+                    boolean sub_category_already_filled = false;
+                    if(added_sub_category_list.size()>0){
+                        for(int k=0;k<added_sub_category_list.size();k++){
+                            if(added_sub_category_list.get(k).getSub_category_id().equals(brand_selected.getSub_category_id())){
+                                sub_category_already_filled = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if(sub_category_already_filled){
+                        Snackbar.make(btn_create,"Sub Category already added",Snackbar.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Intent in = new Intent(getApplicationContext(), NoCameraActivity.class);
+                        in.putExtra("categoryName", categoryName);
+                        in.putExtra("categoryId", categoryId);
+                        in.putExtra(CommonString.KEY_NUMBER_OF_ROWS, number_of_rows);
+                        in.putExtra(CommonString.KEY_SUB_CATEGORY, brand_selected);
+                        in.putExtra(CommonString.KEY_FROM, FROM_DIALOG);
+                        startActivity(in);
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                        dialog.cancel();
+                    }
+
+
                 }
 
             }
@@ -380,6 +413,7 @@ public class CreateSelfActivity extends AppCompatActivity {
             alert.show();*/
 
             finish();
+            overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
         }
 
         //noinspection SimplifiableIfStatement
@@ -394,9 +428,9 @@ public class CreateSelfActivity extends AppCompatActivity {
 
     public class SubcategoryAdapter extends RecyclerView.Adapter<SubcategoryAdapter.ViewHolder> {
 
-        private ArrayList<String> list;
+        private ArrayList<MSL_AvailabilityStockFacingGetterSetter> list;
 
-        public SubcategoryAdapter(ArrayList<String> skuList) {
+        public SubcategoryAdapter(ArrayList<MSL_AvailabilityStockFacingGetterSetter> skuList) {
             list = skuList;
         }
 
@@ -410,7 +444,21 @@ public class CreateSelfActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final SubcategoryAdapter.ViewHolder holder, final int position) {
 
-            holder.tv_sub_category.setText(list.get(position));
+            holder.tv_sub_category.setText(list.get(position).getSub_category());
+
+            holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent in = new Intent(getApplicationContext(), NoCameraActivity.class);
+                    in.putExtra("categoryName", categoryName);
+                    in.putExtra("categoryId", categoryId);
+                    in.putExtra(CommonString.KEY_NUMBER_OF_ROWS, 0);
+                    in.putExtra(CommonString.KEY_SUB_CATEGORY, list.get(position));
+                    in.putExtra(CommonString.KEY_FROM, FROM_CLICK);
+                    startActivity(in);
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                }
+            });
         }
 
         @Override
@@ -420,7 +468,7 @@ public class CreateSelfActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-            //public final LinearLayout parentLayout;
+            public final LinearLayout parentLayout;
             public final TextView tv_sub_category;
 
             public ViewHolder(View view) {
@@ -429,7 +477,7 @@ public class CreateSelfActivity extends AppCompatActivity {
                 mView = view;
 
                 tv_sub_category = (TextView) mView.findViewById(R.id.tv_sub_category);
-                //parentLayout = (LinearLayout) mView.findViewById(R.id.parent_layout);
+                parentLayout = (LinearLayout) mView.findViewById(R.id.linear_parent);
 
             }
 

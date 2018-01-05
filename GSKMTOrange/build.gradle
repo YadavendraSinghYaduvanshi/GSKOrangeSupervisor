@@ -10,6 +10,10 @@ android {
         disable 'MissingTranslation'
     }
 
+    configurations {
+        all*.exclude module: 'okio'
+    }
+
     defaultConfig {
         applicationId "cpm.com.gskmtorange"
         minSdkVersion 17
@@ -17,6 +21,7 @@ android {
 
         versionCode 11
         versionName "2.4"
+        multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -44,5 +49,8 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
+
     testCompile 'junit:junit:4.12'
 }

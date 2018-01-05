@@ -59,6 +59,7 @@ import java.util.Locale;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.BrandAvabilityGetterSetter;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
@@ -116,7 +117,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         //preference data
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
@@ -217,7 +218,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
 
@@ -514,7 +515,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         _pathforcheck = "T2P_Image_" + store_id + categoryId + "_" + mItem.getBrand_id() +
                                 mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
-                                getCurrentTime().replace(":", "") + ".jpg";
+                                CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                         child_position = position;
                         path = str + _pathforcheck;
 
@@ -543,7 +544,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         _pathforcheck1 = "T2P_Image1_" + store_id + categoryId + "_" + mItem.getBrand_id() +
                                 mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
-                                getCurrentTime().replace(":", "") + ".jpg";
+                                CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                         child_position1 = position;
                         path = str + _pathforcheck1;
 
@@ -572,7 +573,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         _pathforcheck2 = "T2P_Image2_" + store_id + categoryId + "_" + mItem.getBrand_id() +
                                 mItem.getDisplay_id() + visit_date.replace("/", "") + "_" +
-                                getCurrentTime().replace(":", "") + ".jpg";
+                                CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                         child_position2 = position;
                         path = str + _pathforcheck2;
 
@@ -961,7 +962,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         return new String(chars);
     }
 
-    public String getCurrentTime() {
+    public String getCurrentTimeNotUsed() {
         Calendar m_cal = Calendar.getInstance();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");
@@ -1455,50 +1456,6 @@ public class T2PComplianceActivity extends AppCompatActivity {
             }
 
         }
-    }
-
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        } else {
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
     }
 
     public void showPlanogram(String planogram_image) {

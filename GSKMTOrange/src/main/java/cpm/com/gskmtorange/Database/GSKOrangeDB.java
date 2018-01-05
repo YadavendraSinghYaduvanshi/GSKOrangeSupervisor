@@ -26,6 +26,7 @@ import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.ADDITIONAL_DISPLAY_MASTERGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.CategoryImagesAllowed;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
@@ -39,13 +40,16 @@ import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityStockFacingGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingCategoryImageAllowGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingPlanogramCountrywiseGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NoCameraDataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.RowColumnGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.ShelfMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
@@ -64,7 +68,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
  */
 
 public class GSKOrangeDB extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "GSK_ORANGE_DB12";
+    public static final String DATABASE_NAME = "GSK_ORANGE_DB14";
     public static final int DATABASE_VERSION = 13;
     TableBean tableBean;
     private SQLiteDatabase db;
@@ -152,6 +156,8 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             db.execSQL(CommonString.CREATE_TABLE_INSERT_CATEGORY_PICTURE);
 
             db.execSQL(TableBean.getMappingSubCategoryImageAllow());
+            db.execSQL(TableBean.getMappingCategoryImageAllow());
+            //db.execSQL(TableBean.getMappingCountrywisePlanogram());
             db.execSQL(TableBean.getSkugroupMaster());
 
             //15-03-2017
@@ -203,6 +209,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE_LIST, "Store_Id='" + storeid + "'", null);
 
         db.delete(CommonString.TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING, "Store_Id='" + storeid + "'", null);
+
+        db.delete(CommonString.TABLE_INSERT_NO_CAMERA_FACING_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+
     }
 
     public void deleteAllTables() {
@@ -234,6 +243,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE, null, null);
         db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE_LIST, null, null);
         db.delete(CommonString.TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING, null, null);
+        db.delete(CommonString.TABLE_INSERT_NO_CAMERA_FACING_DATA, null, null);
     }
 
     public void InsertJCP(JourneyPlanGetterSetter data) {
@@ -3121,11 +3131,12 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> getMappingPlanogramData(String category_id) {
+    public ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> getMappingPlanogramData(String category_id, String store_type_id, String class_id) {
         ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
         try {
-            dbcursor = db.rawQuery("SELECT * FROM MAPPING_PLANOGRAM where CATEGORY_ID='" + category_id + "'", null);
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_PLANOGRAM where CATEGORY_ID='" + category_id + "' AND STORETYPE_ID ='" + store_type_id
+                    +"' AND CLASS_ID ='" + class_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -4235,7 +4246,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
         try {
 
-            dbcursor = db.rawQuery("SELECT  DISTINCT SB.SUB_CATEGORY_ID, MIA.IMAGE_ALLOW,SB.SUB_CATEGORY FROM MAPPING_STOCK M INNER JOIN SKU_MASTER SK ON M.SKU_ID = SK.SKU_ID" +
+            dbcursor = db.rawQuery("SELECT DISTINCT SB.SUB_CATEGORY_ID, MIA.IMAGE_ALLOW,SB.SUB_CATEGORY FROM MAPPING_STOCK M INNER JOIN SKU_MASTER SK ON M.SKU_ID = SK.SKU_ID" +
                     " INNER JOIN BRAND_MASTER BR ON SK.BRAND_ID = BR.BRAND_ID" +
                     " INNER JOIN SUB_CATEGORY_MASTER SB ON BR.SUB_CATEGORY_ID = SB.SUB_CATEGORY_ID" +
                     " INNER JOIN CATEGORY_MASTER CA ON SB.CATEGORY_ID = CA.CATEGORY_ID" +
@@ -4793,6 +4804,27 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
+    //MAPPING_CATEGORY_IMAGE_ALLOW
+    public void InsertMappingCategoryImageAllow(MappingCategoryImageAllowGetterSetter data) {
+        db.delete("MAPPING_CATEGORY_IMAGE_ALLOW", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getCATEGORY_ID().size(); i++) {
+
+                values.put("COUNTRY_ID", data.getCOUNTRY_ID().get(i));
+                values.put("CATEGORY_ID", data.getCATEGORY_ID().get(i));
+                values.put("IMAGE1_ALLOW", data.getIMAGE1_ALLOW().get(i));
+                values.put("IMAGE2_ALLOW", data.getIMAGE2_ALLOW().get(i));
+                values.put("IMAGE3_ALLOW", data.getIMAGE3_ALLOW().get(i));
+                values.put("IMAGE4_ALLOW", data.getIMAGE4_ALLOW().get(i));
+
+                db.insert("MAPPING_CATEGORY_IMAGE_ALLOW", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " in MAPPING_CATEGORY_IMAGE_ALLOW " + ex.toString());
+        }
+    }
 
     //14-03-2017
     //MSL_Availability_StockFacing
@@ -5176,11 +5208,15 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
     public void InsertNoCameraAddedData(
             String storeId, String categoryId, String sub_category_id, int row_count, HashMap<Integer,
             List<NoCameraDataGetterSetter>> hashMapRowData) {
+
+        db.delete(CommonString.TABLE_INSERT_NO_CAMERA_FACING_DATA, " STORE_ID = '" + storeId
+                + "' AND CATEGORY_ID = '" + categoryId + "' AND SUB_CATEGORY_ID = '" + sub_category_id + "'", null);
+
         ContentValues values = new ContentValues();
 
         try {
             db.beginTransaction();
-            for (int i = 1; i < row_count; i++) {
+            for (int i = 1; i <=row_count; i++) {
 
                 for (int j = 0; j < hashMapRowData.get(i).size(); j++) {
                     NoCameraDataGetterSetter data = hashMapRowData.get(i).get(j);
@@ -5309,6 +5345,130 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             }
         } catch (Exception ex) {
             Log.d("Exception ", " in SKUGROUP_MASTER " + ex.toString());
+        }
+    }
+
+    //get Row and column count no camera
+    public ArrayList<RowColumnGetterSetter> getrowColumnNoCamera(String store_id, String category_id, String sub_category_id) {
+
+        ArrayList<RowColumnGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT ROW_NO, MAX(COLUMN_NO) as COLUMN_NO FROM NO_CAMERA_FACING_DATA WHERE " +
+                    "STORE_ID = '" + store_id + "' AND CATEGORY_ID = '" + category_id + "' AND SUB_CATEGORY_ID = '" + sub_category_id +
+                    "' GROUP BY ROW_NO", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    RowColumnGetterSetter rc = new RowColumnGetterSetter();
+
+                    rc.setRow(dbcursor.getInt(dbcursor.getColumnIndexOrThrow("ROW_NO")));
+                    rc.setColumn(dbcursor.getInt(dbcursor.getColumnIndexOrThrow("COLUMN_NO")));
+
+                    list.add(rc);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get row column!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    //get Sub group master for sub category id , row and column
+
+    public NoCameraDataGetterSetter getRowSkuGroupCamera(String store_id, String category_id, String sub_category_id, int row, int column) {
+
+        NoCameraDataGetterSetter column_data = new NoCameraDataGetterSetter();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT NC.SKU_GROUP_ID, SM.SKUGROUP_NAME, NC.FACING FROM NO_CAMERA_FACING_DATA NC " +
+                    "INNER JOIN SKUGROUP_MASTER SM ON NC.SKU_GROUP_ID = SM.SKUGROUP_ID " +
+                    "WHERE NC.STORE_ID = '"+store_id +"' AND NC.CATEGORY_ID = '"+ category_id +"' AND NC.SUB_CATEGORY_ID = '"+ sub_category_id +"' AND ROW_NO = '"
+                    + row +"' AND COLUMN_NO = '" + column + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+
+                    column_data.setSKUGROUP_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_GROUP_ID")));
+                    column_data.setSKUGROUP_NAME(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKUGROUP_NAME")));
+                    column_data.setFacing(dbcursor.getInt(dbcursor.getColumnIndexOrThrow("FACING")));
+
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return column_data;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get row column!" + e.toString());
+            return column_data;
+        }
+        return column_data;
+    }
+
+    //Category Images Allowed
+    public ArrayList<CategoryImagesAllowed> getCategoryPictureAllowedData(String categoryId) {
+        Cursor cursordata = null;
+        ArrayList<CategoryImagesAllowed> imageAllowData = new ArrayList<>();
+
+        try {
+
+            cursordata = db.rawQuery("Select * from MAPPING_CATEGORY_IMAGE_ALLOW  " + "where CATEGORY_ID ='" + categoryId + "'", null);
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    CategoryImagesAllowed sb = new CategoryImagesAllowed();
+
+                    sb.setImg_cam1(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("IMAGE1_ALLOW")).equals("1"));
+                    sb.setImg_cam2(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("IMAGE2_ALLOW")).equals("1"));
+                    sb.setImg_cam3(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("IMAGE3_ALLOW")).equals("1"));
+                    sb.setImg_cam4(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("IMAGE4_ALLOW")).equals("1"));
+
+                    imageAllowData.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+        return imageAllowData;
+
+    }
+
+    //MAPPING_COUNTRYWISE_PLANOGRAM
+    public void InsertMappingCountrywisePlanogram(MappingPlanogramCountrywiseGetterSetter data) {
+        db.delete("MAPPING_COUNTRYWISE_PLANOGRAM", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getCOUNTRY_ID().size(); i++) {
+
+                values.put("COUNTRY_ID", data.getCOUNTRY_ID().get(i));
+                values.put("FILE_PATH", data.getFILE_PATH().get(i));
+                values.put("PLANOGRAM_URL", data.getPLANOGRAM_URL().get(i));
+
+                db.insert("MAPPING_COUNTRYWISE_PLANOGRAM", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " in MAPPING_COUNTRYWISE_PLANOGRAM " + ex.toString());
         }
     }
 }

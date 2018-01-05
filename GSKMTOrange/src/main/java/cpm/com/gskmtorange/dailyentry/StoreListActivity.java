@@ -40,6 +40,7 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.download.DownloadActivity;
 import cpm.com.gskmtorange.gsk_dailyentry.StoreWisePerformanceActivity;
@@ -77,7 +78,7 @@ public class StoreListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         date = preferences.getString(CommonString.KEY_DATE, null);
         visit_status = preferences.getString(CommonString.KEY_STOREVISITED_STATUS, "");
@@ -108,7 +109,7 @@ public class StoreListActivity extends AppCompatActivity {
         // TODO Auto-generated method stub
         super.onResume();
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(getString(R.string.title_activity_store_list));
         db.open();
         storelist = db.getStoreData(date);
@@ -193,8 +194,8 @@ public class StoreListActivity extends AppCompatActivity {
                 viewHolder.chkbtn.setBackgroundResource(R.mipmap.checkout);
             }
 
-
             storeid = current.getSTORE_ID();
+            CoverageBean coverageObj = db.getCoverageSpecificData(date,storeid);
             //viewHolder.txt.setText(current.txt);
 
             viewHolder.txt.setText(current.getSTORE_NAME());
@@ -208,27 +209,50 @@ public class StoreListActivity extends AppCompatActivity {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.tick);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
             } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_D)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
             } else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_Y)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
             } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_P)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
             } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.KEY_L)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
             } else if (current.getUPLOAD_STATUS().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
 
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
                 viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
+            }else if(coverageObj.getStatus()!=null && coverageObj.getStatus().equalsIgnoreCase(CommonString.KEY_VALID)){
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
+                viewHolder.chkbtn.setVisibility(View.VISIBLE);
+                viewHolder.imageview.setVisibility(View.INVISIBLE);
+
+            }else if(coverageObj.getStatus()!=null && coverageObj.getStatus().equalsIgnoreCase(CommonString.KEY_INVALID)){
+                viewHolder.imageview.setVisibility(View.INVISIBLE);
+                viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.green));
+
+            }else if(coverageObj.getStatus()!=null && coverageObj.getStatus().equalsIgnoreCase(CommonString.STORE_STATUS_LEAVE)) {
+
+                viewHolder.imageview.setVisibility(View.VISIBLE);
+                viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
+                viewHolder.chkbtn.setVisibility(View.INVISIBLE);
+                viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
+
             }/* else if (checkleavestatus(storeid)) {
                 viewHolder.imageview.setVisibility(View.VISIBLE);
                 viewHolder.imageview.setBackgroundResource(R.mipmap.exclamation);
@@ -237,7 +261,7 @@ public class StoreListActivity extends AppCompatActivity {
             /*else if (current.getCHECKOUT_STATUS().equalsIgnoreCase(CommonString.KEY_INVALID)) {
 
             }*/
-            else if (coverage.size() > 0) {
+           /* else if (coverage.size() > 0) {
                 String statusleave = "";
 
                 for (int i = 0; i < coverage.size(); i++) {
@@ -275,7 +299,7 @@ public class StoreListActivity extends AppCompatActivity {
 
                     }
 
-                       /* if (coverage.get(i).getInTime() != null) {
+                       *//* if (coverage.get(i).getInTime() != null) {
 
                             if (coverage.get(i).getOutTime() == null) {
 
@@ -290,11 +314,11 @@ public class StoreListActivity extends AppCompatActivity {
                                 break;
                             }
 
-                        }*/
+                        }*//*
 
                 }
 
-            } else {
+            }*/ else {
 
                 viewHolder.Cardbtn.setCardBackgroundColor(getResources().getColor(R.color.colorOrange));
                 viewHolder.imageview.setVisibility(View.INVISIBLE);
@@ -605,50 +629,6 @@ public class StoreListActivity extends AppCompatActivity {
         return result_flag;
     }
 
-
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
     public void UpdateStore(String storeid) {
 

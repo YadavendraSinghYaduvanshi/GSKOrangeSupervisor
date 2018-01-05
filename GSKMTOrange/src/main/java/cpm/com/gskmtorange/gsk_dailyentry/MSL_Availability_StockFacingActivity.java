@@ -55,6 +55,7 @@ import java.util.regex.Pattern;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityStockFacingGetterSetter;
@@ -117,7 +118,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
 
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+            CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -184,7 +185,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
                         builder.setMessage(Error_Message)
                                 .setCancelable(false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         expandableListView.smoothScrollToPosition(scrollPosition);
 
@@ -204,6 +205,9 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                    expandableListView.invalidate();
+
                     int lastItem = firstVisibleItem + visibleItemCount;
 
                     if (firstVisibleItem == 0) {
@@ -224,7 +228,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                         getCurrentFocus().clearFocus();
                     }
 
-                    //expandableListView.invalidateViews();
+                    expandableListView.invalidateViews();
                 }
             });
 
@@ -324,7 +328,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
             dialog.setCancelable(false);
 
-            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mappingPlanogramList = db.getMappingPlanogramData(categoryId);
+            ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> mappingPlanogramList = db.getMappingPlanogramData(categoryId, storeType_id, class_id);
 
             //ImageView img_planogram = (ImageView) dialog.findViewById(R.id.img_planogram);
             WebView webView = (WebView) dialog.findViewById(R.id.webview);
@@ -444,7 +448,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     _pathforcheck = "Stock_Camera1_" + store_id + "_" + categoryId
-                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                            + "_" + visit_date.replace("/", "") + "_" + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                     path = str + _pathforcheck;
 
                     startCameraActivity(3);
@@ -455,7 +459,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     _pathforcheck = "Stock_Camera2_" + store_id + "_" + categoryId
-                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                            + "_" + visit_date.replace("/", "") + "_" + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                     path = str + _pathforcheck;
 
                     startCameraActivity(4);
@@ -466,7 +470,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     _pathforcheck = "Stock_Camera3_" + store_id + "_" + categoryId
-                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                            + "_" + visit_date.replace("/", "") + "_" + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                     path = str + _pathforcheck;
 
                     startCameraActivity(5);
@@ -477,7 +481,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     _pathforcheck = "Stock_Camera4_" + store_id + "_" + categoryId
-                            + "_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                            + "_" + visit_date.replace("/", "") + "_" + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                     path = str + _pathforcheck;
 
                     startCameraActivity(6);
@@ -546,7 +550,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     private void prepareList() {
@@ -819,7 +823,6 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
 
             if (childData.getCompany_id().equals("1") && childData.getMust_have().equals("1")) {
                 holder.lin_category.setBackgroundColor(getResources().getColor(R.color.colorOrange));
-                holder.txt_skuName.setTextColor(getResources().getColor(R.color.colorPrimary));
 
                 holder.txt_mbq.setVisibility(View.VISIBLE);
                 holder.toggle_available.setVisibility(View.VISIBLE);
@@ -833,15 +836,29 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                     holder.stock_view.setVisibility(View.VISIBLE);
                 }
             } else {
-                holder.lin_category.setBackgroundColor(getResources().getColor(R.color.white));
-                holder.txt_skuName.setTextColor(getResources().getColor(R.color.black));
 
+                holder.lin_category.setBackgroundColor(getResources().getColor(R.color.white));
                 holder.txt_mbq.setVisibility(View.GONE);
                 holder.toggle_available.setVisibility(View.GONE);
                 holder.facing.setVisibility(View.VISIBLE);
                 holder.stock.setVisibility(View.GONE);
                 holder.stock_view.setVisibility(View.GONE);
             }
+
+            if(childData.getCompany_id().equals("1")){
+
+                if(childData.getMust_have().equals("1")){
+                    holder.txt_skuName.setTextColor(getResources().getColor(R.color.colorPrimary));
+                }
+                else{
+                    holder.txt_skuName.setTextColor(getResources().getColor(R.color.blue));
+                }
+
+            }
+            else{
+                holder.txt_skuName.setTextColor(getResources().getColor(R.color.black));
+            }
+
 
            /* if (childData.getCompany_id().equals("1") && childData.getMust_have().equals("1")) {
                 holder.lin_category.setBackgroundColor(getResources().getColor(R.color.colorOrange));
@@ -864,7 +881,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                         /*childData.setStock("");
                         childData.setFacing("");*/
                     } else {
-                        /*childData.setStock("");
+                       /* childData.setStock("");
                         childData.setFacing("");*/
                         childData.setToggleValue("0");
                         finalHolder.stock.setVisibility(View.VISIBLE);
@@ -911,45 +928,66 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
 
                     if (!edStock.equals("")) {
                         String stock = edStock;
+                        int mbq = Integer.parseInt(childData.getMbq());
+                        if(mbq!=0){
+                            if (Integer.parseInt(stock) >= 0 && Integer.parseInt(stock) < mbq) {
 
-                        if (Integer.parseInt(stock) >= 0 && Integer.parseInt(stock) < Integer.parseInt(childData.getMbq())) {
+                                if (!childData.getFacing().equals("")) {
+                                    if (Integer.parseInt(stock) >= 0 && Double.parseDouble(childData.getFacing()) <= Integer.parseInt(stock)) {
 
-                            if (!childData.getFacing().equals("")) {
-                                if (Integer.parseInt(stock) >= 0 && Double.parseDouble(childData.getFacing()) <= Integer.parseInt(stock)) {
+                                        childData.setStock(stock);
+                                    } else {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
+                                        builder.setMessage(getString(R.string.check_faceup))
+                                                .setCancelable(false)
+                                                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        finalHolder.stock.setText("");
+                                                        dialog.dismiss();
 
-                                    childData.setStock(stock);
+                                                    }
+                                                });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    }
                                 } else {
+                                    childData.setStock(stock);
+                                }
+                            } else {
+                                if (isDialogOpen) {
+                                    isDialogOpen = !isDialogOpen;
                                     AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
-                                    builder.setMessage(getString(R.string.check_faceup))
+                                    builder.setMessage(getString(R.string.check_stock))
                                             .setCancelable(false)
                                             .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     finalHolder.stock.setText("");
                                                     dialog.dismiss();
-
+                                                    isDialogOpen = !isDialogOpen;
                                                 }
                                             });
                                     AlertDialog alert = builder.create();
                                     alert.show();
                                 }
-                            } else {
-                                childData.setStock(stock);
                             }
-                        } else {
-                            if (isDialogOpen) {
-                                isDialogOpen = !isDialogOpen;
-                                AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
-                                builder.setMessage(getString(R.string.check_stock))
-                                        .setCancelable(false)
-                                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                finalHolder.stock.setText("");
-                                                dialog.dismiss();
-                                                isDialogOpen = !isDialogOpen;
-                                            }
-                                        });
-                                AlertDialog alert = builder.create();
-                                alert.show();
+                        }
+                        else{
+                            if(Integer.parseInt(stock) > 0){
+                                if (isDialogOpen) {
+                                    isDialogOpen = !isDialogOpen;
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
+                                    builder.setMessage(getString(R.string.check_stock))
+                                            .setCancelable(false)
+                                            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    finalHolder.stock.setText("");
+                                                    dialog.dismiss();
+                                                    isDialogOpen = !isDialogOpen;
+                                                }
+                                            });
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                }
                             }
                         }
                     } else {
@@ -1006,58 +1044,80 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                             alert.show();
                         } else {*/
                         if (edFaceup != null && !edFaceup.equals("")) {
+                            int mbq = Integer.parseInt(childData.getMbq());
+                            if(mbq!=0){
+                                if (Double.parseDouble(edFaceup) >= 0 && Double.parseDouble(edFaceup) < mbq) {
+                                    if (!childData.getStock().equals("")) {
 
-                            if (Double.parseDouble(edFaceup) >= 0 && Double.parseDouble(edFaceup) < Integer.parseInt(childData.getMbq())) {
-                                if (!childData.getStock().equals("")) {
+                                        //if (edFaceup != null && !edFaceup.equals("")) {
 
-                                    //if (edFaceup != null && !edFaceup.equals("")) {
+                                        String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
 
-                                    String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
+                                        if (Double.parseDouble(faceup) <= Integer.parseInt(childData.getStock())) {
 
-                                    if (Double.parseDouble(faceup) <= Integer.parseInt(childData.getStock())) {
-
-                                        isFill = true;
+                                            isFill = true;
 
                           /*          if (!edFaceup.equals("")) {
                                         childData.setFacing(faceup);
                                     } else {
                                         childData.setFacing("");
                                     }*/
+                                        } else {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
+                                            builder.setMessage(getString(R.string.check_faceup))
+                                                    .setCancelable(false)
+                                                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            finalHolder1.facing.setText("");
+                                                            dialog.dismiss();
+                                                            finalHolder2.facing.setText("");
+                                                        }
+                                                    });
+                                            AlertDialog alert = builder.create();
+                                            alert.show();
+                                        }
+                                        //  }
                                     } else {
+                                        isFill = true;
+                                    }
+                                } else {
+                                    if (isDialogOpen) {
+                                        isDialogOpen = !isDialogOpen;
                                         AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
-                                        builder.setMessage(getString(R.string.check_faceup))
+                                        builder.setMessage(getString(R.string.check_faceing))
                                                 .setCancelable(false)
                                                 .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {
-                                                        finalHolder1.facing.setText("");
+                                                        finalHolder.facing.setText("");
                                                         dialog.dismiss();
-                                                        finalHolder2.facing.setText("");
+                                                        isDialogOpen = !isDialogOpen;
                                                     }
                                                 });
                                         AlertDialog alert = builder.create();
                                         alert.show();
                                     }
-                                    //  }
-                                } else {
-                                    isFill = true;
-                                }
-                            } else {
-                                if (isDialogOpen) {
-                                    isDialogOpen = !isDialogOpen;
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
-                                    builder.setMessage(getString(R.string.check_faceing))
-                                            .setCancelable(false)
-                                            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    finalHolder.facing.setText("");
-                                                    dialog.dismiss();
-                                                    isDialogOpen = !isDialogOpen;
-                                                }
-                                            });
-                                    AlertDialog alert = builder.create();
-                                    alert.show();
                                 }
                             }
+                            else {
+                                if(Double.parseDouble(edFaceup) > 0){
+                                    if (isDialogOpen) {
+                                        isDialogOpen = !isDialogOpen;
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(MSL_Availability_StockFacingActivity.this);
+                                        builder.setMessage(getString(R.string.check_faceing))
+                                                .setCancelable(false)
+                                                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        finalHolder.facing.setText("");
+                                                        dialog.dismiss();
+                                                        isDialogOpen = !isDialogOpen;
+                                                    }
+                                                });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    }
+                                }
+                            }
+
                         }
                         //}
                     } else{
@@ -1195,50 +1255,6 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
         View stock_view;
     }
 
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        } else {
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
     @SuppressLint("LongLogTag")
     @Override

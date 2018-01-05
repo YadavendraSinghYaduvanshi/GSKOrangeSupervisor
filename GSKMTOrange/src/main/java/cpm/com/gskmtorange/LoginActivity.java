@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cpm.com.gskmtorange.autoupdate.AutoUpdateActivity;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.LoginGetterSetter;
@@ -127,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        tv_version.setText("Version/Versiyon - " + app_ver+"T1");
+        tv_version.setText("Version/Versiyon - " + app_ver+"T3");
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
@@ -174,7 +175,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
         // Create a Folder for Images
-
 
         File file = new File(Environment.getExternalStorageDirectory(), "GSK_MT_ORANGE_IMAGES");
         if (!file.isDirectory()) {
@@ -431,10 +431,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 String userauth_xml = "[DATA]" + "[USER_DATA][USER_ID]"
                         + userid + "[/USER_ID]" + "[PASSWORD]" + password
-                        + "[/PASSWORD]" + "[IN_TIME]" + getCurrentTime()
+                        + "[/PASSWORD]" + "[IN_TIME]" + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext())
                         + "[/IN_TIME]" + "[LATITUDE]" + lat
                         + "[/LATITUDE]" + "[LONGITUDE]" + lon
-                        + "[/LONGITUDE]" + "[APP_VERSION]" + app_ver
+                        + "[/LONGITUDE]" + "[APP_VERSION]" + app_ver+"T3"
                         + "[/APP_VERSION]" + "[ATT_MODE]OnLine[/ATT_MODE]"
                         + "[NETWORK_STATUS]" + "LoginStatus"
                         + "[/NETWORK_STATUS]" + "[/USER_DATA][/DATA]";
@@ -627,7 +627,7 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                     } else {
 
-                        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+                        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
                         Intent intent = new Intent(getBaseContext(),
                                 MainActivity.class);
@@ -672,7 +672,7 @@ public class LoginActivity extends AppCompatActivity {
         alert.show();
     }
 
-    /*public String getCurrentTime() {
+    /*public String getCurrentTimeNotUsed() {
 
         Calendar m_cal = Calendar.getInstance();
 
@@ -695,7 +695,7 @@ public class LoginActivity extends AppCompatActivity {
         return new String(chars);
     }
 
-    public String getCurrentTime() {
+    public String getCurrentTimeNotUsed() {
         Calendar m_cal = Calendar.getInstance();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
@@ -709,52 +709,6 @@ public class LoginActivity extends AppCompatActivity {
 
         return cdate;
     }
-
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }
-        else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
-
 
 }
 

@@ -17,7 +17,9 @@ import cpm.com.gskmtorange.xmlGetterSetter.MAPPINGT2PGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_ADDITIONAL_PROMOTION_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingCategoryImageAllowGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingPlanogramCountrywiseGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSetter;
@@ -856,6 +858,46 @@ public class XMLHandlers {
         return st;
     }
 
+    //MAPPING_CATEGORY_IMAGE_ALLOW
+    public static MappingCategoryImageAllowGetterSetter mappingCategoryImageAllowXMLHandler(XmlPullParser xpp, int eventType) {
+        MappingCategoryImageAllowGetterSetter st = new MappingCategoryImageAllowGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+
+                    if (xpp.getName().equals("META_DATA")) {
+                        st.setTable_MAPPING_CATEGORY_IMAGE_ALLOW(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("COUNTRY_ID")) {
+                        st.setCOUNTRY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("CATEGORY_ID")) {
+                        st.setCATEGORY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("IMAGE1_ALLOW")) {
+                        st.setIMAGE1_ALLOW(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("IMAGE2_ALLOW")) {
+                        st.setIMAGE2_ALLOW(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("IMAGE3_ALLOW")) {
+                        st.setIMAGE3_ALLOW(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("IMAGE4_ALLOW")) {
+                        st.setIMAGE4_ALLOW(xpp.nextText());
+                    }
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return st;
+    }
+
     //SKUGROUP_MASTER
     public static SkuGroupMasterGetterSetter skuGroupMasterXMLHandler(XmlPullParser xpp, int eventType) {
         SkuGroupMasterGetterSetter st = new SkuGroupMasterGetterSetter();
@@ -883,6 +925,37 @@ public class XMLHandlers {
                         st.setSKUGROUP_SEQUENCE(xpp.nextText());
                     }
 
+                }
+                xpp.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return st;
+    }
+
+    //MAPPING_COUNTRYWISE_PLANOGRAM
+    public static MappingPlanogramCountrywiseGetterSetter MAPPING_COUNTRYWISE_PLANOGRAM_XMLHandler(XmlPullParser xpp, int eventType) {
+        MappingPlanogramCountrywiseGetterSetter st = new MappingPlanogramCountrywiseGetterSetter();
+
+        try {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                if (xpp.getEventType() == XmlPullParser.START_TAG) {
+
+                    if (xpp.getName().equals("META_DATA")) {
+                        st.setTable_MAPPING_COUNTRYWISE_PLANOGRAM(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("COUNTRY_ID")) {
+                        st.setCOUNTRY_ID(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("FILE_PATH")) {
+                        st.setFILE_PATH(xpp.nextText());
+                    }
+                    if (xpp.getName().equals("PLANOGRAM_URL")) {
+                        st.setPLANOGRAM_URL(xpp.nextText());
+                    }
                 }
                 xpp.next();
             }

@@ -1,10 +1,13 @@
 package cpm.com.gskmtorange.fragment;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,21 +17,39 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.RequestBody;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.UnknownHostException;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.ServiceActivity;
+
+
+import cpm.com.gskmtorange.messgae.AlertMessage;
+import cpm.com.gskmtorange.retrofit.PostApiForFile;
+import cpm.com.gskmtorange.retrofit.StringConverterFactory;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
+
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ServiceActivityFragment extends Fragment {
+    String result = "";
+    boolean isvalid = false;
 
     public ServiceActivityFragment() {
     }
@@ -143,7 +164,7 @@ public class ServiceActivityFragment extends Fragment {
     }
 
     public void showExportDialog(){
-
+        String path;
         AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
         builder1.setMessage(R.string.Areyou_sure_take_backup)
                 .setCancelable(false)
@@ -187,6 +208,27 @@ public class ServiceActivityFragment extends Fragment {
                                     dst.close();
                                 }
                             }
+
+                            //usk
+                           // File dir = new File(CommonString.BACKUP_PATH);
+                            File dir = new File(CommonString.BACKUP_PATH);
+
+                            ArrayList<String> list = new ArrayList();
+                            list = getFileNames(dir.listFiles());
+                            if (list.size() > 0) {
+                                for (int i1 = 0; i1 < list.size(); i1++) {
+                                    if (list.get(i1).contains("gsk_orange_backup")) {
+                                        File originalFile = new File(CommonString.BACKUP_PATH + list.get(i1));
+                                        Object result = uploadBackup(getActivity(), originalFile.getName(), "DBBackup");
+                                        if (result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
+
+                                        }
+                                    }
+                                }
+                            }
+                            Toast.makeText(getActivity(), getString(R.string.databasexported), Toast.LENGTH_SHORT).show();
+
+
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
@@ -199,5 +241,60 @@ public class ServiceActivityFragment extends Fragment {
                 });
         AlertDialog alert1 = builder1.create();
         alert1.show();
+    }
+    public ArrayList<String> getFileNames(File[] file) {
+        ArrayList<String> arrayFiles = new ArrayList<String>();
+        if (file.length > 0) {
+            for (int i = 0; i < file.length; i++)
+                arrayFiles.add(file[i].getName());
+        }
+        return arrayFiles;
+    }
+
+
+    private String uploadBackup(final Context context, String file_name, String folder_name) {
+        RequestBody body1;
+        result = "";
+        isvalid = false;
+        final File originalFile = new File(CommonString.BACKUP_PATH + file_name);
+        RequestBody photo = RequestBody.create(MediaType.parse("application/octet-stream"), originalFile);
+        body1 = new MultipartBuilder().type(MultipartBuilder.FORM)
+                .addFormDataPart("file", originalFile.getName(), photo)
+                .addFormDataPart("Foldername", folder_name)
+                .build();
+        Retrofit adapter = new Retrofit.Builder()
+                .baseUrl(CommonString.URL+"/")
+                .addConverterFactory(new StringConverterFactory())
+                .build();
+        PostApiForFile api = adapter.create(PostApiForFile.class);
+        Call<String> call = api.getUploadImage(body1);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Response<String> response) {
+                if (response.toString() != null) {
+                    if (response.body().contains(CommonString.KEY_SUCCESS)) {
+                        isvalid = true;
+                        result = CommonString.KEY_SUCCESS;
+                        originalFile.delete();
+                    } else {
+                        result = "Servererror!";
+                    }
+                } else {
+                    result = "Servererror!";
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                isvalid = true;
+                if (t instanceof UnknownHostException) {
+                    result = AlertMessage.MESSAGE_SOCKETEXCEPTION;
+                } else {
+                    result = AlertMessage.MESSAGE_SOCKETEXCEPTION;
+                }
+                Toast.makeText(context, originalFile.getName() + " not uploaded", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return result;
     }
 }

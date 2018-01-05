@@ -28,6 +28,10 @@ public class TableBean {
     public static String MAPPING_SUB_CATEGORY_IMAGE_ALLOW;
     public static String SKUGROUP_MASTER;
 
+    //YSY
+    public static String MAPPING_CATEGORY_IMAGE_ALLOW;
+    public static String MAPPING_COUNTRYWISE_PLANOGRAM;
+
 
     public static String getAdditionalDisplay() {
         return ADDITIONAL_DISPLAY;
@@ -196,5 +200,21 @@ public class TableBean {
 
     public static void setSkugroupMaster(String skugroupMaster) {
         SKUGROUP_MASTER = skugroupMaster;
+    }
+
+    public static String getMappingCategoryImageAllow() {
+        return MAPPING_CATEGORY_IMAGE_ALLOW;
+    }
+
+    public static void setMappingCategoryImageAllow(String mappingCategoryImageAllow) {
+        MAPPING_CATEGORY_IMAGE_ALLOW = mappingCategoryImageAllow;
+    }
+
+    public static String getMappingCountrywisePlanogram() {
+        return MAPPING_COUNTRYWISE_PLANOGRAM;
+    }
+
+    public static void setMappingCountrywisePlanogram(String mappingCountrywisePlanogram) {
+        MAPPING_COUNTRYWISE_PLANOGRAM = mappingCountrywisePlanogram;
     }
 }

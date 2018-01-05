@@ -27,6 +27,7 @@ public class NoCameraDataGetterSetter {
 
     String CATEGORY_ID;
     String SUB_CATEGORY_ID;
+    String SUB_CATEGORY;
     int facing, row_no, column_no;
 
     public int getFacing() {
@@ -67,5 +68,13 @@ public class NoCameraDataGetterSetter {
 
     public void setSUB_CATEGORY_ID(String SUB_CATEGORY_ID) {
         this.SUB_CATEGORY_ID = SUB_CATEGORY_ID;
+    }
+
+    public String getSUB_CATEGORY() {
+        return SUB_CATEGORY;
+    }
+
+    public void setSUB_CATEGORY(String SUB_CATEGORY) {
+        this.SUB_CATEGORY = SUB_CATEGORY;
     }
 }

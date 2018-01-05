@@ -35,8 +35,10 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.FutureJCPActivity;
+import cpm.com.gskmtorange.dailyentry.PlanogramPDFActivity;
 import cpm.com.gskmtorange.dailyentry.ServiceActivity;
 import cpm.com.gskmtorange.dailyentry.SettingsActivity;
 import cpm.com.gskmtorange.dailyentry.StoreListActivity;
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         date = preferences.getString(CommonString.KEY_DATE, null);
         imageView = (ImageView) findViewById(R.id.img_main);
@@ -132,7 +134,7 @@ public class MainActivity extends AppCompatActivity
         coverageList = db.getCoverageData(date);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(getString(R.string.main_menu_activity_name));
 
         db.open();
@@ -303,6 +305,19 @@ public class MainActivity extends AppCompatActivity
             startActivity(startDownload);
 
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+        }else if(id == R.id.nav_planogram){
+
+            if(checkNetIsAvailable()){
+                Intent planogram_pdf = new Intent(this, PlanogramPDFActivity.class);
+                startActivity(planogram_pdf);
+
+                overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+            }else {
+
+                Snackbar.make(webView, getResources().getString(R.string.nonetwork), Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+            }
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -384,51 +399,6 @@ public class MainActivity extends AppCompatActivity
             error_msg = getResources().getString(R.string.no_data_for_upload);
 
         return flag;
-    }
-
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }
-        else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
     }
 
 }

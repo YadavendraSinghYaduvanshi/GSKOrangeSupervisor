@@ -19,4 +19,5 @@ public interface Listener {
     void setEmptyListBottom(boolean visibility, int tv, RecyclerView rv);
     void addNUpdateRow(View v, int view_id, NoCameraDataGetterSetter parent_item);
     void smoothScrollToRow(View v, DragEvent event);
+    void deleteItem(View v, int column_no, RecyclerView rec);
 }

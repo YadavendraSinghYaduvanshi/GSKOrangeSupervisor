@@ -65,7 +65,7 @@
     <string name="menu_setting">Settings</string>
     <string name="menu_services">Services</string>
 
-    <string name="title_activity_t2_pcompliance">T2P - Monthly Visibility</string>
+    <string name="title_activity_t2_pcompliance">Visibility/T2P</string>
 
     <!--Gagan start code-->
     <string name="title_activity_category_list">Category List</string>
@@ -76,7 +76,7 @@
 
     <string name="daily_data_menu_msl_availability">SKU Availability</string>
     <string name="daily_data_menu_stock_facing">Stock and Facing</string>
-    <string name="daily_data_menu_t2p">T2P - Monthly Visibility</string>
+    <string name="daily_data_menu_t2p">Visibility/T2P</string>
     <string name="daily_data_menu_additional_visibility">Additional Visibility</string>
     <string name="daily_data_menu_promo_compliance">Promo Compliance</string>
     <string name="daily_data_menu_competition_tracking">Competition Visibility</string>
@@ -225,6 +225,9 @@
     <string name="export_database">Export Database</string>
     <string name="data_exported_successfully">Database Exported Successfully</string>
 
+    <string name="databasexported">Database Exported And Uploaded Successfully</string>
+
+
     <string name="uploadeddata">Uploaded Data</string>
 
     <string name="previous_data_upload">Please Upload Previous Data First</string>
@@ -278,7 +281,7 @@
     <string name="stock_planogram_data_uploading">Stock Planogram Data Uploading</string>
 
     <string name="daily_data_menu_category_picture">Category Pictures</string>
-    <string name="title_activity_category_picture">CategoryPicture</string>
+    <string name="title_activity_category_picture">Category Picture</string>
 
     <string name="stock_planogram_data_noCamera_data">Please fill the no camera data</string>
     <string name="stock_planogram_shelf">Shelf </string>
@@ -322,6 +325,9 @@
     <string name="enter_facing">Enter Facing</string>
     <string name="please_facing">Please fill Facing</string>
     <string name="please_add_subgroup_facing">Please add atleast one Sub Group to every row</string>
+    <string name="edit">Edit</string>
+    <string name="select_option">Select an option</string>
+    <string name="title_activity_planogram_pdf">Planogram Document</string>
 
 
 </resources>
