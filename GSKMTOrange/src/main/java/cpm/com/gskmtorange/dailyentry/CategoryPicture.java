@@ -47,7 +47,7 @@ public class CategoryPicture extends AppCompatActivity {
     String _pathforcheck1, _pathforcheck2, _pathforcheck3, _pathforcheck4, Camerapath1, Camerapath2, _path, CaMpath, str, msg, categoryName, categoryId;
     ImageView im1, im2, im3, im4;
     ListView listview;
-    String store_id, date, intime, img_str1, img_str2, img_str3, img_str4, togglevalue = "1", CATEGORY_ID, camera_allow, store_type_id, class_id, key_account_id;
+    String store_id, date, intime, img_str1="", img_str2="", img_str3="", img_str4="", togglevalue = "1", CATEGORY_ID, camera_allow, store_type_id, class_id, key_account_id;
     private SharedPreferences preferences;
     Uri outputFileUri;
     String gallery_package = "";
@@ -98,54 +98,43 @@ public class CategoryPicture extends AppCompatActivity {
         adddata = db.getCategoryPictureData(store_id, categoryId);
         categoryImagesAllowed = db.getCategoryPictureAllowedData(categoryId);
 
+        if(categoryImagesAllowed.size()>0){
+            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam1(), im1);
+            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam2(), im2);
+            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam2(), im3);
+            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam3(), im4);
+        }
+
         if (adddata.size() != 0) {
 
-            for (int k = 0; k < adddata.size(); k++) {
-                String key_id = adddata.get(k).getKEY_ID();
-
+                String key_id = adddata.get(0).getKEY_ID();
 
                 listdat = db.getCategoryPictureListData(store_id, categoryId, key_id);
 
-                String image1 = adddata.get(k).getCategoryImage1();
-                String image2 = adddata.get(k).getCategoryImage2();
-                String image3 = adddata.get(k).getCategoryImage3();
-                String image4 = adddata.get(k).getCategoryImage4();
+                String image1 = adddata.get(0).getCategoryImage1();
+                String image2 = adddata.get(0).getCategoryImage2();
+                String image3 = adddata.get(0).getCategoryImage3();
+                String image4 = adddata.get(0).getCategoryImage4();
 
-                if (image1 != null) {
+                if (image1 != null && !image1.equals("")) {
                     im1.setBackgroundResource(R.mipmap.camera_green);
-
                     img_str1 = image1;
-
-                } else {
-                    im1.setBackgroundResource(R.drawable.camera_orange_star_green);
                 }
 
-
-                if (image2 != null) {
+                if (image2 != null && !image2.equals("")) {
                     im2.setBackgroundResource(R.mipmap.camera_green);
-
                     img_str2 = image2;
-
-                } else {
-                    im2.setBackgroundResource(R.mipmap.camera_orange);
                 }
-                if (image3 != null) {
+
+                if (image3 != null && !image3.equals("")) {
                     im3.setBackgroundResource(R.mipmap.camera_green);
                     img_str3 = image3;
-                } else {
-                    im3.setBackgroundResource(R.mipmap.camera_orange);
                 }
-                if (image4 != null) {
+
+                if (image4 != null && !image4.equals("")) {
                     im4.setBackgroundResource(R.mipmap.camera_green);
-
                     img_str4 = image4;
-                } else {
-                    im4.setBackgroundResource(R.mipmap.camera_orange);
                 }
-
-
-            }
-
 
         } else {
 
@@ -155,13 +144,6 @@ public class CategoryPicture extends AppCompatActivity {
 
         adapteradditional = new CategoryPicture.CategoryAdapter(CategoryPicture.this, listdat);
         listview.setAdapter(adapteradditional);
-
-        if(categoryImagesAllowed.size()>0){
-            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam1(), im1);
-            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam2(), im2);
-            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam2(), im3);
-            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam3(), im4);
-        }
 
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -556,11 +538,34 @@ public class CategoryPicture extends AppCompatActivity {
     boolean validateData(CategoryPictureGetterSetter data, ArrayList<CategoryPictureGetterSetter> list) {
         boolean flag = true;
 
-        String cameraImage1 = data.getCategoryImage1();
+            if(categoryImagesAllowed.get(0).isImg_cam1()){
+               if(data.getCategoryImage1().equals("")){
+                   flag = false;
+               }
+            }
 
+            if(flag){
+                if(categoryImagesAllowed.get(0).isImg_cam2()){
+                    if(data.getCategoryImage2().equals("")){
+                        flag = false;
+                    }
+                }
+            }
 
-        if (cameraImage1 == null) {
-            flag = false;
+        if(flag){
+            if(categoryImagesAllowed.get(0).isImg_cam3()){
+                if(data.getCategoryImage3().equals("")){
+                    flag = false;
+                }
+            }
+        }
+
+        if(flag){
+            if(categoryImagesAllowed.get(0).isImg_cam4()){
+                if(data.getCategoryImage4().equals("")){
+                    flag = false;
+                }
+            }
         }
 
 
@@ -658,7 +663,7 @@ public class CategoryPicture extends AppCompatActivity {
             img_cam.setBackgroundResource(R.drawable.camera_orange_star_green);
         }
         else{
-            img_cam.setBackgroundResource(R.mipmap.camera_green);
+            img_cam.setBackgroundResource(R.mipmap.camera_orange);
         }
     }
 }

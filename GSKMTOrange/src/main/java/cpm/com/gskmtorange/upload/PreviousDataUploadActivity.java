@@ -246,7 +246,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                 for (int i = 0; i < coverageList.size(); i++) {
 
-                    storeData = db.getSpecificStoreData(date, coverageList.get(i).getStoreId());
+                    storeData = db.getSpecificStoreData(coverageList.get(i).getVisitDate(), coverageList.get(i).getStoreId());
                     if (storeData.getSTORE_ID() != null) {
 
                         if (storeData.getCHECKOUT_STATUS().equals(CommonString.KEY_Y) ||
@@ -1501,10 +1501,11 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
             }*/
 
             dialog.dismiss();
-            db.deleteAllTables();
+
             if (result.contains(CommonString.KEY_SUCCESS)) {
                 //db.deleteAllTables();
                 showAlert(getString(R.string.menu_upload_data));
+                db.deleteAllTables();
                 //showAlert(getString(R.string.menu_upload_data));
             } else {
                 showAlert(getString(R.string.error) + result.toString());

@@ -80,7 +80,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
     GSKOrangeDB db;
 
     String categoryName, categoryId, storeId, Error_Message = "";
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow, country_id;
     boolean isDialogOpen = true;
     private SharedPreferences preferences;
     int scrollPosition = 0;
@@ -128,6 +128,7 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
             class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
             storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
             camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
+            country_id = preferences.getString(CommonString.KEY_COUNTRY_ID, "");
 
             //Intent data
             categoryName = getIntent().getStringExtra("categoryName");
@@ -1017,8 +1018,11 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
                                 faceint = 5;
                                 edFaceup = String.valueOf(num + faceint / 10.0);
                                 finalHolder2.facing.setText(edFaceup);
+
                             }
                         }
+
+
                         /*Double faceup = Double.parseDouble(edFaceup);
                         DecimalFormat twoDForm = new DecimalFormat(".#");
                         faceup=  Double.valueOf(twoDForm.format(faceup));*/
@@ -1147,7 +1151,15 @@ public class MSL_Availability_StockFacingActivity extends AppCompatActivity {
 
                     if (isFill) {
                         if (!edFaceup.equals("")) {
-                            String faceup = edFaceup.replaceFirst("^0+(?!$)", "");
+                            String faceup = "";
+                            if(edFaceup.equals("0")){
+                                faceup = edFaceup;
+                            }
+                            else{
+                                faceup = edFaceup.replaceFirst("^0+(?!$)", "");
+                               //faceup = new DecimalFormat("##.#").format(Double.parseDouble(faceup));
+                            }
+
                             // String str2 = PerfectDecimal(faceup, 3, 1);
                             childData.setFacing(faceup);
                         } else {

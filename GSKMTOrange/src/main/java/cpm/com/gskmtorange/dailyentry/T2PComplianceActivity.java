@@ -78,7 +78,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
     RecyclerView rec_t2p;
     MyAdaptorStock adapterData;
     String categoryName, categoryId;
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow, country_id;
     String str = CommonString.FILE_PATH,
             path = "", path1 = "", path2 = "",
             _pathforcheck = "", _pathforcheck1 = "", _pathforcheck2 = "",
@@ -128,6 +128,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
         class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
         storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
         camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
+        country_id = preferences.getString(CommonString.KEY_COUNTRY_ID, "");
 
         rec_t2p = (RecyclerView) findViewById(R.id.rec_t2p);
 
@@ -1111,7 +1112,7 @@ public class T2PComplianceActivity extends AppCompatActivity {
                     flag = false;
                     error_msg = getResources().getString(R.string.fill_gaps_data);
                     break;
-                } else if (camera_allow.equals("1") && (t2PGetterSetters.get(i).getImage().equals("") &&
+                } else if (!country_id.equals("6") && camera_allow.equals("1") && (t2PGetterSetters.get(i).getImage().equals("") &&
                         t2PGetterSetters.get(i).getImage1().equals("") &&
                         t2PGetterSetters.get(i).getImage2().equals(""))) {
                     flag = false;

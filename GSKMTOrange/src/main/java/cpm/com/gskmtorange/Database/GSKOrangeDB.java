@@ -4322,6 +4322,11 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         ContentValues values1 = new ContentValues();
         try {
 
+            db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE,
+                    "Store_Id='" + gettersetter.getStore_ID() + "' And categoryId='" + categoryId + "' ", null);
+            db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE_LIST,
+                    "Store_Id='" + gettersetter.getStore_ID() + "' And categoryId='" + categoryId + "' ", null);
+
             values.put("Store_Id", gettersetter.getStore_ID());
             values.put("categoryId", categoryId);
             values.put("CategoryImage1", gettersetter.getCategoryImage1());
@@ -5470,5 +5475,55 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         } catch (Exception ex) {
             Log.d("Exception ", " in MAPPING_COUNTRYWISE_PLANOGRAM " + ex.toString());
         }
+    }
+
+    //Stock N Facing
+    public ArrayList<MSL_AvailabilityStockFacingGetterSetter> getStockFacingHeaderData(
+            String category_id, String keyAccount_id, String storeType_id, String class_id) {
+
+        ArrayList<MSL_AvailabilityStockFacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("Select DISTINCT SB.SUB_CATEGORY_ID,SB.SUB_CATEGORY,BR.BRAND_ID,BR.BRAND,BR.COMPANY_ID ," +
+                    " (SELECT SUM(SOS_TARGET) FROM MAPPING_SOS_TARGET WHERE STORE_ID = 1 AND BRAND_ID = BR.BRAND_ID)AS SOS_TARGET " +
+                    "from MAPPING_STOCK M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where CA.CATEGORY_ID='" + category_id + "' AND M.KEYACCOUNT_ID = '" + keyAccount_id +
+                    "' AND M.STORETYPE_ID = '" + storeType_id + "' AND M.CLASS_ID = '" + class_id + "' AND BR.COMPANY_ID='"+ 1 +"' "+
+                    "order by SB.SUB_CATEGORY,BR.COMPANY_ID,BR.BRAND", null);
+
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    MSL_AvailabilityStockFacingGetterSetter cd = new MSL_AvailabilityStockFacingGetterSetter();
+
+                    cd.setSub_category_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
+                    cd.setSub_category(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
+                    cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
+                    cd.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND")));
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            return list;
+        }
+        return list;
     }
 }

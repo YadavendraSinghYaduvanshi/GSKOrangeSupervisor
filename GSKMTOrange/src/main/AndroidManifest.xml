@@ -220,7 +220,13 @@
         <activity
             android:name=".dailyentry.PlanogramPDFActivity"
             android:label="@string/title_activity_planogram_pdf"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".dailyentry.StockDataActivity"
+            android:label="@string/title_activity_stock_data"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>

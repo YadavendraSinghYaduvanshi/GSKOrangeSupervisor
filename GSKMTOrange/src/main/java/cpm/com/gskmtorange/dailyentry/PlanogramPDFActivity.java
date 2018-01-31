@@ -14,10 +14,15 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +47,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.Collections;
+import java.util.List;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
@@ -62,6 +69,11 @@ public class PlanogramPDFActivity extends AppCompatActivity {
     private SharedPreferences preferences = null;
     FloatingActionButton fab;
 
+    MappingPlanogramCountrywiseGetterSetter document;
+    MyRecyclerAdapter adapter;
+    RecyclerView rec;
+    String Path = Environment.getExternalStorageDirectory().toString() + "/Planogram_Documents/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +82,8 @@ public class PlanogramPDFActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        rec = (RecyclerView) findViewById(R.id.rec);
 
         fab  = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +135,7 @@ public class PlanogramPDFActivity extends AppCompatActivity {
 
             data = new Data();
             String resultHttp = "";
-
+            boolean flag = true;
             // JCP
 
             try {
@@ -158,7 +172,7 @@ public class PlanogramPDFActivity extends AppCompatActivity {
                     xpp.next();
                     eventType = xpp.getEventType();
 
-                    MappingPlanogramCountrywiseGetterSetter document = XMLHandlers.MAPPING_COUNTRYWISE_PLANOGRAM_XMLHandler(xpp, eventType);
+                    document = XMLHandlers.MAPPING_COUNTRYWISE_PLANOGRAM_XMLHandler(xpp, eventType);
 
                     if (document.getCOUNTRY_ID().size() > 0) {
                         resultHttp = CommonString.KEY_SUCCESS;
@@ -178,10 +192,13 @@ public class PlanogramPDFActivity extends AppCompatActivity {
                         File folder = new File(extStorageDirectory, "Planogram_Documents");
                         folder.mkdir();
 
-                        boolean flag = downloadFile(document.getFILE_PATH().get(0), document.getPLANOGRAM_URL().get(0), folder);
+                        for(int i = 0; i<document.getFILE_PATH().size();i++){
+                            flag = downloadFile(document.getFILE_PATH().get(i), document.getPLANOGRAM_URL().get(i), folder);
 
-                        if(flag)
-                            return CommonString.KEY_SUCCESS+ ":"+ folder.getAbsolutePath()+"/"+document.getPLANOGRAM_URL().get(0);
+                            if(!flag)
+                                //return CommonString.KEY_SUCCESS+ ":"+ folder.getAbsolutePath()+"/"+document.getPLANOGRAM_URL().get(0);
+                                return getString(R.string.Download_pdf_Error);
+                        }
 
                     }
 
@@ -194,13 +211,26 @@ public class PlanogramPDFActivity extends AppCompatActivity {
 
             } catch (XmlPullParserException e) {
                 e.printStackTrace();
+                resultHttp = getString(R.string.nonetwork);
+                flag = false;
             } catch (SoapFault soapFault) {
                 soapFault.printStackTrace();
+                resultHttp = getString(R.string.nonetwork);
+                flag = false;
             } catch (IOException e) {
                 e.printStackTrace();
+                resultHttp = getString(R.string.nonetwork);
+                flag = false;
+            }
+            catch ( Exception e){
+                resultHttp = getString(R.string.nonetwork);
+                flag = false;
             }
 
-            return resultHttp;
+            if(flag)
+                return CommonString.KEY_SUCCESS;
+            else
+                return resultHttp;
         }
 
         @Override
@@ -211,17 +241,15 @@ public class PlanogramPDFActivity extends AppCompatActivity {
 
             if (result.contains(CommonString.KEY_SUCCESS)) {
 
-                String file_path = result.substring(result.indexOf(":")+1);
+                if(document.getPLANOGRAM_URL().size()>0){
+                    adapter = new MyRecyclerAdapter(getApplicationContext(), document);
+                    rec.setAdapter(adapter);
+                    rec.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                }
 
-                File file = new File(file_path);
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(file),"application/pdf");
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
-                finish();
 
             } else {
-                Toast.makeText(getApplicationContext(), "Downloaded Failed", Toast.LENGTH_SHORT).show();
+                Snackbar.make(fab, result, Toast.LENGTH_SHORT).show();
             }
 
             //finish();
@@ -345,4 +373,74 @@ public class PlanogramPDFActivity extends AppCompatActivity {
         return isConnected;
     }
 
+    class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder> {
+
+        private LayoutInflater inflator;
+
+        MappingPlanogramCountrywiseGetterSetter data = new MappingPlanogramCountrywiseGetterSetter();
+
+        public MyRecyclerAdapter(Context context, MappingPlanogramCountrywiseGetterSetter data) {
+
+            inflator = LayoutInflater.from(context);
+            this.data = data;
+
+        }
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = inflator.inflate(R.layout.pdf_planogram_item, parent, false);
+
+            MyRecyclerAdapter.MyViewHolder holder = new MyRecyclerAdapter.MyViewHolder(view);
+
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, final int position) {
+
+            //final MappingPlanogramCountrywiseGetterSetter current = data.get(position);
+
+            final String name = data.getPLANOGRAM_URL().get(position);
+
+            holder.name.setText(name);
+            //holder.detail.setText(current.getDocument_descriiption().get(0));
+
+            holder.parent_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String file_path = Path + name;
+
+                    File file = new File(file_path);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(file),"application/pdf");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    startActivity(intent);
+                    //finish();
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return document.getFILE_PATH().size();
+        }
+
+        class MyViewHolder extends RecyclerView.ViewHolder {
+
+            TextView name, detail;
+            LinearLayout parent_layout;
+
+            public MyViewHolder(View itemView) {
+                super(itemView);
+                name = (TextView) itemView.findViewById(R.id.tv_name);
+                detail = (TextView) itemView.findViewById(R.id.tv_details);
+
+                parent_layout = (LinearLayout) itemView.findViewById(R.id.layout_parent);
+
+            }
+
+        }
+    }
 }

@@ -106,6 +106,7 @@ public class ServiceActivityFragment extends Fragment {
                     }
                     else{
                         showExportDialog();
+                        //restoreBackup();
                     }
 
 
@@ -160,6 +161,33 @@ public class ServiceActivityFragment extends Fragment {
 
         public void setFragment(Fragment fragment) {
             this.fragment = fragment;
+        }
+    }
+
+    public void restoreBackup(){
+
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+
+            if (sd.canWrite()) {
+                String currentDBPath = "//data//cpm.com.gskmtorange//databases//" + GSKOrangeDB.DATABASE_NAME;
+                String backupDBPath = "GSKMT_ORANGE_Database_backup.dat";
+                File currentDB = new File(data, currentDBPath);
+                File backupDB = new File(sd, backupDBPath);
+
+                if (currentDB.exists()) {
+                    FileChannel src = new FileInputStream(backupDB).getChannel();
+                    FileChannel dst = new FileOutputStream(currentDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                    Toast.makeText(getActivity(), "Database Restored successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+
+            System.out.println(e.getMessage());
         }
     }
 

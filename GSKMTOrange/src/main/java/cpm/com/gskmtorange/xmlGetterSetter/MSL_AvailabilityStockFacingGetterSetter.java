@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class MSL_AvailabilityStockFacingGetterSetter implements Serializable{
     String sub_category_id, sub_category, brand_id, brand,
-            sku_id, sku, mrp, sku_sequence, toggleValue, mbq, category_id, facing, stock,company_id,must_have;
+            sku_id, sku, mrp, sku_sequence, toggleValue, mbq, category_id, facing="", stock,company_id,must_have;
 
     public String getSub_category_id() {
         return sub_category_id;

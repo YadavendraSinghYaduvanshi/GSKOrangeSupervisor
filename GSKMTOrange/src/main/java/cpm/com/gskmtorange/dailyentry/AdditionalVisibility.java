@@ -94,13 +94,13 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     ArrayList<SkuGetterSetter> empty_list = new ArrayList<>();
     String _pathforcheck1, _pathforcheck2, _pathforcheck3, _path, str, msg;
     private SharedPreferences preferences;
-    String store_id, date, intime, img_str1, img_str2, img_str3, togglevalue = "1", CATEGORY_ID, camera_allow, store_type_id, class_id, key_account_id;
+    String store_id, date, intime, img_str1="", img_str2="", img_str3="", togglevalue = "1", CATEGORY_ID, camera_allow, store_type_id, class_id, key_account_id;
     ImageView img_cam, img_clicked;
     Button btn_add, btn_close;
     EditText Edt_txt;
     MyAdaptorStock adapterData;
     ListView listviewlay;
-    String errormsg, categoryName, categoryId;
+    String errormsg, categoryName, categoryId,country_id;
     MyAdaptorAdditionalStock adapteradditional;
     AddittionalGetterSetter adGt, newadd;
     LinearLayout brandlayout, diaplylayout, cameralayout;
@@ -130,6 +130,9 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         store_type_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
         class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
         key_account_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
+
+        country_id = preferences.getString(CommonString.KEY_COUNTRY_ID, "");
+
         CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         categoryName = getIntent().getStringExtra("categoryName");
@@ -1613,7 +1616,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 errormsg = getResources().getString(R.string.title_activity_select_dropdown);
 
             } else if (camera_allow.equals("1")) {
-                if (imageu == null || imageu.equalsIgnoreCase("")) {
+                if (!country_id.equals("6") && (imageu == null || imageu.equalsIgnoreCase(""))) {
                     flag = false;
 
                     errormsg = getResources().getString(R.string.title_activity_take_image);

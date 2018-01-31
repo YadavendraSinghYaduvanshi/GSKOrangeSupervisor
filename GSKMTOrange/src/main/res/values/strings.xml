@@ -57,7 +57,7 @@
 
     <string name="menu_daily_route_plan">Daily Route Plan</string>
     <string name="menu_daily_download">Daily Data Download</string>
-    <string name="menu_upload_data">Upload Data</string>
+    <string name="menu_upload_data">Data Uploaded Successfully</string>
     <string name="menu_geotag">Geo Tag</string>
     <string name="menu_export">Data Export</string>
 
@@ -329,5 +329,7 @@
     <string name="select_option">Select an option</string>
     <string name="title_activity_planogram_pdf">Planogram Document</string>
 
+    <string name="Download_pdf_Error">File not downloaded</string>
+    <string name="title_activity_stock_data">Stock</string>
 
 </resources>

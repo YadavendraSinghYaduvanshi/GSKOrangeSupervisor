@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class LoginGetterSetter implements Serializable{
 
-    String RIGHT_NAME, APP_VERSION, APP_PATH, CURRENTDATE;
+    String RIGHT_NAME, APP_VERSION, APP_PATH, CURRENTDATE,COUNTRY_ID;
 
     ArrayList<String> CULTURE_ID = new ArrayList<>();
     ArrayList<String> CULTURE_NAME = new ArrayList<>();
@@ -70,5 +70,13 @@ public class LoginGetterSetter implements Serializable{
 
     public void setNOTICE_URL(String NOTICE_URL) {
         this.NOTICE_URL.add(NOTICE_URL);
+    }
+
+    public String getCOUNTRY_ID() {
+        return COUNTRY_ID;
+    }
+
+    public void setCOUNTRY_ID(String COUNTRY_ID) {
+        this.COUNTRY_ID = COUNTRY_ID;
     }
 }

@@ -95,6 +95,9 @@ public class XMLHandlers {
                         lgs.setNOTICE_URL(xpp.nextText());
                     }
 
+                    if (xpp.getName().equals("COUNTRY_ID")) {
+                        lgs.setCOUNTRY_ID(xpp.nextText());
+                    }
                 }
                 xpp.next();
             }

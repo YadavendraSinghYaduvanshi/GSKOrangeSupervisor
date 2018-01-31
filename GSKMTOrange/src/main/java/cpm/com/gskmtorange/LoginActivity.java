@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        tv_version.setText("Version/Versiyon - " + app_ver+"T3");
+        tv_version.setText("Version/Versiyon - " + app_ver+"T6");
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
@@ -434,7 +434,7 @@ public class LoginActivity extends AppCompatActivity {
                         + "[/PASSWORD]" + "[IN_TIME]" + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext())
                         + "[/IN_TIME]" + "[LATITUDE]" + lat
                         + "[/LATITUDE]" + "[LONGITUDE]" + lon
-                        + "[/LONGITUDE]" + "[APP_VERSION]" + app_ver+"T3"
+                        + "[/LONGITUDE]" + "[APP_VERSION]" + app_ver+"T6"
                         + "[/APP_VERSION]" + "[ATT_MODE]OnLine[/ATT_MODE]"
                         + "[NETWORK_STATUS]" + "LoginStatus"
                         + "[/NETWORK_STATUS]" + "[/USER_DATA][/DATA]";
@@ -543,6 +543,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         editor.putString(CommonString.KEY_PATH, lgs.getAPP_PATH());
                         editor.putString(CommonString.KEY_DATE, lgs.getCURRENTDATE());
+                        editor.putString(CommonString.KEY_COUNTRY_ID, lgs.getCOUNTRY_ID());
                         //editor.putString(CommonString.KEY_DATE, "01/21/2017");
 
                         editor.commit();
