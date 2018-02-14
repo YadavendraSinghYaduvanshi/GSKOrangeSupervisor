@@ -182,8 +182,8 @@
     <string name="title_activity_store_wise_performance">أداء المتجر</string>
     <string name="success">نجاح</string>
     <string name="category_performance_t2p">مواد الدعاية في المتاجر</string>
-    <string name="daily_data_menu_t2p">المتاح او المتوفر الشهري</string>
-    <string name="title_activity_t2_pcompliance">مطابقة مواد الدعاية لقوانين الشركة</string>
+    <string name="daily_data_menu_t2p">أدوات العرض</string>
+    <string name="title_activity_t2_pcompliance"> T2P - مطابقة مواد الدعاية لقوانين الشركة</string>
     <string name="t2p_data_uploading">تحميل بيانات مواد الدعاية T2P</string>
     <string name="title_activity_t2p_brand__avaibility">تواجد مواد الدعاية</string>
     <string name="notsuppoted">هذا الجهاز غير معتمد.</string>
@@ -235,4 +235,5 @@
     <string name="future_route_plan">بحث عن خط السير</string>
     <string name="select_date">اختيار التاريخ</string>
     <string name="no_route_plan_for_day">لا يوجد خط سير لليوم</string>
+    <string name="check_faceup_not_zero">لا يمكن ان يكون عدد أوجه الأصناف صفر علي الرف  اذا كانت الأصناف متوفره</string>
 </resources>

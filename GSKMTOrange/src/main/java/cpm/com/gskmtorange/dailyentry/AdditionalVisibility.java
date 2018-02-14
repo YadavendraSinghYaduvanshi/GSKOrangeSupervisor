@@ -52,6 +52,7 @@ import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.ADDITIONAL_DISPLAY_MASTERGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
@@ -93,13 +94,13 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     ArrayList<SkuGetterSetter> empty_list = new ArrayList<>();
     String _pathforcheck1, _pathforcheck2, _pathforcheck3, _path, str, msg;
     private SharedPreferences preferences;
-    String store_id, date, intime, img_str1, img_str2, img_str3, togglevalue = "1", CATEGORY_ID, camera_allow, store_type_id, class_id, key_account_id;
+    String store_id, date, intime, img_str1="", img_str2="", img_str3="", togglevalue = "1", CATEGORY_ID, camera_allow, store_type_id, class_id, key_account_id;
     ImageView img_cam, img_clicked;
     Button btn_add, btn_close;
     EditText Edt_txt;
     MyAdaptorStock adapterData;
     ListView listviewlay;
-    String errormsg, categoryName, categoryId;
+    String errormsg, categoryName, categoryId,country_id;
     MyAdaptorAdditionalStock adapteradditional;
     AddittionalGetterSetter adGt, newadd;
     LinearLayout brandlayout, diaplylayout, cameralayout;
@@ -109,13 +110,15 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     String gallery_package = "";
     Uri outputFileUri;
 
+    Toolbar toolbar;
+
     ////String brand_id,SKU_ID;
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.additionalvisibilitylayout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -127,7 +130,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         store_type_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
         class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
         key_account_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+
+        country_id = preferences.getString(CommonString.KEY_COUNTRY_ID, "");
+
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         categoryName = getIntent().getStringExtra("categoryName");
         categoryId = getIntent().getStringExtra("categoryId");
@@ -750,10 +756,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             btnimage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    _pathforcheck1 = store_id + categoryId + "AdditionalImage1" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck1 = store_id + categoryId + "AdditionalImage1" + date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
 
                     _path = CommonString.FILE_PATH + _pathforcheck1;
-                    intime = getCurrentTime();
+                    intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
                     startCameraActivity();
 
                 }
@@ -762,10 +768,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             btnimage1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    _pathforcheck2 = store_id + categoryId + "AdditionalImage2" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck2 = store_id + categoryId + "AdditionalImage2" + date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
 
                     _path = CommonString.FILE_PATH + _pathforcheck2;
-                    intime = getCurrentTime();
+                    intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
                     startCameraActivity();
 
                 }
@@ -774,10 +780,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
             btnimage2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    _pathforcheck3 = store_id + categoryId + "AdditionalImage3" + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck3 = store_id + categoryId + "AdditionalImage3" + date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
 
                     _path = CommonString.FILE_PATH + _pathforcheck3;
-                    intime = getCurrentTime();
+                    intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
                     startCameraActivity();
 
                 }
@@ -813,7 +819,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
         return new String(chars);
     }
 
-    public String getCurrentTime() {
+    public String getCurrentTimeNotUsed() {
         Calendar m_cal = Calendar.getInstance();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");
@@ -1610,7 +1616,7 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
                 errormsg = getResources().getString(R.string.title_activity_select_dropdown);
 
             } else if (camera_allow.equals("1")) {
-                if (imageu == null || imageu.equalsIgnoreCase("")) {
+                if (!country_id.equals("6") && (imageu == null || imageu.equalsIgnoreCase(""))) {
                     flag = false;
 
                     errormsg = getResources().getString(R.string.title_activity_take_image);
@@ -1667,44 +1673,10 @@ public class AdditionalVisibility extends AppCompatActivity implements View.OnCl
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
-
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar.setTitle(getResources().getString(R.string.title_activity_Additional_visibility));
 
     }
 
-    private static boolean updateResources(Context context, String language) {
-
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
 }

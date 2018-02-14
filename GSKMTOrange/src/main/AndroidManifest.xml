@@ -82,7 +82,7 @@
         <activity
             android:name=".dailyentry.T2PComplianceActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_activity_t2_pcompliance"
+            android:label="@string/daily_data_menu_t2p"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -202,7 +202,31 @@
             android:name=".dailyentry.FutureJCPActivity"
             android:label=""
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".dailyentry.CreateSelfActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_activity_create_self"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".dailyentry.NoCameraActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:label="@string/title_activity_create_self"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".dailyentry.PlanogramPDFActivity"
+            android:label="@string/title_activity_planogram_pdf"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".dailyentry.StockDataActivity"
+            android:label="@string/title_activity_stock_data"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>

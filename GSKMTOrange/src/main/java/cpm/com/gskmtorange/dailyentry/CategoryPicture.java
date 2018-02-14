@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,21 +34,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
-import cpm.com.gskmtorange.GetterSetter.AdditionalDialogGetterSetter;
-import cpm.com.gskmtorange.GetterSetter.AddittionalGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CategoryPictureGetterSetter;
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
-import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
+import cpm.com.gskmtorange.constant.CommonFunctions;
+import cpm.com.gskmtorange.gsk_dailyentry.MSL_Availability_StockFacingActivity;
+import cpm.com.gskmtorange.xmlGetterSetter.CategoryImagesAllowed;
 
 public class CategoryPicture extends AppCompatActivity {
     String _pathforcheck1, _pathforcheck2, _pathforcheck3, _pathforcheck4, Camerapath1, Camerapath2, _path, CaMpath, str, msg, categoryName, categoryId;
     ImageView im1, im2, im3, im4;
     ListView listview;
-    String store_id, date, intime, img_str1, img_str2, img_str3, img_str4, togglevalue = "1", CATEGORY_ID, camera_allow, store_type_id, class_id, key_account_id;
+    String store_id, date, intime, img_str1="", img_str2="", img_str3="", img_str4="", togglevalue = "1", CATEGORY_ID, camera_allow, store_type_id, class_id, key_account_id;
     private SharedPreferences preferences;
     Uri outputFileUri;
     String gallery_package = "";
@@ -59,12 +56,15 @@ public class CategoryPicture extends AppCompatActivity {
     int Adapterposition;
     ArrayList<CategoryPictureGetterSetter> listdat = new ArrayList<CategoryPictureGetterSetter>();
     CategoryAdapter adapteradditional;
+    Toolbar toolbar;
+
+    ArrayList<CategoryImagesAllowed> categoryImagesAllowed = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_picture);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -74,7 +74,7 @@ public class CategoryPicture extends AppCompatActivity {
         store_type_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
         class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
         key_account_id = preferences.getString(CommonString.KEY_KEYACCOUNT_ID, "");
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         categoryName = getIntent().getStringExtra("categoryName");
         categoryId = getIntent().getStringExtra("categoryId");
@@ -96,55 +96,45 @@ public class CategoryPicture extends AppCompatActivity {
 
 
         adddata = db.getCategoryPictureData(store_id, categoryId);
+        categoryImagesAllowed = db.getCategoryPictureAllowedData(categoryId);
+
+        if(categoryImagesAllowed.size()>0){
+            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam1(), im1);
+            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam2(), im2);
+            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam2(), im3);
+            setCamAllowImage(categoryImagesAllowed.get(0).isImg_cam3(), im4);
+        }
 
         if (adddata.size() != 0) {
 
-            for (int k = 0; k < adddata.size(); k++) {
-                String key_id = adddata.get(k).getKEY_ID();
-
+                String key_id = adddata.get(0).getKEY_ID();
 
                 listdat = db.getCategoryPictureListData(store_id, categoryId, key_id);
 
-                String image1 = adddata.get(k).getCategoryImage1();
-                String image2 = adddata.get(k).getCategoryImage2();
-                String image3 = adddata.get(k).getCategoryImage3();
-                String image4 = adddata.get(k).getCategoryImage4();
+                String image1 = adddata.get(0).getCategoryImage1();
+                String image2 = adddata.get(0).getCategoryImage2();
+                String image3 = adddata.get(0).getCategoryImage3();
+                String image4 = adddata.get(0).getCategoryImage4();
 
-                if (image1 != null) {
+                if (image1 != null && !image1.equals("")) {
                     im1.setBackgroundResource(R.mipmap.camera_green);
-
                     img_str1 = image1;
-
-                } else {
-                    im1.setBackgroundResource(R.drawable.camera_orange_star_green);
                 }
 
-
-                if (image2 != null) {
+                if (image2 != null && !image2.equals("")) {
                     im2.setBackgroundResource(R.mipmap.camera_green);
-
                     img_str2 = image2;
-
-                } else {
-                    im2.setBackgroundResource(R.mipmap.camera_orange);
                 }
-                if (image3 != null) {
+
+                if (image3 != null && !image3.equals("")) {
                     im3.setBackgroundResource(R.mipmap.camera_green);
                     img_str3 = image3;
-                } else {
-                    im3.setBackgroundResource(R.mipmap.camera_orange);
                 }
-                if (image4 != null) {
+
+                if (image4 != null && !image4.equals("")) {
                     im4.setBackgroundResource(R.mipmap.camera_green);
-
                     img_str4 = image4;
-                } else {
-                    im4.setBackgroundResource(R.mipmap.camera_orange);
                 }
-
-
-            }
-
 
         } else {
 
@@ -152,15 +142,15 @@ public class CategoryPicture extends AppCompatActivity {
 
         }
 
-
         adapteradditional = new CategoryPicture.CategoryAdapter(CategoryPicture.this, listdat);
         listview.setAdapter(adapteradditional);
 
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 
-                CategoryPictureGetterSetter CP = new CategoryPictureGetterSetter();
+                final CategoryPictureGetterSetter CP = new CategoryPictureGetterSetter();
 
                 CP.setCategoryImage1(img_str1);
                 CP.setCategoryImage2(img_str2);
@@ -169,15 +159,31 @@ public class CategoryPicture extends AppCompatActivity {
                 CP.setStore_ID(store_id);
                 CP.setCamera_allow(camera_allow);
 
-
                 if (validateData(CP, listdat)) {
 
-                    db.InsertCategoryPictureData(CP, listdat, categoryId);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CategoryPicture.this);
+                    builder.setMessage(getResources().getString(R.string.check_save_message))
+                            .setCancelable(false)
+                            .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    db.open();
 
-                    finish();
+                                    db.InsertCategoryPictureData(CP, listdat, categoryId);
+                                    finish();
+                                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                                }
+                            })
+                            .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
 
                 } else {
-                    Snackbar.make(view, "Please take image", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    Snackbar.make(view, R.string.title_activity_take_image, Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
 
                 }
@@ -191,10 +197,10 @@ public class CategoryPicture extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                _pathforcheck1 = store_id + "CategoryPicture1" + categoryId + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck1 = store_id + "CategoryPicture1" + categoryId + date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
 
                 _path = CommonString.FILE_PATH + _pathforcheck1;
-                intime = getCurrentTime();
+                intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
                 startCameraActivity();
 
 
@@ -205,10 +211,10 @@ public class CategoryPicture extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                _pathforcheck2 = store_id + "CategoryPicture2" + categoryId + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck2 = store_id + "CategoryPicture2" + categoryId + date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
 
                 _path = CommonString.FILE_PATH + _pathforcheck2;
-                intime = getCurrentTime();
+                intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
                 startCameraActivity();
 
 
@@ -218,10 +224,10 @@ public class CategoryPicture extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                _pathforcheck3 = store_id + "CategoryPicture3" + categoryId + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck3 = store_id + "CategoryPicture3" + categoryId + date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
 
                 _path = CommonString.FILE_PATH + _pathforcheck3;
-                intime = getCurrentTime();
+                intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
                 startCameraActivity();
 
 
@@ -231,10 +237,10 @@ public class CategoryPicture extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                _pathforcheck4 = store_id + "CategoryPicture4" + categoryId + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck4 = store_id + "CategoryPicture4" + categoryId + date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
 
                 _path = CommonString.FILE_PATH + _pathforcheck4;
-                intime = getCurrentTime();
+                intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
                 startCameraActivity();
 
 
@@ -255,7 +261,7 @@ public class CategoryPicture extends AppCompatActivity {
         return new String(chars);
     }
 
-    public String getCurrentTime() {
+    public String getCurrentTimeNotUsed() {
         Calendar m_cal = Calendar.getInstance();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");
@@ -271,42 +277,6 @@ public class CategoryPicture extends AppCompatActivity {
         return cdate;
     }
 
-    private static boolean updateResources(Context context, String language) {
-
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
     protected void startCameraActivity() {
         try {
@@ -505,11 +475,11 @@ public class CategoryPicture extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Camerapath1 = store_id + "CategoryPicture" + list.get(position1).getSUB_CATEGORY_ID().toString() + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    Camerapath1 = store_id + "CategoryPicture" + list.get(position1).getSUB_CATEGORY_ID().toString() + date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                     Adapterposition = position1;
 
                     _path = CommonString.FILE_PATH + Camerapath1;
-                    intime = getCurrentTime();
+                    intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
                     startCameraActivity();
 
                     listview.invalidateViews();
@@ -524,10 +494,10 @@ public class CategoryPicture extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Camerapath2 = store_id + "CategoryPicture" + list.get(position1).getSUB_CATEGORY_ID().toString() + date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    Camerapath2 = store_id + "CategoryPicture" + list.get(position1).getSUB_CATEGORY_ID().toString() + date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                     Adapterposition = position1;
                     _path = CommonString.FILE_PATH + Camerapath2;
-                    intime = getCurrentTime();
+                    intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
                     startCameraActivity();
                     listview.invalidateViews();
                 }
@@ -568,11 +538,34 @@ public class CategoryPicture extends AppCompatActivity {
     boolean validateData(CategoryPictureGetterSetter data, ArrayList<CategoryPictureGetterSetter> list) {
         boolean flag = true;
 
-        String cameraImage1 = data.getCategoryImage1();
+            if(categoryImagesAllowed.get(0).isImg_cam1()){
+               if(data.getCategoryImage1().equals("")){
+                   flag = false;
+               }
+            }
 
+            if(flag){
+                if(categoryImagesAllowed.get(0).isImg_cam2()){
+                    if(data.getCategoryImage2().equals("")){
+                        flag = false;
+                    }
+                }
+            }
 
-        if (cameraImage1 == null) {
-            flag = false;
+        if(flag){
+            if(categoryImagesAllowed.get(0).isImg_cam3()){
+                if(data.getCategoryImage3().equals("")){
+                    flag = false;
+                }
+            }
+        }
+
+        if(flag){
+            if(categoryImagesAllowed.get(0).isImg_cam4()){
+                if(data.getCategoryImage4().equals("")){
+                    flag = false;
+                }
+            }
         }
 
 
@@ -655,5 +648,22 @@ public class CategoryPicture extends AppCompatActivity {
                 });
         android.app.AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar.setTitle(getResources().getString(R.string.title_activity_category_picture));
+    }
+
+    public void setCamAllowImage(boolean isAllowed, ImageView img_cam){
+
+        if(isAllowed){
+            img_cam.setBackgroundResource(R.drawable.camera_orange_star_green);
+        }
+        else{
+            img_cam.setBackgroundResource(R.mipmap.camera_orange);
+        }
     }
 }

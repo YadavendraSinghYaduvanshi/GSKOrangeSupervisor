@@ -65,6 +65,7 @@ import cpm.com.gskmtorange.GeoTag.GeoTagStoreList;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.download.DownloadActivity;
 import cpm.com.gskmtorange.messgae.AlertMessage;
@@ -130,7 +131,7 @@ public class NonWorkingReason extends AppCompatActivity implements
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         _UserId = preferences.getString(CommonString.KEY_USERNAME, "");
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
@@ -169,7 +170,7 @@ public class NonWorkingReason extends AppCompatActivity implements
         }
 
 
-        intime = getCurrentTime();
+        intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
 
         camera.setOnClickListener(this);
         save.setOnClickListener(this);
@@ -362,7 +363,7 @@ public class NonWorkingReason extends AppCompatActivity implements
         // TODO Auto-generated method stub
         if (v.getId() == R.id.imgcam) {
 
-            _pathforcheck = store_id + "NonWorking" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+            _pathforcheck = store_id + "NonWorking" + visit_date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
 
             _path = CommonString.FILE_PATH + _pathforcheck;
 
@@ -405,7 +406,7 @@ public class NonWorkingReason extends AppCompatActivity implements
                                                         cdata.setVisitDate(visit_date);
                                                         cdata.setUserId(_UserId);
                                                         cdata.setInTime(intime);
-                                                        cdata.setOutTime(getCurrentTime());
+                                                        cdata.setOutTime(CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()));
                                                         cdata.setReason(reasonname);
                                                         cdata.setReasonid(reasonid);
                                                         cdata.setLatitude("0.0");
@@ -437,7 +438,7 @@ public class NonWorkingReason extends AppCompatActivity implements
                                                     cdata.setVisitDate(visit_date);
                                                     cdata.setUserId(_UserId);
                                                     cdata.setInTime(intime);
-                                                    cdata.setOutTime(getCurrentTime());
+                                                    cdata.setOutTime(CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()));
                                                     cdata.setReason(reasonname);
                                                     cdata.setReasonid(reasonid);
                                                     cdata.setLatitude("0.0");
@@ -533,7 +534,7 @@ public class NonWorkingReason extends AppCompatActivity implements
         return new String(chars);
     }
 
-    public String getCurrentTime() {
+    public String getCurrentTimeNotUsed() {
         Calendar m_cal = Calendar.getInstance();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");
@@ -571,45 +572,7 @@ public class NonWorkingReason extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
-    }
-
-    private static boolean updateResources(Context context, String language) {
-
-
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
 

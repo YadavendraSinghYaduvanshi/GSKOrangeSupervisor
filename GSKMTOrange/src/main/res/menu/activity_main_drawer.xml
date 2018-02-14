@@ -25,6 +25,11 @@
             android:title="@string/future_route_plan" />
 
         <item
+            android:id="@+id/nav_planogram"
+            android:icon="@mipmap/ic_view_quilt_black_48dp"
+            android:title="@string/category_performance_PLANOGRAM" />
+
+        <item
             android:id="@+id/nav_exit"
             android:icon="@mipmap/exit_grey"
             android:title="@string/menu_exit" />

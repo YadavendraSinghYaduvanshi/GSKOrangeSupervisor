@@ -39,6 +39,7 @@ import java.util.Locale;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 
@@ -76,7 +77,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
 
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+            CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -226,7 +227,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     private void prepareList() {
@@ -365,7 +366,7 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
                     String date = new Date().toLocaleString().toString();
                     String TempDate = new Date().toLocaleString().toString().replace(' ', '_').replace(',', '_').replace(':', '-');
 
-                    _pathforcheck = "Stock" + headerTitle.getBrand_cd() + "_" + store_cd + "_" + visit_date.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                    _pathforcheck = "Stock" + headerTitle.getBrand_cd() + "_" + store_cd + "_" + visit_date.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                     child_position = groupPosition;
                     path = str + _pathforcheck;
 
@@ -488,49 +489,5 @@ public class MSL_AvailabilityActivity extends AppCompatActivity {
         LinearLayout lin_category;
     }
 
-
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
 }

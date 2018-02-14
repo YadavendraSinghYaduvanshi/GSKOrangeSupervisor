@@ -33,6 +33,7 @@ import java.util.Locale;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.download.DownloadActivity;
 
@@ -51,12 +52,13 @@ public class CheckoutActivity extends AppCompatActivity {
     CoverageBean coverageBean;
 
     String lat, lon, checkOutImagePath = "";
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         db = new GSKOrangeDB(this);
@@ -66,7 +68,7 @@ public class CheckoutActivity extends AppCompatActivity {
         visit_date = preferences.getString(CommonString.KEY_DATE, null);
         username = preferences.getString(CommonString.KEY_USERNAME, null);
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         store_id = getIntent().getStringExtra(CommonString.KEY_STORE_ID);
         checkOutImagePath = getIntent().getStringExtra(CommonString.KEY_CHECKOUT_IMAGE);
@@ -131,7 +133,7 @@ public class CheckoutActivity extends AppCompatActivity {
                                 + "[LATITUDE]" + lat + "[/LATITUDE]"
                                 + "[LOGITUDE]" + lon + "[/LOGITUDE]"
                                 + "[CHECKOUT_DATE]" + visit_date + "[/CHECKOUT_DATE]"
-                                + "[CHECK_OUTTIME]" + getCurrentTime() + "[/CHECK_OUTTIME]"
+                                + "[CHECK_OUTTIME]" + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()) + "[/CHECK_OUTTIME]"
                                 + "[CHECK_INTIME]" + coverageBean.getInTime() + "[/CHECK_INTIME]"
                                 + "[CREATED_BY]" + username + "[/CREATED_BY]"
                                 + "[/STORE_CHECK_OUT_STATUS]";
@@ -169,7 +171,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
                 if (result.toString().equalsIgnoreCase(CommonString.KEY_SUCCESS)) {
 
-                    db.updateCheckoutOuttime(store_id, getCurrentTime(), CommonString.KEY_Y, checkOutImagePath);
+                    db.updateCheckoutOuttime(store_id, CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()), CommonString.KEY_Y, checkOutImagePath);
 
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(CommonString.KEY_STORE_ID, "");
@@ -281,45 +283,11 @@ public class CheckoutActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar.setTitle(getResources().getString(R.string.title_activity_checkout));
     }
 
-    private static boolean updateResources(Context context, String language) {
-
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else {
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
-
-    /*public String getCurrentTime() {
+    /*public String getCurrentTimeNotUsed() {
         Calendar m_cal = Calendar.getInstance();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");
@@ -342,7 +310,7 @@ public class CheckoutActivity extends AppCompatActivity {
         return new String(chars);
     }
 
-    public String getCurrentTime() {
+    public String getCurrentTimeNotUsed() {
         Calendar m_cal = Calendar.getInstance();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");

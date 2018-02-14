@@ -76,6 +76,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.GeotaggingBeans;
@@ -92,7 +93,6 @@ import cpm.com.gskmtorange.xmlHandlers.FailureXMLHandler;
 public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     String result, errormsg = "";
-    ;
     private ProgressBar pb;
     private GoogleMap mMap;
     double latitude = 0.0;
@@ -133,14 +133,16 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
      */
     private GoogleApiClient client;
 
+    Toolbar toolbar;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo_tag);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         username = preferences.getString(CommonString.KEY_USERNAME, null);
         storeid = preferences.getString(CommonString.KEY_STORE_ID, null);
@@ -256,7 +258,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
                     }
                 }*/
 
-                _pathforcheck = storeid +"GeoTag" + visitData.replace("/", "") + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck = storeid +"GeoTag" + visitData.replace("/", "") + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
 
                 _path = CommonString.FILE_PATH + _pathforcheck;
 
@@ -394,7 +396,8 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onResume() {
         super.onResume();
 
-        updateResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(),preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        toolbar.setTitle(getResources().getString(R.string.title_activity_store_geotag));
        /* checkPlayServices();
 
         // Resuming the periodic location updates
@@ -422,7 +425,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         stopLocationUpdates();
     }
 
-    /*public String getCurrentTime() {
+    /*public String getCurrentTimeNotUsed() {
 
         Calendar m_cal = Calendar.getInstance();
 
@@ -450,7 +453,7 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         return new String(chars);
     }
 
-    public String getCurrentTime() {
+    public String getCurrentTimeNotUsed() {
         Calendar m_cal = Calendar.getInstance();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");
@@ -1073,50 +1076,4 @@ public class GeoTagActivity extends AppCompatActivity implements OnMapReadyCallb
         return result.toString();
     }
 
-
-
-
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 }

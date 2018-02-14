@@ -26,6 +26,7 @@ import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.ADDITIONAL_DISPLAY_MASTERGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.BrandMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.CategoryImagesAllowed;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.CategoryWisePerformaceGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.DisplayChecklistMasterGetterSetter;
@@ -39,15 +40,20 @@ import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_PLANOGRAM_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MAPPING_SOS_TARGET_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityStockFacingGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingCategoryImageAllowGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingDisplayChecklistGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.MappingPlanogramCountrywiseGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingPromotionGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingStockGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MappingSubCategoryImageAllowGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.NoCameraDataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.NonWorkingReasonGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.RowColumnGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.STORE_PERFORMANCE_MasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.ShelfMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.SkuGroupMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuMasterGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Stock_FacingGetterSetter;
@@ -62,7 +68,7 @@ import cpm.com.gskmtorange.xmlGetterSetter.TableBean;
  */
 
 public class GSKOrangeDB extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "GSK_ORANGE_DB5";
+    public static final String DATABASE_NAME = "GSK_ORANGE_DB14";
     public static final int DATABASE_VERSION = 13;
     TableBean tableBean;
     private SQLiteDatabase db;
@@ -150,9 +156,13 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             db.execSQL(CommonString.CREATE_TABLE_INSERT_CATEGORY_PICTURE);
 
             db.execSQL(TableBean.getMappingSubCategoryImageAllow());
+            db.execSQL(TableBean.getMappingCategoryImageAllow());
+            //db.execSQL(TableBean.getMappingCountrywisePlanogram());
+            db.execSQL(TableBean.getSkugroupMaster());
 
             //15-03-2017
             db.execSQL(CommonString.CREATE_TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING);
+            db.execSQL(CommonString.CREATE_TABLE_INSERT_NO_CAMERA_FACING_DATA);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -199,6 +209,9 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE_LIST, "Store_Id='" + storeid + "'", null);
 
         db.delete(CommonString.TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING, "Store_Id='" + storeid + "'", null);
+
+        db.delete(CommonString.TABLE_INSERT_NO_CAMERA_FACING_DATA, CommonString.KEY_STORE_ID + "='" + storeid + "'", null);
+
     }
 
     public void deleteAllTables() {
@@ -230,6 +243,7 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE, null, null);
         db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE_LIST, null, null);
         db.delete(CommonString.TABLE_INSERT_MSL_AVAILABILITY_STOCK_FACING, null, null);
+        db.delete(CommonString.TABLE_INSERT_NO_CAMERA_FACING_DATA, null, null);
     }
 
     public void InsertJCP(JourneyPlanGetterSetter data) {
@@ -281,14 +295,19 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<T2PGetterSetter> getT2PDefaultData(String store_id) {
+    public ArrayList<T2PGetterSetter> getT2PDefaultData(String store_id, String category_id) {
 
         ArrayList<T2PGetterSetter> t2PList = new ArrayList<>();
         Cursor dbcursor = null;
 
         try {
 
-            dbcursor = db.rawQuery("Select  BM.BRAND As BRAND, BM.BRAND_ID As BRAND_ID, DM.DISPLAY As DISPLAY, DM.DISPLAY_ID As DISPLAY_ID, DM.IMAGE_URL As IMAGE_URL, DM.IMAGE_PATH As IMAGE_PATH, T.CATEGORY_FIXTURE As CATEGORY_FIXTURE from BRAND_MASTER BM INNER JOIN MAPPING_T2P T ON BM.BRAND_ID = T.BRAND_ID INNER JOIN  DISPLAY_MASTER DM  ON T.DISPLAY_ID= DM.DISPLAY_ID WHERE T.STORE_ID = '" + store_id + "'", null);
+            dbcursor = db.rawQuery("Select  BM.BRAND As BRAND, BM.BRAND_ID As BRAND_ID, DM.DISPLAY As DISPLAY, " +
+                    "DM.DISPLAY_ID As DISPLAY_ID, DM.IMAGE_URL As IMAGE_URL, DM.IMAGE_PATH As IMAGE_PATH, " +
+                    "T.CATEGORY_FIXTURE As CATEGORY_FIXTURE from BRAND_MASTER BM INNER JOIN MAPPING_T2P T " +
+                    "ON BM.BRAND_ID = T.BRAND_ID INNER JOIN  DISPLAY_MASTER DM  " +
+                    "ON T.DISPLAY_ID= DM.DISPLAY_ID INNER JOIN SUB_CATEGORY_MASTER SCM ON  BM.SUB_CATEGORY_ID = SCM.SUB_CATEGORY_ID " +
+                    "WHERE T.STORE_ID = '" + store_id + "' AND SCM.CATEGORY_ID ='"+ category_id +"'", null);
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
                 while (!dbcursor.isAfterLast()) {
@@ -3112,11 +3131,12 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> getMappingPlanogramData(String category_id) {
+    public ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> getMappingPlanogramData(String category_id, String store_type_id, String class_id) {
         ArrayList<MAPPING_PLANOGRAM_DataGetterSetter> list = new ArrayList<>();
         Cursor dbcursor = null;
         try {
-            dbcursor = db.rawQuery("SELECT * FROM MAPPING_PLANOGRAM where CATEGORY_ID='" + category_id + "'", null);
+            dbcursor = db.rawQuery("SELECT * FROM MAPPING_PLANOGRAM where CATEGORY_ID='" + category_id + "' AND STORETYPE_ID ='" + store_type_id
+                    +"' AND CLASS_ID ='" + class_id + "'", null);
 
             if (dbcursor != null) {
                 dbcursor.moveToFirst();
@@ -4226,12 +4246,12 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         Cursor dbcursor = null;
         try {
 
-            dbcursor = db.rawQuery("SELECT  DISTINCT SB.SUB_CATEGORY_ID, MIA.IMAGE_ALLOW,SB.SUB_CATEGORY FROM MAPPING_STOCK M INNER JOIN SKU_MASTER SK ON M.SKU_ID = SK.SKU_ID" +
+            dbcursor = db.rawQuery("SELECT DISTINCT SB.SUB_CATEGORY_ID, MIA.IMAGE_ALLOW,SB.SUB_CATEGORY FROM MAPPING_STOCK M INNER JOIN SKU_MASTER SK ON M.SKU_ID = SK.SKU_ID" +
                     " INNER JOIN BRAND_MASTER BR ON SK.BRAND_ID = BR.BRAND_ID" +
                     " INNER JOIN SUB_CATEGORY_MASTER SB ON BR.SUB_CATEGORY_ID = SB.SUB_CATEGORY_ID" +
                     " INNER JOIN CATEGORY_MASTER CA ON SB.CATEGORY_ID = CA.CATEGORY_ID" +
                     " INNER JOIN MAPPING_SUB_CATEGORY_IMAGE_ALLOW MIA ON SB.SUB_CATEGORY_ID=MIA.SUB_CATEGORY_ID " +
-                    " WHERE M.KEYACCOUNT_ID = '" + key_account_id + " 'AND M.STORETYPE_ID = '" + store_type_id + "' AND M.CLASS_ID = '" + class_id + "' AND CA.CATEGORY_ID = '" + categoryId + "'", null);
+                    " WHERE M.KEYACCOUNT_ID = '" + key_account_id + " ' AND M.STORETYPE_ID = '" + store_type_id + "' AND M.CLASS_ID = '" + class_id + "' AND CA.CATEGORY_ID = '" + categoryId + "'", null);
 
 
             if (dbcursor != null) {
@@ -4301,6 +4321,11 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         ContentValues values1 = new ContentValues();
         try {
+
+            db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE,
+                    "Store_Id='" + gettersetter.getStore_ID() + "' And categoryId='" + categoryId + "' ", null);
+            db.delete(CommonString.TABLE_INSERT_CATEGORY_PICTURE_LIST,
+                    "Store_Id='" + gettersetter.getStore_ID() + "' And categoryId='" + categoryId + "' ", null);
 
             values.put("Store_Id", gettersetter.getStore_ID());
             values.put("categoryId", categoryId);
@@ -4784,6 +4809,27 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
         }
     }
 
+    //MAPPING_CATEGORY_IMAGE_ALLOW
+    public void InsertMappingCategoryImageAllow(MappingCategoryImageAllowGetterSetter data) {
+        db.delete("MAPPING_CATEGORY_IMAGE_ALLOW", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getCATEGORY_ID().size(); i++) {
+
+                values.put("COUNTRY_ID", data.getCOUNTRY_ID().get(i));
+                values.put("CATEGORY_ID", data.getCATEGORY_ID().get(i));
+                values.put("IMAGE1_ALLOW", data.getIMAGE1_ALLOW().get(i));
+                values.put("IMAGE2_ALLOW", data.getIMAGE2_ALLOW().get(i));
+                values.put("IMAGE3_ALLOW", data.getIMAGE3_ALLOW().get(i));
+                values.put("IMAGE4_ALLOW", data.getIMAGE4_ALLOW().get(i));
+
+                db.insert("MAPPING_CATEGORY_IMAGE_ALLOW", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " in MAPPING_CATEGORY_IMAGE_ALLOW " + ex.toString());
+        }
+    }
 
     //14-03-2017
     //MSL_Availability_StockFacing
@@ -5091,6 +5137,391 @@ public class GSKOrangeDB extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             Log.d("Exception ", "get MSL_Availability server upload Data!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    //get Sub Category Master
+    public ArrayList<MSL_AvailabilityStockFacingGetterSetter> getSubCategoryMaster(
+            String category_id) {
+
+        ArrayList<MSL_AvailabilityStockFacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT * FROM SUB_CATEGORY_MASTER WHERE CATEGORY_ID = '"+ category_id +"'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    MSL_AvailabilityStockFacingGetterSetter cd = new MSL_AvailabilityStockFacingGetterSetter();
+
+                    cd.setSub_category_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
+                    cd.setSub_category(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    //Sku Group Master Data for No camera
+
+    public ArrayList<NoCameraDataGetterSetter> getSkuGroupMasterData(String category_id, String sub_category_id) {
+        Cursor cursordata = null;
+        ArrayList<NoCameraDataGetterSetter> Data = new ArrayList<>();
+
+        try {
+
+            cursordata = db.rawQuery("SELECT  * FROM SKUGROUP_MASTER " +
+                    "WHERE CATEGORY_ID ='" + category_id + "' AND SUB_CATEGORY_ID ='"+ sub_category_id +"' ORDER BY SKUGROUP_SEQUENCE", null);
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    NoCameraDataGetterSetter sb = new NoCameraDataGetterSetter();
+
+                    sb.setSKUGROUP_ID(cursordata.getString(cursordata.getColumnIndexOrThrow("SKUGROUP_ID")));
+
+                    sb.setSKUGROUP_NAME(cursordata.getString(cursordata.getColumnIndexOrThrow("SKUGROUP_NAME")));
+
+                    Data.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+        return Data;
+
+    }
+
+    //insert no camera category data drag drop
+    public void InsertNoCameraAddedData(
+            String storeId, String categoryId, String sub_category_id, int row_count, HashMap<Integer,
+            List<NoCameraDataGetterSetter>> hashMapRowData) {
+
+        db.delete(CommonString.TABLE_INSERT_NO_CAMERA_FACING_DATA, " STORE_ID = '" + storeId
+                + "' AND CATEGORY_ID = '" + categoryId + "' AND SUB_CATEGORY_ID = '" + sub_category_id + "'", null);
+
+        ContentValues values = new ContentValues();
+
+        try {
+            db.beginTransaction();
+            for (int i = 1; i <=row_count; i++) {
+
+                for (int j = 0; j < hashMapRowData.get(i).size(); j++) {
+                    NoCameraDataGetterSetter data = hashMapRowData.get(i).get(j);
+
+                    values.put(CommonString.KEY_STORE_ID, storeId);
+                    values.put(CommonString.KEY_CATEGORY_ID, categoryId);
+                    values.put(CommonString.KEY_SUB_CATEGORY_ID, sub_category_id);
+                    values.put(CommonString.KEY_SKU_GROUP_ID, data.getSKUGROUP_ID());
+                    values.put(CommonString.KEY_ROW_NO, i);
+                    values.put(CommonString.KEY_COLUMN_NO, j+1);
+                    values.put(CommonString.KEY_FACING, data.getFacing());
+
+                    db.insert(CommonString.TABLE_INSERT_NO_CAMERA_FACING_DATA, null, values);
+                }
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        } catch (Exception ex) {
+            Log.d("Exception ", " in Insert NO CAMERA " + ex.toString());
+        }
+    }
+
+    //get no camera category drag drop
+    //get  for specific sub category id
+    public ArrayList<NoCameraDataGetterSetter> getNoCameraCategoryDataInserted(
+            String store_id, String category_id, String subcategory_id) {
+
+        ArrayList<NoCameraDataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+
+            if(subcategory_id==null){
+                dbcursor = db.rawQuery("SELECT * FROM "+ CommonString.TABLE_INSERT_NO_CAMERA_FACING_DATA+" WHERE " + CommonString.KEY_STORE_ID + " = '"+ store_id
+                        +"' AND "+ CommonString.KEY_CATEGORY_ID + " ='"+ category_id
+                        +"'", null);
+            }
+            else {
+                dbcursor = db.rawQuery("SELECT * FROM "+ CommonString.TABLE_INSERT_NO_CAMERA_FACING_DATA+" WHERE " + CommonString.KEY_STORE_ID + " = '"+ store_id
+                        +"' AND "+ CommonString.KEY_CATEGORY_ID + " ='"+ category_id
+                        +"' AND "+ CommonString.KEY_SUB_CATEGORY_ID + " ='"+ subcategory_id +"'", null);
+            }
+
+
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    NoCameraDataGetterSetter cd = new NoCameraDataGetterSetter();
+
+                    cd.setSKUGROUP_ID(dbcursor.getInt(dbcursor.getColumnIndexOrThrow(CommonString.KEY_SKU_GROUP_ID))+"");
+                    cd.setRow_no(dbcursor.getInt(dbcursor.getColumnIndexOrThrow(CommonString.KEY_ROW_NO)));
+                    cd.setColumn_no(dbcursor.getInt(dbcursor.getColumnIndexOrThrow(CommonString.KEY_COLUMN_NO)));
+                    cd.setFacing(dbcursor.getInt(dbcursor.getColumnIndexOrThrow(CommonString.KEY_FACING)));
+
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    //get no camera category drag drop
+    //get  for specific sub category id
+    public ArrayList<NoCameraDataGetterSetter> getNoCameraCategoryStoreWiseDataInserted(
+            String store_id) {
+
+        ArrayList<NoCameraDataGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT * FROM "+ CommonString.TABLE_INSERT_NO_CAMERA_FACING_DATA+" WHERE " +
+                    CommonString.KEY_STORE_ID + " = '"+ store_id +"'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    NoCameraDataGetterSetter cd = new NoCameraDataGetterSetter();
+
+                    cd.setCATEGORY_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_CATEGORY_ID)));
+                    cd.setSUB_CATEGORY_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_SUB_CATEGORY_ID)));
+                    cd.setSKUGROUP_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_SKU_GROUP_ID)));
+                    cd.setRow_no(Integer.parseInt(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_ROW_NO))));
+                    cd.setColumn_no(Integer.parseInt(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_COLUMN_NO))));
+                    cd.setFacing(Integer.parseInt(dbcursor.getString(dbcursor.getColumnIndexOrThrow(CommonString.KEY_FACING))));
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    //Sku Group Master
+
+    public void InsertSkuGroupMaster(SkuGroupMasterGetterSetter data) {
+        db.delete("SKUGROUP_MASTER", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getSUB_CATEGORY_ID().size(); i++) {
+
+                values.put("SKUGROUP_ID", data.getSKUGROUP_ID().get(i));
+                values.put("SKUGROUP_NAME", data.getSKUGROUP_NAME().get(i));
+                values.put("SUB_CATEGORY_ID", data.getSUB_CATEGORY_ID().get(i));
+                values.put("CATEGORY_ID", data.getCATEGORY_ID().get(i));
+                values.put("SKUGROUP_SEQUENCE", data.getSKUGROUP_SEQUENCE().get(i));
+
+                db.insert("SKUGROUP_MASTER", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " in SKUGROUP_MASTER " + ex.toString());
+        }
+    }
+
+    //get Row and column count no camera
+    public ArrayList<RowColumnGetterSetter> getrowColumnNoCamera(String store_id, String category_id, String sub_category_id) {
+
+        ArrayList<RowColumnGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT ROW_NO, MAX(COLUMN_NO) as COLUMN_NO FROM NO_CAMERA_FACING_DATA WHERE " +
+                    "STORE_ID = '" + store_id + "' AND CATEGORY_ID = '" + category_id + "' AND SUB_CATEGORY_ID = '" + sub_category_id +
+                    "' GROUP BY ROW_NO", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    RowColumnGetterSetter rc = new RowColumnGetterSetter();
+
+                    rc.setRow(dbcursor.getInt(dbcursor.getColumnIndexOrThrow("ROW_NO")));
+                    rc.setColumn(dbcursor.getInt(dbcursor.getColumnIndexOrThrow("COLUMN_NO")));
+
+                    list.add(rc);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get row column!" + e.toString());
+            return list;
+        }
+        return list;
+    }
+
+    //get Sub group master for sub category id , row and column
+
+    public NoCameraDataGetterSetter getRowSkuGroupCamera(String store_id, String category_id, String sub_category_id, int row, int column) {
+
+        NoCameraDataGetterSetter column_data = new NoCameraDataGetterSetter();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("SELECT NC.SKU_GROUP_ID, SM.SKUGROUP_NAME, NC.FACING FROM NO_CAMERA_FACING_DATA NC " +
+                    "INNER JOIN SKUGROUP_MASTER SM ON NC.SKU_GROUP_ID = SM.SKUGROUP_ID " +
+                    "WHERE NC.STORE_ID = '"+store_id +"' AND NC.CATEGORY_ID = '"+ category_id +"' AND NC.SUB_CATEGORY_ID = '"+ sub_category_id +"' AND ROW_NO = '"
+                    + row +"' AND COLUMN_NO = '" + column + "'", null);
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+
+                    column_data.setSKUGROUP_ID(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKU_GROUP_ID")));
+                    column_data.setSKUGROUP_NAME(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SKUGROUP_NAME")));
+                    column_data.setFacing(dbcursor.getInt(dbcursor.getColumnIndexOrThrow("FACING")));
+
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return column_data;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get row column!" + e.toString());
+            return column_data;
+        }
+        return column_data;
+    }
+
+    //Category Images Allowed
+    public ArrayList<CategoryImagesAllowed> getCategoryPictureAllowedData(String categoryId) {
+        Cursor cursordata = null;
+        ArrayList<CategoryImagesAllowed> imageAllowData = new ArrayList<>();
+
+        try {
+
+            cursordata = db.rawQuery("Select * from MAPPING_CATEGORY_IMAGE_ALLOW  " + "where CATEGORY_ID ='" + categoryId + "'", null);
+
+            if (cursordata != null) {
+                cursordata.moveToFirst();
+                while (!cursordata.isAfterLast()) {
+                    CategoryImagesAllowed sb = new CategoryImagesAllowed();
+
+                    sb.setImg_cam1(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("IMAGE1_ALLOW")).equals("1"));
+                    sb.setImg_cam2(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("IMAGE2_ALLOW")).equals("1"));
+                    sb.setImg_cam3(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("IMAGE3_ALLOW")).equals("1"));
+                    sb.setImg_cam4(cursordata.getString(cursordata
+                            .getColumnIndexOrThrow("IMAGE4_ALLOW")).equals("1"));
+
+                    imageAllowData.add(sb);
+                    cursordata.moveToNext();
+                }
+                cursordata.close();
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+        return imageAllowData;
+
+    }
+
+    //MAPPING_COUNTRYWISE_PLANOGRAM
+    public void InsertMappingCountrywisePlanogram(MappingPlanogramCountrywiseGetterSetter data) {
+        db.delete("MAPPING_COUNTRYWISE_PLANOGRAM", null, null);
+
+        ContentValues values = new ContentValues();
+        try {
+            for (int i = 0; i < data.getCOUNTRY_ID().size(); i++) {
+
+                values.put("COUNTRY_ID", data.getCOUNTRY_ID().get(i));
+                values.put("FILE_PATH", data.getFILE_PATH().get(i));
+                values.put("PLANOGRAM_URL", data.getPLANOGRAM_URL().get(i));
+
+                db.insert("MAPPING_COUNTRYWISE_PLANOGRAM", null, values);
+            }
+        } catch (Exception ex) {
+            Log.d("Exception ", " in MAPPING_COUNTRYWISE_PLANOGRAM " + ex.toString());
+        }
+    }
+
+    //Stock N Facing
+    public ArrayList<MSL_AvailabilityStockFacingGetterSetter> getStockFacingHeaderData(
+            String category_id, String keyAccount_id, String storeType_id, String class_id) {
+
+        ArrayList<MSL_AvailabilityStockFacingGetterSetter> list = new ArrayList<>();
+        Cursor dbcursor = null;
+
+        try {
+
+            dbcursor = db.rawQuery("Select DISTINCT SB.SUB_CATEGORY_ID,SB.SUB_CATEGORY,BR.BRAND_ID,BR.BRAND,BR.COMPANY_ID ," +
+                    " (SELECT SUM(SOS_TARGET) FROM MAPPING_SOS_TARGET WHERE STORE_ID = 1 AND BRAND_ID = BR.BRAND_ID)AS SOS_TARGET " +
+                    "from MAPPING_STOCK M " +
+                    "inner join SKU_MASTER SK " +
+                    "on M.SKU_ID=SK.SKU_ID " +
+                    "inner join BRAND_MASTER BR " +
+                    "on SK.BRAND_ID=BR.BRAND_ID " +
+                    "inner join SUB_CATEGORY_MASTER SB " +
+                    "on BR.SUB_CATEGORY_ID=SB.SUB_CATEGORY_ID " +
+                    "inner join CATEGORY_MASTER CA " +
+                    "on SB.CATEGORY_ID=CA.CATEGORY_ID " +
+                    "where CA.CATEGORY_ID='" + category_id + "' AND M.KEYACCOUNT_ID = '" + keyAccount_id +
+                    "' AND M.STORETYPE_ID = '" + storeType_id + "' AND M.CLASS_ID = '" + class_id + "' AND BR.COMPANY_ID='"+ 1 +"' "+
+                    "order by SB.SUB_CATEGORY,BR.COMPANY_ID,BR.BRAND", null);
+
+
+            if (dbcursor != null) {
+                dbcursor.moveToFirst();
+                while (!dbcursor.isAfterLast()) {
+                    MSL_AvailabilityStockFacingGetterSetter cd = new MSL_AvailabilityStockFacingGetterSetter();
+
+                    cd.setSub_category_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY_ID")));
+                    cd.setSub_category(dbcursor.getString(dbcursor.getColumnIndexOrThrow("SUB_CATEGORY")));
+                    cd.setBrand_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND_ID")));
+                    cd.setBrand(dbcursor.getString(dbcursor.getColumnIndexOrThrow("BRAND")));
+                    cd.setCompany_id(dbcursor.getString(dbcursor.getColumnIndexOrThrow("COMPANY_ID")));
+
+
+                    list.add(cd);
+                    dbcursor.moveToNext();
+                }
+                dbcursor.close();
+                return list;
+            }
+        } catch (Exception e) {
+            Log.d("Exception ", "get MSL_AvailabilityHeader!" + e.toString());
             return list;
         }
         return list;

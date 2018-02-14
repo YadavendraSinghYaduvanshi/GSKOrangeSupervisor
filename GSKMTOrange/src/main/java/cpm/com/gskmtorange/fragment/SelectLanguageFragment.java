@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 
 
@@ -20,11 +19,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import cpm.com.gskmtorange.R;
 import cpm.com.gskmtorange.constant.CommonString;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.xmlGetterSetter.LoginGetterSetter;
 
 /**
@@ -163,7 +162,7 @@ public class SelectLanguageFragment extends Fragment implements View.OnClickList
                 //selected_flag = true;
                 onButtonPressed(language.get(0),culture_id.get(0),login_data.getNOTICE_URL().get(0));
 
-                updateResources(getActivity(), language.get(0));
+                CommonFunctions.updateLangResources(getActivity(), language.get(0));
 
                 btn_lang_1.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 btn_lang_2.setBackgroundColor(getResources().getColor(R.color.grey_background));
@@ -181,7 +180,7 @@ public class SelectLanguageFragment extends Fragment implements View.OnClickList
 
                 onButtonPressed(language.get(1),culture_id.get(1),login_data.getNOTICE_URL().get(1));
 
-                updateResources(getActivity(), language.get(1));
+                CommonFunctions.updateLangResources(getActivity(), language.get(1));
 
                 btn_lang_1.setBackgroundColor(getResources().getColor(R.color.grey_background));
                 btn_lang_2.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -225,46 +224,4 @@ public class SelectLanguageFragment extends Fragment implements View.OnClickList
         //return ;
     }
 
-    private static boolean updateResources(Context context, String language) {
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 }

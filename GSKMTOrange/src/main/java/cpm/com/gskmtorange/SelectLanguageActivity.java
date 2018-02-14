@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.LoginGetterSetter;
 
@@ -94,7 +95,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
 
                 selected_flag = true;
 
-                updateResources(getApplicationContext(), language.get(0));
+                CommonFunctions.updateLangResources(getApplicationContext(), language.get(0));
 
                 btn_lang_1.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 btn_lang_2.setBackgroundColor(getResources().getColor(R.color.grey_background));
@@ -110,7 +111,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
 
                 selected_flag = true;
 
-                updateResources(getApplicationContext(), language.get(1));
+                CommonFunctions.updateLangResources(getApplicationContext(), language.get(1));
 
                 btn_lang_1.setBackgroundColor(getResources().getColor(R.color.grey_background));
                 btn_lang_2.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -124,49 +125,6 @@ public class SelectLanguageActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private static boolean updateResources(Context context, String language) {
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
     private void setDataFromSharedPreferences(LoginGetterSetter lgs) {
         Gson gson = new Gson();

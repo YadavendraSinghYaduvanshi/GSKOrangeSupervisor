@@ -30,7 +30,7 @@
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/camera_orange_star_green" />
+                android:background="@mipmap/camera_orange" />
 
 
         </LinearLayout>

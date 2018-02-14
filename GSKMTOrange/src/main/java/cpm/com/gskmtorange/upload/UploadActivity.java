@@ -45,11 +45,13 @@ import cpm.com.gskmtorange.GetterSetter.CategoryPictureGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.MSL_AvailabilityStockFacingGetterSetter;
+import cpm.com.gskmtorange.xmlGetterSetter.NoCameraDataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.SkuGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.StockFacing_PlanogramTrackerDataGetterSetter;
@@ -87,7 +89,7 @@ public class UploadActivity extends AppCompatActivity {
     Object result = "";
     Toolbar toolbar;
     ArrayList<CategoryPictureGetterSetter> adddata = new ArrayList<CategoryPictureGetterSetter>();
-    ArrayList<CategoryPictureGetterSetter> listdat = new ArrayList<CategoryPictureGetterSetter>();
+    ArrayList<CategoryPictureGetterSetter> listdat = new ArrayList<>();
     ArrayList<StockFacing_PlanogramTrackerDataGetterSetter> stockFacingPlanogramDataList;
 
     ArrayList<Store_wise_camera_DataGetterSetter> storeWiseCameraDataGetterSetters;
@@ -102,7 +104,7 @@ public class UploadActivity extends AppCompatActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         date = preferences.getString(CommonString.KEY_DATE, null);
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
@@ -419,6 +421,7 @@ public class UploadActivity extends AppCompatActivity {
                             //MSL_Availability_StockFacing
                             String mslAvailability_stockFacing_xml = "";
                             onXML = "";
+                            db.open();
                             msl_availabilityStockFacingList = db.getMSL_Availability_StockFacing_UploadServerData(coverageList.get(i).getStoreId());
 
                             if (msl_availabilityStockFacingList.size() > 0) {
@@ -475,6 +478,7 @@ public class UploadActivity extends AppCompatActivity {
                             //Promo Compliance - Promotion Data
                             String promoition_data_xml = "";
                             onXML = "";
+                            db.open();
                             promotionSkuList = db.getPromoComplianceSkuServerUploadData(coverageList.get(i).getStoreId());
 
                             if (promotionSkuList.size() > 0) {
@@ -527,6 +531,7 @@ public class UploadActivity extends AppCompatActivity {
                             //Promo Compliance -Additional Promotion Data
                             String additional_promoition_data_xml = "";
                             onXML = "";
+                            db.open();
                             additionalPromotionList = db.getAdditionalPromotionServerUploadData(coverageList.get(i).getStoreId());
 
                             if (additionalPromotionList.size() > 0) {
@@ -583,6 +588,7 @@ public class UploadActivity extends AppCompatActivity {
                             String onXMLdIALOG = "";
                             String imageV1, imageV2, imageV3;
 
+                            db.open();
                             additionalVisibilityList = db.getAdditionalStockUpload(coverageList.get(i).getStoreId());
 
                             if (additionalVisibilityList.size() > 0) {
@@ -678,6 +684,7 @@ public class UploadActivity extends AppCompatActivity {
                             //T2p Upload Data
                             String t2p_data_xml = "";
                             onXML = "";
+                            db.open();
                             t2PGetterSetters = db.getT2pComplianceData(coverageList.get(i).getStoreId(), null);
 
                             if (t2PGetterSetters.size() > 0) {
@@ -796,6 +803,7 @@ public class UploadActivity extends AppCompatActivity {
                             //Stock Facing Planogram Tracker
                             String stock_facing_planogram_xml = "";
                             onXML = "";
+                            db.open();
                             stockFacingPlanogramDataList = db.getStockAndFacingPlanogramServerUploadData(coverageList.get(i).getStoreId());
 
                             if (stockFacingPlanogramDataList.size() > 0) {
@@ -850,6 +858,7 @@ public class UploadActivity extends AppCompatActivity {
                             String CategoryLISTDATA = "";
                             String image1, image2, image3, image4;
 
+                            db.open();
                             adddata = db.getCategoryPictureUpload(coverageList.get(i).getStoreId());
 
                             if (adddata.size() > 0) {
@@ -935,6 +944,51 @@ public class UploadActivity extends AppCompatActivity {
                                     return CommonString.METHOD_UPLOAD_STOCK_XML_DATA;
                                 }*/
                             }
+                            else{
+
+                                db.open();
+                                ArrayList<NoCameraDataGetterSetter> nocamera_data_list = db.getNoCameraCategoryStoreWiseDataInserted(coverageList.get(i).getStoreId());
+
+                                if(nocamera_data_list.size()>0){
+
+                                    String onXml_nodata="", No_camera_data="";
+                                    for(int n=0; n<nocamera_data_list.size(); n++){
+
+                                        onXml_nodata = "[NO_CAMERA_POG_DATA]"
+                                                + "[MID]" + mid + "[/MID]"
+                                                + "[USER_ID]" + userId + "[/USER_ID]"
+                                                + "[CATEGORY_ID]" + nocamera_data_list.get(n).getCATEGORY_ID() + "[/CATEGORY_ID]"
+                                                + "[SUB_CATEGORY_ID]" + nocamera_data_list.get(n).getSUB_CATEGORY_ID() + "[/SUB_CATEGORY_ID]"
+                                                + "[SKU_GROUP_ID]" + nocamera_data_list.get(n).getSKUGROUP_ID() + "[/SKU_GROUP_ID]"
+                                                + "[ROW_NO]" + nocamera_data_list.get(n).getRow_no() + "[/ROW_NO]"
+                                                + "[COLUMN_NO]" + nocamera_data_list.get(n).getColumn_no() + "[/COLUMN_NO]"
+                                                + "[FACING]" + nocamera_data_list.get(n).getFacing() + "[/FACING]"
+                                                + "[/NO_CAMERA_POG_DATA]";
+
+                                        No_camera_data = No_camera_data + onXml_nodata;
+                                    }
+
+                                    final String sos_xml = "[DATA]" + No_camera_data + "[/DATA]";
+
+                                    request = new SoapObject(CommonString.NAMESPACE, CommonString.METHOD_UPLOAD_STOCK_XML_DATA);
+                                    request.addProperty("XMLDATA", sos_xml);
+                                    request.addProperty("KEYS", "NO_CAMERA_POG");
+                                    request.addProperty("USERNAME", userId);
+                                    request.addProperty("MID", mid);
+
+                                    envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                                    envelope.dotNet = true;
+                                    envelope.setOutputSoapObject(request);
+
+                                    androidHttpTransport = new HttpTransportSE(CommonString.URL);
+                                    androidHttpTransport.call(CommonString.SOAP_ACTION + CommonString.METHOD_UPLOAD_STOCK_XML_DATA, envelope);
+
+                                    result = envelope.getResponse();
+                                }
+
+
+
+                            }
                             data.value = 60;
                             data.name = getString(R.string.additional_data_uploading);
                             publishProgress(data);
@@ -1019,7 +1073,7 @@ public class UploadActivity extends AppCompatActivity {
                                 for (int J = 0; J < adddata.size(); J++) {
 
                                     String KeyID = adddata.get(J).getKEY_ID();
-
+                                    db.open();
                                     listdat = db.getCategoryPictureListUploaded(KeyID);
 
                                     if (listdat.size() > 0) {
@@ -1511,61 +1565,18 @@ public class UploadActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(getString(R.string.title_activity_upload));
     }
 
 
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
     public void showAlert(String str) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
         builder.setTitle("Parinaam");
         builder.setMessage(str).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                        /* Intent i = new Intent(activity, StorelistActivity.class);

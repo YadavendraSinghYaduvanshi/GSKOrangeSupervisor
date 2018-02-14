@@ -39,7 +39,7 @@
 
     <string name="select">Seçiniz</string>
 
-    <string name="title_activity_t2_pcompliance">Kalıcı Teşhir</string>
+    <string name="title_activity_t2_pcompliance">T2P - Kalıcı Teşhir</string>
 
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
@@ -66,7 +66,7 @@
 
     <string name="daily_data_menu_msl_availability">SKU bulunurluğu</string>
     <string name="daily_data_menu_stock_facing">Raf Payı</string>
-    <string name="daily_data_menu_t2p">Kalıcı Teşhir</string>
+    <string name="daily_data_menu_t2p">T2P - Kalıcı Teşhir</string>
     <string name="daily_data_menu_additional_visibility">Ek Teşhir</string>
     <string name="daily_data_menu_promo_compliance">Promosyon</string>
     <string name="daily_data_menu_competition_tracking">Rakip Bilgisi</string>

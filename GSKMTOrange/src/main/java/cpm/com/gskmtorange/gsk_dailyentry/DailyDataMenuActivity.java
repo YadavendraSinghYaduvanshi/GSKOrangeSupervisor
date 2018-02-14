@@ -28,9 +28,12 @@ import java.util.Locale;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.CategoryPictureGetterSetter;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.AdditionalVisibility;
 import cpm.com.gskmtorange.dailyentry.CategoryPicture;
+import cpm.com.gskmtorange.dailyentry.CreateSelfActivity;
+import cpm.com.gskmtorange.dailyentry.StockDataActivity;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.DailyDataMenuGetterSetter;
 
@@ -42,7 +45,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
 
     GSKOrangeDB db;
     String categoryName = "", categoryId;
-    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow;
+    String store_id, visit_date, username, intime, date, keyAccount_id, class_id, storeType_id, camera_allow, country_id;
     private SharedPreferences preferences;
 
     ArrayList<CategoryPictureGetterSetter> category_camera_list;
@@ -64,7 +67,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-            updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+            CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
@@ -75,6 +78,7 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             class_id = preferences.getString(CommonString.KEY_CLASS_ID, "");
             storeType_id = preferences.getString(CommonString.KEY_STORETYPE_ID, "");
             camera_allow = preferences.getString(CommonString.KEY_CAMERA_ALLOW, "");
+            country_id = preferences.getString(CommonString.KEY_COUNTRY_ID, "");
             //Intent data
             categoryName = getIntent().getStringExtra("categoryName");
             categoryId = getIntent().getStringExtra("categoryId");
@@ -102,24 +106,41 @@ public class DailyDataMenuActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         try {
             categoryList = new ArrayList<>();
 
             DailyDataMenuGetterSetter data = new DailyDataMenuGetterSetter();
-            data = new DailyDataMenuGetterSetter();
-            data.setCategory_name(getResources().getString(R.string.daily_data_menu_msl_availability));
-            if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {
-                if (db.checkMsl_Availability_StockFacingData(store_id, categoryId)) {
-                    data.setCategory_img(R.mipmap.msl_availability_done);
+
+            if(country_id.equals("6") && categoryId.equals("3")){
+                data = new DailyDataMenuGetterSetter();
+                data.setCategory_name(getResources().getString(R.string.daily_data_menu_stock_facing));
+                if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {
+                    if (db.checkMsl_Availability_StockFacingData(store_id, categoryId)) {
+                        data.setCategory_img(R.mipmap.msl_availability_done);
+                    } else {
+                        data.setCategory_img(R.mipmap.msl_availability);
+                    }
                 } else {
-                    data.setCategory_img(R.mipmap.msl_availability);
+                    data.setCategory_img(R.mipmap.msl_availability_grey);
                 }
-            } else {
-                data.setCategory_img(R.mipmap.msl_availability_grey);
+                categoryList.add(data);
             }
-            categoryList.add(data);
+            else {
+                data = new DailyDataMenuGetterSetter();
+                data.setCategory_name(getResources().getString(R.string.daily_data_menu_msl_availability));
+                if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {
+                    if (db.checkMsl_Availability_StockFacingData(store_id, categoryId)) {
+                        data.setCategory_img(R.mipmap.msl_availability_done);
+                    } else {
+                        data.setCategory_img(R.mipmap.msl_availability);
+                    }
+                } else {
+                    data.setCategory_img(R.mipmap.msl_availability_grey);
+                }
+                categoryList.add(data);
+            }
 
 
             /*data.setCategory_name(getResources().getString(R.string.daily_data_menu_msl_availability));
@@ -194,17 +215,26 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             data.setCategory_name(getResources().getString(R.string.daily_data_menu_category_picture));
             //category_camera_list = db.getCategoryPicturedata(categoryId, keyAccount_id, storeType_id, class_id);
             if (camera_allow.equalsIgnoreCase("1")) {
-           //if (category_camera_list.size()>0) {
+                //if (category_camera_list.size()>0) {
                 if (db.isCategoryPictureData(store_id, categoryId)) {
                     data.setCategory_img(R.mipmap.picturecatogory_done);
                 } else {
                     data.setCategory_img(R.mipmap.picturecatogory);
-                }
-            } else {
+                    //   }
+                } /*else {
                 data.setCategory_img(R.mipmap.picturecatogory_grey);
+            }*/
+
+            }
+            else {
+                if (db.getNoCameraCategoryDataInserted(store_id, categoryId, null).size()>0) {
+                    data.setCategory_img(R.mipmap.picturecatogory_done);
+                } else {
+                    data.setCategory_img(R.mipmap.picturecatogory);
+                    //   }
+                }
             }
             categoryList.add(data);
-
 
 
 
@@ -308,17 +338,22 @@ public class DailyDataMenuActivity extends AppCompatActivity {
             } else if (dailyData.getCategory_name().equalsIgnoreCase((getResources().getString(R.string.daily_data_menu_category_picture)))) {
                 if (camera_allow.equalsIgnoreCase("1")) {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                } else {
+                } /*else {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
-                }
+                }*/
             }else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_msl_availability))) {
                 if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 } else {
                     holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
                 }
+            }else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_stock_facing))) {
+                if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                } else {
+                    holder.categoryName.setTextColor(getResources().getColor(R.color.grey_background));
+                }
             }
-
 
             holder.lay_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -371,12 +406,25 @@ public class DailyDataMenuActivity extends AppCompatActivity {
                             intent.putExtra("categoryId", categoryId);
                             startActivity(intent);
                             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-                        } /*else {
-                        }*/
+                        } else {
+                            Intent intent = new Intent(DailyDataMenuActivity.this, CreateSelfActivity.class);
+                            intent.putExtra("categoryName", dailyData.getCategory_name());
+                            intent.putExtra("categoryId", categoryId);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                        }
 
                     } else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_msl_availability))) {
                         if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {
                             Intent intent = new Intent(DailyDataMenuActivity.this, MSL_Availability_StockFacingActivity.class);
+                            intent.putExtra("categoryName", dailyData.getCategory_name());
+                            intent.putExtra("categoryId", categoryId);
+                            startActivity(intent);
+                        }
+
+                    }else if (dailyData.getCategory_name().equalsIgnoreCase(getResources().getString(R.string.daily_data_menu_stock_facing))) {
+                        if (db.isMappingStockDataStockFacing(categoryId, keyAccount_id, storeType_id, class_id)) {
+                            Intent intent = new Intent(DailyDataMenuActivity.this, StockDataActivity.class);
                             intent.putExtra("categoryName", dailyData.getCategory_name());
                             intent.putExtra("categoryId", categoryId);
                             startActivity(intent);
@@ -407,49 +455,6 @@ public class DailyDataMenuActivity extends AppCompatActivity {
         }
     }
 
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
 }
 

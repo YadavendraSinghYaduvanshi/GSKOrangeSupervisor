@@ -47,6 +47,7 @@ import java.util.logging.StreamHandler;
 
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.dailyentry.T2PComplianceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.Promo_Compliance_DataGetterSetter;
@@ -78,50 +79,6 @@ public class PromoComplianceActivity extends AppCompatActivity {
     String error_msg;
     Promo_Compliance_DataGetterSetter cd;
 
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        } else {
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +109,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
 
             //preference data
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+            CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
             store_id = preferences.getString(CommonString.KEY_STORE_ID, null);
             visit_date = preferences.getString(CommonString.KEY_DATE, null);
             date = preferences.getString(CommonString.KEY_DATE, null);
@@ -194,15 +151,15 @@ public class PromoComplianceActivity extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     if (i == 1) {
                         cd.setIn_stock("1");
-                        img_addPromotion.setBackgroundResource(R.mipmap.camera_orange);
 
                         if (camera_allow.equals("1")) {
+                            img_addPromotion.setBackgroundResource(R.mipmap.camera_orange);
                             img_addPromotion.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     _pathforcheck = "AddPromo_Image_" + store_id + categoryId + "_"
                                             + visit_date.replace("/", "") + "_" +
-                                            getCurrentTime().replace(":", "") + ".jpg";
+                                            CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                                     path = str + _pathforcheck;
 
                                     startCameraActivity(2);
@@ -391,7 +348,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                             }
                         }
                         if (!flag) {
-                            Snackbar.make(view, getResources().getString(R.string.please_select_answer), Snackbar.LENGTH_LONG)
+                            Snackbar.make(view, getResources().getString(R.string.title_activity_select_dropdown), Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
                         }
                     }
@@ -465,7 +422,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
     private void prepareList() {
@@ -596,14 +553,15 @@ public class PromoComplianceActivity extends AppCompatActivity {
                                 case 1:
                                     data.setIn_stock("1");
                                     img_promotion.setClickable(true);
-                                    img_promotion.setBackgroundResource(R.mipmap.camera_orange);
                                     if (camera_allow.equals("1")) {
+
+                                        img_promotion.setBackgroundResource(R.mipmap.camera_orange);
                                         img_promotion.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 _pathforcheck = "Promo_Image_" + store_id + categoryId + "_" + data.getSku_id() +
                                                         data.getPromo_id() + visit_date.replace("/", "") + "_" +
-                                                        getCurrentTime().replace(":", "") + ".jpg";
+                                                        CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                                                 //child_position = position;
                                                 child_position = finalI;
                                                 path = str + _pathforcheck;
@@ -652,7 +610,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
                                     public void onClick(View v) {
                                         _pathforcheck = "Promo_Image_" + store_id + categoryId + "_" + data.getSku_id() +
                                                 data.getPromo_id() + visit_date.replace("/", "") + "_" +
-                                                getCurrentTime().replace(":", "") + ".jpg";
+                                                CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                                         //child_position = position;
                                         child_position = finalI;
                                         path = str + _pathforcheck;
@@ -1085,7 +1043,7 @@ public class PromoComplianceActivity extends AppCompatActivity {
         return new String(chars);
     }
 
-    public String getCurrentTime() {
+    public String getCurrentTimeNotUsed() {
         Calendar m_cal = Calendar.getInstance();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");

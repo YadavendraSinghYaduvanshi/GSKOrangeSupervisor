@@ -44,6 +44,7 @@ import cpm.com.gskmtorange.GetterSetter.CategoryPictureGetterSetter;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.GetterSetter.StoreBean;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
 import cpm.com.gskmtorange.xmlGetterSetter.GapsChecklistGetterSetter;
@@ -100,7 +101,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         date = preferences.getString(CommonString.KEY_DATE, null);
         userId = preferences.getString(CommonString.KEY_USERNAME, null);
@@ -245,7 +246,7 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
 
                 for (int i = 0; i < coverageList.size(); i++) {
 
-                    storeData = db.getSpecificStoreData(date, coverageList.get(i).getStoreId());
+                    storeData = db.getSpecificStoreData(coverageList.get(i).getVisitDate(), coverageList.get(i).getStoreId());
                     if (storeData.getSTORE_ID() != null) {
 
                         if (storeData.getCHECKOUT_STATUS().equals(CommonString.KEY_Y) ||
@@ -1500,10 +1501,11 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
             }*/
 
             dialog.dismiss();
-            db.deleteAllTables();
+
             if (result.contains(CommonString.KEY_SUCCESS)) {
                 //db.deleteAllTables();
                 showAlert(getString(R.string.menu_upload_data));
+                db.deleteAllTables();
                 //showAlert(getString(R.string.menu_upload_data));
             } else {
                 showAlert(getString(R.string.error) + result.toString());
@@ -1514,52 +1516,9 @@ public class PreviousDataUploadActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
     }
 
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        } else {
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
 
     public void showAlert(String str) {
 

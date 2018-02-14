@@ -62,6 +62,7 @@ import javax.xml.parsers.SAXParserFactory;
 import cpm.com.gskmtorange.Database.GSKOrangeDB;
 import cpm.com.gskmtorange.GetterSetter.CoverageBean;
 import cpm.com.gskmtorange.R;
+import cpm.com.gskmtorange.constant.CommonFunctions;
 import cpm.com.gskmtorange.constant.CommonString;
 import cpm.com.gskmtorange.gsk_dailyentry.StoreWisePerformanceActivity;
 import cpm.com.gskmtorange.xmlGetterSetter.FailureGetterSetter;
@@ -103,7 +104,7 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
         setContentView(R.layout.activity_store_checkout_image);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -183,9 +184,9 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
         switch (id) {
             case R.id.img_cam_selfie:
 
-                _pathforcheck = checkOutStore_id + "CHK_SI_" + visit_date.replace("/", "") + "_" + getCurrentTime().replace(":", "") + ".jpg";
+                _pathforcheck = checkOutStore_id + "CHK_SI_" + visit_date.replace("/", "") + "_" + CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext()).replace(":", "") + ".jpg";
                 _path = CommonString.FILE_PATH + _pathforcheck;
-                intime = getCurrentTime();
+                intime = CommonFunctions.getCurrentTimeWithLanguage(getApplicationContext());
 
                 startCameraActivity();
                 break;
@@ -316,7 +317,7 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public String getCurrentTime() {
+    public String getCurrentTimeNotUsed() {
         Calendar m_cal = Calendar.getInstance();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:mmm");
@@ -353,7 +354,7 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
     @Override
     protected void onResume() {
         super.onResume();
-        updateResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
+        CommonFunctions.updateLangResources(getApplicationContext(), preferences.getString(CommonString.KEY_LANGUAGE, ""));
         toolbar.setTitle(R.string.title_activity_store_checkout_image);
     }
 
@@ -365,51 +366,6 @@ public class StoreCheckoutImageActivity extends AppCompatActivity implements Vie
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
-    }
-
-    private static boolean updateResources(Context context, String language) {
-
-        /*String lang;
-
-        if (language.equalsIgnoreCase("English")) {
-            lang = "EN";
-        } else if (language.equalsIgnoreCase("ARABIC-KSA")) {
-            lang = "AR";
-        } else {
-            lang = "TR";
-        }*/
-
-        String lang;
-
-        if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ENGLISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ENGLISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_KSA)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_ARABIC_KSA;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_TURKISH)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_TURKISH;
-
-        } else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_ARABIC_UAE)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_UAE_ARABIC;
-        }else if (language.equalsIgnoreCase(CommonString.KEY_LANGUAGE_OMAN)) {
-            lang = CommonString.KEY_RETURE_LANGUAGE_OMAN;
-        }else{
-            lang = CommonString.KEY_RETURN_LANGUAGE_DEFAULT;
-        }
-
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
     }
 
 
